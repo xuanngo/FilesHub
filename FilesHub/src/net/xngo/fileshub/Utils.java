@@ -41,6 +41,15 @@ public class Utils
     return allFiles;
   }
   
+  /**
+   * Get the hash(ID) of the file.
+   * Note: -XXHash32 is chosen because it claims to be fast.
+   *       -Check what is the collision rate of XXHash32 algorithm 
+   *              because StreamingXXHash32.getValue() return an integer, 
+   *              which has a limit of 2,147,483,648.
+   * @param file
+   * @return  the hash as string
+   */
   public String getHash(File file)
   {
     XXHashFactory factory = XXHashFactory.fastestInstance();
@@ -60,7 +69,7 @@ public class Utils
       }
       fileInputStream.close();
   
-      return hash32.getValue()+"";
+      return hash32.getValue()+""; // Force to be a string so that if we can change to use another hashing algorithm.
     }
     catch(UnsupportedEncodingException ex)
     {
@@ -73,4 +82,6 @@ public class Utils
     
     return null;
   }
+  
+  
 }
