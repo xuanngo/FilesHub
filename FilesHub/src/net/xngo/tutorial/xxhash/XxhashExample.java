@@ -7,6 +7,11 @@ import java.io.ByteArrayInputStream;
 import java.io.UnsupportedEncodingException;
 import java.io.IOException;
 
+/**
+ * 
+ * @author Xuan Ngo
+ *
+ */
 public class XxhashExample
 {
 
