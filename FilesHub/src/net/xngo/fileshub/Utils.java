@@ -8,11 +8,15 @@ import java.util.ArrayList;
 
 import net.jpountz.xxhash.StreamingXXHash32;
 import net.jpountz.xxhash.XXHashFactory;
-
+/**
+ * 
+ * @author Xuan Ngo
+ *
+ */
 public class Utils
 {
   /**
-   * Get all files from a directory and its subdirectories.
+   * Get all files from a directory and its sub-directories.
    * @param directoryName to be listed
    */
   public ArrayList<File> getAllFiles(String directoryName)
@@ -48,7 +52,7 @@ public class Utils
    *              because StreamingXXHash32.getValue() return an integer, 
    *              which has a limit of 2,147,483,648.
    * @param file
-   * @return  the hash as string
+   * @return      the hash as string
    */
   public String getHash(File file)
   {
