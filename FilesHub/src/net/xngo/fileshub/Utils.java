@@ -25,14 +25,14 @@ public class Utils
 {
   /**
    * Get all files from a directory and its sub-directories.
-   * @param directoryName to be listed
+   * @param directoryPath to be listed
    */
-  public ArrayList<File> getAllFiles(String directoryName)
+  public ArrayList<File> getAllFiles(String directoryPath)
   {
     
     ArrayList<File> allFiles = new ArrayList<File>();
     
-    File directory = new File(directoryName);
+    File directory = new File(directoryPath);
     
     // Get all the files from a directory
     File[] fList = directory.listFiles();
