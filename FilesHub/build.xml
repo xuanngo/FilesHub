@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project default="create_run_jar" name="Create Runnable Jar for Project FilesHub with Jar-in-Jar Loader">
+    <target name="create_run_jar">
+        <jar destfile="./releases/latest/fileshub.jar">
+            <manifest>
+                <attribute name="Main-Class" value="org.eclipse.jdt.internal.jarinjarloader.JarRsrcLoader"/>
+                <attribute name="Rsrc-Main-Class" value="net.xngo.fileshub.Main"/>
+                <attribute name="Class-Path" value="."/>
+                <attribute name="Rsrc-Class-Path" value="./ lz4-1.2.0.jar sqlite-jdbc-3.7.2.jar"/>
+            </manifest>
+            <zipfileset src="jar-in-jar-loader.zip"/>
+            <fileset dir="./bin"/>
+            <zipfileset dir=".\lib" includes="lz4-1.2.0.jar"/>
+            <zipfileset dir=".\lib" includes="sqlite-jdbc-3.7.2.jar"/>
+        </jar>
+    </target>
+</project>
