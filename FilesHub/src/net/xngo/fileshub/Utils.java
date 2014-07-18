@@ -154,7 +154,7 @@ public class Utils
   
   /**
    * copyNhash() combine the copying and the hashing process at the same time so that it only fetches data once from hard drive.
-   * @TODO Modify code to use FileChannel class. It is much faster.
+   * TODO Modify code to use FileChannel class. It is much faster.
    * 
    * @param source
    * @param dest
