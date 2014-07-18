@@ -1,4 +1,10 @@
 FilesHub
 ========
 
-Files management
+Files manager
+
+Features
+========
+-Remove duplicate files.
+-Tag files.
+
