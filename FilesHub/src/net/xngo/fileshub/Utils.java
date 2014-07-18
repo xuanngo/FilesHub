@@ -23,37 +23,7 @@ import net.jpountz.xxhash.XXHashFactory;
  */
 public class Utils
 {
-  /**
-   * Get all files from a directory and its sub-directories.
-   * @param directoryPath to be listed
-   * @return
-   */
-  public ArrayList<File> getAllFiles(String directoryPath)
-  {
-    
-    ArrayList<File> allFiles = new ArrayList<File>();
-    
-    File directory = new File(directoryPath);
-    
-    // Get all the files from a directory
-    File[] fList = directory.listFiles();
-    
-    for (File file : fList)
-    {
-      if (file.isFile())
-      {
-          allFiles.add(file);
-          return allFiles;
-      }
-      else if (file.isDirectory())
-      {
-        getAllFiles(file.getAbsolutePath());
-      }
-    }
-    
-    return allFiles;
-  }
-  
+ 
   /**
    * Get the hash(ID) of the file.
    * Note: -XXHash32 is chosen because it claims to be fast.
