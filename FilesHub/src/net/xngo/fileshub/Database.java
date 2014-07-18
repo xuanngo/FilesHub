@@ -97,7 +97,7 @@ public class Database
   }
     
   /**
-   * Create xtag table.
+   * Create table.
    */
   public void createTable()
   {
