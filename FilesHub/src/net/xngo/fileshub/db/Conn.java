@@ -14,6 +14,9 @@ import java.sql.Statement;
  */
 public class Conn
 {
+  public static final String DB_NAME      = "FilesHub";
+  public static final String DB_FILE_PATH = System.getProperty(DB_NAME+".home")+File.separator+DB_NAME+".db"; // File.separator might be double depending on how dbname.home system property is supplied.
+  
   
   private static Conn instance = null;
   
@@ -63,11 +66,8 @@ public class Conn
   
   private void connectToSqlite()
   {
-    final String dbname     = "FilesHub";
-    final String filePath   = System.getProperty(dbname+".home")+File.separator+dbname+".db"; // File.separator might be double depending on how dbname.home system property is supplied.
-    
     // Construct JDBC connection string.
-    String sqlUrl = "jdbc:sqlite:/"+filePath.replace('\\', '/'); // Not efficient. Use File.toURI().toURL().toString();
+    String sqlUrl = "jdbc:sqlite:/"+DB_FILE_PATH.replace('\\', '/'); // Not efficient. Use File.toURI().toURL().toString();
     this.connect(sqlUrl);
   }
   
