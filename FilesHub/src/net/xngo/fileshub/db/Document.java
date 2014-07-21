@@ -8,7 +8,7 @@ public class Document
   
   private Conn connection = Conn.getInstance();
   
-  public void Document()
+  public Document()
   {
     
   }
