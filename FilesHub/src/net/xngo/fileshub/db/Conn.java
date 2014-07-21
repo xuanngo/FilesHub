@@ -7,23 +7,29 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 /**
- * Implement database connection and generic functions.
+ * Implement database connection and generic query functions.
  * Conn name is used to differentiate with java.sql.Connection.
  * @author Xuan Ngo
  *
  */
 public class Conn
 {
-  private final String dbname     = "FilesHub";
-  private final String filePath   = System.getProperty(this.dbname+".home")+File.separator+dbname+".db"; // File.separator might be double depending on how dbname.home system property is supplied.
+  
+  private static Conn instance = null;
   
   Connection  connection  = null;
   Statement   statement   = null;
   
-  public Conn()
+  protected Conn(){}
+  
+  public static Conn getInstance()
   {
-      String sqlUrl = "jdbc:sqlite:/"+this.filePath.replace('\\', '/'); // Not efficient. Use File.toURI().toURL().toString();
-      this.connect(sqlUrl);
+    if(instance == null)
+    {
+      instance = new Conn();
+      instance.connectToSqlite();
+    }
+    return instance;    
   }
   
   public void executeUpdate(final String query)
@@ -55,6 +61,16 @@ public class Conn
     }     
   }
   
+  private void connectToSqlite()
+  {
+    final String dbname     = "FilesHub";
+    final String filePath   = System.getProperty(dbname+".home")+File.separator+dbname+".db"; // File.separator might be double depending on how dbname.home system property is supplied.
+    
+    // Construct JDBC connection string.
+    String sqlUrl = "jdbc:sqlite:/"+filePath.replace('\\', '/'); // Not efficient. Use File.toURI().toURL().toString();
+    this.connect(sqlUrl);
+  }
+  
   /**
    * Connect to database engine
    */
@@ -78,14 +94,9 @@ public class Conn
     catch(ClassNotFoundException e)
     {
       e.printStackTrace();
-    }     
+    }
   }
     
-   
-
-    
-
-    
-  
+ 
     
 }
