@@ -11,15 +11,15 @@ import java.sql.Statement;
 import java.util.ArrayList;
 
 /**
- * 
+ * Implement database generic functions only.
  * @author Xuan Ngo
  *
  */
 public class Database
 {
   
-  private final String dbname  = "FilesHub";
-  private final String filePath = System.getProperty(this.dbname+".home")+File.separator+dbname+".db"; // File.separator might be double depending on how dbname.home system property is supplied.
+  private final String dbname     = "FilesHub";
+  private final String filePath   = System.getProperty(this.dbname+".home")+File.separator+dbname+".db"; // File.separator might be double depending on how dbname.home system property is supplied.
   private final String tablename  = this.dbname;
   
   Connection  connection  = null;
