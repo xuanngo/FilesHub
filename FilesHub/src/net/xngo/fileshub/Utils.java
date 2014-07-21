@@ -1,7 +1,6 @@
 package net.xngo.fileshub;
 
 import java.io.File;
-
 import java.io.IOException;
 import java.io.FileNotFoundException;
 import java.io.UnsupportedEncodingException;
@@ -23,6 +22,24 @@ import net.jpountz.xxhash.XXHashFactory;
  */
 public class Utils
 {
+  /**
+   * Always get canonical(complete and fully expanded) path of file.
+   * @return Canonical path.
+   */
+  public static final String getCanonicalPath(File file)
+  {
+    String path="";
+    try
+    {
+      path = file.getCanonicalPath(); // Canonical path gives the file path in full and expanded.
+    }
+    catch(IOException e)
+    {
+      System.err.println("ERROR: "+file.getName()+": "+e.getMessage()+": Wrong file path!");
+    }
+    
+    return path;
+  }  
  
   /**
    * Get the hash(ID) of the file.
