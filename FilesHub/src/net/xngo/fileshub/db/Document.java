@@ -87,7 +87,10 @@ public class Document
   }
   
   /**
-   * 
+   * Don't put too much constraint on the column. Do the check on the application side.
+   *   For example, it is tempted to set "hash" column to be unique. Don't.
+   *   Hashing takes a lot of time. What if you want to calculate hash later on.
+   *   
    * @return Create table query.
    */
   private String createTableQuery()
@@ -97,7 +100,7 @@ public class Document
                 + "path     TEXT NOT NULL, "
                 + "filename TEXT NOT NULL, "
                 + "size     INTEGER NOT NULL, "
-                + "hash     TEXT "
+                + "hash     TEXT "              
                 + ")";
      
   }
