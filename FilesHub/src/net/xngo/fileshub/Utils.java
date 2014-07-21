@@ -50,7 +50,7 @@ public class Utils
    * @param file
    * @return      the hash as string
    */
-  public String getHash(File file)
+  public static final String getHash(File file)
   {
     XXHashFactory factory = XXHashFactory.fastestInstance();
     int seed = 0x9747b28c;  // used to initialize the hash value, use whatever
