@@ -23,6 +23,7 @@ public class CopyAndHashBenchmark
   {
     CopyAndHashBenchmark cpNhashBen = new CopyAndHashBenchmark();
     cpNhashBen.benchmarkCopyNhash();
+    System.out.println("Done!");
   }
   
   public void benchmarkCopyNhash()

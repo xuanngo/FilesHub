@@ -1,8 +1,13 @@
 package net.xngo.fileshub;
 
 import java.io.File;
+import java.util.Collection;
+
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.filefilter.TrueFileFilter;
 
 import net.xngo.fileshub.db.Database;
+import net.xngo.fileshub.db.Document;
 
 /**
  * 
@@ -16,33 +21,18 @@ public class Hub
   public Hub()
   {
     database.create();
-  }
-  
-  /**
-   * Add file if it is unique.
-   * 
-   * If filename is 
-   * @param file
-   * @return
-   */
-  public boolean add(File file)
-  {
     
-    return true;
+    this.addDirectory(new File("./"));
   }
   
-  private boolean isFileExists()
+  public void addDirectory(File directory)
   {
-    return true;
+    Collection<File> filesList = FileUtils.listFiles(directory, TrueFileFilter.INSTANCE, TrueFileFilter.INSTANCE);
+    
+    Document doc = new Document();
+    for (File file : filesList) 
+    {
+      doc.addFile(file);
+    }    
   }
-  
-  private boolean isFilenameExists(final String filename)
-  {
-    return true;
-  }
-  private boolean isSizeExists(final int size)
-  {
-    return true;
-  }
-  
 }

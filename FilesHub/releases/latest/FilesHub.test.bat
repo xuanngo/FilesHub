@@ -1,0 +1,1 @@
+sqlite3 FilesHub.db -column -header "SELECT * FROM Document;"

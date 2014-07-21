@@ -2,6 +2,7 @@ package net.xngo.fileshub.db;
 
 import java.io.File;
 
+import net.xngo.fileshub.Utils;
 import net.xngo.fileshub.db.Conn;
 import net.xngo.fileshub.db.Document;
 
@@ -17,7 +18,7 @@ public class Database
     // Create database structure if sqlite database file doesn't exist.
     File DbFile = new File(Conn.DB_FILE_PATH);
     if(!DbFile.exists())
-    {
+    {// Database file doesn't exist.
       this.createDbStructure();
     }
   }

@@ -3,6 +3,7 @@ package net.xngo.fileshub.db;
 import java.io.File;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
 
@@ -20,8 +21,8 @@ public class Conn
   
   private static Conn instance = null;
   
-  Connection  connection  = null;
-  Statement   statement   = null;
+  public Connection  connection  = null;
+  public Statement   statement   = null;
   
   protected Conn(){}
   
@@ -66,6 +67,7 @@ public class Conn
   
   private void connectToSqlite()
   {
+      
     // Construct JDBC connection string.
     String sqlUrl = "jdbc:sqlite:/"+DB_FILE_PATH.replace('\\', '/'); // Not efficient. Use File.toURI().toURL().toString();
     this.connect(sqlUrl);
