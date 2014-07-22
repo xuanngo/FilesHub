@@ -39,10 +39,10 @@ public class CopyAndHashBenchmark
       double average = 0.0;
       
       average = this.copyNhashSeparately(file, MAX_TRIES);
-      System.out.println(String.format("%s(%s): Average(%d) = %17.2f ns => %s", file.getName(), filesize, MAX_TRIES, average, "copyNhashSeparately"));
+      System.out.println(String.format("%s(%s): Average(%d) = %,17.2f ns => %s", file.getName(), filesize, MAX_TRIES, average, "copyNhashSeparately"));
 
       average = this.copyNhashCombined(file, MAX_TRIES);
-      System.out.println(String.format("%s(%s): Average(%d) = %17.2f ns => %s", file.getName(), filesize, MAX_TRIES, average, "copyNhashCombined"));
+      System.out.println(String.format("%s(%s): Average(%d) = %,17.2f ns => %s", file.getName(), filesize, MAX_TRIES, average, "copyNhashCombined"));
       
       System.out.println();
     }
