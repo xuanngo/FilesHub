@@ -35,11 +35,6 @@ public class Conn
     return instance;    
   }
   
-  public Connection getConnection()
-  {
-    return this.connection;
-  }
-  
   public void executeUpdate(final String query)
   {
     try
