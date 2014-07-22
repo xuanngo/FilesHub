@@ -3,7 +3,6 @@ package net.xngo.fileshub.db;
 import java.io.File;
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
 
@@ -36,6 +35,11 @@ public class Conn
     return instance;    
   }
   
+  public Connection getConnection()
+  {
+    return this.connection;
+  }
+  
   public void executeUpdate(final String query)
   {
     try
@@ -64,6 +68,16 @@ public class Conn
       e.printStackTrace();
     }     
   }
+  
+  
+  
+  
+  /****************************************************************************
+   * 
+   *                             PRIVATE FUNCTIONS
+   * 
+   ****************************************************************************/
+  
   
   private void connectToSqlite()
   {
