@@ -16,7 +16,11 @@
 	  	
 	  	<!-- Add Binary -->
       <zipfileset src="jar-in-jar-loader.zip"/>
-      <fileset dir="./bin"/>
+      <fileset dir="./bin">
+      	<exclude name="**/benchmark/**"/>
+      	<exclude name="**/tutorial/**"/>
+      	<exclude name="**/test/**"/>
+      </fileset>
 	  	
 	  	<!-- Add Library -->
       <zipfileset dir="./lib" includes="*.jar" excludes="testng*.jar"/>
