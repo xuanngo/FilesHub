@@ -1,6 +1,5 @@
 package net.xngo.fileshub.benchmark;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.io.File;
 import java.io.IOException;
@@ -67,7 +66,7 @@ public class CopyAndHashBenchmark
         // Benchmark start here.
         start = System.nanoTime();
         util.copyFileUsingFileChannels(file, dest);
-        util.getHash(dest);
+        Utils.getHash(dest);
         end = System.nanoTime();
         
         total += end - start;
