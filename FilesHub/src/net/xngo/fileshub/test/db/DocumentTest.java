@@ -2,6 +2,7 @@ package net.xngo.fileshub.test.db;
 
 // FilesHub classes.
 import net.xngo.fileshub.db.Document;
+import net.xngo.fileshub.db.Database;
 import net.xngo.fileshub.Utils;
 
 // FilesHub test helper classes.
@@ -10,6 +11,7 @@ import net.xngo.fileshub.test.helpers.Data;
 
 // TestNG
 import org.testng.annotations.Test;
+import org.testng.annotations.BeforeClass;
 
 import static org.testng.Assert.assertTrue;
 
@@ -22,6 +24,13 @@ import org.apache.commons.io.FileUtils;
 
 public class DocumentTest
 {
+  @BeforeClass
+  public void DatabaseCreation()
+  {
+    // Make sure that the database file is created.
+    Database db = new Database();
+    db.create();
+  }
   
   @Test(description="Add new unique file.")
   public void AddUniqueFile()
@@ -67,7 +76,7 @@ public class DocumentTest
     File duplicateFile = null;
     try
     {
-      duplicateFile = File.createTempFile("duplicate", null);
+      duplicateFile = File.createTempFile("duplicate_same_hash", null);
       FileUtils.copyFile(uniqueFile, duplicateFile);
     }
     catch(IOException e)
