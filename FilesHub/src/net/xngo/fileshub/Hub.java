@@ -18,11 +18,11 @@ public class Hub
 {
   private Database database = new Database();
   
-  public Hub()
+  public Hub(String[] args)
   {
     database.create();
     
-    this.addDirectory(new File("./"));
+    this.addDirectory(new File(args[0]));
   }
   
   public void addDirectory(File directory)
