@@ -9,9 +9,10 @@
         <attribute name="Class-Path" value="."/>
         <attribute name="Rsrc-Class-Path" value="./ lz4-1.2.0.jar sqlite-jdbc-3.7.2.jar commons-io-2.4.jar"/>
 	    </manifest>
+	  	
       <zipfileset src="jar-in-jar-loader.zip"/>
       <fileset dir="./bin"/>
-      <zipfileset dir=".\lib" includes="*.jar"/>
+      <zipfileset dir=".\lib" includes="*.jar" excludes="testng*.jar"/>
 	  </jar>
 	
 	  <antcall target="copy_build_to_test_dir"/>

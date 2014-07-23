@@ -5,5 +5,6 @@
 	<classpathentry kind="lib" path="lib/lz4-1.2.0.jar"/>
 	<classpathentry kind="lib" path="lib/sqlite-jdbc-3.7.2.jar"/>
 	<classpathentry kind="lib" path="lib/commons-io-2.4.jar"/>
+	<classpathentry kind="lib" path="lib/testng-6.8.8.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
