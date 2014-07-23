@@ -22,13 +22,13 @@ public class Document
   */
   
  
-  public boolean addFile(File file)
+  public int addFile(File file)
   {
+    int generatedKey = 0;
     final String canonical_path = Utils.getCanonicalPath(file); 
     if(this.isSameFile(canonical_path))
     {
       // File ignore because it is the exact same file that had already been processed.
-      System.out.println("Exact file: "+canonical_path);
     }
     else
     { // Check hash
@@ -38,7 +38,7 @@ public class Document
       
       if(uid==0)
       {// Hash is not found.
-        this.insert(file, hash);
+        generatedKey = this.insert(file, hash);
       }
       else
       {
@@ -48,7 +48,7 @@ public class Document
       
     }
     
-    return true;
+    return generatedKey;
   }
   
   public void createTable()
@@ -150,7 +150,7 @@ public class Document
 
     final String query = "INSERT INTO "+this.tablename+  "(canonical_path, filename, hash) VALUES(?, ?, ?)";
     
-    int rowAffected = 0;
+    int generatedKey = 0;
     try
     {
       // Prepare the query.
@@ -165,7 +165,14 @@ public class Document
       this.insert.setString(i++, hash);
       
       // Insert row.
-      rowAffected = this.insert.executeUpdate();
+      this.insert.executeUpdate();
+      ResultSet resultSet =  this.insert.getGeneratedKeys();
+      if(resultSet.next())
+      {
+        generatedKey = resultSet.getInt(1);
+ 
+      }
+      
     }
     catch(SQLException e)
     {
@@ -179,7 +186,7 @@ public class Document
       }
     }
   
-    return rowAffected;
+    return generatedKey;
   }
   
 

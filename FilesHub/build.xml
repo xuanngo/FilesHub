@@ -27,12 +27,18 @@
 	  </jar>
 	
 	  <antcall target="copy_build_to_test_dir"/>
+		<antcall target="delete_db_files"/>
 	</target>
 	
 	<target name="copy_build_to_test_dir">
 		<copy todir="./test">
 			<fileset dir="${latest.release.directory}"/>
 		</copy>
+	</target>
+	
+	<target name="delete_db_files">
+		<delete file="${latest.release.directory}/fileshub.db"/>
+		<delete file="./test/fileshub.db"/>
 	</target>
 	
 </project>
