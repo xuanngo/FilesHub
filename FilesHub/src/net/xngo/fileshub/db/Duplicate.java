@@ -6,47 +6,25 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import net.xngo.fileshub.db.Conn;
-import net.xngo.fileshub.db.Duplicate;
 import net.xngo.fileshub.Utils;
 
-public class Document
+public class Duplicate
 {
-  private final String tablename  = "Document";
+  private final String tablename  = "Duplicate";
   
   private Conn conn = Conn.getInstance();
   
   public PreparedStatement insert = null;
   public PreparedStatement select = null;
-  /*
-  public PreparedStatement delete = null;
-  public PreparedStatement update = null;  
-  */
-  
  
-  public int addFile(File file)
+  public int addFile(final long duid, File file)
   {
     int generatedKey = 0;
-    final String canonical_path = Utils.getCanonicalPath(file); 
+    final String canonical_path = Utils.getCanonicalPath(file);
+    
     if(!this.isSameFile(canonical_path))
-    { // Not the exact same file.
-      
-      // Check hash.
-      String hash = Utils.getHash(file);
-      long uid = this.findHash(hash);
-      
-      if(uid==0)
-      {// Hash is not found.
-        generatedKey = this.insert(file, hash);
-      }
-      else
-      {
-        // Same hash but add the record to Duplicate table to keep as history.
-        Duplicate dup = new Duplicate();
-        dup.addFile(uid, file);
-        System.out.println(String.format("YOU CAN DELETE [%s]", canonical_path));
-      }
-      
-      
+    {// File was never processed before.
+      generatedKey = this.insert(duid, file);
     }
     
     return generatedKey;
@@ -108,10 +86,6 @@ public class Document
     return false;
   }
   
-  private long findHash(final String hash)
-  {
-    return this.findString("hash", hash);
-  }
   
   /**
    * 
@@ -146,10 +120,10 @@ public class Document
     return 0;
   }
   
-  private final int insert(final File file, final String hash)
+  private final int insert(final long duid, final File file)
   {
 
-    final String query = "INSERT INTO "+this.tablename+  "(canonical_path, filename, hash) VALUES(?, ?, ?)";
+    final String query = "INSERT INTO "+this.tablename+  "(duid, canonical_path, filename) VALUES(?, ?, ?)";
     
     int generatedKey = 0;
     try
@@ -161,9 +135,10 @@ public class Document
       final String canonical_path = Utils.getCanonicalPath(file);
       final String filename = file.getName();
       int i=1;
+      this.insert.setLong  (i++, duid);
       this.insert.setString(i++, canonical_path);
       this.insert.setString(i++, filename);
-      this.insert.setString(i++, hash);
+
       
       // Insert row.
       this.insert.executeUpdate();
@@ -193,9 +168,6 @@ public class Document
 
   
   /**
-   * Don't put too much constraint on the column. Do validations on the application side.
-   *   For example, it is tempted to set "hash" column to be UNIQUE or NOT NULL. Don't.
-   *   Hashing takes a lot of time. What if you want to calculate the hash value later on.
    *   
    * @return Create table query.
    */
@@ -203,11 +175,10 @@ public class Document
   {
     return  "CREATE TABLE "+tablename+" ("
                 + "uid            INTEGER PRIMARY KEY AUTOINCREMENT, "
+                + "duid           INTEGER NOT NULL, "       // Document UID
                 + "canonical_path TEXT NOT NULL, "
-                + "filename       TEXT NOT NULL, "
-                + "hash           TEXT "              
+                + "filename       TEXT NOT NULL"
                 + ")";
-     
   }
   
   

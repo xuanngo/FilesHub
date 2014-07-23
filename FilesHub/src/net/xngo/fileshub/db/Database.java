@@ -2,9 +2,9 @@ package net.xngo.fileshub.db;
 
 import java.io.File;
 
-import net.xngo.fileshub.Utils;
 import net.xngo.fileshub.db.Conn;
 import net.xngo.fileshub.db.Document;
+import net.xngo.fileshub.db.Duplicate;
 
 /**
  * Implement database structure.
@@ -27,5 +27,8 @@ public class Database
   {
     Document doc = new Document();
     doc.createTable();
+    
+    Duplicate dup = new Duplicate();
+    dup.createTable();
   }
 }
