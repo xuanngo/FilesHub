@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <project default="create_run_jar" name="Create Runnable Jar for Project FilesHub with Jar-in-Jar Loader">
-    
+  
+	<property name="latest.release.directory" value="./releases/latest"/>
+	<property name="latest.jar.file.path" value="${latest.release.directory}/fileshub.jar"/>
+	
 	<target name="create_run_jar">
-	  <jar destfile="./releases/latest/fileshub.jar">
+	  <jar destfile="${latest.jar.file.path}">
 	    <manifest>
 	      <attribute name="Main-Class" value="org.eclipse.jdt.internal.jarinjarloader.JarRsrcLoader"/>
         <attribute name="Rsrc-Main-Class" value="net.xngo.fileshub.Main"/>
@@ -10,8 +13,11 @@
         <attribute name="Rsrc-Class-Path" value="./ lz4-1.2.0.jar sqlite-jdbc-3.7.2.jar commons-io-2.4.jar"/>
 	    </manifest>
 	  	
+	  	<!-- Add Binary -->
       <zipfileset src="jar-in-jar-loader.zip"/>
       <fileset dir="./bin"/>
+	  	
+	  	<!-- Add Library -->
       <zipfileset dir="./lib" includes="*.jar" excludes="testng*.jar"/>
 	  </jar>
 	
@@ -20,7 +26,7 @@
 	
 	<target name="copy_build_to_test_dir">
 		<copy todir="./test">
-			<fileset dir="./releases/latest/"/>
+			<fileset dir="${latest.release.directory}"/>
 		</copy>
 	</target>
 	
