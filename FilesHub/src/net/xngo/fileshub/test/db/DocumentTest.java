@@ -4,10 +4,12 @@ package net.xngo.fileshub.test.db;
 import net.xngo.fileshub.db.Document;
 import net.xngo.fileshub.db.Duplicate;
 import net.xngo.fileshub.db.Database;
+import net.xngo.fileshub.db.PairFile;
 import net.xngo.fileshub.Utils;
 
 // FilesHub test helper classes.
 import net.xngo.fileshub.test.helpers.Data;
+
 
 
 // TestNG
@@ -16,6 +18,7 @@ import org.testng.annotations.BeforeClass;
 
 import static org.testng.Assert.assertTrue;
 import static org.testng.Assert.assertEquals;
+
 
 
 // Java Library
@@ -59,10 +62,10 @@ public class DocumentTest
     
     int generalKey = doc.addFile(uniqueFile).uid; // Add the exact same file the 2nd time.
     uniqueFile.delete();
-    if(generalKey==0)
+    if(generalKey==PairFile.EXACT_SAME_FILE)
       assertTrue(true);
     else
-      assertTrue(false, String.format("[%s] already exists in database. Generated key should be equal to 0.", Utils.getCanonicalPath(uniqueFile)));
+      assertTrue(false, String.format("[%s] already exists in database. Generated key should be equal to %d. But it returned generalKey=%d.", Utils.getCanonicalPath(uniqueFile), PairFile.EXACT_SAME_FILE, generalKey));
   }
   
   @Test(description="Add file with existing hash but different filename.")
