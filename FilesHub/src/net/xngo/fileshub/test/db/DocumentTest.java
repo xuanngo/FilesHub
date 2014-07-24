@@ -46,10 +46,10 @@ public class DocumentTest
     int generalKey = doc.addFile(uniqueFile).uid;
     uniqueFile.delete();
     
-    if(generalKey!=0)
+    if(generalKey > 0)
       assertTrue(true);
     else
-      assertTrue(false, String.format("[%s] is unique. Generated key should not be equal to 0.", Utils.getCanonicalPath(uniqueFile)));
+      assertTrue(false, String.format("[%s] is unique. Generated key should be greater than 0. But it returned generalKey=%d.", Utils.getCanonicalPath(uniqueFile), generalKey));
   }
   
   @Test(description="Add exact file.")
