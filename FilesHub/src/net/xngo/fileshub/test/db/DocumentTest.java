@@ -78,7 +78,7 @@ public class DocumentTest
     File duplicateFile = null;
     try
     {
-      duplicateFile = File.createTempFile("duplicate_same_hash", null);
+      duplicateFile = File.createTempFile("duplicate_same_hash_", null);
       FileUtils.copyFile(uniqueFile, duplicateFile);
     }
     catch(IOException e)
@@ -113,7 +113,7 @@ public class DocumentTest
     File duplicateFile = null;
     try
     {
-      duplicateFile = File.createTempFile("duplicate_same_hash", null);
+      duplicateFile = File.createTempFile("duplicate_same_hash_", null);
       FileUtils.copyFile(uniqueFile, duplicateFile);
     }
     catch(IOException e)
