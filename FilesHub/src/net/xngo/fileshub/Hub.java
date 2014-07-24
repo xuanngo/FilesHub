@@ -33,18 +33,20 @@ public class Hub
     
     Collection<File> filesList = FileUtils.listFiles(directory, TrueFileFilter.INSTANCE, TrueFileFilter.INSTANCE);
     Document doc = new Document();
+    long totalSize = 0;
     for (File file : filesList) 
     {
       PairFile pairFile = doc.addFile(file);
       if(pairFile.uid==PairFile.DUPLICATE_HASH)
       {
         listOfDuplicateFiles.add(pairFile);
+        totalSize += pairFile.toAddFile.length();
       }
     }
     
     System.out.println();
-    System.out.println(String.format("%s duplicates files:", listOfDuplicateFiles.size()));
-    System.out.println("======================");
+    System.out.println(String.format("%s duplicates files [%s]:", listOfDuplicateFiles.size(), Utils.readableFileSize(totalSize)));
+    System.out.println("==============================");
     for(int i=0; i<listOfDuplicateFiles.size(); i++)
     {
       String toAddFilePath = Utils.getCanonicalPath(listOfDuplicateFiles.get(i).toAddFile);
