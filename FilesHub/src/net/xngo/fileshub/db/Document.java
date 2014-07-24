@@ -20,9 +20,9 @@ public class Document
   
   private Conn conn = Conn.getInstance();
   
-  public PreparedStatement insert = null;
-  public PreparedStatement select = null;
- 
+  private PreparedStatement insert = null;
+  private PreparedStatement select = null;
+  
   public int addFile(File file)
   {
     int generatedKey = 0;
