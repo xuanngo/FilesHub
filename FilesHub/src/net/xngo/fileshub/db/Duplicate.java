@@ -48,6 +48,10 @@ public class Duplicate
     this.conn.executeUpdate(query);    
   }
   
+  public int getDuidByCanonicalPath(String canonicalPath)
+  {
+    return Integer.parseInt(this.getString("duid", "canonical_path", canonicalPath));
+  }
   /****************************************************************************
    * 
    *                             PRIVATE FUNCTIONS
@@ -123,6 +127,35 @@ public class Duplicate
     }
     
     return 0;
+  }
+  
+ 
+  private String getString(String returnColumn, String findColumn, String findValue)
+  {
+    String returnValue = null;
+    
+    final String query = String.format("SELECT %s FROM %s WHERE %s = ?", returnColumn, this.tablename, findColumn);
+    try
+    {
+      this.select = this.conn.connection.prepareStatement(query);
+      
+      this.select.setString(1, findValue);
+      
+      ResultSet resultSet =  this.select.executeQuery();
+      
+      if(resultSet.next())
+      {
+        returnValue = resultSet.getString(1);
+      }
+      
+      return returnValue;
+    }
+    catch(SQLException e)
+    {
+      e.printStackTrace();
+    }
+    
+    return returnValue;
   }
   
   private final int insert(final long duid, final String hash, final File file)
