@@ -34,7 +34,7 @@ public class CopyAndHashBenchmark
 
     for (File file : filesList) 
     {
-      String filesize = this.readableFileSize(file.length());
+      String filesize = Utils.readableFileSize(file.length());
       double average = 0.0;
       
       average = this.copyNhashSeparately(file, MAX_TRIES);
@@ -125,20 +125,6 @@ public class CopyAndHashBenchmark
     
   }
   
-  /**
-   * Return human readable file size.
-   * This is a help function.
-   * Source: http://stackoverflow.com/questions/3263892/format-file-size-as-mb-gb-etc
-   * 
-   * @param size
-   * @return
-   */
-  private String readableFileSize(long size) 
-  {
-    if(size <= 0) return "0";
-    final String[] units = new String[] { "B", "KB", "MB", "GB", "TB" };
-    int digitGroups = (int) (Math.log10(size)/Math.log10(1024));
-    return new DecimalFormat("#,##0.#").format(size/Math.pow(1024, digitGroups)) + " " + units[digitGroups];
-  }
+
   
 }

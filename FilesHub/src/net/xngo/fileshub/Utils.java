@@ -9,6 +9,7 @@ import java.io.OutputStream;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.nio.channels.FileChannel;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 import net.jpountz.xxhash.StreamingXXHash32;
@@ -185,5 +186,21 @@ public class Utils
     
     return null;    
   }
+  
+  /**
+   * Return human readable file size.
+   * This is a help function.
+   * Source: http://stackoverflow.com/questions/3263892/format-file-size-as-mb-gb-etc
+   * 
+   * @param size
+   * @return
+   */
+  public static String readableFileSize(long size) 
+  {
+    if(size <= 0) return "0";
+    final String[] units = new String[] { "B", "KB", "MB", "GB", "TB" };
+    int digitGroups = (int) (Math.log10(size)/Math.log10(1024));
+    return new DecimalFormat("#,##0.#").format(size/Math.pow(1024, digitGroups)) + " " + units[digitGroups];
+  }  
   
 }
