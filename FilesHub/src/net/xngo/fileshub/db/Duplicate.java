@@ -19,8 +19,8 @@ public class Duplicate
   
   private Conn conn = Conn.getInstance();
   
-  public PreparedStatement insert = null;
-  public PreparedStatement select = null;
+  private PreparedStatement insert = null;
+  private PreparedStatement select = null;
  
   public int addFile(final long duid, final String hash, final File file)
   {
