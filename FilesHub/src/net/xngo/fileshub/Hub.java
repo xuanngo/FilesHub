@@ -53,5 +53,8 @@ public class Hub
       String dbFilePath = Utils.getCanonicalPath(listOfDuplicateFiles.get(i).dbFile);
       System.out.println(String.format("%s ==> %s", toAddFilePath, dbFilePath));
     }
+    
+    Report report = new Report();
+    report.writeCSV(listOfDuplicateFiles, "./resultCSV.csv");
   }
 }

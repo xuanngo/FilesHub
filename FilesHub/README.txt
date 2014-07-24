@@ -12,3 +12,8 @@ Development
   -Follow semantic versioning described at http://semver.org/
   -Add new library:
       --In build.xml, add JAR filename to '<attribute name="Rsrc-Class-Path" .../>'.
+
+      
+Libraries
+==========
+  -CSV: http://csveed.org/comparison-matrix.html
