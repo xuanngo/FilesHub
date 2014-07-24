@@ -9,6 +9,11 @@ import net.xngo.fileshub.db.Conn;
 import net.xngo.fileshub.db.Duplicate;
 import net.xngo.fileshub.Utils;
 
+/**
+ * Implementions functionalities related to documents(files) in the database.
+ * @author Xuan Ngo
+ *
+ */
 public class Document
 {
   private final String tablename  = "Document";
@@ -17,11 +22,6 @@ public class Document
   
   public PreparedStatement insert = null;
   public PreparedStatement select = null;
-  /*
-  public PreparedStatement delete = null;
-  public PreparedStatement update = null;  
-  */
-  
  
   public int addFile(File file)
   {
