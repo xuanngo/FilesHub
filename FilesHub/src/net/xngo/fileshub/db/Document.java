@@ -35,9 +35,10 @@ public class Document
     PairFile pairFile = new PairFile();
     pairFile.toAddFile = file;
     
-    final String canonical_path = Utils.getCanonicalPath(file); 
+    final String canonical_path = Utils.getCanonicalPath(file);
+    
     if(this.isSameFile(canonical_path))
-    {
+    {// Do nothing.
       pairFile.uid = PairFile.EXACT_SAME_FILE;
       pairFile.dbFile = file;
     }
@@ -57,14 +58,15 @@ public class Document
       { // Same hash but add the record to Duplicate table to keep as history.
         
         // Add duplicate file in database if it doesn't exist.
-        Duplicate dup = new Duplicate();
-        dup.addFile(uid, hash, file);
+        Duplicate duplicate = new Duplicate();
+        duplicate.addFile(uid, hash, file);
         
         // Output duplicate file.
         System.out.println(String.format("[%s], <%s>", canonical_path, this.getCanonicalPath(uid)));
         
         pairFile.uid = PairFile.DUPLICATE_HASH;
         pairFile.dbFile = new File(this.getCanonicalPath(uid));        
+
       }
     }
     
