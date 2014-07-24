@@ -15,8 +15,15 @@ public class Main
 
   public static void main(String[] args)
   {
-    Hub hub = new Hub(args);
-
+    if(args.length > 0)
+    {
+      Hub hub = new Hub(args);
+    }
+    else
+    {
+      System.out.println(String.format("Please supply directory path."));
+    }
+    
   }
  
 }
