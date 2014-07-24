@@ -23,11 +23,11 @@ public class Duplicate
   private PreparedStatement select = null;
  
   /**
-   * Add file if only it doesn't exist.
+   * Add file if it doesn't exist.
    * @param duid Document UID.
    * @param hash
    * @param file
-   * @return
+   * @return Duplicate UID added. Otherwise, 0.
    */
   public int addFile(final int duid, final String hash, final File file)
   {

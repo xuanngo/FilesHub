@@ -24,7 +24,11 @@ public class Document
   private PreparedStatement insert = null;
   private PreparedStatement select = null;
   
-  
+  /**
+   * Add file if it doesn't exist.
+   * @param file
+   * @return Document UID added. Otherwise, 0.
+   */
   public int addFile(File file)
   {
     int generatedKey = 0;
