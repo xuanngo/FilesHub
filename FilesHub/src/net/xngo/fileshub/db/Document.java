@@ -11,7 +11,7 @@ import net.xngo.fileshub.db.Duplicate;
 import net.xngo.fileshub.Utils;
 
 /**
- * Implementions functionalities related to documents(files) in the database.
+ * Implement functionalities related to documents(files) in the database.
  * @author Xuan Ngo
  *
  */
@@ -34,7 +34,7 @@ public class Document
       
       // Check hash.
       String hash = Utils.getHash(file);
-      long uid = this.findHash(hash);
+      int uid = this.findHash(hash);
       
       if(uid==0)
       {// Hash is not found.
@@ -113,7 +113,7 @@ public class Document
     return false;
   }
   
-  private long findHash(final String hash)
+  private int findHash(final String hash)
   {
     return this.findString("hash", hash);
   }
@@ -122,9 +122,9 @@ public class Document
    * 
    * @param columnName
    * @param value
-   * @return uid number. If not found, it will return 0. It is assumed AUTO_INCREMENT start value is 1.
+   * @return uid number. If not found, return 0. It is assumed AUTO_INCREMENT start value is 1.
    */
-  private long findString(String columnName, String value)
+  private int findString(String columnName, String value)
   {
     final String query = String.format("SELECT uid FROM %s WHERE %s = ?", this.tablename, columnName);
     try
@@ -151,7 +151,7 @@ public class Document
     return 0;
   }
   
-  private String getCanonicalPath(long uid)
+  private String getCanonicalPath(int uid)
   {
     String canonical_path = null;
     final String query = String.format("SELECT canonical_path FROM %s WHERE uid = ?", this.tablename);
@@ -159,7 +159,7 @@ public class Document
     {
       this.select = this.conn.connection.prepareStatement(query);
       
-      this.select.setLong(1, uid);
+      this.select.setInt(1, uid);
       
       ResultSet resultSet =  this.select.executeQuery();
       

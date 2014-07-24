@@ -29,7 +29,7 @@ public class Duplicate
    * @param file
    * @return
    */
-  public int addFile(final long duid, final String hash, final File file)
+  public int addFile(final int duid, final String hash, final File file)
   {
     int generatedKey = 0;
     final String canonical_path = Utils.getCanonicalPath(file);
@@ -114,7 +114,7 @@ public class Duplicate
    * @param value
    * @return uid number. If not found, it will return 0. It is assumed AUTO_INCREMENT start value is 1.
    */
-  private long findString(String columnName, String value)
+  private int findString(String columnName, String value)
   {
     final String query = String.format("SELECT uid FROM %s WHERE %s = ?", this.tablename, columnName);
     try
@@ -170,7 +170,7 @@ public class Duplicate
     return returnValue;
   }
   
-  private final int insert(final long duid, final String hash, final File file)
+  private final int insert(final int duid, final String hash, final File file)
   {
 
     final String query = "INSERT INTO "+this.tablename+  "(duid, canonical_path, filename, hash) VALUES(?, ?, ?, ?)";
@@ -185,7 +185,7 @@ public class Duplicate
       final String canonical_path = Utils.getCanonicalPath(file);
       final String filename = file.getName();
       int i=1; // Order must match with query.
-      this.insert.setLong  (i++, duid);
+      this.insert.setInt   (i++, duid);
       this.insert.setString(i++, canonical_path);
       this.insert.setString(i++, filename);
       this.insert.setString(i++, hash);
