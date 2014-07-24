@@ -39,7 +39,7 @@ public class DocumentTest
   {
     Document doc = new Document();
     
-    File uniqueFile = Data.createUniqueFile();
+    File uniqueFile = Data.createUniqueFile("AddUniqueFile");
     int generalKey = doc.addFile(uniqueFile);
     uniqueFile.delete();
     
@@ -54,7 +54,7 @@ public class DocumentTest
   {
     Document doc = new Document();
     
-    File uniqueFile = Data.createUniqueFile();
+    File uniqueFile = Data.createUniqueFile("AddExactFile");
     doc.addFile(uniqueFile); // Add file 1st time.
     
     int generalKey = doc.addFile(uniqueFile); // Add the exact same file the 2nd time.
@@ -71,14 +71,14 @@ public class DocumentTest
     Document doc = new Document();
     
     // Add unique file.
-    File uniqueFile = Data.createUniqueFile();
+    File uniqueFile = Data.createUniqueFile("AddFileWithSameHash");
     doc.addFile(uniqueFile);
     
     // Copy unique file and then add to database.
     File duplicateFile = null;
     try
     {
-      duplicateFile = File.createTempFile("duplicate_same_hash_", null);
+      duplicateFile = File.createTempFile("AddFileWithSameHash_duplicate_hash_", null);
       FileUtils.copyFile(uniqueFile, duplicateFile);
     }
     catch(IOException e)
@@ -106,14 +106,14 @@ public class DocumentTest
     Document doc = new Document();
     
     // Add unique file.
-    File uniqueFile = Data.createUniqueFile();
+    File uniqueFile = Data.createUniqueFile("AddFileWithSameHashCheckDuplicate");
     int expected_duid = doc.addFile(uniqueFile);
     
     // Copy unique file and then add to database.
     File duplicateFile = null;
     try
     {
-      duplicateFile = File.createTempFile("duplicate_same_hash_", null);
+      duplicateFile = File.createTempFile("AddFileWithSameHashCheckDuplicate_duplicate_hash_", null);
       FileUtils.copyFile(uniqueFile, duplicateFile);
     }
     catch(IOException e)
