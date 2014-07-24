@@ -1,6 +1,7 @@
 package net.xngo.fileshub.db;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -23,6 +24,7 @@ public class Document
   private PreparedStatement insert = null;
   private PreparedStatement select = null;
   
+  
   public int addFile(File file)
   {
     int generatedKey = 0;
@@ -39,8 +41,9 @@ public class Document
         generatedKey = this.insert(file, hash);
       }
       else
-      {
-        // Same hash but add the record to Duplicate table to keep as history.
+      { // Same hash but add the record to Duplicate table to keep as history.
+        
+        // Add duplicate file in database if it doesn't exist.
         Duplicate dup = new Duplicate();
         dup.addFile(uid, hash, file);
         
