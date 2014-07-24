@@ -17,14 +17,14 @@ public class Duplicate
   public PreparedStatement insert = null;
   public PreparedStatement select = null;
  
-  public int addFile(final long duid, File file)
+  public int addFile(final long duid, final String hash, final File file)
   {
     int generatedKey = 0;
     final String canonical_path = Utils.getCanonicalPath(file);
     
     if(!this.isSameFile(canonical_path))
     {// File was never processed before.
-      generatedKey = this.insert(duid, file);
+      generatedKey = this.insert(duid, hash, file);
     }
     
     return generatedKey;
@@ -120,10 +120,10 @@ public class Duplicate
     return 0;
   }
   
-  private final int insert(final long duid, final File file)
+  private final int insert(final long duid, final String hash, final File file)
   {
 
-    final String query = "INSERT INTO "+this.tablename+  "(duid, canonical_path, filename) VALUES(?, ?, ?)";
+    final String query = "INSERT INTO "+this.tablename+  "(duid, canonical_path, filename, hash) VALUES(?, ?, ?, ?)";
     
     int generatedKey = 0;
     try
@@ -134,10 +134,11 @@ public class Duplicate
       // Set the data.
       final String canonical_path = Utils.getCanonicalPath(file);
       final String filename = file.getName();
-      int i=1;
+      int i=1; // Order must match with query.
       this.insert.setLong  (i++, duid);
       this.insert.setString(i++, canonical_path);
       this.insert.setString(i++, filename);
+      this.insert.setString(i++, hash);
 
       
       // Insert row.
@@ -177,7 +178,8 @@ public class Duplicate
                 + "uid            INTEGER PRIMARY KEY AUTOINCREMENT, "
                 + "duid           INTEGER NOT NULL, "       // Document UID
                 + "canonical_path TEXT NOT NULL, "
-                + "filename       TEXT NOT NULL"
+                + "filename       TEXT NOT NULL, "
+                + "hash           TEXT "
                 + ")";
   }
   

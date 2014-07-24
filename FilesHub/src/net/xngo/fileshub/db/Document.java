@@ -42,8 +42,10 @@ public class Document
       {
         // Same hash but add the record to Duplicate table to keep as history.
         Duplicate dup = new Duplicate();
-        dup.addFile(uid, file);
-        System.out.println(String.format("YOU CAN DELETE [%s]", canonical_path));
+        dup.addFile(uid, hash, file);
+        
+        // Output duplicate file.
+        System.out.println(String.format("[%s], <%s>", canonical_path, this.getCanonicalPath(uid)));
       }
       
       
@@ -144,6 +146,33 @@ public class Document
     }
     
     return 0;
+  }
+  
+  private String getCanonicalPath(long uid)
+  {
+    String canonical_path = null;
+    final String query = String.format("SELECT canonical_path FROM %s WHERE uid = ?", this.tablename);
+    try
+    {
+      this.select = this.conn.connection.prepareStatement(query);
+      
+      this.select.setLong(1, uid);
+      
+      ResultSet resultSet =  this.select.executeQuery();
+      
+      if(resultSet.next())
+      {
+        canonical_path = resultSet.getString(1);
+      }
+      
+      return canonical_path;
+    }
+    catch(SQLException e)
+    {
+      e.printStackTrace();
+    }
+    
+    return canonical_path;
   }
   
   private final int insert(final File file, final String hash)
