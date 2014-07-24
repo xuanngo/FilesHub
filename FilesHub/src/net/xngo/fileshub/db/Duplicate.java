@@ -48,6 +48,11 @@ public class Duplicate
     this.conn.executeUpdate(query);    
   }
   
+  /**
+   * @deprecated This is only used by unit test. Remove this if used in application.
+   * @param canonicalPath
+   * @return Document UID.
+   */
   public int getDuidByCanonicalPath(String canonicalPath)
   {
     return Integer.parseInt(this.getString("duid", "canonical_path", canonicalPath));
