@@ -8,6 +8,11 @@ import java.sql.SQLException;
 import net.xngo.fileshub.db.Conn;
 import net.xngo.fileshub.Utils;
 
+/**
+ * Implement functionalities related to duplicate documents(files) in database.
+ * @author Xuan Ngo
+ *
+ */
 public class Duplicate
 {
   private final String tablename  = "Duplicate";
