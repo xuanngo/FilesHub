@@ -11,7 +11,7 @@
 	      <attribute name="Main-Class" value="org.eclipse.jdt.internal.jarinjarloader.JarRsrcLoader"/>
         <attribute name="Rsrc-Main-Class" value="net.xngo.fileshub.Main"/>
         <attribute name="Class-Path" value="."/>
-        <attribute name="Rsrc-Class-Path" value="./ lz4-1.2.0.jar sqlite-jdbc-3.7.2.jar commons-io-2.4.jar"/>
+        <attribute name="Rsrc-Class-Path" value="./ lz4-1.2.0.jar sqlite-jdbc-3.7.2.jar commons-io-2.4.jar super-csv-2.2.0.jar"/>
 	    </manifest>
 	  	
 	  	<!-- Add Binary -->
