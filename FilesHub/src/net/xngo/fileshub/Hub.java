@@ -1,6 +1,7 @@
 package net.xngo.fileshub;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Collection;
 
 import org.apache.commons.io.FileUtils;
@@ -8,6 +9,7 @@ import org.apache.commons.io.filefilter.TrueFileFilter;
 
 import net.xngo.fileshub.db.Database;
 import net.xngo.fileshub.db.Document;
+import net.xngo.fileshub.db.PairFile;
 
 /**
  * 
@@ -27,12 +29,27 @@ public class Hub
   
   public void addDirectory(File directory)
   {
-    Collection<File> filesList = FileUtils.listFiles(directory, TrueFileFilter.INSTANCE, TrueFileFilter.INSTANCE);
+    ArrayList<PairFile> listOfDuplicateFiles = new ArrayList<PairFile>();
     
+    Collection<File> filesList = FileUtils.listFiles(directory, TrueFileFilter.INSTANCE, TrueFileFilter.INSTANCE);
     Document doc = new Document();
     for (File file : filesList) 
     {
-      doc.addFile(file);
-    }    
+      PairFile pairFile = doc.addFile(file);
+      if(pairFile.uid==PairFile.DUPLICATE_HASH)
+      {
+        listOfDuplicateFiles.add(pairFile);
+      }
+    }
+    
+    System.out.println();
+    System.out.println(String.format("%s duplicates files:", listOfDuplicateFiles.size()));
+    System.out.println("======================");
+    for(int i=0; i<listOfDuplicateFiles.size(); i++)
+    {
+      String toAddFilePath = Utils.getCanonicalPath(listOfDuplicateFiles.get(i).toAddFile);
+      String dbFilePath = Utils.getCanonicalPath(listOfDuplicateFiles.get(i).dbFile);
+      System.out.println(String.format("%s ==> %s", toAddFilePath, dbFilePath));
+    }
   }
 }

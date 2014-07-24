@@ -40,7 +40,7 @@ public class DocumentTest
     Document doc = new Document();
     
     File uniqueFile = Data.createUniqueFile("AddUniqueFile");
-    int generalKey = doc.addFile(uniqueFile);
+    int generalKey = doc.addFile(uniqueFile).uid;
     uniqueFile.delete();
     
     if(generalKey!=0)
@@ -57,7 +57,7 @@ public class DocumentTest
     File uniqueFile = Data.createUniqueFile("AddExactFile");
     doc.addFile(uniqueFile); // Add file 1st time.
     
-    int generalKey = doc.addFile(uniqueFile); // Add the exact same file the 2nd time.
+    int generalKey = doc.addFile(uniqueFile).uid; // Add the exact same file the 2nd time.
     uniqueFile.delete();
     if(generalKey==0)
       assertTrue(true);
@@ -86,7 +86,7 @@ public class DocumentTest
       e.printStackTrace();
     }
     
-    int generalKey = doc.addFile(duplicateFile); // Add duplicate file.
+    int generalKey = doc.addFile(duplicateFile).uid; // Add duplicate file.
     
     // Clean up.
     uniqueFile.delete();
@@ -107,7 +107,7 @@ public class DocumentTest
     
     // Add unique file.
     File uniqueFile = Data.createUniqueFile("AddFileWithSameHashCheckDuplicate");
-    int expected_duid = doc.addFile(uniqueFile);
+    int expected_duid = doc.addFile(uniqueFile).uid;
     
     // Copy unique file and then add to database.
     File duplicateFile = null;

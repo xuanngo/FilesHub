@@ -8,6 +8,7 @@ import java.sql.SQLException;
 
 import net.xngo.fileshub.db.Conn;
 import net.xngo.fileshub.db.Duplicate;
+import net.xngo.fileshub.db.PairFile;
 import net.xngo.fileshub.Utils;
 
 /**
@@ -27,13 +28,20 @@ public class Document
   /**
    * Add file if it doesn't exist.
    * @param file
-   * @return Document UID added. Otherwise, 0.
+   * @return Document UID. Otherwise, -1 = EXACT_SAME_FILE,  0 = DUPLICATE_HASH.
    */
-  public int addFile(File file)
+  public PairFile addFile(File file)
   {
-    int generatedKey = 0;
+    PairFile pairFile = new PairFile();
+    pairFile.toAddFile = file;
+    
     final String canonical_path = Utils.getCanonicalPath(file); 
-    if(!this.isSameFile(canonical_path))
+    if(this.isSameFile(canonical_path))
+    {
+      pairFile.uid = PairFile.EXACT_SAME_FILE;
+      pairFile.dbFile = file;
+    }
+    else
     { // Not the exact same file.
       
       // Check hash.
@@ -42,7 +50,8 @@ public class Document
       
       if(uid==0)
       {// Hash is not found.
-        generatedKey = this.insert(file, hash);
+        pairFile.uid = this.insert(file, hash); // Return generatedKeys
+        pairFile.dbFile = null;
       }
       else
       { // Same hash but add the record to Duplicate table to keep as history.
@@ -53,12 +62,13 @@ public class Document
         
         // Output duplicate file.
         System.out.println(String.format("[%s], <%s>", canonical_path, this.getCanonicalPath(uid)));
+        
+        pairFile.uid = PairFile.DUPLICATE_HASH;
+        pairFile.dbFile = new File(this.getCanonicalPath(uid));        
       }
-      
-      
     }
     
-    return generatedKey;
+    return pairFile;
   }
   
   public void createTable()
