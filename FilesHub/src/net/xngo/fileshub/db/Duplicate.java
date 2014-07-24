@@ -55,6 +55,11 @@ public class Duplicate
     this.conn.executeUpdate(query);    
   }
   
+  public boolean isSameFile(String canonicalPath)
+  {
+    return this.isStringExists("canonical_path", canonicalPath);
+  }  
+  
   /**
    * @deprecated This is only used by unit test. Remove this if used in application.
    * @param canonicalPath
@@ -71,10 +76,7 @@ public class Duplicate
    ****************************************************************************/
   
   
-  private boolean isSameFile(String canonicalPath)
-  {
-    return this.isStringExists("canonical_path", canonicalPath);
-  }
+
   
   private boolean isStringExists(String columnName, String value)
   {
