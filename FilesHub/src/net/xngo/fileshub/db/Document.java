@@ -61,9 +61,6 @@ public class Document
         Duplicate duplicate = new Duplicate();
         duplicate.addFile(uid, hash, file);
         
-        // Output duplicate file.
-        System.out.println(String.format("[%s], <%s>", canonical_path, this.getCanonicalPath(uid)));
-        
         pairFile.uid = PairFile.DUPLICATE_HASH;
         pairFile.dbFile = new File(this.getCanonicalPath(uid));        
 
