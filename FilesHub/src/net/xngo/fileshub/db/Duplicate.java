@@ -22,6 +22,13 @@ public class Duplicate
   private PreparedStatement insert = null;
   private PreparedStatement select = null;
  
+  /**
+   * Add file if only it doesn't exist.
+   * @param duid Document UID.
+   * @param hash
+   * @param file
+   * @return
+   */
   public int addFile(final long duid, final String hash, final File file)
   {
     int generatedKey = 0;
