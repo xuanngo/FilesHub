@@ -2,18 +2,12 @@ package net.xngo.fileshub;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Set;
-
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.filefilter.TrueFileFilter;
-
-
 
 import net.xngo.fileshub.db.Database;
 import net.xngo.fileshub.db.Document;
 import net.xngo.fileshub.db.PairFile;
-import net.xngo.fileshub.cmd.Cmd;;
+
 
 /**
  * 

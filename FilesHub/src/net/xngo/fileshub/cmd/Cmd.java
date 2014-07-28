@@ -1,58 +1,46 @@
 package net.xngo.fileshub.cmd;
 
-import java.util.Collection;
-import java.util.Set;
-import java.util.HashSet;
-import java.io.File;
-import java.io.IOException;
 
-import net.xngo.fileshub.Utils;
 
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.filefilter.TrueFileFilter;
 
-import com.beust.jcommander.Parameter;
+import net.xngo.fileshub.Hub;
+import net.xngo.fileshub.cmd.Options;
+
+
+import com.beust.jcommander.JCommander;
+import com.beust.jcommander.ParameterException;
 
 
 public class Cmd
 {
-  @Parameter(names = {"-a", "--add"}, description = "Add list of files or directories.", required = true, variableArity = true)
-  private Set<File> paths;
-  
-  
-  public final Set<File> getAllUniqueFiles()
+
+  public Cmd(String[] args)
   {
-    Set<File> listOfAllUniqueFiles = new HashSet<File>();
     
-    for(File path: paths)
+    Options options = new Options();
+    JCommander jc = new JCommander(options);
+    jc.setProgramName("FilesHub");
+    
+    Hub hub = new Hub();
+    try
     {
-      if(path.exists())
+      jc.parse(args);
+      
+      if(!options.paths.isEmpty())
       {
-        try
-        {
-          File canonicalPath = path.getCanonicalFile(); // Ensure that will be no duplicates.
-          if(canonicalPath.isFile())
-          {
-            listOfAllUniqueFiles.add(canonicalPath);
-          }
-          else
-          {// It is a directory.
-            Collection<File> filesList = FileUtils.listFiles(canonicalPath, TrueFileFilter.INSTANCE, TrueFileFilter.INSTANCE);
-            listOfAllUniqueFiles.addAll(filesList);
-          }
-        }
-        catch(IOException e)
-        {
-          e.printStackTrace();
-        }
-        
+        hub.addFiles(options.getAllUniqueFiles());
       }
-      else
+      else if(options.help)
       {
-        System.out.println(String.format("[Warning] -> [%s] doesn't exist.", Utils.getCanonicalPath(path)));
+        jc.usage();
       }
+     
     }
-    
-    return listOfAllUniqueFiles;
+    catch(ParameterException e)
+    {
+      System.out.println(e.getMessage());
+      System.out.println("======================");
+      jc.usage();
+    }    
   }
 }
