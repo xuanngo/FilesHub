@@ -42,6 +42,7 @@ public class Hub
     System.out.println();
     System.out.println(String.format("%s duplicates files [%s]:", listOfDuplicateFiles.size(), Utils.readableFileSize(totalSize)));
     System.out.println("==============================");
+    System.out.println("To delete ==> From database");
     for(int i=0; i<listOfDuplicateFiles.size(); i++)
     {
       String toAddFilePath = Utils.getCanonicalPath(listOfDuplicateFiles.get(i).toAddFile);
@@ -51,5 +52,6 @@ public class Hub
     
     Report report = new Report();
     report.writeCSV(listOfDuplicateFiles, "./resultCSV.csv");
+    report.write(listOfDuplicateFiles);
   }
 }

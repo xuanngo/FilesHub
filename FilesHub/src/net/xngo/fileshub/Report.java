@@ -14,6 +14,10 @@ import org.supercsv.cellprocessor.constraint.NotNull;
 
 import net.xngo.fileshub.db.PairFile;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+
 public class Report
 {
   public void writeCSV(ArrayList<PairFile> listOfDuplicates, String csvFilePath)
@@ -25,7 +29,7 @@ public class Report
               CsvPreference.STANDARD_PREFERENCE);
       
       final CellProcessor[] processors = this.getProcessors();
-      final String[] header = new String[] { "To Delete", "Existing" };
+      final String[] header = new String[] { "To Delete", "From Database" };
       
       // write the header
       listWriter.writeHeader(header);
@@ -58,6 +62,34 @@ public class Report
                                                             };
     
     return processors;
+  }
+  
+  
+  public void write(ArrayList<PairFile> listOfDuplicates)
+  {
+
+    try
+    {
+      FileWriter toDeleteFile = new FileWriter("result_to_delete.txt");
+      FileWriter fromDatabaseFile = new FileWriter("result_from_database.txt");
+      BufferedWriter toDeleteFileBuffer = new BufferedWriter(toDeleteFile);
+      BufferedWriter fromDatabaseFileBuffer = new BufferedWriter(fromDatabaseFile);
+      
+      for(int i=0; i<listOfDuplicates.size(); i++)
+      {
+        toDeleteFileBuffer.write(Utils.getCanonicalPath(listOfDuplicates.get(i).toAddFile)+"\n");
+        fromDatabaseFileBuffer.write(Utils.getCanonicalPath(listOfDuplicates.get(i).dbFile)+"\n");
+      } 
+      
+      toDeleteFileBuffer.close();
+      fromDatabaseFileBuffer.close();
+    }
+    catch(IOException e)
+    {
+      e.printStackTrace();
+    }     
+    
+ 
   }
 
 }

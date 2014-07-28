@@ -1,8 +1,5 @@
 package net.xngo.fileshub.cmd;
 
-
-
-
 import net.xngo.fileshub.Hub;
 import net.xngo.fileshub.cmd.Options;
 

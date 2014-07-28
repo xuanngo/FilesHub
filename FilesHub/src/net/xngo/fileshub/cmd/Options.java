@@ -16,7 +16,7 @@ import com.beust.jcommander.Parameter;
 public class Options
 {
 
-  @Parameter(names = {"-h", "--help"}, description = "Show help.")
+  @Parameter(names = {"-h", "--help"}, description = "Show help.", help = true)
   public boolean help; 
   
   @Parameter(names = {"-a", "--add"}, description = "Add list of files or directories.", variableArity = true)
