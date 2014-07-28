@@ -51,7 +51,7 @@ public class Hub
     }
     
     Report report = new Report();
-    report.writeCSV(listOfDuplicateFiles, "./resultCSV.csv");
+    report.writeCSV(listOfDuplicateFiles, "./results.csv");
     report.write(listOfDuplicateFiles);
   }
 }
