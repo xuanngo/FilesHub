@@ -38,7 +38,15 @@
 	
 	<target name="delete_files">
 		<delete file="${latest.release.directory}/fileshub.db"/>
+		
+		<delete file="./results.csv"/>
+		<delete file="./result_from_database.txt"/>
+		<delete file="./result_to_delete.txt"/>
+		
+		<delete file="./test/results.csv"/>
 		<delete file="./test/fileshub.db"/>
+    <delete file="./test/result_from_database.txt"/>
+    <delete file="./test/result_to_delete.txt"/>		
 		<delete dir="./test/test-output"/>
 	</target>
 	
