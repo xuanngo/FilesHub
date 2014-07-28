@@ -32,11 +32,11 @@ public class Utils
     String path="";
     try
     {
-      path = file.getCanonicalPath(); // Canonical path gives the file path in full and expanded.
+      path = file.getCanonicalPath(); // Get the canonical path, the file path in full and expanded.
     }
     catch(IOException e)
     {
-      System.err.println("ERROR: "+file.getName()+": "+e.getMessage()+": Wrong file path!");
+      e.printStackTrace();
     }
     
     return path;
