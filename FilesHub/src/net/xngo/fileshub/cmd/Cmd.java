@@ -26,21 +26,34 @@ public class Cmd
     {
       jc.parse(args);
       
-      if(!options.paths.isEmpty())
+      if(options.paths!=null)
       {
         hub.addFiles(options.getAllUniqueFiles());
       }
       else if(options.help)
       {
+        System.out.println();
+        jc.usage();
+      }
+      else
+      {
+        System.out.println();
         jc.usage();
       }
      
     }
     catch(ParameterException e)
     {
+      System.out.println();
+      System.out.println("ERROR:");
+      System.out.println("======");
       System.out.println(e.getMessage());
-      System.out.println("======================");
+      System.out.println("====================================");
+      System.out.println();
       jc.usage();
-    }    
+    }
+    
   }
+  
+  
 }

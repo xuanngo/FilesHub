@@ -16,10 +16,10 @@ import com.beust.jcommander.Parameter;
 public class Options
 {
 
-  @Parameter(names = {}, description = "Show help.")
+  @Parameter(names = {"-h", "--help"}, description = "Show help.")
   public boolean help; 
   
-  @Parameter(names = {"-a", "--add"}, description = "Add list of files or directories.", required = true, variableArity = true)
+  @Parameter(names = {"-a", "--add"}, description = "Add list of files or directories.", variableArity = true)
   public Set<File> paths;
   
   
