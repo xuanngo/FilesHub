@@ -3,13 +3,17 @@ package net.xngo.fileshub;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Set;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.TrueFileFilter;
 
+
+
 import net.xngo.fileshub.db.Database;
 import net.xngo.fileshub.db.Document;
 import net.xngo.fileshub.db.PairFile;
+import net.xngo.fileshub.cmd.Cmd;;
 
 /**
  * 
@@ -20,21 +24,18 @@ public class Hub
 {
   private Database database = new Database();
   
-  public Hub(String[] args)
+  public Hub()
   {
     database.create();
-    
-    this.addDirectory(new File(args[0]));
   }
   
-  public void addDirectory(File directory)
+  public void addFiles(Set<File> listOfFiles)
   {
     ArrayList<PairFile> listOfDuplicateFiles = new ArrayList<PairFile>();
     
-    Collection<File> filesList = FileUtils.listFiles(directory, TrueFileFilter.INSTANCE, TrueFileFilter.INSTANCE);
     Document doc = new Document();
     long totalSize = 0;
-    for (File file : filesList) 
+    for (File file : listOfFiles) 
     {
       PairFile pairFile = doc.addFile(file);
       if(pairFile.uid==PairFile.DUPLICATE_HASH)
