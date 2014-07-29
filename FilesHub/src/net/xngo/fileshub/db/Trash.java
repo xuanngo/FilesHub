@@ -222,7 +222,7 @@ public class Trash
   {
     doc.sanityCheck();
     
-    final String query = "INSERT INTO "+this.tablename+  "(duid, canonical_path, filename, last_modified, hash) VALUES(?, ?, ?, ?, ?)";
+    final String query = "INSERT INTO "+this.tablename+  "(duid, canonical_path, filename, last_modified, hash, comment) VALUES(?, ?, ?, ?, ?, ?)";
     
     int generatedKey = 0;
     try
@@ -237,6 +237,7 @@ public class Trash
       this.insert.setString(i++, doc.filename);
       this.insert.setLong  (i++, doc.last_modified);
       this.insert.setString(i++, doc.hash);
+      this.insert.setString(i++, doc.comment);
 
       
       // Insert row.

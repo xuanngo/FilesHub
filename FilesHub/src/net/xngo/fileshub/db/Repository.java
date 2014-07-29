@@ -324,7 +324,7 @@ public class Repository
   private final int insert(final File file, final String hash)
   {
 
-    final String query = "INSERT INTO "+this.tablename+  "(canonical_path, filename, last_modified, hash) VALUES(?, ?, ?, ?)";
+    final String query = "INSERT INTO "+this.tablename+  "(canonical_path, filename, last_modified, hash, comment) VALUES(?, ?, ?, ?, ?)";
     
     int generatedKey = 0;
     try
@@ -335,11 +335,13 @@ public class Repository
       // Set the data.
       final String canonical_path = Utils.getCanonicalPath(file);
       final String filename = file.getName();
+      final String comment = ""; // TODO: for later.
       int i=1;
       this.insert.setString(i++, canonical_path);
       this.insert.setString(i++, filename);
       this.insert.setLong(i++, file.lastModified());
       this.insert.setString(i++, hash);
+      this.insert.setString(i++, comment);
       
       // Insert row.
       this.insert.executeUpdate();
