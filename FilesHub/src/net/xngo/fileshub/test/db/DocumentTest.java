@@ -2,7 +2,7 @@ package net.xngo.fileshub.test.db;
 
 // FilesHub classes.
 import net.xngo.fileshub.db.Repository;
-import net.xngo.fileshub.db.Duplicate;
+import net.xngo.fileshub.db.Trash;
 import net.xngo.fileshub.db.Database;
 import net.xngo.fileshub.db.PairFile;
 import net.xngo.fileshub.Utils;
@@ -125,7 +125,7 @@ public class DocumentTest
     }
     
     doc.addFile(duplicateFile); // Add duplicate file.
-    Duplicate dup = new Duplicate();
+    Trash dup = new Trash();
     int actual_duid = dup.getDuidByCanonicalPath(Utils.getCanonicalPath(duplicateFile));
     
     // Clean up.

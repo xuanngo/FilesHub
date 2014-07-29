@@ -13,9 +13,9 @@ import net.xngo.fileshub.Utils;
  * @author Xuan Ngo
  *
  */
-public class Duplicate
+public class Trash
 {
-  private final String tablename  = "Duplicate";
+  private final String tablename  = "Trash";
   
   private Conn conn = Conn.getInstance();
   

@@ -6,7 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import net.xngo.fileshub.db.Conn;
-import net.xngo.fileshub.db.Duplicate;
+import net.xngo.fileshub.db.Trash;
 import net.xngo.fileshub.db.PairFile;
 import net.xngo.fileshub.Utils;
 
@@ -55,8 +55,8 @@ public class Repository
       { // Same hash but add the record to Duplicate table to keep as history.
         
         // Add duplicate file in database if it doesn't exist.
-        Duplicate duplicate = new Duplicate();
-        duplicate.addFile(uid, hash, file);
+        Trash trash = new Trash();
+        trash.addFile(uid, hash, file);
         
         pairFile.uid = PairFile.DUPLICATE_HASH;
         pairFile.dbFile = new File(this.getCanonicalPath(uid));        

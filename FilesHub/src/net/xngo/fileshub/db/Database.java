@@ -4,7 +4,7 @@ import java.io.File;
 
 import net.xngo.fileshub.db.Conn;
 import net.xngo.fileshub.db.Repository;
-import net.xngo.fileshub.db.Duplicate;
+import net.xngo.fileshub.db.Trash;
 
 /**
  * Implement database structure.
@@ -28,7 +28,7 @@ public class Database
     Repository repository = new Repository();
     repository.createTable();
     
-    Duplicate dup = new Duplicate();
-    dup.createTable();
+    Trash trash = new Trash();
+    trash.createTable();
   }
 }
