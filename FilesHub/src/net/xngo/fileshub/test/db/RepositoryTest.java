@@ -27,7 +27,7 @@ import java.io.IOException;
 
 import org.apache.commons.io.FileUtils;
 
-public class DocumentTest
+public class RepositoryTest
 {
   @BeforeClass
   public void DatabaseCreation()
