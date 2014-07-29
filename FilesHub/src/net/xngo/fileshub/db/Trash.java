@@ -233,7 +233,8 @@ public class Trash
                 + "canonical_path TEXT NOT NULL, "
                 + "filename       TEXT NOT NULL, "
                 + "last_modified  INTEGER NOT NULL, " // Optimization: Rerun same directories but files have changed since last run.
-                + "hash           TEXT "
+                + "hash           TEXT, "
+                + "comment        TEXT "
                 + ")";
   }
   
