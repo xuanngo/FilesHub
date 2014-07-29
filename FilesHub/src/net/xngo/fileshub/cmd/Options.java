@@ -16,18 +16,17 @@ import com.beust.jcommander.Parameter;
 public class Options
 {
 
-  @Parameter(names = {"-h", "--help"}, description = "Show help.", help = true)
-  public boolean help; 
-  
   @Parameter(names = {"-a", "--add"}, description = "Add list of files or directories.", variableArity = true)
-  public Set<File> paths;
+  public Set<File> addPaths;
   
+  @Parameter(names = {"-v", "--validate"}, description = "Validate database.")
+  public boolean validate;  
   
   public final Set<File> getAllUniqueFiles()
   {
     Set<File> listOfAllUniqueFiles = new HashSet<File>();
     
-    for(File path: paths)
+    for(File path: this.addPaths)
     {
       if(path.exists())
       {

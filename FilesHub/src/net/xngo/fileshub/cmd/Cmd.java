@@ -13,7 +13,7 @@ public class Cmd
 
   public Cmd(String[] args)
   {
-    
+
     Options options = new Options();
     JCommander jc = new JCommander(options);
     jc.setProgramName("FilesHub");
@@ -23,17 +23,12 @@ public class Cmd
     {
       jc.parse(args);
       
-      if(options.paths!=null)
+      if(options.addPaths!=null)
       {
         hub.addFiles(options.getAllUniqueFiles());
       }
-      else if(options.help)
-      {
-        System.out.println();
-        jc.usage();
-      }
       else
-      {
+      { // Anything else, display the help.
         System.out.println();
         jc.usage();
       }
@@ -49,6 +44,9 @@ public class Cmd
       System.out.println();
       jc.usage();
     }
+
+
+    
     
   }
   
