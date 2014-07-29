@@ -35,9 +35,7 @@ public class Document
     PairFile pairFile = new PairFile();
     pairFile.toAddFile = file;
     
-    final String canonical_path = Utils.getCanonicalPath(file);
-    
-    if(this.isSameFile(canonical_path))
+    if(this.isSameFile(file))
     {// Do nothing.
       pairFile.uid = PairFile.EXACT_SAME_FILE;
       pairFile.dbFile = file;
@@ -90,11 +88,42 @@ public class Document
    ****************************************************************************/
   
   
-  private boolean isSameFile(String canonicalPath)
+  private boolean isSameFile(File file)
   {
-    return this.isStringExists("canonical_path", canonicalPath);
+    if(this.getCount(file)>0)
+      return true;
+    else
+      return false;
   }
   
+  private long getCount(final File file)
+  {
+    final String query = String.format("SELECT COUNT(*) FROM %s WHERE %s = ? AND %s = ?", this.tablename, "canonical_path", "last_modified");
+    try
+    {
+      this.select = this.conn.connection.prepareStatement(query);
+      
+      int i=1;
+      this.select.setString(i++, Utils.getCanonicalPath(file));
+      this.select.setLong(i++, file.lastModified());
+      
+      ResultSet resultSet =  this.select.executeQuery();
+      
+      if(resultSet.next())
+      {
+        return resultSet.getLong(1);
+      }
+      else
+        return 0;
+
+    }
+    catch(SQLException e)
+    {
+      e.printStackTrace();
+    }
+    
+    return 0;
+  }
   private boolean isStringExists(String columnName, String value)
   {
     final String query = String.format("SELECT COUNT(*) FROM %s WHERE %s = ?", this.tablename, columnName);
@@ -194,7 +223,7 @@ public class Document
   private final int insert(final File file, final String hash)
   {
 
-    final String query = "INSERT INTO "+this.tablename+  "(canonical_path, filename, hash) VALUES(?, ?, ?)";
+    final String query = "INSERT INTO "+this.tablename+  "(canonical_path, filename, last_modified, hash) VALUES(?, ?, ?, ?)";
     
     int generatedKey = 0;
     try
@@ -208,6 +237,7 @@ public class Document
       int i=1;
       this.insert.setString(i++, canonical_path);
       this.insert.setString(i++, filename);
+      this.insert.setLong(i++, file.lastModified());
       this.insert.setString(i++, hash);
       
       // Insert row.
@@ -250,6 +280,7 @@ public class Document
                 + "uid            INTEGER PRIMARY KEY AUTOINCREMENT, "
                 + "canonical_path TEXT NOT NULL, "
                 + "filename       TEXT NOT NULL, "
+                + "last_modified  INTEGER NOT NULL, " // Optimization: Rerun same directories but files have changed since last run.                
                 + "hash           TEXT "              
                 + ")";
      

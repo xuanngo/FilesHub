@@ -175,7 +175,7 @@ public class Duplicate
   private final int insert(final int duid, final String hash, final File file)
   {
 
-    final String query = "INSERT INTO "+this.tablename+  "(duid, canonical_path, filename, hash) VALUES(?, ?, ?, ?)";
+    final String query = "INSERT INTO "+this.tablename+  "(duid, canonical_path, filename, last_modified, hash) VALUES(?, ?, ?, ?, ?)";
     
     int generatedKey = 0;
     try
@@ -190,6 +190,7 @@ public class Duplicate
       this.insert.setInt   (i++, duid);
       this.insert.setString(i++, canonical_path);
       this.insert.setString(i++, filename);
+      this.insert.setLong(i++, file.lastModified());
       this.insert.setString(i++, hash);
 
       
@@ -228,9 +229,10 @@ public class Duplicate
   {
     return  "CREATE TABLE "+tablename+" ("
                 + "uid            INTEGER PRIMARY KEY AUTOINCREMENT, "
-                + "duid           INTEGER NOT NULL, "       // Document UID
+                + "duid           INTEGER NOT NULL, " // Document UID
                 + "canonical_path TEXT NOT NULL, "
                 + "filename       TEXT NOT NULL, "
+                + "last_modified  INTEGER NOT NULL, " // Optimization: Rerun same directories but files have changed since last run.
                 + "hash           TEXT "
                 + ")";
   }
