@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.Set;
 
 import net.xngo.fileshub.db.Database;
-import net.xngo.fileshub.db.Document;
+import net.xngo.fileshub.db.Repository;
 import net.xngo.fileshub.db.PairFile;
 
 
@@ -27,11 +27,11 @@ public class Hub
   {
     ArrayList<PairFile> listOfDuplicateFiles = new ArrayList<PairFile>();
     
-    Document doc = new Document();
+    Repository repository = new Repository();
     long totalSize = 0;
     for (File file : listOfFiles) 
     {
-      PairFile pairFile = doc.addFile(file);
+      PairFile pairFile = repository.addFile(file);
       if(pairFile.uid==PairFile.DUPLICATE_HASH)
       {
         listOfDuplicateFiles.add(pairFile);

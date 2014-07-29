@@ -1,7 +1,6 @@
 package net.xngo.fileshub.db;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -16,9 +15,9 @@ import net.xngo.fileshub.Utils;
  * @author Xuan Ngo
  *
  */
-public class Document
+public class Repository
 {
-  private final String tablename  = "Document";
+  private final String tablename  = "Repository";
   
   private Conn conn = Conn.getInstance();
   

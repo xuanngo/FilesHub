@@ -1,7 +1,7 @@
 package net.xngo.fileshub.test.db;
 
 // FilesHub classes.
-import net.xngo.fileshub.db.Document;
+import net.xngo.fileshub.db.Repository;
 import net.xngo.fileshub.db.Duplicate;
 import net.xngo.fileshub.db.Database;
 import net.xngo.fileshub.db.PairFile;
@@ -40,7 +40,7 @@ public class DocumentTest
   @Test(description="Add new unique file.")
   public void AddUniqueFile()
   {
-    Document doc = new Document();
+    Repository doc = new Repository();
     
     File uniqueFile = Data.createUniqueFile("AddUniqueFile");
     int generalKey = doc.addFile(uniqueFile).uid;
@@ -55,7 +55,7 @@ public class DocumentTest
   @Test(description="Add exact file.")
   public void AddExactFile()
   {
-    Document doc = new Document();
+    Repository doc = new Repository();
     
     File uniqueFile = Data.createUniqueFile("AddExactFile");
     doc.addFile(uniqueFile); // Add file 1st time.
@@ -71,7 +71,7 @@ public class DocumentTest
   @Test(description="Add file with existing hash but different filename.")
   public void AddFileWithSameHash()
   {
-    Document doc = new Document();
+    Repository doc = new Repository();
     
     // Add unique file.
     File uniqueFile = Data.createUniqueFile("AddFileWithSameHash");
@@ -106,7 +106,7 @@ public class DocumentTest
   @Test(description="Add file with existing hash but different filename and check Duplicate table.")
   public void AddFileWithSameHashCheckDuplicate()
   {
-    Document doc = new Document();
+    Repository doc = new Repository();
     
     // Add unique file.
     File uniqueFile = Data.createUniqueFile("AddFileWithSameHashCheckDuplicate");
