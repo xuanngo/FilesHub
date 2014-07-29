@@ -25,6 +25,7 @@ public class Repository
   private PreparedStatement insert = null;
   private PreparedStatement select = null;
   private PreparedStatement delete = null;
+  private PreparedStatement update = null;
   
   /**
    * Add file if it doesn't exist.
@@ -36,7 +37,7 @@ public class Repository
     PairFile pairFile = new PairFile();
     pairFile.toAddFile = file;
     
-    Document docFromDb = this.findDocumentByCanonicalPath(file);
+    Document docFromDb = this.findDocumentByCanonicalPath(Utils.getCanonicalPath(file));
     if(docFromDb!=null)
     {// Exact same path.
       
@@ -44,18 +45,18 @@ public class Repository
       if(docFromDb.last_modified != file.lastModified())
       {
         // Move docFromDb to Trash.
-        this.deleteDocument(docFromDb.uid);
-        File trashFile = new File(docFromDb.canonical_path);
-        trashFile.setLastModified(docFromDb.last_modified);
         Trash trash = new Trash();
-        trash.addFile(docFromDb.uid, docFromDb.hash, trashFile);
+        trash.addFile(docFromDb);
         
-        // Add changed file to Repository.
+        // Update changed file to Repository.
         String hash = Utils.getHash(file);
-        this.insert(file, hash);
-        
+        Document newDoc = new Document(file);
+        newDoc.uid = docFromDb.uid;
+        newDoc.hash = hash;
+        this.update(newDoc);
+       
         // Note: It is possible that the file is overwritten with an older version.
-        //        Therefore, file in Repository table is older than Trash table.
+        //        Therefore, files in Repository table can be older than Trash table.
       }
 
       pairFile.uid = PairFile.EXACT_SAME_FILE;
@@ -77,8 +78,11 @@ public class Repository
       { // Same hash but add the record to Duplicate table to keep as history.
         
         // Add duplicate file in database if it doesn't exist.
+        Document trashDoc = new Document(file);
+        trashDoc.uid = uid;
+        trashDoc.hash = hash;
         Trash trash = new Trash();
-        trash.addFile(uid, hash, file);
+        trash.addFile(trashDoc);
         
         pairFile.uid = PairFile.DUPLICATE_HASH;
         pairFile.dbFile = new File(this.getCanonicalPath(uid));        
@@ -102,11 +106,65 @@ public class Repository
     this.conn.executeUpdate(query);    
   }
   
+  /**
+   * @deprecated This is only used by unit test. Remove this if used in application.
+   * @param uid
+   * @return
+   */
+  public Document findDocumentByUid(final int uid)
+  {
+    return this.findDocumentBy("uid", uid+"");
+  } 
+  
   /****************************************************************************
    * 
    *                             PRIVATE FUNCTIONS
    * 
    ****************************************************************************/
+  private Document findDocumentByCanonicalPath(final String canonicalPath)
+  {
+    return this.findDocumentBy("canonical_path", canonicalPath);
+  }
+  
+  private Document findDocumentBy(String column, String value)
+  {
+    Document doc = null;
+    
+    final String query = String.format("SELECT uid, canonical_path, filename, last_modified, hash, comment "
+                                        + " FROM %s "
+                                        + "WHERE %s = ?", this.tablename, column);
+    try
+    {
+      this.select = this.conn.connection.prepareStatement(query);
+      
+      int i=1;
+      this.select.setString(i++, value);
+      
+      ResultSet resultSet =  this.select.executeQuery();
+      if(resultSet.next())
+      {
+        doc = new Document();
+        int j=1;
+        doc.uid             = resultSet.getInt(j++);
+        doc.canonical_path  = resultSet.getString(j++);
+        doc.filename        = resultSet.getString(j++);
+        doc.last_modified   = resultSet.getLong(j++);
+        doc.hash            = resultSet.getString(j++);
+        doc.comment         = resultSet.getString(j++);
+        
+        return doc;
+      }
+      else
+        return doc;
+
+    }
+    catch(SQLException e)
+    {
+      e.printStackTrace();
+    }
+    
+    return doc;
+  }
   
   private int deleteDocument(long uid)
   {
@@ -165,45 +223,7 @@ public class Repository
     return 0;
   }
   
-  private Document findDocumentByCanonicalPath(final File file)
-  {
-    Document doc = null;
-    
-    final String query = String.format("SELECT uid, canonical_path, filename, last_modified, hash, comment "
-                                        + " FROM %s "
-                                        + "WHERE %s = ? AND %s = ?", this.tablename, "canonical_path");
-    try
-    {
-      this.select = this.conn.connection.prepareStatement(query);
-      
-      int i=1;
-      this.select.setString(i++, Utils.getCanonicalPath(file));
-      
-      ResultSet resultSet =  this.select.executeQuery();
-      if(resultSet.next())
-      {
-        doc = new Document();
-        int j=1;
-        doc.uid             = resultSet.getInt(j++);
-        doc.canonical_path  = resultSet.getString(j++);
-        doc.filename        = resultSet.getString(j++);
-        doc.last_modified   = resultSet.getLong(j++);
-        doc.hash            = resultSet.getString(j++);
-        doc.comment         = resultSet.getString(j++);
-        
-        return doc;
-      }
-      else
-        return doc;
 
-    }
-    catch(SQLException e)
-    {
-      e.printStackTrace();
-    }
-    
-    return doc;
-  }
   
   private boolean isStringExists(String columnName, String value)
   {
@@ -346,7 +366,37 @@ public class Repository
     return generatedKey;
   }
   
-
+  private final int update(Document doc)
+  {
+    doc.sanityCheck();
+    
+    final String query = "UPDATE "+this.tablename+  " SET canonical_path = ?, filename = ?, last_modified = ?, hash = ?, comment = ? WHERE uid = ?";
+    
+    int rowAffected = 0;
+    try
+    {
+      // Prepare the query.
+      this.update = this.conn.connection.prepareStatement(query);
+      
+      // Set the data.
+      int i=1;
+      this.update.setString(i++, doc.canonical_path  );
+      this.update.setString(i++, doc.filename        );
+      this.update.setLong  (i++, doc.last_modified   );
+      this.update.setString(i++, doc.hash            );
+      this.update.setString(i++, doc.comment         );      
+      this.update.setInt   (i++, doc.uid             );
+      
+      // update row.
+      rowAffected = this.update.executeUpdate();
+    }
+    catch(SQLException e)
+    {
+      e.printStackTrace();
+    }
+  
+    return rowAffected;
+  }
   
   /**
    * Don't put too much constraint on the column. Do validations on the application side.

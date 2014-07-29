@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import net.xngo.fileshub.db.Conn;
+import net.xngo.fileshub.struct.Document;
 import net.xngo.fileshub.Utils;
 
 /**
@@ -29,14 +30,13 @@ public class Trash
    * @param file
    * @return Duplicate UID added. Otherwise, 0.
    */
-  public int addFile(final int duid, final String hash, final File file)
+  public int addFile(final Document doc)
   {
     int generatedKey = 0;
-    final String canonical_path = Utils.getCanonicalPath(file);
     
-    if(!this.isSameFile(canonical_path))
+    if(!this.isSameFile(doc.canonical_path))
     {// File was never processed before.
-      generatedKey = this.insert(duid, hash, file);
+      generatedKey = this.insert(doc);
     }
     
     return generatedKey;
@@ -69,6 +69,52 @@ public class Trash
   {
     return Integer.parseInt(this.getString("duid", "canonical_path", canonicalPath));
   }
+  
+  /**
+   * @deprecated This is only used by unit test. Remove this if used in application.
+   * @param canonicalPath
+   * @return
+   */
+  public Document findDocumentByCanonicalPath(final String canonicalPath)
+  {
+    Document doc = null;
+    
+    final String query = String.format("SELECT uid, canonical_path, filename, last_modified, hash, comment "
+                                        + " FROM %s "
+                                        + "WHERE %s = ?", this.tablename, "canonical_path");
+    try
+    {
+      this.select = this.conn.connection.prepareStatement(query);
+      
+      int i=1;
+      this.select.setString(i++, canonicalPath);
+      
+      ResultSet resultSet =  this.select.executeQuery();
+      if(resultSet.next())
+      {
+        doc = new Document();
+        int j=1;
+        doc.uid             = resultSet.getInt(j++);
+        doc.canonical_path  = resultSet.getString(j++);
+        doc.filename        = resultSet.getString(j++);
+        doc.last_modified   = resultSet.getLong(j++);
+        doc.hash            = resultSet.getString(j++);
+        doc.comment         = resultSet.getString(j++);
+        
+        return doc;
+      }
+      else
+        return doc;
+
+    }
+    catch(SQLException e)
+    {
+      e.printStackTrace();
+    }
+    
+    return doc;
+  }
+  
   /****************************************************************************
    * 
    *                             PRIVATE FUNCTIONS
@@ -172,9 +218,10 @@ public class Trash
     return returnValue;
   }
   
-  private final int insert(final int duid, final String hash, final File file)
+  private final int insert(final Document doc)
   {
-
+    doc.sanityCheck();
+    
     final String query = "INSERT INTO "+this.tablename+  "(duid, canonical_path, filename, last_modified, hash) VALUES(?, ?, ?, ?, ?)";
     
     int generatedKey = 0;
@@ -184,14 +231,12 @@ public class Trash
       this.insert = this.conn.connection.prepareStatement(query);
       
       // Set the data.
-      final String canonical_path = Utils.getCanonicalPath(file);
-      final String filename = file.getName();
       int i=1; // Order must match with query.
-      this.insert.setInt   (i++, duid);
-      this.insert.setString(i++, canonical_path);
-      this.insert.setString(i++, filename);
-      this.insert.setLong(i++, file.lastModified());
-      this.insert.setString(i++, hash);
+      this.insert.setInt   (i++, doc.uid);
+      this.insert.setString(i++, doc.canonical_path);
+      this.insert.setString(i++, doc.filename);
+      this.insert.setLong  (i++, doc.last_modified);
+      this.insert.setString(i++, doc.hash);
 
       
       // Insert row.
@@ -208,7 +253,7 @@ public class Trash
     {
       if(e.getMessage().indexOf("not unique")!=-1)
       {
-        System.err.println(String.format("WARNING: [%s] already exists in database!", file.getName()));
+        System.err.println(String.format("WARNING: [%s] already exists in database!", doc.filename));
       }
       else
       {
