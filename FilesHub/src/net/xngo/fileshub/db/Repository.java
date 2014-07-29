@@ -9,6 +9,7 @@ import net.xngo.fileshub.db.Conn;
 import net.xngo.fileshub.db.Trash;
 import net.xngo.fileshub.db.PairFile;
 import net.xngo.fileshub.Utils;
+import net.xngo.fileshub.struct.Document;
 
 /**
  * Implement functionalities related to documents(files) in the database.
@@ -23,6 +24,7 @@ public class Repository
   
   private PreparedStatement insert = null;
   private PreparedStatement select = null;
+  private PreparedStatement delete = null;
   
   /**
    * Add file if it doesn't exist.
@@ -34,8 +36,28 @@ public class Repository
     PairFile pairFile = new PairFile();
     pairFile.toAddFile = file;
     
-    if(this.isSameFile(file))
-    {// Do nothing.
+    Document docFromDb = this.findDocumentByCanonicalPath(file);
+    if(docFromDb!=null)
+    {// Exact same path.
+      
+      // File has changed. 
+      if(docFromDb.last_modified != file.lastModified())
+      {
+        // Move docFromDb to Trash.
+        this.deleteDocument(docFromDb.uid);
+        File trashFile = new File(docFromDb.canonical_path);
+        trashFile.setLastModified(docFromDb.last_modified);
+        Trash trash = new Trash();
+        trash.addFile(docFromDb.uid, docFromDb.hash, trashFile);
+        
+        // Add changed file to Repository.
+        String hash = Utils.getHash(file);
+        this.insert(file, hash);
+        
+        // Note: It is possible that the file is overwritten with an older version.
+        //        Therefore, file in Repository table is older than Trash table.
+      }
+
       pairFile.uid = PairFile.EXACT_SAME_FILE;
       pairFile.dbFile = file;
     }
@@ -86,6 +108,25 @@ public class Repository
    * 
    ****************************************************************************/
   
+  private int deleteDocument(long uid)
+  {
+    final String query = "DELETE FROM "+this.tablename+" WHERE uid=?";
+    int rowsAffected = 0;
+    try
+    {
+      this.delete = this.conn.connection.prepareStatement(query);
+      
+      this.delete.setLong(1, uid);
+      
+      rowsAffected = this.delete.executeUpdate();
+    }
+    catch(SQLException e)
+    {
+      e.printStackTrace();
+    }
+    return rowsAffected;    
+  }
+
   
   private boolean isSameFile(File file)
   {
@@ -123,6 +164,47 @@ public class Repository
     
     return 0;
   }
+  
+  private Document findDocumentByCanonicalPath(final File file)
+  {
+    Document doc = null;
+    
+    final String query = String.format("SELECT uid, canonical_path, filename, last_modified, hash, comment "
+                                        + " FROM %s "
+                                        + "WHERE %s = ? AND %s = ?", this.tablename, "canonical_path");
+    try
+    {
+      this.select = this.conn.connection.prepareStatement(query);
+      
+      int i=1;
+      this.select.setString(i++, Utils.getCanonicalPath(file));
+      
+      ResultSet resultSet =  this.select.executeQuery();
+      if(resultSet.next())
+      {
+        doc = new Document();
+        int j=1;
+        doc.uid             = resultSet.getInt(j++);
+        doc.canonical_path  = resultSet.getString(j++);
+        doc.filename        = resultSet.getString(j++);
+        doc.last_modified   = resultSet.getLong(j++);
+        doc.hash            = resultSet.getString(j++);
+        doc.comment         = resultSet.getString(j++);
+        
+        return doc;
+      }
+      else
+        return doc;
+
+    }
+    catch(SQLException e)
+    {
+      e.printStackTrace();
+    }
+    
+    return doc;
+  }
+  
   private boolean isStringExists(String columnName, String value)
   {
     final String query = String.format("SELECT COUNT(*) FROM %s WHERE %s = ?", this.tablename, columnName);

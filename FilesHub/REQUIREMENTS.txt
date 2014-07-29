@@ -1,0 +1,8 @@
+Use cases:
+==========
+FilesHub need to handle the following cases:
+
+  Case 1: Add new files.
+  Case 2: Add files with different path but have the same hash.
+  Case 3: Add the exact same files but files have changed since last run
+    -Optimization: Add last modified time of files in database so that you don't have to re-hash again. 
