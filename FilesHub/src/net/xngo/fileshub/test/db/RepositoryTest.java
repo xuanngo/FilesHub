@@ -105,20 +105,20 @@ public class RepositoryTest
   }
   
 
-  @Test(description="Add file with existing hash but different filename and check Trash table.")
-  public void AddFileWithSameHashCheckDuplicate()
+  @Test(description="Add file with existing hash but different file path and check Trash table.")
+  public void AddFileWithSameHashCheckTrash()
   {
     Repository repository = new Repository();
     
     // Add unique file.
-    File uniqueFile = Data.createUniqueFile("AddFileWithSameHashCheckDuplicate");
+    File uniqueFile = Data.createUniqueFile("AddFileWithSameHashCheckTrash");
     int expected_duid = repository.addFile(uniqueFile).uid;
     
     // Copy unique file and then add to database.
     File duplicateFile = null;
     try
     {
-      duplicateFile = File.createTempFile("AddFileWithSameHashCheckDuplicate_duplicate_hash_", null);
+      duplicateFile = File.createTempFile("AddFileWithSameHashCheckTrash_duplicate_hash_", null);
       FileUtils.copyFile(uniqueFile, duplicateFile);
     }
     catch(IOException e)

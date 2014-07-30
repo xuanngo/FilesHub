@@ -24,11 +24,11 @@ public class Document
     this.last_modified = file.lastModified();
   }
   
+  /**
+   * Throw RuntimeException if Document data is not consistent.
+   */
   public void sanityCheck()
   {
-    if(this.uid<1)
-      throw new RuntimeException(this.getErrorMsg());
-    
     if(this.hash.isEmpty())
       throw new RuntimeException(this.getErrorMsg());
 
@@ -43,10 +43,28 @@ public class Document
 
   }
   
+  public void checkUid()
+  {
+    String uidErrorMsg = String.format("[uid = %d] // Can't be zero.", this.uid);
+    if(this.uid<1)
+      throw new RuntimeException(uidErrorMsg);
+  }
+  
+  /**
+   * Hash the document if it has not been hashed.
+   */
+  public void hash()
+  {
+    if(hash.isEmpty())
+    {
+      Utils.getHash(new File(this.canonical_path));
+    }
+  }
+
   private final String getErrorMsg()
   {
     return String.format( "\n"
-                        + "uid            = %d // Has to > 0. \n"
+                        + "uid            = %d // Can be zero if document is not created in the database. \n"
                         + "canonical_path = %s // Can't be empty. \n"
                         + "filename       = %s // Can't be empty. \n"
                         + "last_modified  = %d // Has to > 0. \n"

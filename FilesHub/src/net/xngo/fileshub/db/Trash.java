@@ -1,13 +1,11 @@
 package net.xngo.fileshub.db;
 
-import java.io.File;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import net.xngo.fileshub.db.Conn;
 import net.xngo.fileshub.struct.Document;
-import net.xngo.fileshub.Utils;
 
 /**
  * Implement functionalities related to duplicate documents(files) in database.
@@ -156,39 +154,6 @@ public class Trash
   }
   
   
-  /**
-   * 
-   * @param columnName
-   * @param value
-   * @return uid number. If not found, it will return 0. It is assumed AUTO_INCREMENT start value is 1.
-   */
-  private int findString(String columnName, String value)
-  {
-    final String query = String.format("SELECT uid FROM %s WHERE %s = ?", this.tablename, columnName);
-    try
-    {
-      this.select = this.conn.connection.prepareStatement(query);
-      
-      this.select.setString(1, value);
-      
-      ResultSet resultSet =  this.select.executeQuery();
-      
-      int uid = 0;  
-      if(resultSet.next())
-      {
-        uid = resultSet.getInt(1);
-      }
-      
-      return uid;
-    }
-    catch(SQLException e)
-    {
-      e.printStackTrace();
-    }
-    
-    return 0;
-  }
-  
  
   private String getString(String returnColumn, String findColumn, String findValue)
   {
@@ -208,18 +173,23 @@ public class Trash
         returnValue = resultSet.getString(1);
       }
       
+      if(returnValue == null)
+      {
+        String e = String.format("Result not found: SELECT %s FROM %s WHERE %s = %s", returnColumn, this.tablename, findColumn, findValue);
+        throw new RuntimeException(e);
+      }
       return returnValue;
     }
     catch(SQLException e)
     {
       e.printStackTrace();
+      return returnValue;
     }
-    
-    return returnValue;
   }
   
   private final int insert(final Document doc)
   {
+    doc.checkUid();
     doc.sanityCheck();
     
     final String query = "INSERT INTO "+this.tablename+  "(duid, canonical_path, filename, last_modified, hash, comment) VALUES(?, ?, ?, ?, ?, ?)";
