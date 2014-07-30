@@ -18,9 +18,11 @@ import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 
+import net.xngo.fileshub.struct.ResultDocSet;
+
 public class Report
 {
-  public void writeCSV(ArrayList<PairFile> listOfDuplicates, String csvFilePath)
+  public void writeCSV(ArrayList<ResultDocSet> listOfDuplicates, String csvFilePath)
   {
     ICsvListWriter listWriter = null;
     try
@@ -37,7 +39,7 @@ public class Report
       // write
       for(int i=0; i<listOfDuplicates.size(); i++)
       {
-        final List<Object> row = Arrays.asList(new Object[] { Utils.getCanonicalPath(listOfDuplicates.get(i).toAddFile), Utils.getCanonicalPath(listOfDuplicates.get(i).dbFile)});            
+        final List<Object> row = Arrays.asList(new Object[] { Utils.getCanonicalPath(listOfDuplicates.get(i).file), listOfDuplicates.get(i).shelfDoc.canonical_path});            
         listWriter.write(row, processors);
       }
             
@@ -65,7 +67,7 @@ public class Report
   }
   
   
-  public void write(ArrayList<PairFile> listOfDuplicates)
+  public void write(ArrayList<ResultDocSet> listOfDuplicates)
   {
 
     try
@@ -77,8 +79,8 @@ public class Report
       
       for(int i=0; i<listOfDuplicates.size(); i++)
       {
-        toDeleteFileBuffer.write(Utils.getCanonicalPath(listOfDuplicates.get(i).toAddFile)+"\n");
-        fromDatabaseFileBuffer.write(Utils.getCanonicalPath(listOfDuplicates.get(i).dbFile)+"\n");
+        toDeleteFileBuffer.write(Utils.getCanonicalPath(listOfDuplicates.get(i).file)+"\n");
+        fromDatabaseFileBuffer.write(listOfDuplicates.get(i).shelfDoc.canonical_path+"\n");
       } 
       
       toDeleteFileBuffer.close();

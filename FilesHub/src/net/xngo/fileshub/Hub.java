@@ -7,6 +7,7 @@ import java.util.Set;
 import net.xngo.fileshub.db.Database;
 import net.xngo.fileshub.db.Repository;
 import net.xngo.fileshub.db.PairFile;
+import net.xngo.fileshub.struct.ResultDocSet;
 
 
 /**
@@ -25,18 +26,19 @@ public class Hub
   
   public void addFiles(Set<File> listOfFiles)
   {
-    ArrayList<PairFile> listOfDuplicateFiles = new ArrayList<PairFile>();
+    ArrayList<ResultDocSet> listOfDuplicateFiles = new ArrayList<ResultDocSet>();
     
     Repository repository = new Repository();
     long totalSize = 0;
     for (File file : listOfFiles) 
     {
-      PairFile pairFile = repository.addFile(file);
-      if(pairFile.uid==PairFile.DUPLICATE_HASH)
+      ResultDocSet resultDocSet = repository.addFile(file);
+      if(resultDocSet.status==ResultDocSet.DIFF_PATH_SAME_HASH)
       {
-        listOfDuplicateFiles.add(pairFile);
-        totalSize += pairFile.toAddFile.length();
+        listOfDuplicateFiles.add(resultDocSet);
+        totalSize += file.length();
       }
+      
     }
     
     System.out.println();
@@ -45,13 +47,13 @@ public class Hub
     System.out.println("To delete ==> From database");
     for(int i=0; i<listOfDuplicateFiles.size(); i++)
     {
-      String toAddFilePath = Utils.getCanonicalPath(listOfDuplicateFiles.get(i).toAddFile);
-      String dbFilePath = Utils.getCanonicalPath(listOfDuplicateFiles.get(i).dbFile);
-      System.out.println(String.format("%s ==> %s", toAddFilePath, dbFilePath));
+      System.out.println(String.format("%s ==> %s", Utils.getCanonicalPath(listOfDuplicateFiles.get(i).file), listOfDuplicateFiles.get(i).shelfDoc.canonical_path));
     }
     
     Report report = new Report();
     report.writeCSV(listOfDuplicateFiles, "./results.csv");
     report.write(listOfDuplicateFiles);
+    
+   
   }
 }

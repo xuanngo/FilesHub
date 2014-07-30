@@ -7,9 +7,9 @@ import java.sql.SQLException;
 
 import net.xngo.fileshub.db.Conn;
 import net.xngo.fileshub.db.Trash;
-import net.xngo.fileshub.db.PairFile;
 import net.xngo.fileshub.Utils;
 import net.xngo.fileshub.struct.Document;
+import net.xngo.fileshub.struct.ResultDocSet;
 
 /**
  * Implement functionalities related to documents(files) in the database.
@@ -32,10 +32,9 @@ public class Repository
    * @param file
    * @return Document UID. Otherwise, -1 = EXACT_SAME_FILE,  0 = DUPLICATE_HASH.
    */
-  public PairFile addFile(File file)
+  public ResultDocSet addFile(File file)
   {
-    PairFile pairFile = new PairFile();
-    pairFile.toAddFile = file;
+    ResultDocSet resultDocSet = new ResultDocSet();
     
     Document docFromDb = this.findDocByCanonicalPath(Utils.getCanonicalPath(file));
     if(docFromDb!=null)
@@ -57,10 +56,23 @@ public class Repository
        
         // Note: It is possible that the file is overwritten with an older version.
         //        Therefore, files in Shelf table can be older than Trash table.
+        
+        // Update status.
+        resultDocSet.status = ResultDocSet.SAME_PATH_DIFF_HASH;
+        resultDocSet.file     = file;
+        resultDocSet.shelfDoc = newDoc;
+        resultDocSet.trashDoc = docFromDb;        
+      }
+      else
+      { // Nothing to do. Exact same file.
+        
+        // Update status.
+        resultDocSet.status = ResultDocSet.EXACT_SAME_FILE;
+        resultDocSet.file     = file;
+        resultDocSet.shelfDoc = docFromDb;
+        resultDocSet.trashDoc = null;
       }
 
-      pairFile.uid = PairFile.EXACT_SAME_FILE;
-      pairFile.dbFile = file;
     }
     else
     { // File path not found in Shelf table.
@@ -73,8 +85,13 @@ public class Repository
       {// Hash is not found.
         doc = new Document(file);
         doc.hash = hash;
-        pairFile.uid = this.insertDoc(doc); // Return generatedKeys
-        pairFile.dbFile = null;
+        doc.uid = this.insertDoc(doc); // Return generatedKeys
+        
+        // Update status.
+        resultDocSet.status = ResultDocSet.DIFF_PATH_DIFF_HASH; // New unique file.
+        resultDocSet.file     = file;
+        resultDocSet.shelfDoc = doc;
+        resultDocSet.trashDoc = null;        
       }
       else
       { // Found hash but different path. Therefore, add it to Trash table to keep it as history.
@@ -85,14 +102,17 @@ public class Repository
         trashDoc.hash = doc.hash;
         Trash trash = new Trash();
         trash.addFile(trashDoc);
-        
-        pairFile.uid = PairFile.DUPLICATE_HASH;
-        pairFile.dbFile = new File(doc.canonical_path);        
+    
+        // Update status.
+        resultDocSet.status = ResultDocSet.DIFF_PATH_SAME_HASH; // Duplicate file.
+        resultDocSet.file     = file;
+        resultDocSet.shelfDoc = doc;
+        resultDocSet.trashDoc = trashDoc;        
 
       }
     }
     
-    return pairFile;
+    return resultDocSet;
   }
   
   public void createTable()
