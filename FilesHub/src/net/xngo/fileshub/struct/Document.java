@@ -7,7 +7,7 @@ import net.xngo.fileshub.Utils;
 
 public class Document
 {
-  public int uid                = 0; // For now uid is an INTEGER. Don't use LONG.
+  public int uid                = 0; // For now, uid is an INTEGER. Don't use LONG.
   public String canonical_path  = "";
   public String filename        = "";
   public long last_modified     = 0;
@@ -50,17 +50,12 @@ public class Document
       throw new RuntimeException(uidErrorMsg);
   }
   
-  /**
-   * Hash the document if it has not been hashed.
-   */
-  public void hash()
-  {
-    if(hash.isEmpty())
-    {
-      Utils.getHash(new File(this.canonical_path));
-    }
-  }
-
+  /****************************************************************************
+   * 
+   *                             PRIVATE FUNCTIONS
+   * 
+   ****************************************************************************/
+  
   private final String getErrorMsg()
   {
     return String.format( "\n"
