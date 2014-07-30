@@ -156,10 +156,10 @@ public class RepositoryTest
     
     // Testing: Check old last modified time is moved to Trash table and new last modified time is in Repository table.
     Trash trash = new Trash();
-    Document trashDoc = trash.findDocumentByCanonicalPath(Utils.getCanonicalPath(uniqueFile));
+    Document trashDoc = trash.findDocByCanonicalPath(Utils.getCanonicalPath(uniqueFile));
     assertEquals(trashDoc.last_modified, expected_trash_last_modified, "Check last modified time in Trash table.");
     
-    Document repositoryDoc = repository.findDocumentByUid(duid);
+    Document repositoryDoc = repository.findDocByUid(duid);
     assertNotNull(repositoryDoc, String.format("Row in Repository table not found. Expected row: uid=%d, %s", duid, Utils.getCanonicalPath(uniqueFile)));
     assertEquals(repositoryDoc.last_modified, expected_repo_last_modified, "Check last modified time in Repository table.");
     

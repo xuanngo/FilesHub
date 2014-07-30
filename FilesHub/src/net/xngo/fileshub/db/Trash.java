@@ -73,7 +73,7 @@ public class Trash
    * @param canonicalPath
    * @return
    */
-  public Document findDocumentByCanonicalPath(final String canonicalPath)
+  public Document findDocByCanonicalPath(final String canonicalPath)
   {
     Document doc = null;
     

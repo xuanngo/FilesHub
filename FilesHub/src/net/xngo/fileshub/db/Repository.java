@@ -37,47 +37,47 @@ public class Repository
     PairFile pairFile = new PairFile();
     pairFile.toAddFile = file;
     
-    Document docFromDb = this.findDocumentByCanonicalPath(Utils.getCanonicalPath(file));
+    Document docFromDb = this.findDocByCanonicalPath(Utils.getCanonicalPath(file));
     if(docFromDb!=null)
-    {// Exact same path.
+    {// File path found in Shelf table.
       
-      // File has changed. 
+      
       if(docFromDb.last_modified != file.lastModified())
-      {
-        // Move docFromDb to Trash.
+      {// File has changed. 
+        // Move docFromDb to Trash table.
         Trash trash = new Trash();
         trash.addFile(docFromDb);
         
-        // Update changed file to Repository.
+        // Update changed file to Shelf table.
         String hash = Utils.getHash(file);
         Document newDoc = new Document(file);
         newDoc.uid = docFromDb.uid;
         newDoc.hash = hash;
-        this.update(newDoc);
+        this.updateDoc(newDoc);
        
         // Note: It is possible that the file is overwritten with an older version.
-        //        Therefore, files in Repository table can be older than Trash table.
+        //        Therefore, files in Shelf table can be older than Trash table.
       }
 
       pairFile.uid = PairFile.EXACT_SAME_FILE;
       pairFile.dbFile = file;
     }
     else
-    { // Not the exact same file.
+    { // File path not found in Shelf table.
       
       // Check hash.
       String hash = Utils.getHash(file);
-      Document doc = this.findDocumentByHash(hash);
+      Document doc = this.findDocByHash(hash);
       
       if(doc==null)
       {// Hash is not found.
         doc = new Document(file);
         doc.hash = hash;
-        pairFile.uid = this.insertDocument(doc); // Return generatedKeys
+        pairFile.uid = this.insertDoc(doc); // Return generatedKeys
         pairFile.dbFile = null;
       }
       else
-      { // Found same hash but different path. Therefore, add it to Trash table to keep it as history.
+      { // Found hash but different path. Therefore, add it to Trash table to keep it as history.
         
         // Add duplicate file in Trash table if it doesn't exist.
         Document trashDoc = new Document(file);
@@ -113,9 +113,9 @@ public class Repository
    * @param uid
    * @return
    */
-  public Document findDocumentByUid(final int uid)
+  public Document findDocByUid(final int uid)
   {
-    return this.findDocumentBy("uid", uid+"");
+    return this.findDocBy("uid", uid+"");
   } 
   
   /****************************************************************************
@@ -123,16 +123,16 @@ public class Repository
    *                             PRIVATE FUNCTIONS
    * 
    ****************************************************************************/
-  private Document findDocumentByCanonicalPath(final String canonicalPath)
+  private Document findDocByCanonicalPath(final String canonicalPath)
   {
-    return this.findDocumentBy("canonical_path", canonicalPath);
+    return this.findDocBy("canonical_path", canonicalPath);
   }
   
-  private Document findDocumentByHash(final String hash)
+  private Document findDocByHash(final String hash)
   {
-    return this.findDocumentBy("hash", hash);
+    return this.findDocBy("hash", hash);
   }
-  private Document findDocumentBy(String column, String value)
+  private Document findDocBy(String column, String value)
   {
     Document doc = null;
     
@@ -172,7 +172,7 @@ public class Repository
     return doc;
   }
   
-  private int deleteDocument(long uid)
+  private int deleteDoc(long uid)
   {
     final String query = "DELETE FROM "+this.tablename+" WHERE uid=?";
     int rowsAffected = 0;
@@ -191,7 +191,7 @@ public class Repository
     return rowsAffected;    
   }
   
-  private final int insertDocument(final Document doc)
+  private final int insertDoc(final Document doc)
   {
     doc.sanityCheck();
 
@@ -236,7 +236,7 @@ public class Repository
     return generatedKey;
   }
   
-  private final int update(Document doc)
+  private final int updateDoc(Document doc)
   {
     doc.sanityCheck();
     
