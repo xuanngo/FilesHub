@@ -12,7 +12,6 @@ import org.supercsv.prefs.CsvPreference;
 import org.supercsv.cellprocessor.ift.CellProcessor;
 import org.supercsv.cellprocessor.constraint.NotNull;
 
-import net.xngo.fileshub.db.PairFile;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;

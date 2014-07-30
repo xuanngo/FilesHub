@@ -6,7 +6,6 @@ import java.util.Set;
 
 import net.xngo.fileshub.db.Database;
 import net.xngo.fileshub.db.Repository;
-import net.xngo.fileshub.db.PairFile;
 import net.xngo.fileshub.struct.ResultDocSet;
 
 
