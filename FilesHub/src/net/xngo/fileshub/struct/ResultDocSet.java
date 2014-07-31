@@ -12,8 +12,8 @@ public class ResultDocSet
   public final static int DIFF_PATH_SAME_HASH = i++;  // Duplicate file.
   
   
-  public int status = -1;
+  public int      status   = -1;
   public File     file     = null; // Original file to add.
-  public Document document = null; // Document instance with respect to the status. The 'document' that is in conflict with 'file'.
+  public Document document = null; // The 'document' that conflicts with 'file'. The document that influences the status.
 
 }
