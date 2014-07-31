@@ -160,20 +160,19 @@ public class RepositoryTest
     // Simple status check:
     assertEquals(resultDocSet.status, ResultDocSet.SAME_PATH_DIFF_HASH,
         String.format("[%s] already exists in database with the same hash. Status should be %d."
+                            + "File to add:"
+                            + "last_modified = %d\n"
+                            + "canonical_path = %s\n"
+                            
+                            + "\n"
                             + "Shelf:"
                             + "uid = %d\n"
                             + "last_modified = %d\n"
                             + "canonical_path = %s\n"
                             + "hash = %s\n"
-                            
-                            + "Trash:"
-                            + "uid = %d\n"
-                            + "last_modified = %d\n"
-                            + "canonical_path = %s\n"
-                            + "hash = %s\n"
-                            , resultDocSet.document.filename, resultDocSet.status, 
-                                resultDocSet.document.uid, resultDocSet.document.last_modified, resultDocSet.document.canonical_path, resultDocSet.document.hash,
-                                resultDocSet.trashDoc.uid, resultDocSet.trashDoc.last_modified, resultDocSet.trashDoc.canonical_path, resultDocSet.trashDoc.hash));       
+                            , resultDocSet.file.getName(), resultDocSet.status, 
+                                resultDocSet.file.lastModified(), Utils.getCanonicalPath(resultDocSet.file),
+                                resultDocSet.document.uid, resultDocSet.document.last_modified, resultDocSet.document.canonical_path, resultDocSet.document.hash));       
     
     // Testing: Check old last modified time is moved to Trash table and new last modified time is in Repository table.
     Trash trash = new Trash();

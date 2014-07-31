@@ -35,6 +35,7 @@ public class Repository
   public ResultDocSet addFile(File file)
   {
     ResultDocSet resultDocSet = new ResultDocSet();
+    resultDocSet.file = file;
     
     Document docFromDb = this.findDocByCanonicalPath(Utils.getCanonicalPath(file));
     if(docFromDb!=null)
@@ -60,8 +61,8 @@ public class Repository
         // Update status.
         resultDocSet.status = ResultDocSet.SAME_PATH_DIFF_HASH;
         resultDocSet.file     = file;
-        resultDocSet.document = newDoc;
-        resultDocSet.trashDoc = docFromDb;        
+        resultDocSet.document = docFromDb; // Use docFromDb instead of newDoc because it conflict with 'file'.
+        
       }
       else
       { // Nothing to do. Exact same file.
@@ -70,7 +71,7 @@ public class Repository
         resultDocSet.status = ResultDocSet.EXACT_SAME_FILE;
         resultDocSet.file     = file;
         resultDocSet.document = docFromDb;
-        resultDocSet.trashDoc = null;
+
       }
 
     }
@@ -91,7 +92,7 @@ public class Repository
         resultDocSet.status = ResultDocSet.DIFF_PATH_DIFF_HASH; // New unique file.
         resultDocSet.file     = file;
         resultDocSet.document = doc;
-        resultDocSet.trashDoc = null;        
+
       }
       else
       { // Found hash but different path. Therefore, add it to Trash table to keep it as history.
@@ -107,7 +108,6 @@ public class Repository
         resultDocSet.status = ResultDocSet.DIFF_PATH_SAME_HASH; // Duplicate file.
         resultDocSet.file     = file;
         resultDocSet.document = doc;
-        resultDocSet.trashDoc = trashDoc;        
 
       }
     }

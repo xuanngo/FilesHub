@@ -14,6 +14,6 @@ public class ResultDocSet
   
   public int status = -1;
   public File     file     = null; // Original file to add.
-  public Document document = null; // Document information with respect to the status.
-  public Document trashDoc = null; // Document entry from Trash table.
+  public Document document = null; // Document instance with respect to the status. The 'document' that is in conflict with 'file'.
+
 }
