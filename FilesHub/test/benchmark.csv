@@ -1,0 +1,7 @@
+Filename, size, System.currentTimeMillis(), Avg. copyNhashSeparately() in ns(Tries=10), Avg. copyNhashCombined() in ns(Tries=10)
+FilesHub.bat, 120 B, 1406834447760, 5599972.20, 486868.00
+fileshub.jar, 3.5 MB, 1406834447760, 29016339.60, 10303916.40
+sqlite3.exe, 496 KB, 1406834447760, 113263464.40, 3191351.70
+FilesHub.bat, 120 B, 1406840528076, 11949984.90, 620600.60
+fileshub.jar, 3.5 MB, 1406840528076, 59051983.50, 11030072.40
+sqlite3.exe, 496 KB, 1406840528076, 446315745.00, 4448146.00
