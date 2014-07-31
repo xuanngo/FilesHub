@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Arrays;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.BufferedWriter;
 
 import org.supercsv.io.CsvListWriter;
 import org.supercsv.io.ICsvListWriter;
@@ -13,9 +14,7 @@ import org.supercsv.cellprocessor.ift.CellProcessor;
 import org.supercsv.cellprocessor.constraint.NotNull;
 
 
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
+
 
 import net.xngo.fileshub.struct.ResultDocSet;
 
@@ -38,7 +37,7 @@ public class Report
       // write
       for(int i=0; i<listOfDuplicates.size(); i++)
       {
-        final List<Object> row = Arrays.asList(new Object[] { Utils.getCanonicalPath(listOfDuplicates.get(i).file), listOfDuplicates.get(i).shelfDoc.canonical_path});            
+        final List<Object> row = Arrays.asList(new Object[] { Utils.getCanonicalPath(listOfDuplicates.get(i).file), listOfDuplicates.get(i).document.canonical_path});            
         listWriter.write(row, processors);
       }
             
@@ -79,7 +78,7 @@ public class Report
       for(int i=0; i<listOfDuplicates.size(); i++)
       {
         toDeleteFileBuffer.write(Utils.getCanonicalPath(listOfDuplicates.get(i).file)+"\n");
-        fromDatabaseFileBuffer.write(listOfDuplicates.get(i).shelfDoc.canonical_path+"\n");
+        fromDatabaseFileBuffer.write(listOfDuplicates.get(i).document.canonical_path+"\n");
       } 
       
       toDeleteFileBuffer.close();

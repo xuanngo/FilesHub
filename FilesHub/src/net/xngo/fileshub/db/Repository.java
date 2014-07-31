@@ -60,7 +60,7 @@ public class Repository
         // Update status.
         resultDocSet.status = ResultDocSet.SAME_PATH_DIFF_HASH;
         resultDocSet.file     = file;
-        resultDocSet.shelfDoc = newDoc;
+        resultDocSet.document = newDoc;
         resultDocSet.trashDoc = docFromDb;        
       }
       else
@@ -69,7 +69,7 @@ public class Repository
         // Update status.
         resultDocSet.status = ResultDocSet.EXACT_SAME_FILE;
         resultDocSet.file     = file;
-        resultDocSet.shelfDoc = docFromDb;
+        resultDocSet.document = docFromDb;
         resultDocSet.trashDoc = null;
       }
 
@@ -90,7 +90,7 @@ public class Repository
         // Update status.
         resultDocSet.status = ResultDocSet.DIFF_PATH_DIFF_HASH; // New unique file.
         resultDocSet.file     = file;
-        resultDocSet.shelfDoc = doc;
+        resultDocSet.document = doc;
         resultDocSet.trashDoc = null;        
       }
       else
@@ -106,7 +106,7 @@ public class Repository
         // Update status.
         resultDocSet.status = ResultDocSet.DIFF_PATH_SAME_HASH; // Duplicate file.
         resultDocSet.file     = file;
-        resultDocSet.shelfDoc = doc;
+        resultDocSet.document = doc;
         resultDocSet.trashDoc = trashDoc;        
 
       }

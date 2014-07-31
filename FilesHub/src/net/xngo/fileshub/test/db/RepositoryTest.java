@@ -11,13 +11,10 @@ import net.xngo.fileshub.Utils;
 // FilesHub test helper classes.
 import net.xngo.fileshub.test.helpers.Data;
 
-
-
 // TestNG
 import org.testng.annotations.Test;
 import org.testng.annotations.BeforeClass;
 
-import static org.testng.Assert.assertTrue;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 
@@ -68,8 +65,8 @@ public class RepositoryTest
                             + "uid = %d\n"
                             + "canonical_path = %s\n"
                             + "hash = %s\n"
-                            , resultDocSet.shelfDoc.filename, resultDocSet.status, 
-                                resultDocSet.shelfDoc.uid, resultDocSet.shelfDoc.canonical_path, resultDocSet.shelfDoc.hash));
+                            , resultDocSet.document.filename, resultDocSet.status, 
+                                resultDocSet.document.uid, resultDocSet.document.canonical_path, resultDocSet.document.hash));
   }
   
   @Test(description="Add file with existing hash but different file name/path.")
@@ -105,8 +102,8 @@ public class RepositoryTest
                             + "uid = %d\n"
                             + "canonical_path = %s\n"
                             + "hash = %s\n"
-                            , resultDocSet.shelfDoc.filename, resultDocSet.status, 
-                                resultDocSet.shelfDoc.uid, resultDocSet.shelfDoc.canonical_path, resultDocSet.shelfDoc.hash));    
+                            , resultDocSet.document.filename, resultDocSet.status, 
+                                resultDocSet.document.uid, resultDocSet.document.canonical_path, resultDocSet.document.hash));    
   }
   
 
@@ -140,7 +137,7 @@ public class RepositoryTest
     uniqueFile.delete();
     duplicateFile.delete();
     
-    assertEquals(actual_duid, resultDocSet.shelfDoc.uid, String.format("Repository.uid=%d should be equal to Trash.duid=%d", resultDocSet.shelfDoc.uid, actual_duid));
+    assertEquals(actual_duid, resultDocSet.document.uid, String.format("Repository.uid=%d should be equal to Trash.duid=%d", resultDocSet.document.uid, actual_duid));
   }  
   
   @Test(description="Add the same file that has changed since FilesHub last ran.")
@@ -174,8 +171,8 @@ public class RepositoryTest
                             + "last_modified = %d\n"
                             + "canonical_path = %s\n"
                             + "hash = %s\n"
-                            , resultDocSet.shelfDoc.filename, resultDocSet.status, 
-                                resultDocSet.shelfDoc.uid, resultDocSet.shelfDoc.last_modified, resultDocSet.shelfDoc.canonical_path, resultDocSet.shelfDoc.hash,
+                            , resultDocSet.document.filename, resultDocSet.status, 
+                                resultDocSet.document.uid, resultDocSet.document.last_modified, resultDocSet.document.canonical_path, resultDocSet.document.hash,
                                 resultDocSet.trashDoc.uid, resultDocSet.trashDoc.last_modified, resultDocSet.trashDoc.canonical_path, resultDocSet.trashDoc.hash));       
     
     // Testing: Check old last modified time is moved to Trash table and new last modified time is in Repository table.
@@ -183,8 +180,8 @@ public class RepositoryTest
     Document trashDoc = trash.findDocByCanonicalPath(Utils.getCanonicalPath(uniqueFile));
     assertEquals(trashDoc.last_modified, expected_trash_last_modified, "Check last modified time in Trash table.");
     
-    Document repositoryDoc = repository.findDocByUid(resultDocSet.shelfDoc.uid);
-    assertNotNull(repositoryDoc, String.format("Row in Repository table not found. Expected row: uid=%d, %s", resultDocSet.shelfDoc.uid, Utils.getCanonicalPath(uniqueFile)));
+    Document repositoryDoc = repository.findDocByUid(resultDocSet.document.uid);
+    assertNotNull(repositoryDoc, String.format("Row in Repository table not found. Expected row: uid=%d, %s", resultDocSet.document.uid, Utils.getCanonicalPath(uniqueFile)));
     assertEquals(repositoryDoc.last_modified, expected_repo_last_modified, "Check last modified time in Repository table.");
     
     // Clean up.

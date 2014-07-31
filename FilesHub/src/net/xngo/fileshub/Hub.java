@@ -46,7 +46,7 @@ public class Hub
     System.out.println("To delete ==> From database");
     for(int i=0; i<listOfDuplicateFiles.size(); i++)
     {
-      System.out.println(String.format("%s ==> %s", Utils.getCanonicalPath(listOfDuplicateFiles.get(i).file), listOfDuplicateFiles.get(i).shelfDoc.canonical_path));
+      System.out.println(String.format("%s ==> %s", Utils.getCanonicalPath(listOfDuplicateFiles.get(i).file), listOfDuplicateFiles.get(i).document.canonical_path));
     }
     
     Report report = new Report();

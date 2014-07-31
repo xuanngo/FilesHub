@@ -14,6 +14,6 @@ public class ResultDocSet
   
   public int status = -1;
   public File     file     = null; // Original file to add.
-  public Document shelfDoc = null; // Document entry from Shelf table.
+  public Document document = null; // Document information with respect to the status.
   public Document trashDoc = null; // Document entry from Trash table.
 }
