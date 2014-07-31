@@ -1,9 +1,9 @@
 package net.xngo.fileshub.benchmark;
 
+import java.util.Calendar;
 import java.util.Collection;
 import java.io.File;
 import java.io.IOException;
-import java.text.DecimalFormat;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.TrueFileFilter;
@@ -22,7 +22,6 @@ public class CopyAndHashBenchmark
   {
     CopyAndHashBenchmark cpNhashBen = new CopyAndHashBenchmark();
     cpNhashBen.benchmarkCopyNhash();
-    System.out.println("Done!");
   }
   
   public void benchmarkCopyNhash()
@@ -32,20 +31,33 @@ public class CopyAndHashBenchmark
     
     final int MAX_TRIES = 10;
 
+    File benchmarkFile = new File("./test/benchmark.csv");
+    if(!benchmarkFile.exists())
+    {
+      String data = String.format("Filename, size, System.currentTimeMillis(), Avg. copyNhashSeparately() in ns(Tries=%d), Avg. copyNhashCombined() in ns(Tries=%d)\n", MAX_TRIES, MAX_TRIES);
+      try
+      {
+        FileUtils.writeStringToFile(benchmarkFile, data);
+      }
+      catch(IOException e){ e.printStackTrace(); }
+    }
+    
+    long currentTimeMillis = System.currentTimeMillis();
     for (File file : filesList) 
     {
       String filesize = Utils.readableFileSize(file.length());
-      double average = 0.0;
       
-      average = this.copyNhashSeparately(file, MAX_TRIES);
-      System.out.println(String.format("%s(%s): Average(%d) = %,17.2f ns => %s", file.getName(), filesize, MAX_TRIES, average, "copyNhashSeparately"));
-
-      average = this.copyNhashCombined(file, MAX_TRIES);
-      System.out.println(String.format("%s(%s): Average(%d) = %,17.2f ns => %s", file.getName(), filesize, MAX_TRIES, average, "copyNhashCombined"));
+      double averageCopyNhashSeparately = this.copyNhashSeparately(file, MAX_TRIES);
+      double averageCopyNhashCombined = this.copyNhashCombined(file, MAX_TRIES);
       
-      System.out.println();
+      String data = String.format("%s, %s, %d, %.2f, %.2f\n", file.getName(), filesize, currentTimeMillis, averageCopyNhashSeparately, averageCopyNhashCombined);
+      try
+      {
+        FileUtils.writeStringToFile(benchmarkFile, data, true);
+      }
+      catch(IOException e){ e.printStackTrace(); }      
     }
-
+    System.out.println(new java.util.Date()+": Benchmark done!");
     //util.copyFileUsingFileChannels(source, dest);
   }
   
