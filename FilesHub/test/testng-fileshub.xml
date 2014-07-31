@@ -5,7 +5,7 @@
 
   <test verbose="5" name="FilesHub tests">
     <packages>
-      <package name="net.xngo.fileshub.test" />
+      <package name="net.xngo.fileshub.test.*" />
    </packages>  
   </test>
   
