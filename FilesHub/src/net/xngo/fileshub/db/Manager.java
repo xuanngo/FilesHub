@@ -15,13 +15,14 @@ import net.xngo.fileshub.db.Shelf;
 public class Manager
 {
   private Shelf shelf = new Shelf();
+  private Trash trash = new Trash();
   
   public ResultDocSet addFile(File file)
   {
     ResultDocSet resultDocSet = new ResultDocSet();
     resultDocSet.file = file;
     
-    Document docFromDb = shelf.findDocByCanonicalPath(Utils.getCanonicalPath(file));
+    Document docFromDb = this.shelf.findDocByCanonicalPath(Utils.getCanonicalPath(file));
     if(docFromDb!=null)
     {// File path found in Shelf table.
       
@@ -37,7 +38,7 @@ public class Manager
         Document newDoc = new Document(file);
         newDoc.uid = docFromDb.uid;
         newDoc.hash = hash;
-        shelf.saveDoc(newDoc);
+        this.shelf.saveDoc(newDoc);
        
         // Note: It is possible that the file is overwritten with an older version.
         //        Therefore, files in Shelf table can be older than Trash table.
@@ -64,13 +65,13 @@ public class Manager
       
       // Check hash.
       String hash = Utils.getHash(file);
-      Document doc = shelf.findDocByHash(hash);
+      Document doc = this.shelf.findDocByHash(hash);
       
       if(doc==null)
       {// Hash is not found.
         doc = new Document(file);
         doc.hash = hash;
-        doc.uid = shelf.addDoc(doc); // Return generatedKeys
+        doc.uid = this.shelf.addDoc(doc); // Return generatedKeys
         
         // Update status.
         resultDocSet.status = ResultDocSet.DIFF_PATH_DIFF_HASH; // New unique file.
@@ -98,4 +99,16 @@ public class Manager
     
     return resultDocSet;    
   }
+  
+  public void createDbStructure()
+  {
+    // Create database structure if sqlite database file doesn't exist.
+    File DbFile = new File(Conn.DB_FILE_PATH);
+    if(!DbFile.exists())
+    {// Database file doesn't exist.
+      this.shelf.createTable();
+      this.trash.createTable();
+    }
+    
+  }  
 }

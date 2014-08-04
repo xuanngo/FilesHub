@@ -4,7 +4,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Set;
 
-import net.xngo.fileshub.db.Database;
+
 import net.xngo.fileshub.db.Manager;
 import net.xngo.fileshub.struct.ResultDocSet;
 
@@ -16,22 +16,21 @@ import net.xngo.fileshub.struct.ResultDocSet;
  */
 public class Hub
 {
-  private Database database = new Database();
+  private Manager manager = new Manager();
   
   public Hub()
   {
-    database.create();
+    this.manager.createDbStructure();
   }
   
   public void addFiles(Set<File> listOfFiles)
   {
     ArrayList<ResultDocSet> listOfDuplicateFiles = new ArrayList<ResultDocSet>();
     
-    Manager manager = new Manager();
     long totalSize = 0;
     for (File file : listOfFiles) 
     {
-      ResultDocSet resultDocSet = manager.addFile(file);
+      ResultDocSet resultDocSet = this.manager.addFile(file);
       if(resultDocSet.status==ResultDocSet.DIFF_PATH_SAME_HASH)
       {
         listOfDuplicateFiles.add(resultDocSet);

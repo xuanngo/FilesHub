@@ -4,7 +4,6 @@ package net.xngo.fileshub.test.db;
 import net.xngo.fileshub.db.Manager;
 import net.xngo.fileshub.db.Trash;
 import net.xngo.fileshub.db.Shelf;
-import net.xngo.fileshub.db.Database;
 import net.xngo.fileshub.struct.Document;
 import net.xngo.fileshub.struct.ResultDocSet;
 import net.xngo.fileshub.Utils;
@@ -29,21 +28,21 @@ import org.apache.commons.io.FileUtils;
 
 public class ManagerTest
 {
+  private Manager manager = new Manager();
+  
   @BeforeClass
   public void DatabaseCreation()
   {
     // Make sure that the database file is created.
-    Database db = new Database();
-    db.create();
+    this.manager.createDbStructure();
   }
   
   @Test(description="Add new unique file.")
   public void AddUniqueFile()
   {
-    Manager manager = new Manager();
     
     File uniqueFile = Data.createUniqueFile("AddUniqueFile");
-    ResultDocSet resultDocSet = manager.addFile(uniqueFile);
+    ResultDocSet resultDocSet = this.manager.addFile(uniqueFile);
     uniqueFile.delete();
     
     assertEquals(resultDocSet.status, ResultDocSet.DIFF_PATH_DIFF_HASH,
@@ -53,12 +52,10 @@ public class ManagerTest
   @Test(description="Add exact same file.")
   public void AddExactSameFile()
   {
-    Manager manager = new Manager();
-    
     File uniqueFile = Data.createUniqueFile("AddExactSameFile");
-    manager.addFile(uniqueFile); // Add file 1st time.
+    this.manager.addFile(uniqueFile); // Add file 1st time.
     
-    ResultDocSet resultDocSet = manager.addFile(uniqueFile); // Add the exact same file the 2nd time.
+    ResultDocSet resultDocSet = this.manager.addFile(uniqueFile); // Add the exact same file the 2nd time.
     uniqueFile.delete();
     
     assertEquals(resultDocSet.status, ResultDocSet.EXACT_SAME_FILE,
@@ -73,11 +70,9 @@ public class ManagerTest
   @Test(description="Add file with existing hash but different file name/path.")
   public void AddFileWithSameHash()
   {
-    Manager manager = new Manager();
-    
     // Add unique file.
     File uniqueFile = Data.createUniqueFile("AddFileWithSameHash");
-    manager.addFile(uniqueFile);
+    this.manager.addFile(uniqueFile);
     
     // Copy unique file and then add to database.
     File duplicateFile = null;
@@ -91,7 +86,7 @@ public class ManagerTest
       e.printStackTrace();
     }
     
-    ResultDocSet resultDocSet = manager.addFile(duplicateFile); // Add duplicate file with different file name/path.
+    ResultDocSet resultDocSet = this.manager.addFile(duplicateFile); // Add duplicate file with different file name/path.
     
     // Clean up.
     uniqueFile.delete();
@@ -111,11 +106,9 @@ public class ManagerTest
   @Test(description="Add file with existing hash but different file path and check Trash table.")
   public void AddFileWithSameHashCheckTrash()
   {
-    Manager manager = new Manager();
-    
     // Add unique file.
     File uniqueFile = Data.createUniqueFile("AddFileWithSameHashCheckTrash");
-    manager.addFile(uniqueFile);
+    this.manager.addFile(uniqueFile);
     
     // Copy unique file and then add to database.
     File duplicateFile = null;
@@ -129,7 +122,7 @@ public class ManagerTest
       e.printStackTrace();
     }
     
-    ResultDocSet resultDocSet = manager.addFile(duplicateFile); // Add duplicate file with different file name/path.
+    ResultDocSet resultDocSet = this.manager.addFile(duplicateFile); // Add duplicate file with different file name/path.
     
     Trash trash = new Trash();
     int actual_duid = trash.getDuidByCanonicalPath(Utils.getCanonicalPath(duplicateFile));
@@ -144,19 +137,17 @@ public class ManagerTest
   @Test(description="Add the same file that has changed since FilesHub last ran.")
   public void AddFileChangedSinceLastRun()
   {
-    Manager manager = new Manager();
-    
     // Add unique file in Shelf.
     File uniqueFile = Data.createUniqueFile("AddFileChangedSinceLastRun");
     long expected_trash_last_modified = uniqueFile.lastModified();
-    manager.addFile(uniqueFile);
+    this.manager.addFile(uniqueFile);
     
     // Update the unique file.
     try { FileUtils.touch(uniqueFile); } catch(IOException e){ e.printStackTrace(); }
     long expected_repo_last_modified = uniqueFile.lastModified();
     
     // Add the exact same file again with new last modified time.
-    ResultDocSet resultDocSet = manager.addFile(uniqueFile);
+    ResultDocSet resultDocSet = this.manager.addFile(uniqueFile);
     
     // Simple status check:
     assertEquals(resultDocSet.status, ResultDocSet.SAME_PATH_DIFF_HASH,
