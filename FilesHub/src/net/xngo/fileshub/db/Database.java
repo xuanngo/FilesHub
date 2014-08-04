@@ -3,8 +3,8 @@ package net.xngo.fileshub.db;
 import java.io.File;
 
 import net.xngo.fileshub.db.Conn;
-import net.xngo.fileshub.db.Repository;
 import net.xngo.fileshub.db.Trash;
+import net.xngo.fileshub.db.Shelf;
 
 /**
  * Implement database structure.
@@ -25,8 +25,8 @@ public class Database
   
   private void createDbStructure()
   {
-    Repository repository = new Repository();
-    repository.createTable();
+    Shelf shelf = new Shelf();
+    shelf.createTable();
     
     Trash trash = new Trash();
     trash.createTable();

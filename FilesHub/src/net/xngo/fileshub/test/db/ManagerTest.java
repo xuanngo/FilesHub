@@ -1,8 +1,9 @@
 package net.xngo.fileshub.test.db;
 
 // FilesHub classes.
-import net.xngo.fileshub.db.Repository;
+import net.xngo.fileshub.db.Manager;
 import net.xngo.fileshub.db.Trash;
+import net.xngo.fileshub.db.Shelf;
 import net.xngo.fileshub.db.Database;
 import net.xngo.fileshub.struct.Document;
 import net.xngo.fileshub.struct.ResultDocSet;
@@ -26,7 +27,7 @@ import java.io.IOException;
 
 import org.apache.commons.io.FileUtils;
 
-public class RepositoryTest
+public class ManagerTest
 {
   @BeforeClass
   public void DatabaseCreation()
@@ -39,10 +40,10 @@ public class RepositoryTest
   @Test(description="Add new unique file.")
   public void AddUniqueFile()
   {
-    Repository repository = new Repository();
+    Manager manager = new Manager();
     
     File uniqueFile = Data.createUniqueFile("AddUniqueFile");
-    ResultDocSet resultDocSet = repository.addFile(uniqueFile);
+    ResultDocSet resultDocSet = manager.addFile(uniqueFile);
     uniqueFile.delete();
     
     assertEquals(resultDocSet.status, ResultDocSet.DIFF_PATH_DIFF_HASH,
@@ -52,12 +53,12 @@ public class RepositoryTest
   @Test(description="Add exact same file.")
   public void AddExactSameFile()
   {
-    Repository repository = new Repository();
+    Manager manager = new Manager();
     
     File uniqueFile = Data.createUniqueFile("AddExactSameFile");
-    repository.addFile(uniqueFile); // Add file 1st time.
+    manager.addFile(uniqueFile); // Add file 1st time.
     
-    ResultDocSet resultDocSet = repository.addFile(uniqueFile); // Add the exact same file the 2nd time.
+    ResultDocSet resultDocSet = manager.addFile(uniqueFile); // Add the exact same file the 2nd time.
     uniqueFile.delete();
     
     assertEquals(resultDocSet.status, ResultDocSet.EXACT_SAME_FILE,
@@ -72,11 +73,11 @@ public class RepositoryTest
   @Test(description="Add file with existing hash but different file name/path.")
   public void AddFileWithSameHash()
   {
-    Repository repository = new Repository();
+    Manager manager = new Manager();
     
     // Add unique file.
     File uniqueFile = Data.createUniqueFile("AddFileWithSameHash");
-    repository.addFile(uniqueFile);
+    manager.addFile(uniqueFile);
     
     // Copy unique file and then add to database.
     File duplicateFile = null;
@@ -90,7 +91,7 @@ public class RepositoryTest
       e.printStackTrace();
     }
     
-    ResultDocSet resultDocSet = repository.addFile(duplicateFile); // Add duplicate file with different file name/path.
+    ResultDocSet resultDocSet = manager.addFile(duplicateFile); // Add duplicate file with different file name/path.
     
     // Clean up.
     uniqueFile.delete();
@@ -110,11 +111,11 @@ public class RepositoryTest
   @Test(description="Add file with existing hash but different file path and check Trash table.")
   public void AddFileWithSameHashCheckTrash()
   {
-    Repository repository = new Repository();
+    Manager manager = new Manager();
     
     // Add unique file.
     File uniqueFile = Data.createUniqueFile("AddFileWithSameHashCheckTrash");
-    repository.addFile(uniqueFile);
+    manager.addFile(uniqueFile);
     
     // Copy unique file and then add to database.
     File duplicateFile = null;
@@ -128,7 +129,7 @@ public class RepositoryTest
       e.printStackTrace();
     }
     
-    ResultDocSet resultDocSet = repository.addFile(duplicateFile); // Add duplicate file with different file name/path.
+    ResultDocSet resultDocSet = manager.addFile(duplicateFile); // Add duplicate file with different file name/path.
     
     Trash trash = new Trash();
     int actual_duid = trash.getDuidByCanonicalPath(Utils.getCanonicalPath(duplicateFile));
@@ -137,25 +138,25 @@ public class RepositoryTest
     uniqueFile.delete();
     duplicateFile.delete();
     
-    assertEquals(actual_duid, resultDocSet.document.uid, String.format("Repository.uid=%d should be equal to Trash.duid=%d", resultDocSet.document.uid, actual_duid));
+    assertEquals(actual_duid, resultDocSet.document.uid, String.format("Shelf.uid=%d should be equal to Trash.duid=%d", resultDocSet.document.uid, actual_duid));
   }  
   
   @Test(description="Add the same file that has changed since FilesHub last ran.")
   public void AddFileChangedSinceLastRun()
   {
-    Repository repository = new Repository();
+    Manager manager = new Manager();
     
-    // Add unique file in Repository.
+    // Add unique file in Shelf.
     File uniqueFile = Data.createUniqueFile("AddFileChangedSinceLastRun");
     long expected_trash_last_modified = uniqueFile.lastModified();
-    repository.addFile(uniqueFile);
+    manager.addFile(uniqueFile);
     
     // Update the unique file.
     try { FileUtils.touch(uniqueFile); } catch(IOException e){ e.printStackTrace(); }
     long expected_repo_last_modified = uniqueFile.lastModified();
     
     // Add the exact same file again with new last modified time.
-    ResultDocSet resultDocSet = repository.addFile(uniqueFile);
+    ResultDocSet resultDocSet = manager.addFile(uniqueFile);
     
     // Simple status check:
     assertEquals(resultDocSet.status, ResultDocSet.SAME_PATH_DIFF_HASH,
@@ -174,14 +175,15 @@ public class RepositoryTest
                                 resultDocSet.file.lastModified(), Utils.getCanonicalPath(resultDocSet.file),
                                 resultDocSet.document.uid, resultDocSet.document.last_modified, resultDocSet.document.canonical_path, resultDocSet.document.hash));       
     
-    // Testing: Check old last modified time is moved to Trash table and new last modified time is in Repository table.
+    // Testing: Check old last modified time is moved to Trash table and new last modified time is in Manager table.
     Trash trash = new Trash();
     Document trashDoc = trash.findDocByCanonicalPath(Utils.getCanonicalPath(uniqueFile));
     assertEquals(trashDoc.last_modified, expected_trash_last_modified, "Check last modified time in Trash table.");
     
-    Document repositoryDoc = repository.findDocByUid(resultDocSet.document.uid);
-    assertNotNull(repositoryDoc, String.format("Row in Repository table not found. Expected row: uid=%d, %s", resultDocSet.document.uid, Utils.getCanonicalPath(uniqueFile)));
-    assertEquals(repositoryDoc.last_modified, expected_repo_last_modified, "Check last modified time in Repository table.");
+    Shelf shelf = new Shelf();
+    Document shelfDoc = shelf.findDocByUid(resultDocSet.document.uid);
+    assertNotNull(shelfDoc, String.format("Row in Manager table not found. Expected row: uid=%d, %s", resultDocSet.document.uid, Utils.getCanonicalPath(uniqueFile)));
+    assertEquals(shelfDoc.last_modified, expected_repo_last_modified, "Check last modified time in Manager table.");
     
     // Clean up.
     uniqueFile.delete();    

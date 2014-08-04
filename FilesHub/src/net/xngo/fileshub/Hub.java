@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.Set;
 
 import net.xngo.fileshub.db.Database;
-import net.xngo.fileshub.db.Repository;
+import net.xngo.fileshub.db.Manager;
 import net.xngo.fileshub.struct.ResultDocSet;
 
 
@@ -27,11 +27,11 @@ public class Hub
   {
     ArrayList<ResultDocSet> listOfDuplicateFiles = new ArrayList<ResultDocSet>();
     
-    Repository repository = new Repository();
+    Manager manager = new Manager();
     long totalSize = 0;
     for (File file : listOfFiles) 
     {
-      ResultDocSet resultDocSet = repository.addFile(file);
+      ResultDocSet resultDocSet = manager.addFile(file);
       if(resultDocSet.status==ResultDocSet.DIFF_PATH_SAME_HASH)
       {
         listOfDuplicateFiles.add(resultDocSet);
