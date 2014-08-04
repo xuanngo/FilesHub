@@ -26,7 +26,17 @@ public class Manager
       this.shelf.createTable();
       this.trash.createTable();
     }
-    
+    else if(DbFile.length()<1)
+    {// Database file already exist but don't have database structure created.
+      
+      this.shelf.createTable();
+      this.trash.createTable();      
+    }
+    else
+    {
+      // Do nothing. Database file already exists.
+    }
+  
   }
   
   public ResultDocSet addFile(File file)

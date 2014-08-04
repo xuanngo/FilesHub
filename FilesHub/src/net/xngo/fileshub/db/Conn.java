@@ -75,7 +75,6 @@ public class Conn
   
   private void connectToSqlite()
   {
-      
     // Construct JDBC connection string.
     String sqlUrl = "jdbc:sqlite:/"+DB_FILE_PATH.replace('\\', '/'); // Not efficient. Use File.toURI().toURL().toString();
     this.connect(sqlUrl);

@@ -34,7 +34,7 @@ public class Trash
     
     if(!this.isSameFile(doc.canonical_path))
     {// File was never processed before.
-      generatedKey = this.insert(doc);
+      generatedKey = this.insertDoc(doc);
     }
     
     return generatedKey;
@@ -75,42 +75,7 @@ public class Trash
    */
   public Document findDocByCanonicalPath(final String canonicalPath)
   {
-    Document doc = null;
-    
-    final String query = String.format("SELECT uid, canonical_path, filename, last_modified, hash, comment "
-                                        + " FROM %s "
-                                        + "WHERE %s = ?", this.tablename, "canonical_path");
-    try
-    {
-      this.select = this.conn.connection.prepareStatement(query);
-      
-      int i=1;
-      this.select.setString(i++, canonicalPath);
-      
-      ResultSet resultSet =  this.select.executeQuery();
-      if(resultSet.next())
-      {
-        doc = new Document();
-        int j=1;
-        doc.uid             = resultSet.getInt(j++);
-        doc.canonical_path  = resultSet.getString(j++);
-        doc.filename        = resultSet.getString(j++);
-        doc.last_modified   = resultSet.getLong(j++);
-        doc.hash            = resultSet.getString(j++);
-        doc.comment         = resultSet.getString(j++);
-        
-        return doc;
-      }
-      else
-        return doc;
-
-    }
-    catch(SQLException e)
-    {
-      e.printStackTrace();
-    }
-    
-    return doc;
+    return this.findDocBy("canonical_path", canonicalPath);
   }
   
   /****************************************************************************
@@ -187,7 +152,48 @@ public class Trash
     }
   }
   
-  private final int insert(final Document doc)
+  private Document findDocBy(String column, String value)
+  {
+    Document doc = null;
+    
+    final String query = String.format("SELECT uid, canonical_path, filename, last_modified, hash, comment "
+                                        + " FROM %s "
+                                        + "WHERE %s = ?", this.tablename, column);
+    
+    try
+    {
+      this.select = this.conn.connection.prepareStatement(query);
+      
+      int i=1;
+      this.select.setString(i++, value);
+      
+      ResultSet resultSet =  this.select.executeQuery();
+      if(resultSet.next())
+      {
+        doc = new Document();
+        int j=1;
+        doc.uid             = resultSet.getInt(j++);
+        doc.canonical_path  = resultSet.getString(j++);
+        doc.filename        = resultSet.getString(j++);
+        doc.last_modified   = resultSet.getLong(j++);
+        doc.hash            = resultSet.getString(j++);
+        doc.comment         = resultSet.getString(j++);
+        
+        return doc;
+      }
+      else
+        return doc;
+
+    }
+    catch(SQLException e)
+    {
+      e.printStackTrace();
+    }
+    
+    return doc;
+  }
+  
+  private final int insertDoc(final Document doc)
   {
     doc.checkUid();
     doc.sanityCheck();
