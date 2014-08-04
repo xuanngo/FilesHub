@@ -17,6 +17,18 @@ public class Manager
   private Shelf shelf = new Shelf();
   private Trash trash = new Trash();
   
+  public void createDbStructure()
+  {
+    // Create database structure if sqlite database file doesn't exist.
+    File DbFile = new File(Conn.DB_FILE_PATH);
+    if(!DbFile.exists())
+    {// Database file doesn't exist.
+      this.shelf.createTable();
+      this.trash.createTable();
+    }
+    
+  }
+  
   public ResultDocSet addFile(File file)
   {
     ResultDocSet resultDocSet = new ResultDocSet();
@@ -84,13 +96,13 @@ public class Manager
         
         // Add duplicate file in Trash table if it doesn't exist.
         Document trashDoc = new Document(file);
-        trashDoc.uid = doc.uid;
+        trashDoc.uid  = doc.uid;
         trashDoc.hash = doc.hash;
         Trash trash = new Trash();
         trash.addFile(trashDoc);
     
         // Update status.
-        resultDocSet.status = ResultDocSet.DIFF_PATH_SAME_HASH; // Duplicate file.
+        resultDocSet.status   = ResultDocSet.DIFF_PATH_SAME_HASH; // Duplicate file.
         resultDocSet.file     = file;
         resultDocSet.document = doc;
 
@@ -100,15 +112,5 @@ public class Manager
     return resultDocSet;    
   }
   
-  public void createDbStructure()
-  {
-    // Create database structure if sqlite database file doesn't exist.
-    File DbFile = new File(Conn.DB_FILE_PATH);
-    if(!DbFile.exists())
-    {// Database file doesn't exist.
-      this.shelf.createTable();
-      this.trash.createTable();
-    }
-    
-  }  
+
 }
