@@ -5,6 +5,11 @@ import java.lang.RuntimeException;
 
 import net.xngo.fileshub.Utils;
 
+/**
+ * Document is a container holding specific informations of a file.
+ * @author Xuan Ngo
+ *
+ */
 public class Document
 {
   public int    uid             = 0; // For now, uid is an INTEGER. Don't use LONG.
