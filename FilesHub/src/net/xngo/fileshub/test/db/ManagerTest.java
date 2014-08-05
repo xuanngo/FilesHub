@@ -43,7 +43,7 @@ public class ManagerTest
   }
   
   @Test(description="Add new unique file.")
-  public void AddUniqueFile()
+  public void addUniqueFile()
   {
     
     File uniqueFile = Data.createUniqueFile("AddUniqueFile");
@@ -55,7 +55,7 @@ public class ManagerTest
   }
   
   @Test(description="Add exact same file.")
-  public void AddExactSameFile()
+  public void addExactSameFile()
   {
     File uniqueFile = Data.createUniqueFile("AddExactSameFile");
     this.manager.addFile(uniqueFile); // Add file 1st time.
@@ -73,7 +73,7 @@ public class ManagerTest
   }
   
   @Test(description="Add file with existing hash but different file name/path.")
-  public void AddFileWithSameHash()
+  public void addFileWithSameHash()
   {
     // Add unique file.
     File uniqueFile = Data.createUniqueFile("AddFileWithSameHash");
@@ -109,7 +109,7 @@ public class ManagerTest
   
 
   @Test(description="Add file with existing hash but different file path and check Trash table.")
-  public void AddFileWithSameHashCheckTrash()
+  public void addFileWithSameHashCheckTrash()
   {
     // Add unique file.
     File uniqueFile = Data.createUniqueFile("AddFileWithSameHashCheckTrash");
@@ -140,7 +140,7 @@ public class ManagerTest
   }  
   
   @Test(description="Add the same file that has changed since FilesHub last ran.")
-  public void AddFileChangedSinceLastRun()
+  public void addFileChangedSinceLastRun()
   {
     // Add unique file in Shelf.
     File uniqueFile = Data.createUniqueFile("AddFileChangedSinceLastRun");
