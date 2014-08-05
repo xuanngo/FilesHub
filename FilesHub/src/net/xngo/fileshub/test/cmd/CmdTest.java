@@ -61,7 +61,7 @@ public class CmdTest
   {
     String testDirectory = "./test";
     
-    String[] args = new String[] { "-a", testDirectory};
+    String[] args = new String[] { "-a", testDirectory };
     Cmd cmd = new Cmd(args);
     
     Shelf shelf = new Shelf();
