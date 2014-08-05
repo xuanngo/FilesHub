@@ -59,14 +59,22 @@ public class CmdTest
   @Test(description="Test -a option with 1 directory.")
   public void addOptSingleDirectory()
   {
-    String testDirectory = "./test";
+    // Create test data in temporary path
+    String testDirectoryString = System.getProperty("java.io.tmpdir")+System.nanoTime();
+    File testDirectory = new File(testDirectoryString);
+    testDirectory.mkdir();
+    for(int i=0; i<5; i++)
+    {
+      Data.createUniqueFile("addOptSingleDirectory_"+i, testDirectory);
+    }
     
-    String[] args = new String[] { "-a", testDirectory };
+    // Run command.
+    String[] args = new String[] { "-a", testDirectoryString };
     Cmd cmd = new Cmd(args);
-    
+
+    // Validate
     Shelf shelf = new Shelf();
-    
-    Collection<File> filesList = FileUtils.listFiles(new File(testDirectory), TrueFileFilter.INSTANCE, TrueFileFilter.INSTANCE);
+    Collection<File> filesList = FileUtils.listFiles(testDirectory, TrueFileFilter.INSTANCE, TrueFileFilter.INSTANCE);
     
     for(File file: filesList)
     {
@@ -74,6 +82,18 @@ public class CmdTest
       Document doc = shelf.findDocByCanonicalPath(canonicalPath);
       assertNotNull(doc, String.format("Command [%s %s] doesn't work. [%s] is not found in the database.", args[0], args[1], canonicalPath));
     }
+    
+    // Clean up. Directory will be not be cleaned up if assertions failed. But at least the created directory is in the temporary directory.
+    FileUtils.deleteQuietly(testDirectory);    
   }
+  
+  @Test(description="Test -v option.")
+  public void validateOpt()
+  {
+ 
+    String[] args = new String[] { "-v" };
+    Cmd cmd = new Cmd(args);
+
+  }  
   
 }

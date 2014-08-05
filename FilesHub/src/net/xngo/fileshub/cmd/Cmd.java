@@ -27,6 +27,10 @@ public class Cmd
       {
         hub.addFiles(options.getAllUniqueFiles());
       }
+      else if(options.validate)
+      {
+        System.out.println("Validate");
+      }
       else
       { // Anything else, display the help.
         System.out.println();

@@ -8,7 +8,7 @@ import net.xngo.fileshub.struct.ResultDocSet;
 import net.xngo.fileshub.db.Shelf;
 
 /**
- * Manage documents
+ * Manage documents.
  * @author Xuan Ngo
  *
  */

@@ -83,7 +83,7 @@ public class ManagerTest
     File duplicateFile = null;
     try
     {
-      duplicateFile = File.createTempFile("AddFileWithSameHash_duplicate_hash_", null);
+      duplicateFile = Data.createUniqueFile("AddFileWithSameHash_duplicate_hash");
       FileUtils.copyFile(uniqueFile, duplicateFile);
     }
     catch(IOException e)
@@ -119,7 +119,7 @@ public class ManagerTest
     File duplicateFile = null;
     try
     {
-      duplicateFile = File.createTempFile("AddFileWithSameHashCheckTrash_duplicate_hash_", null);
+      duplicateFile = Data.createUniqueFile("AddFileWithSameHashCheckTrash_duplicate_hash");
       FileUtils.copyFile(uniqueFile, duplicateFile);
     }
     catch(IOException e)
