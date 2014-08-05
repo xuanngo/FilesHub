@@ -26,6 +26,11 @@ import java.io.IOException;
 
 import org.apache.commons.io.FileUtils;
 
+/**
+ * Test net.xngo.fileshub.db.Manager class.
+ * @author Xuan Ngo
+ *
+ */
 public class ManagerTest
 {
   private Manager manager = new Manager();
