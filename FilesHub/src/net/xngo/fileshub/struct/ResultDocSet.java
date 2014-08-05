@@ -2,6 +2,11 @@ package net.xngo.fileshub.struct;
 
 import java.io.File;
 
+/**
+ * ResultDocSet is a container holding information for reporting purposes.
+ * @author Xuan Ngo
+ *
+ */
 public class ResultDocSet
 {
   // Possible statuses.
