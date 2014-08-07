@@ -19,8 +19,8 @@ public class Options
   @Parameter(names = {"-a", "--add"}, description = "Add list of files or directories.", variableArity = true)
   public Set<File> addPaths;
   
-  @Parameter(names = {"-v", "--validate"}, description = "Validate database for inconsistency.")
-  public boolean validate;  
+  @Parameter(names = {"-u", "--update"}, description = "Update database.")
+  public boolean update;  
   
   public final Set<File> getAllUniqueFiles()
   {

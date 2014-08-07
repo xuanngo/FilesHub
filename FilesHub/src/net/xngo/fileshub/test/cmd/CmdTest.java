@@ -87,11 +87,11 @@ public class CmdTest
     FileUtils.deleteQuietly(testDirectory);    
   }
   
-  @Test(description="Test -v option.")
+  @Test(description="Test -u option.")
   public void validateOpt()
   {
  
-    String[] args = new String[] { "-v" };
+    String[] args = new String[] { "-u" };
     Cmd cmd = new Cmd(args);
 
   }  
