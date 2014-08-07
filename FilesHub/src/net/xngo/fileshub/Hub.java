@@ -2,11 +2,13 @@ package net.xngo.fileshub;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 
 import net.xngo.fileshub.db.Manager;
 import net.xngo.fileshub.struct.ResultDocSet;
+import net.xngo.fileshub.struct.Document;
 
 
 /**
@@ -56,6 +58,16 @@ public class Hub
   
   public void update()
   {
-    this.manager.update();
+    List<Document> missingFileList = this.manager.update();
+    
+    if(missingFileList.size()>0)
+    {
+      System.out.println(String.format("Missing files [%s]:", missingFileList.size()));
+      System.out.println("==============================");
+      for(Document doc: missingFileList)
+      {
+        System.out.println("\t"+doc.canonical_path);
+      }
+    }
   }
 }
