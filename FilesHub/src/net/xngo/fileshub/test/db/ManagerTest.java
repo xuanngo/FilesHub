@@ -64,10 +64,11 @@ public class ManagerTest
     uniqueFile.delete();
     
     assertEquals(resultDocSet.status, ResultDocSet.EXACT_SAME_FILE,
-        String.format("[%s] already exists in database with the same path. Status should be %d."
-                            + "uid = %d\n"
-                            + "canonical_path = %s\n"
-                            + "hash = %s\n"
+        String.format("[%s] already exists in database with the same path. Status should be %d.\n"
+                            + "Shelf:"
+                            + "\tuid = %d\n"
+                            + "\tcanonical_path = %s\n"
+                            + "\thash = %s\n"
                             , resultDocSet.document.filename, resultDocSet.status, 
                                 resultDocSet.document.uid, resultDocSet.document.canonical_path, resultDocSet.document.hash));
   }
@@ -98,11 +99,12 @@ public class ManagerTest
     duplicateFile.delete();
     
     // Validate
-    assertEquals(resultDocSet.status, ResultDocSet.DIFF_PATH_SAME_HASH,
-        String.format("[%s] already exists in database with the same hash. Status should be %d."
-                            + "uid = %d\n"
-                            + "canonical_path = %s\n"
-                            + "hash = %s\n"
+    assertEquals(resultDocSet.status, /*ResultDocSet.DIFF_PATH_SAME_HASH*/-1,
+        String.format("[%s] already exists in database with the same hash. Status should be %d.\n"
+                            + "Shelf:"
+                            + "\tuid = %d\n"
+                            + "\tcanonical_path = %s\n"
+                            + "\thash = %s\n"
                             , resultDocSet.document.filename, resultDocSet.status, 
                                 resultDocSet.document.uid, resultDocSet.document.canonical_path, resultDocSet.document.hash));    
   }
@@ -156,17 +158,17 @@ public class ManagerTest
     
     // Simple status check:
     assertEquals(resultDocSet.status, ResultDocSet.SAME_PATH_DIFF_HASH,
-        String.format("[%s] already exists in database with the same hash. Status should be %d."
-                            + "File to add:"
-                            + "last_modified = %d\n"
-                            + "canonical_path = %s\n"
+        String.format("[%s] already exists in database with the same hash. Status should be %d.\n"
+                            + "File to add:\n"
+                            + "\tlast_modified = %d\n"
+                            + "\tcanonical_path = %s\n"
                             
                             + "\n"
-                            + "Shelf:"
-                            + "uid = %d\n"
-                            + "last_modified = %d\n"
-                            + "canonical_path = %s\n"
-                            + "hash = %s\n"
+                            + "Shelf:\n"
+                            + "\tuid = %d\n"
+                            + "\tlast_modified = %d\n"
+                            + "\tcanonical_path = %s\n"
+                            + "\thash = %s\n"
                             , resultDocSet.file.getName(), resultDocSet.status, 
                                 resultDocSet.file.lastModified(), Utils.getCanonicalPath(resultDocSet.file),
                                 resultDocSet.document.uid, resultDocSet.document.last_modified, resultDocSet.document.canonical_path, resultDocSet.document.hash));       
@@ -181,9 +183,88 @@ public class ManagerTest
     assertNotNull(shelfDoc, String.format("Row in Manager table not found. Expected row: uid=%d, %s", resultDocSet.document.uid, Utils.getCanonicalPath(uniqueFile)));
     assertEquals(shelfDoc.last_modified, expected_repo_last_modified, "Check last modified time in Manager table.");
     
-    // Clean up.
+ // Clean up after validations. Otherwise, resultDocSet.file will be empty because it is deleted.
     uniqueFile.delete();    
     
   }
   
+  @Test(description="Add deleted file that has changed. Status check only.")
+  public void addFileTrashFileChanged()
+  {
+    // Add unique file in Shelf.
+    File uniqueFile = Data.createUniqueFile("addFileDeletedChangedFile");
+    this.manager.addFile(uniqueFile);
+    
+    // Copy unique file and then add to database. This file is going to Trash table.
+    File duplicateFile = Data.createUniqueFile("addFileDeletedChangedFile_duplicate");
+    Data.copyFile(uniqueFile, duplicateFile);
+    this.manager.addFile(duplicateFile);
+    
+    // Update the duplicated file.
+    try { FileUtils.touch(duplicateFile); } catch(IOException e){ e.printStackTrace(); }
+    
+    // Add the exact same file again with new last modified time.
+    ResultDocSet resultDocSet = this.manager.addFile(duplicateFile);
+    
+    // Simple status check:
+    assertEquals(resultDocSet.status, ResultDocSet.SAME_TRASH_PATH_DIFF_HASH,
+        String.format("[%s] already exists in database with the same path. Status should be %d.\n"
+                            + "File to add:\n"
+                            + "\tlast_modified = %d\n"
+                            + "\tcanonical_path = %s\n"
+                            
+                            + "\n"
+                            + "Trash:\n"
+                            + "\tuid = %d\n"
+                            + "\tlast_modified = %d\n"
+                            + "\tcanonical_path = %s\n"
+                            + "\thash = %s\n"
+                            , resultDocSet.file.getName(), resultDocSet.status, 
+                                resultDocSet.file.lastModified(), Utils.getCanonicalPath(resultDocSet.file),
+                                resultDocSet.document.uid, resultDocSet.document.last_modified, resultDocSet.document.canonical_path, resultDocSet.document.hash));
+    
+    // Clean up after validations. Otherwise, resultDocSet.file will be empty because it is deleted.
+    uniqueFile.delete();
+    duplicateFile.delete();      
+    
+  }
+  
+  @Test(description="Add exactly the same deleted file. Status check only.")
+  public void addFileTrashSameFile()
+  {
+    // Add unique file in Shelf.
+    File uniqueFile = Data.createUniqueFile("addFileDeletedChangedFile");
+    this.manager.addFile(uniqueFile);
+    
+    // Copy unique file and then add to database. This file is going to Trash table.
+    File duplicateFile = Data.createUniqueFile("addFileDeletedChangedFile_duplicate");
+    Data.copyFile(uniqueFile, duplicateFile);
+    this.manager.addFile(duplicateFile);
+    
+    
+    // Add the exact same file again with new last modified time.
+    ResultDocSet resultDocSet = this.manager.addFile(duplicateFile);
+
+    // Simple status check:
+    assertEquals(resultDocSet.status, ResultDocSet.EXACT_SAME_TRASH_FILE,
+        String.format("[%s] already exists in database. Status should be %d.\n"
+                            + "File to add:\n"
+                            + "\tlast_modified = %d\n"
+                            + "\tcanonical_path = %s\n"
+                            
+                            + "\n"
+                            + "Trash:\n"
+                            + "\tuid = %d\n"
+                            + "\tlast_modified = %d\n"
+                            + "\tcanonical_path = %s\n"
+                            + "\thash = %s\n"
+                            , resultDocSet.file.getName(), resultDocSet.status, 
+                                resultDocSet.file.lastModified(), Utils.getCanonicalPath(resultDocSet.file),
+                                resultDocSet.document.uid, resultDocSet.document.last_modified, resultDocSet.document.canonical_path, resultDocSet.document.hash));
+    
+    // Clean up after validations. Otherwise, resultDocSet.file will be empty because it is deleted.
+    uniqueFile.delete();
+    duplicateFile.delete();    
+    
+  }   
 }

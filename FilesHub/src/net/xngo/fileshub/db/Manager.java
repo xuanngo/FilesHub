@@ -42,7 +42,7 @@ public class Manager
   public ResultDocSet addFile(File file)
   {
     ResultDocSet resultDocSet = new ResultDocSet();
-    resultDocSet.file = file;
+    resultDocSet.file         = file;
     
     String canonicalFilePath = Utils.getCanonicalPath(file);
     Document docFromDb = this.shelf.findDocByCanonicalPath(canonicalFilePath);
@@ -55,7 +55,6 @@ public class Manager
         
         // Update status.
         resultDocSet.status = ResultDocSet.EXACT_SAME_FILE;
-        resultDocSet.file     = file;
         resultDocSet.document = docFromDb;
         
       }
@@ -78,7 +77,6 @@ public class Manager
         
         // Update status.
         resultDocSet.status = ResultDocSet.SAME_PATH_DIFF_HASH;
-        resultDocSet.file     = file;
         resultDocSet.document = docFromDb; // Use docFromDb instead of newDoc because it conflict with 'file'.        
 
       }
@@ -95,14 +93,12 @@ public class Manager
         {
           // Update status.
           resultDocSet.status = ResultDocSet.EXACT_SAME_TRASH_FILE; // Specifically, same path of deleted file.
-          resultDocSet.file     = file;
           resultDocSet.document = trashDoc; // Use trashDoc because it conflict with 'file'.           
         }
         else
         {
           // Update status.
           resultDocSet.status = ResultDocSet.SAME_TRASH_PATH_DIFF_HASH; // Potential deleted duplicate: Same path as deleted files but different content.
-          resultDocSet.file     = file;
           resultDocSet.document = trashDoc; // Use trashDoc because it conflict with 'file'.             
         }
           
@@ -124,7 +120,6 @@ public class Manager
       
           // Update status.
           resultDocSet.status   = ResultDocSet.DIFF_PATH_SAME_HASH; // Duplicate file.
-          resultDocSet.file     = file;
           resultDocSet.document = doc;
   
         }
@@ -137,7 +132,6 @@ public class Manager
           
           // Update status.
           resultDocSet.status = ResultDocSet.DIFF_PATH_DIFF_HASH; // New unique file.
-          resultDocSet.file     = file;
           resultDocSet.document = doc;
         }
       }

@@ -27,5 +27,17 @@ public class Data
       e.printStackTrace();
     }
     return uniqueFile;
-  }  
+  }
+  
+  public static void copyFile(File from, File to)
+  {
+    try
+    {
+      FileUtils.copyFile(from, to);
+    }
+    catch(IOException e)
+    {
+      e.printStackTrace();
+    }      
+  }
 }
