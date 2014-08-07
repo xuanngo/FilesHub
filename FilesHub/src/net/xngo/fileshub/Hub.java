@@ -68,7 +68,9 @@ public class Hub
       {
         System.out.println("\t"+doc.canonical_path);
       }
-      System.out.println(String.format("%d files are missing from your system.!", missingFileList.size()));
+      System.out.println(String.format("%d files are missing from your system!", missingFileList.size()));
     }
   }
+  
+  
 }
