@@ -173,7 +173,7 @@ public class ManagerTest
                                 resultDocSet.file.lastModified(), Utils.getCanonicalPath(resultDocSet.file),
                                 resultDocSet.document.uid, resultDocSet.document.last_modified, resultDocSet.document.canonical_path, resultDocSet.document.hash));       
     
-    // Testing: Check old last modified time is moved to Trash table and new last modified time is in Manager table.
+    // Testing: Check old last modified time is moved to Trash table and new last modified time is in Shelf table.
     Trash trash = new Trash();
     Document trashDoc = trash.findDocByCanonicalPath(Utils.getCanonicalPath(uniqueFile));
     assertEquals(trashDoc.last_modified, expected_trash_last_modified, "Check last modified time in Trash table.");
@@ -181,9 +181,9 @@ public class ManagerTest
     Shelf shelf = new Shelf();
     Document shelfDoc = shelf.findDocByUid(resultDocSet.document.uid);
     assertNotNull(shelfDoc, String.format("Row in Manager table not found. Expected row: uid=%d, %s", resultDocSet.document.uid, Utils.getCanonicalPath(uniqueFile)));
-    assertEquals(shelfDoc.last_modified, expected_repo_last_modified, "Check last modified time in Manager table.");
+    assertEquals(shelfDoc.last_modified, expected_repo_last_modified, "Check last modified time in Shelf table.");
     
- // Clean up after validations. Otherwise, resultDocSet.file will be empty because it is deleted.
+    // Clean up after validations. Otherwise, resultDocSet.file will be empty because it is deleted.
     uniqueFile.delete();    
     
   }
@@ -266,5 +266,37 @@ public class ManagerTest
     uniqueFile.delete();
     duplicateFile.delete();    
     
-  }   
+  }
+  
+  
+  @Test(description="Update file that has changed since added in database")
+  public void updateFileChanged()
+  {
+    // Add unique file in Shelf.
+    File uniqueFile = Data.createUniqueFile("updateFileChanged");
+    long expected_trash_last_modified = uniqueFile.lastModified();
+    ResultDocSet resultDocSet = this.manager.addFile(uniqueFile);
+    
+    // Update the unique file.
+    try { FileUtils.touch(uniqueFile); } catch(IOException e){ e.printStackTrace(); }
+    long expected_shelf_last_modified = uniqueFile.lastModified();
+    
+    // Update database
+    this.manager.update();
+    
+    // Testing: Check old last modified time is moved to Trash table and new last modified time is in Shelf table.
+    Trash trash = new Trash();
+    Document trashDoc = trash.findDocByCanonicalPath(Utils.getCanonicalPath(uniqueFile));
+    assertEquals(trashDoc.last_modified, expected_trash_last_modified, "Check last modified time in Trash table.");
+    
+    Shelf shelf = new Shelf();
+    Document shelfDoc = shelf.findDocByUid(resultDocSet.document.uid);
+    assertEquals(shelfDoc.last_modified, expected_shelf_last_modified, "Check last modified time in Shelf table.");
+    
+    // Clean up after validations. Otherwise, resultDocSet.file will be empty because it is deleted.
+    uniqueFile.delete();        
+  }
+  
+  
+  
 }
