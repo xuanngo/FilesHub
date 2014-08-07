@@ -73,40 +73,40 @@ public class ManagerTest
                                 resultDocSet.document.uid, resultDocSet.document.canonical_path, resultDocSet.document.hash));
   }
   
-  @Test(description="Add file with existing hash but different file name/path.")
+  @Test(description="Add file with same hash but different file name/path.")
   public void addFileWithSameHash()
   {
     // Add unique file.
-    File uniqueFile = Data.createUniqueFile("AddFileWithSameHash");
+    File uniqueFile = Data.createUniqueFile("addFileWithSameHash");
     this.manager.addFile(uniqueFile);
     
     // Copy unique file and then add to database.
-    File duplicateFile = null;
-    try
-    {
-      duplicateFile = Data.createUniqueFile("AddFileWithSameHash_duplicate_hash");
-      FileUtils.copyFile(uniqueFile, duplicateFile);
-    }
-    catch(IOException e)
-    {
-      e.printStackTrace();
-    }
+    File duplicateFile = Data.createUniqueFile("addFileWithSameHash_duplicate_hash");
+    Data.copyFile(uniqueFile, duplicateFile);
     
+    // Add duplicate file to database.
     ResultDocSet resultDocSet = this.manager.addFile(duplicateFile); // Add duplicate file with different file name/path.
     
-    // Clean up.
-    uniqueFile.delete();
-    duplicateFile.delete();
-    
     // Validate
-    assertEquals(resultDocSet.status, /*ResultDocSet.DIFF_PATH_SAME_HASH*/-1,
+    assertEquals(resultDocSet.status, ResultDocSet.DIFF_PATH_SAME_HASH,
         String.format("[%s] already exists in database with the same hash. Status should be %d.\n"
+                            + "File to add:\n"
+                            + "\tlast_modified = %d\n"
+                            + "\tcanonical_path = %s\n"
+                            
+                            + "\n"            
                             + "Shelf:"
                             + "\tuid = %d\n"
+                            + "\tlast_modified = %d\n"
                             + "\tcanonical_path = %s\n"
-                            + "\thash = %s\n"
+                            + "\thash = %s\n"                            
                             , resultDocSet.document.filename, resultDocSet.status, 
-                                resultDocSet.document.uid, resultDocSet.document.canonical_path, resultDocSet.document.hash));    
+                                resultDocSet.file.lastModified(), Utils.getCanonicalPath(resultDocSet.file),                            
+                                resultDocSet.document.uid, resultDocSet.document.last_modified, resultDocSet.document.canonical_path, resultDocSet.document.hash));
+    
+    // Clean up after validations. Otherwise, resultDocSet.file will be empty because it is deleted.
+    uniqueFile.delete();
+    duplicateFile.delete();    
   }
   
 
