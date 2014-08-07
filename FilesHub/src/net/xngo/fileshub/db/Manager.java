@@ -39,6 +39,32 @@ public class Manager
   
   }
   
+  /**
+   * The logic of this method:
+   * 
+   *   If same path in Shelf
+   *     If same modified time
+   *       Do nothing: It is the exact same file.
+   *     else // Content has changed since it was inputted
+   *       Copy document info from Shelf to Trash table.
+   *       Update last modified time and hash in Shelf table.
+   *   else
+   *     If same path in Trash table
+   *       If same modified time
+   *         Return Duplicate(same as deleted file)
+   *       else
+   *         Return Potential Duplicate: need user invervention
+   *     else
+   *       If hash exists in Shelf table
+   *         Save document in Trash // No need to check for duplicate as it has been checked.
+   *         Return Duplicate.
+   *       else
+   *         Save document in Shelf table
+   *         Return new unique file status.
+   *         
+   * @param file
+   * @return
+   */
   public ResultDocSet addFile(File file)
   {
     ResultDocSet resultDocSet = new ResultDocSet();
