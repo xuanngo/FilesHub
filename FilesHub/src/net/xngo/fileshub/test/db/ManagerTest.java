@@ -57,7 +57,7 @@ public class ManagerTest
   @Test(description="Add exact same file.")
   public void addExactSameFile()
   {
-    File uniqueFile = Data.createUniqueFile("AddExactSameFile");
+    File uniqueFile = Data.createUniqueFile("addExactSameFile");
     this.manager.addFile(uniqueFile); // Add file 1st time.
     
     ResultDocSet resultDocSet = this.manager.addFile(uniqueFile); // Add the exact same file the 2nd time.
