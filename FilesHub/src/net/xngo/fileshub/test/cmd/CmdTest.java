@@ -87,13 +87,5 @@ public class CmdTest
     FileUtils.deleteQuietly(testDirectory);    
   }
   
-  @Test(description="Test -u option.")
-  public void updateOpt()
-  {
  
-    String[] args = new String[] { "-u" };
-    Cmd cmd = new Cmd(args);
-    
-  }  
-  
 }
