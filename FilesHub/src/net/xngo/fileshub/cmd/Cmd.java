@@ -29,7 +29,7 @@ public class Cmd
       }
       else if(options.update)
       {
-        System.out.println("update");
+        hub.update();
       }
       else
       { // Anything else, display the help.

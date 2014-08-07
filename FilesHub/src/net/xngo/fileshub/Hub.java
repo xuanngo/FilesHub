@@ -52,6 +52,10 @@ public class Hub
     report.writeCSV(listOfDuplicateFiles, "./results.csv");
     report.write(listOfDuplicateFiles);
     
-   
+  }
+  
+  public void update()
+  {
+    this.manager.update();
   }
 }

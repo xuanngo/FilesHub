@@ -88,12 +88,12 @@ public class CmdTest
   }
   
   @Test(description="Test -u option.")
-  public void validateOpt()
+  public void updateOpt()
   {
  
     String[] args = new String[] { "-u" };
     Cmd cmd = new Cmd(args);
-
+    
   }  
   
 }

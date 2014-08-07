@@ -16,6 +16,7 @@ import org.testng.annotations.Test;
 import org.testng.annotations.BeforeClass;
 
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertTrue;
 import static org.testng.Assert.assertNotNull;
 
 
@@ -23,6 +24,7 @@ import static org.testng.Assert.assertNotNull;
 // Java Library
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 import org.apache.commons.io.FileUtils;
 
@@ -269,7 +271,7 @@ public class ManagerTest
   }
   
   
-  @Test(description="Update file that has changed since added in database")
+  @Test(description="Update file that has changed since added in database.")
   public void updateFileChanged()
   {
     // Add unique file in Shelf.
@@ -294,9 +296,26 @@ public class ManagerTest
     assertEquals(shelfDoc.last_modified, expected_shelf_last_modified, "Check last modified time in Shelf table.");
     
     // Clean up after validations. Otherwise, resultDocSet.file will be empty because it is deleted.
-    uniqueFile.delete();        
+    uniqueFile.delete();      
   }
   
-  
+  @Test(description="Update to list missing files. Do simple count check.")
+  public void updateMissingFiles()
+  {
+    // Add unique files in Shelf.
+    int MAX = new Shelf().getAllDoc().size()+3; // Bigger than total files in Shelf so that it is not fooled by the remnant deleted files of the other tests.
+    for(int i=0; i<MAX; i++)
+    {
+      File uniqueFile = Data.createUniqueFile("updateMissingFiles_"+i);
+      this.manager.addFile(uniqueFile);
+      uniqueFile.delete();
+    }
+
+    // Get a list of missing files through update().
+    List<Document> docList = this.manager.update();
+    
+    assertTrue((docList.size()>=MAX), String.format("Missing files=%d, Deleted files=%d, Missing Files >= Deleted files", docList.size(), MAX));
+   
+  }  
   
 }
