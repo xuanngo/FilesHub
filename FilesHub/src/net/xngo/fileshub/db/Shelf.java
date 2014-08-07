@@ -3,6 +3,8 @@ package net.xngo.fileshub.db;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
+import java.util.ArrayList;
 
 import net.xngo.fileshub.struct.Document;
 
@@ -42,17 +44,29 @@ public class Shelf
    */
   public Document findDocByUid(final int uid)
   {
-    return this.findDocBy("uid", uid+"");
+    List<Document> docList = this.findDocBy("uid", uid+"");
+    if(docList.size()==0)
+      return null;
+    else
+      return docList.get(0);
   } 
   
   public Document findDocByCanonicalPath(final String canonicalPath)
   {
-    return this.findDocBy("canonical_path", canonicalPath);
+    List<Document> docList = this.findDocBy("canonical_path", canonicalPath);
+    if(docList.size()==0)
+      return null;
+    else
+      return docList.get(0);    
   }
   
   public Document findDocByHash(final String hash)
   {
-    return this.findDocBy("hash", hash);
+    List<Document> docList = this.findDocBy("hash", hash);
+    if(docList.size()==0)
+      return null;
+    else
+      return docList.get(0);       
   }
 
   
@@ -69,6 +83,13 @@ public class Shelf
   {
     return this.updateDoc(doc);
   }
+  
+  /*
+  public List<Document> getAllDoc()
+  {
+    
+  }
+  */
   /****************************************************************************
    * 
    *                             PRIVATE FUNCTIONS
@@ -171,6 +192,7 @@ public class Shelf
     return rowAffected;
   }
   
+  /*
   private Document findDocBy(String column, String value)
   {
     Document doc = null;
@@ -210,6 +232,49 @@ public class Shelf
     
     return doc;
   }
+  */
+  private List<Document> findDocBy(String column, String value)
+  {
+    // Construct sql query.
+    String where = "";
+    if(!column.isEmpty())
+      where = String.format("WHERE %s = ?", column);
+    
+    final String query = String.format("SELECT uid, canonical_path, filename, last_modified, hash, comment "
+                                        + " FROM %s "
+                                        + "%s", this.tablename, where);
+    
+    List<Document> docList = new ArrayList<Document>();
+    
+    try
+    {
+      this.select = this.conn.connection.prepareStatement(query);
+      
+      int i=1;
+      this.select.setString(i++, value);
+      
+      ResultSet resultSet =  this.select.executeQuery();
+      while(resultSet.next())
+      {
+        Document doc = new Document();
+        int j=1;
+        doc.uid             = resultSet.getInt(j++);
+        doc.canonical_path  = resultSet.getString(j++);
+        doc.filename        = resultSet.getString(j++);
+        doc.last_modified   = resultSet.getLong(j++);
+        doc.hash            = resultSet.getString(j++);
+        doc.comment         = resultSet.getString(j++);
+        
+        docList.add(doc);
+      }
+    }
+    catch(SQLException e)
+    {
+      e.printStackTrace();
+    }
+    
+    return docList;
+  }  
   
   /**
    * Don't put too much constraint on the column. Do validations on the application side.
