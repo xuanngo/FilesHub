@@ -90,7 +90,6 @@ public class Manager
       {// File has changed. 
 
         // Move docFromDb to Trash table.
-        Trash trash = new Trash();
         this.trash.addFile(docFromDb);
         
         // Update changed file to Shelf table.
@@ -168,6 +167,10 @@ public class Manager
     return resultDocSet;    
   }
   
+  /**
+   * If files have changed, then update them.
+   * @return List of missing files.
+   */
   public List<Document> update()
   {
     List<Document> docList = this.shelf.getAllDoc();
@@ -194,9 +197,7 @@ public class Manager
       else
         missingFileList.add(doc);
     }
-
-    System.out.println(docList.size());
-    
     return missingFileList;
   }
+  
 }
