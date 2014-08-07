@@ -44,13 +44,24 @@ public class Manager
     ResultDocSet resultDocSet = new ResultDocSet();
     resultDocSet.file = file;
     
-    Document docFromDb = this.shelf.findDocByCanonicalPath(Utils.getCanonicalPath(file));
+    String canonicalFilePath = Utils.getCanonicalPath(file);
+    Document docFromDb = this.shelf.findDocByCanonicalPath(canonicalFilePath);
     if(docFromDb!=null)
     {// File path found in Shelf table.
       
       
-      if(docFromDb.last_modified != file.lastModified())
+      if(docFromDb.last_modified == file.lastModified())
+      {// Nothing to do. Exact same file.
+        
+        // Update status.
+        resultDocSet.status = ResultDocSet.EXACT_SAME_FILE;
+        resultDocSet.file     = file;
+        resultDocSet.document = docFromDb;
+        
+      }
+      else
       {// File has changed. 
+
         // Move docFromDb to Trash table.
         Trash trash = new Trash();
         trash.addFile(docFromDb);
@@ -68,16 +79,7 @@ public class Manager
         // Update status.
         resultDocSet.status = ResultDocSet.SAME_PATH_DIFF_HASH;
         resultDocSet.file     = file;
-        resultDocSet.document = docFromDb; // Use docFromDb instead of newDoc because it conflict with 'file'.
-        
-      }
-      else
-      { // Nothing to do. Exact same file.
-        
-        // Update status.
-        resultDocSet.status = ResultDocSet.EXACT_SAME_FILE;
-        resultDocSet.file     = file;
-        resultDocSet.document = docFromDb;
+        resultDocSet.document = docFromDb; // Use docFromDb instead of newDoc because it conflict with 'file'.        
 
       }
 
@@ -85,37 +87,59 @@ public class Manager
     else
     { // File path not found in Shelf table.
       
-      // Check hash.
-      String hash = Utils.getHash(file);
-      Document doc = this.shelf.findDocByHash(hash);
-      
-      if(doc==null)
-      {// Hash is not found.
-        doc = new Document(file);
-        doc.hash = hash;
-        doc.uid = this.shelf.addDoc(doc); // Return generatedKeys
-        
-        // Update status.
-        resultDocSet.status = ResultDocSet.DIFF_PATH_DIFF_HASH; // New unique file.
-        resultDocSet.file     = file;
-        resultDocSet.document = doc;
-
+      Trash trash = new Trash();
+      Document trashDoc = trash.findDocByCanonicalPath(canonicalFilePath);
+      if(trashDoc!=null)
+      {// File path found in Trash table.
+        if(trashDoc.last_modified == file.lastModified())
+        {
+          // Update status.
+          resultDocSet.status = ResultDocSet.EXACT_SAME_TRASH_FILE; // Specifically, same path of deleted file.
+          resultDocSet.file     = file;
+          resultDocSet.document = trashDoc; // Use trashDoc because it conflict with 'file'.           
+        }
+        else
+        {
+          // Update status.
+          resultDocSet.status = ResultDocSet.SAME_TRASH_PATH_DIFF_HASH; // Potential deleted duplicate: Same path as deleted files but different content.
+          resultDocSet.file     = file;
+          resultDocSet.document = trashDoc; // Use trashDoc because it conflict with 'file'.             
+        }
+          
       }
       else
-      { // Found hash but different path. Therefore, add it to Trash table to keep it as history.
+      {// File path NOT found in Trash table.
+        // Check hash.
+        String hash = Utils.getHash(file);
+        Document doc = this.shelf.findDocByHash(hash);
         
-        // Add duplicate file in Trash table if it doesn't exist.
-        Document trashDoc = new Document(file);
-        trashDoc.uid  = doc.uid;
-        trashDoc.hash = doc.hash;
-        Trash trash = new Trash();
-        trash.addFile(trashDoc);
-    
-        // Update status.
-        resultDocSet.status   = ResultDocSet.DIFF_PATH_SAME_HASH; // Duplicate file.
-        resultDocSet.file     = file;
-        resultDocSet.document = doc;
-
+        if(doc!=null)
+        {// Found hash in Shelf. Therefore, add it to Trash table to keep it as history.
+          
+          // Add duplicate file in Trash table if it doesn't exist.
+          Document trashNewDoc = new Document(file);
+          trashNewDoc.uid  = doc.uid;
+          trashNewDoc.hash = doc.hash;
+          trash.addFile(trashNewDoc);
+      
+          // Update status.
+          resultDocSet.status   = ResultDocSet.DIFF_PATH_SAME_HASH; // Duplicate file.
+          resultDocSet.file     = file;
+          resultDocSet.document = doc;
+  
+        }
+        else
+        {// Hash is not found, new unique file.
+          
+          doc = new Document(file);
+          doc.hash = hash;
+          doc.uid = this.shelf.addDoc(doc); // Return generatedKeys
+          
+          // Update status.
+          resultDocSet.status = ResultDocSet.DIFF_PATH_DIFF_HASH; // New unique file.
+          resultDocSet.file     = file;
+          resultDocSet.document = doc;
+        }
       }
     }
     
