@@ -1,6 +1,8 @@
 package net.xngo.fileshub.db;
 
 import java.io.File;
+import java.util.List;
+import java.util.ArrayList;
 
 import net.xngo.fileshub.Utils;
 import net.xngo.fileshub.struct.Document;
@@ -89,7 +91,7 @@ public class Manager
 
         // Move docFromDb to Trash table.
         Trash trash = new Trash();
-        trash.addFile(docFromDb);
+        this.trash.addFile(docFromDb);
         
         // Update changed file to Shelf table.
         String hash = Utils.getHash(file);
@@ -166,5 +168,35 @@ public class Manager
     return resultDocSet;    
   }
   
+  public List<Document> update()
+  {
+    List<Document> docList = this.shelf.getAllDoc();
+    
+    List<Document> missingFileList = new ArrayList<Document>();
+    for(Document doc: docList)
+    {
+      File file = new File(doc.canonical_path);
+      if(file.exists())
+      {
+        if(file.lastModified()!=doc.last_modified)
+        {// File has changed.
+          // Copy old file info in Trash table.
+          this.trash.addFile(doc);
+          
+          // Update changed file to Shelf table.
+          String hash = Utils.getHash(file);
+          Document newDoc = new Document(file);
+          newDoc.uid = doc.uid;
+          newDoc.hash = hash;
+          this.shelf.saveDoc(newDoc);
+        }
+      }
+      else
+        missingFileList.add(doc);
+    }
 
+    System.out.println(docList.size());
+    
+    return missingFileList;
+  }
 }
