@@ -41,6 +41,32 @@ public class Data
     }      
   }
   
-
+  public static File copyFileToDirectory(File from, File toDir)
+  {
+    File copiedFile = null;
+    try
+    {
+      FileUtils.copyFileToDirectory(from, toDir);
+      copiedFile = new File(toDir.getAbsolutePath()+File.separator+from.getName());
+    }
+    catch(IOException e)
+    {
+      e.printStackTrace();
+    }
+    
+    return copiedFile;
+  }
   
+  
+  public static void writeStringToFile(final File file, final String content)
+  {
+    try
+    {
+      FileUtils.writeStringToFile(file, content, true);
+    }
+    catch(IOException e)
+    {
+      e.printStackTrace();
+    }
+  }  
 }
