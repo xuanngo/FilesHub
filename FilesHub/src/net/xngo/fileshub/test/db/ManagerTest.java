@@ -48,7 +48,7 @@ public class ManagerTest
   public void addUniqueFile()
   {
     
-    File uniqueFile = Data.createUniqueFile("AddUniqueFile");
+    File uniqueFile = Data.createTempFile("AddUniqueFile");
     ResultDocSet resultDocSet = this.manager.addFile(uniqueFile);
     uniqueFile.delete();
     
@@ -59,7 +59,7 @@ public class ManagerTest
   @Test(description="Add exact same file.")
   public void addExactSameFile()
   {
-    File uniqueFile = Data.createUniqueFile("addExactSameFile");
+    File uniqueFile = Data.createTempFile("addExactSameFile");
     this.manager.addFile(uniqueFile); // Add file 1st time.
     
     ResultDocSet resultDocSet = this.manager.addFile(uniqueFile); // Add the exact same file the 2nd time.
@@ -79,11 +79,11 @@ public class ManagerTest
   public void addFileWithSameHash()
   {
     // Add unique file.
-    File uniqueFile = Data.createUniqueFile("addFileWithSameHash");
+    File uniqueFile = Data.createTempFile("addFileWithSameHash");
     this.manager.addFile(uniqueFile);
     
     // Copy unique file and then add to database.
-    File duplicateFile = Data.createUniqueFile("addFileWithSameHash_duplicate_hash");
+    File duplicateFile = Data.createTempFile("addFileWithSameHash_duplicate_hash");
     Data.copyFile(uniqueFile, duplicateFile);
     
     // Add duplicate file to database.
@@ -116,14 +116,14 @@ public class ManagerTest
   public void addFileWithSameHashCheckTrash()
   {
     // Add unique file.
-    File uniqueFile = Data.createUniqueFile("AddFileWithSameHashCheckTrash");
+    File uniqueFile = Data.createTempFile("AddFileWithSameHashCheckTrash");
     this.manager.addFile(uniqueFile);
     
     // Copy unique file and then add to database.
     File duplicateFile = null;
     try
     {
-      duplicateFile = Data.createUniqueFile("AddFileWithSameHashCheckTrash_duplicate_hash");
+      duplicateFile = Data.createTempFile("AddFileWithSameHashCheckTrash_duplicate_hash");
       FileUtils.copyFile(uniqueFile, duplicateFile);
     }
     catch(IOException e)
@@ -147,7 +147,7 @@ public class ManagerTest
   public void addFileChangedSinceLastRun()
   {
     // Add unique file in Shelf.
-    File uniqueFile = Data.createUniqueFile("AddFileChangedSinceLastRun");
+    File uniqueFile = Data.createTempFile("AddFileChangedSinceLastRun");
     long expected_trash_last_modified = uniqueFile.lastModified();
     this.manager.addFile(uniqueFile);
     
@@ -194,11 +194,11 @@ public class ManagerTest
   public void addFileTrashFileChanged()
   {
     // Add unique file in Shelf.
-    File uniqueFile = Data.createUniqueFile("addFileDeletedChangedFile");
+    File uniqueFile = Data.createTempFile("addFileDeletedChangedFile");
     this.manager.addFile(uniqueFile);
     
     // Copy unique file and then add to database. This file is going to Trash table.
-    File duplicateFile = Data.createUniqueFile("addFileDeletedChangedFile_duplicate");
+    File duplicateFile = Data.createTempFile("addFileDeletedChangedFile_duplicate");
     Data.copyFile(uniqueFile, duplicateFile);
     this.manager.addFile(duplicateFile);
     
@@ -235,11 +235,11 @@ public class ManagerTest
   public void addFileTrashSameFile()
   {
     // Add unique file in Shelf.
-    File uniqueFile = Data.createUniqueFile("addFileDeletedChangedFile");
+    File uniqueFile = Data.createTempFile("addFileDeletedChangedFile");
     this.manager.addFile(uniqueFile);
     
     // Copy unique file and then add to database. This file is going to Trash table.
-    File duplicateFile = Data.createUniqueFile("addFileDeletedChangedFile_duplicate");
+    File duplicateFile = Data.createTempFile("addFileDeletedChangedFile_duplicate");
     Data.copyFile(uniqueFile, duplicateFile);
     this.manager.addFile(duplicateFile);
     
@@ -275,7 +275,7 @@ public class ManagerTest
   public void updateFileChanged()
   {
     // Add unique file in Shelf.
-    File uniqueFile = Data.createUniqueFile("updateFileChanged");
+    File uniqueFile = Data.createTempFile("updateFileChanged");
     long expected_trash_last_modified = uniqueFile.lastModified();
     ResultDocSet resultDocSet = this.manager.addFile(uniqueFile);
     
@@ -306,7 +306,7 @@ public class ManagerTest
     int MAX = new Shelf().getAllDoc().size()+3; // Bigger than total files in Shelf so that it is not fooled by the remnant deleted files of the other tests.
     for(int i=0; i<MAX; i++)
     {
-      File uniqueFile = Data.createUniqueFile("updateMissingFiles_"+i);
+      File uniqueFile = Data.createTempFile("updateMissingFiles_"+i);
       this.manager.addFile(uniqueFile);
       uniqueFile.delete();
     }

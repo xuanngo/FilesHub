@@ -21,7 +21,7 @@ public class CmdTest
   @Test(description="Test --add option with 1 file.")
   public void addOptSingleFile()
   {
-    File uniqueFile = Data.createUniqueFile("addOptSingleFile");
+    File uniqueFile = Data.createTempFile("addOptSingleFile");
     String canonicalFilePath = Utils.getCanonicalPath(uniqueFile);
     String[] args = new String[] { "--add", canonicalFilePath };
     Cmd cmd = new Cmd(args);
@@ -37,8 +37,8 @@ public class CmdTest
   @Test(description="Test -a option with multiple files.")
   public void addOptMultipleFiles()
   {
-    File firstUniqueFile = Data.createUniqueFile("addOptMultipleFiles1");
-    File secondUniqueFile = Data.createUniqueFile("addOptMultipleFiles2");
+    File firstUniqueFile = Data.createTempFile("addOptMultipleFiles1");
+    File secondUniqueFile = Data.createTempFile("addOptMultipleFiles2");
     String firstCanonicalFilePath = Utils.getCanonicalPath(firstUniqueFile);
     String secondCanonicalFilePath = Utils.getCanonicalPath(secondUniqueFile);
     String[] args = new String[] { "-a", firstCanonicalFilePath,  secondCanonicalFilePath};
@@ -65,7 +65,7 @@ public class CmdTest
     testDirectory.mkdir();
     for(int i=0; i<5; i++)
     {
-      Data.createUniqueFile("addOptSingleDirectory_"+i, testDirectory);
+      Data.createTempFile("addOptSingleDirectory_"+i, testDirectory);
     }
     
     // Run command.

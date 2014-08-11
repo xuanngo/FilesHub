@@ -7,12 +7,12 @@ import org.apache.commons.io.FileUtils;
 
 public class Data
 {
-  public static File createUniqueFile(final String affix)
+  public static File createTempFile(final String affix)
   {
-    return Data.createUniqueFile(affix, null);
+    return Data.createTempFile(affix, null);
   }
   
-  public static File createUniqueFile(final String affix, final File directory)
+  public static File createTempFile(final String affix, final File directory)
   {
     File uniqueFile = null;
     try
@@ -40,4 +40,7 @@ public class Data
       e.printStackTrace();
     }      
   }
+  
+
+  
 }
