@@ -58,7 +58,7 @@ public class Manager
    *         Return Potential Duplicate: need user invervention
    *     else
    *       If hash exists in Shelf table
-   *         Save document in Trash // No need to check for duplicate as it has been checked.
+   *         Save document in Trash // No need to check for duplicates as it has been checked.
    *         Return Duplicate.
    *       else
    *         Save document in Shelf table
@@ -104,7 +104,7 @@ public class Manager
         
         // Update status.
         resultDocSet.status = ResultDocSet.SAME_PATH_DIFF_HASH;
-        resultDocSet.document = docFromDb; // Use docFromDb instead of newDoc because it conflict with 'file'.        
+        resultDocSet.document = docFromDb; // Use docFromDb instead of newDoc because it conflicts with 'file'.        
 
       }
 
