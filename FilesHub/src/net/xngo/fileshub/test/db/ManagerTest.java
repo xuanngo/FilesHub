@@ -49,13 +49,25 @@ public class ManagerTest
   @Test(description="Add new unique file.")
   public void addUniqueFile()
   {
-    
+    // Add a unique file.
     File uniqueFile = Data.createTempFile("AddUniqueFile");
-    ResultDocSet resultDocSet = this.manager.addFile(uniqueFile);
-    uniqueFile.delete();
+    this.manager.addFile(uniqueFile);
+
     
-    assertEquals(resultDocSet.status, ResultDocSet.DIFF_PATH_DIFF_HASH,
-        String.format("[%s] is unique. Status should be %d.", Utils.getCanonicalPath(uniqueFile), resultDocSet.status));
+    Shelf shelf = new Shelf();
+    Document shelfDoc = shelf.findDocByCanonicalPath(Utils.getCanonicalPath(uniqueFile));
+    
+    assertNotNull(shelfDoc, String.format("[%s] can't be added.\n"
+                                                + "File to add:\n"
+                                                + "\tcanonical_path = %s\n"
+                                                + "\tlast_modified = %d\n"
+                                                + "\tsize = %d\n"
+                                                ,uniqueFile.getName(),
+                                                Utils.getCanonicalPath(uniqueFile), uniqueFile.lastModified(), uniqueFile.length()
+                                          ));
+    
+    // Clean up at the end. If assertion failed, then it is deleted. But it is still in the temporary folder.
+    uniqueFile.delete();
   }
   
   @Test(description="Add exact same file.")
