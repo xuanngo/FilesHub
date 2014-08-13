@@ -57,7 +57,7 @@ public class ManagerTest
     Shelf shelf = new Shelf();
     Document shelfDoc = shelf.findDocByCanonicalPath(Utils.getCanonicalPath(uniqueFile));
     
-    assertNotNull(shelfDoc, String.format("[%s] can't be added.\n"
+    assertNotNull(shelfDoc, String.format("[%s] can't be added. It is not found in Shelf table.\n"
                                                 + "File to add:\n"
                                                 + "\tcanonical_path = %s\n"
                                                 + "\tlast_modified = %d\n"
@@ -102,31 +102,26 @@ public class ManagerTest
   {
     // Add unique file.
     File uniqueFile = Data.createTempFile("addFileWithSameHash");
-    this.manager.addFile(uniqueFile);
+    Document shelfDoc = this.manager.addFile(uniqueFile).document;
     
     // Copy unique file and then add to database.
     File duplicateFile = Data.createTempFile("addFileWithSameHash_duplicate_hash");
     Data.copyFile(uniqueFile, duplicateFile);
     
     // Add duplicate file to database.
-    ResultDocSet resultDocSet = this.manager.addFile(duplicateFile); // Add duplicate file with different file name/path.
+    this.manager.addFile(duplicateFile); // Add duplicate file with different file name/path.
     
     // Validate
-    assertEquals(resultDocSet.status, ResultDocSet.DIFF_PATH_SAME_HASH,
-        String.format("[%s] already exists in database with the same hash. Status should be %d.\n"
-                            + "File to add:\n"
-                            + "\tlast_modified = %d\n"
-                            + "\tcanonical_path = %s\n"
-                            
-                            + "\n"            
-                            + "Shelf:"
-                            + "\tuid = %d\n"
-                            + "\tlast_modified = %d\n"
-                            + "\tcanonical_path = %s\n"
-                            + "\thash = %s\n"                            
-                            , resultDocSet.document.filename, resultDocSet.status, 
-                                resultDocSet.file.lastModified(), Utils.getCanonicalPath(resultDocSet.file),                            
-                                resultDocSet.document.uid, resultDocSet.document.last_modified, resultDocSet.document.canonical_path, resultDocSet.document.hash));
+    Trash trash = new Trash();
+    Document trashDoc = trash.findDocByCanonicalPath(Utils.getCanonicalPath(duplicateFile));
+    assertNotNull(trashDoc, String.format("[%s] is not added in Trash table. It should.\n"
+                                                      + "%s"
+                                                      + "\n"
+                                                      + "%s"
+                                                      ,duplicateFile.getName(),
+                                                      Data.getFileInfo(duplicateFile, "File to add"),
+                                                      shelfDoc.getInfo("Shelf")
+                                                 ));
     
     // Clean up.
     uniqueFile.delete();
