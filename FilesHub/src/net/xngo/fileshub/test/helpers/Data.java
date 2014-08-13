@@ -81,11 +81,12 @@ public class Data
   public static final String getFileInfo(final File file, final String title)
   {
     return String.format("%s:\n"
-        + "\tlast_modified  = %d\n"
         + "\tsize           = %d\n"
+        + "\tlast_modified  = %d\n"
+        + "\thash           = %s\n"
         + "\tfilename       = %s\n"
         + "\tcanonical_path = %s\n"
         , title
-        , file.lastModified(), file.length(), file.getName(), Utils.getCanonicalPath(file));
+        , file.length(), file.lastModified(), Utils.getHash(file), file.getName(), Utils.getCanonicalPath(file));
   }
 }
