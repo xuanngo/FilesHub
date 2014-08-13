@@ -66,27 +66,35 @@ public class ManagerTest
                                                 Utils.getCanonicalPath(uniqueFile), uniqueFile.lastModified(), uniqueFile.length()
                                           ));
     
-    // Clean up at the end. If assertion failed, then it is deleted. But it is still in the temporary folder.
+    // Clean up.
     uniqueFile.delete();
   }
   
   @Test(description="Add exact same file.")
   public void addExactSameFile()
   {
+    // Add a unique file.
     File uniqueFile = Data.createTempFile("addExactSameFile");
     this.manager.addFile(uniqueFile); // Add file 1st time.
     
-    ResultDocSet resultDocSet = this.manager.addFile(uniqueFile); // Add the exact same file the 2nd time.
-    uniqueFile.delete();
+    // Expected
+    Shelf shelf = new Shelf();
+    final int expected_totalDocsShelf = shelf.getTotalDocs();
+    Trash trash = new Trash();
+    final int expected_totalDocsTrash = trash.getTotalDocs();
     
-    assertEquals(resultDocSet.status, ResultDocSet.EXACT_SAME_FILE,
-        String.format("[%s] already exists in database with the same path. Status should be %d.\n"
-                            + "Shelf:"
-                            + "\tuid = %d\n"
-                            + "\tcanonical_path = %s\n"
-                            + "\thash = %s\n"
-                            , resultDocSet.document.filename, resultDocSet.status, 
-                                resultDocSet.document.uid, resultDocSet.document.canonical_path, resultDocSet.document.hash));
+    // Add the same unique file again.
+    this.manager.addFile(uniqueFile); // Add the exact same file the 2nd time.
+
+    final int actual_totalDocsShelf = shelf.getTotalDocs();
+    final int actual_totalDocsTrash = trash.getTotalDocs();
+    
+    // Validations
+    assertEquals(actual_totalDocsShelf, expected_totalDocsShelf, String.format("The expected number of documents in Shelf is %d but it is %d. Expect no change.", expected_totalDocsShelf, actual_totalDocsShelf));
+    assertEquals(actual_totalDocsTrash, expected_totalDocsTrash, String.format("The expected number of documents in Shelf is %d but it is %d. Expect no change.", expected_totalDocsTrash, actual_totalDocsTrash));
+    
+    // Clean up.
+    uniqueFile.delete();
   }
   
   @Test(description="Add file with same hash but different file name/path.")
@@ -120,7 +128,7 @@ public class ManagerTest
                                 resultDocSet.file.lastModified(), Utils.getCanonicalPath(resultDocSet.file),                            
                                 resultDocSet.document.uid, resultDocSet.document.last_modified, resultDocSet.document.canonical_path, resultDocSet.document.hash));
     
-    // Clean up after validations. Otherwise, resultDocSet.file will be empty because it is deleted.
+    // Clean up.
     uniqueFile.delete();
     duplicateFile.delete();    
   }
