@@ -3,6 +3,8 @@ package net.xngo.fileshub.test.helpers;
 import java.io.File;
 import java.io.IOException;
 
+import net.xngo.fileshub.Utils;
+
 import org.apache.commons.io.FileUtils;
 
 public class Data
@@ -68,5 +70,22 @@ public class Data
     {
       e.printStackTrace();
     }
-  }  
+  }
+  
+  /**
+   * Return information of a file with user define title.
+   * @param file
+   * @param title
+   * @return
+   */
+  public final String getFileInfo(final File file, final String title)
+  {
+    return String.format("%s:\n"
+        + "\tlast_modified  = %d\n"
+        + "\tsize           = %d\n"
+        + "\tfilename       = %s\n"
+        + "\tcanonical_path = %s\n"
+        , title
+        , file.lastModified(), file.length(), file.getName(), Utils.getCanonicalPath(file));
+  }
 }
