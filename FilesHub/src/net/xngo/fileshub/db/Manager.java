@@ -124,7 +124,7 @@ public class Manager
         }
         else
         {
-          // Add new entry in Trash table because it file has new hash.
+          // Add new entry in Trash table because file has new hash.
           Document newTrashDoc = new Document(file);
           newTrashDoc.uid = trashDoc.uid;
           newTrashDoc.hash = Utils.getHash(file);
