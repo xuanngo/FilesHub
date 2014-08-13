@@ -358,11 +358,11 @@ public class ManagerTest
     uniqueFile.delete();      
   }
   
-  @Test(description="Update to list missing files. Do simple count check.")
+  @Test(description="Update missing files. Do simple count check. Note: For each run, it will take longer time to run because the database grow.")
   public void updateMissingFiles()
   {
     // Add unique files in Shelf.
-    int MAX = new Shelf().getAllDoc().size()+3; // Bigger than total files in Shelf so that it is not fooled by the remnant deleted files of the other tests.
+    int MAX = new Shelf().getTotalDocs()+3; // Bigger than total files in Shelf so that it is not fooled by the remnant deleted files of the other tests.
     for(int i=0; i<MAX; i++)
     {
       File uniqueFile = Data.createTempFile("updateMissingFiles_"+i);
