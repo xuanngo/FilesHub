@@ -204,7 +204,7 @@ public class ManagerTest
     
   }
   
-  @Test(description="Add deleted file that has changed. Status check only.")
+  @Test(description="Add duplicated file that has changed since last run. Status check only.")
   public void addFileTrashFileChanged()
   {
     // Add unique file in Shelf.
@@ -224,20 +224,14 @@ public class ManagerTest
     
     // Simple status check:
     assertEquals(resultDocSet.status, ResultDocSet.SAME_TRASH_PATH_DIFF_HASH,
-        String.format("[%s] already exists in database with the same path. Status should be %d.\n"
-                            + "File to add:\n"
-                            + "\tlast_modified = %d\n"
-                            + "\tcanonical_path = %s\n"
-                            
-                            + "\n"
-                            + "Trash:\n"
-                            + "\tuid = %d\n"
-                            + "\tlast_modified = %d\n"
-                            + "\tcanonical_path = %s\n"
-                            + "\thash = %s\n"
-                            , resultDocSet.file.getName(), resultDocSet.status, 
-                                resultDocSet.file.lastModified(), Utils.getCanonicalPath(resultDocSet.file),
-                                resultDocSet.document.uid, resultDocSet.document.last_modified, resultDocSet.document.canonical_path, resultDocSet.document.hash));
+                            String.format("[%s] already exists in database with the same path. Status should be %d.\n"
+                                                + "%s"
+                                                + "\n"
+                                                + "%s"
+                                                , resultDocSet.file.getName(), resultDocSet.status, 
+                                                    Data.getFileInfo(duplicateFile, "File to add"),
+                                                    resultDocSet.document.getInfo("Trash")
+                                          ));
     
     // Clean up after validations. Otherwise, resultDocSet.file will be empty because it is deleted.
     uniqueFile.delete();
