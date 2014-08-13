@@ -22,6 +22,7 @@ public class Trash
   private PreparedStatement select = null;
  
   /**
+   * @deprecated This is bad. Use addDoc() instead.
    * Add file if it doesn't exist.
    * @param duid Document UID.
    * @param hash
@@ -79,6 +80,16 @@ public class Trash
   }
   
   /**
+   * @deprecated This is only used by unit test. Remove this if used in application.
+   * @param hash
+   * @return
+   */
+  public Document findDocByHash(String hash)
+  {
+    return this.findDocBy("hash", hash);
+  }
+  
+  /**
    * @deprecated Currently used in unit test. Otherwise, remove deprecated.
    * @return
    */
@@ -103,6 +114,11 @@ public class Trash
     
     return 0;
   }  
+  
+  public int addDoc(Document doc)
+  {
+    return this.insertDoc(doc);
+  }
   
   /****************************************************************************
    * 
