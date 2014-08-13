@@ -204,33 +204,36 @@ public class ManagerTest
     
   }
   
-  @Test(description="Add duplicated file that has changed since last run. Status check only.")
+  @Test(description="Add duplicated file that has changed since last run.")
   public void addFileTrashFileChanged()
   {
     // Add unique file in Shelf.
-    File uniqueFile = Data.createTempFile("addFileDeletedChangedFile");
+    File uniqueFile = Data.createTempFile("addFileTrashFileChanged");
     this.manager.addFile(uniqueFile);
     
     // Copy unique file and then add to database. This file is going to Trash table.
-    File duplicateFile = Data.createTempFile("addFileDeletedChangedFile_duplicate");
+    File duplicateFile = Data.createTempFile("addFileTrashFileChanged_duplicate");
     Data.copyFile(uniqueFile, duplicateFile);
     this.manager.addFile(duplicateFile);
-    
+
+
     // Update the duplicated file.
-    try { FileUtils.touch(duplicateFile); } catch(IOException e){ e.printStackTrace(); }
+    Data.writeStringToFile(duplicateFile, "new content");
+    long expected_last_modified = duplicateFile.lastModified();    
     
-    // Add the exact same file again with new last modified time.
-    ResultDocSet resultDocSet = this.manager.addFile(duplicateFile);
+    // Add the exact same duplicated file again with new last modified time.
+    this.manager.addFile(duplicateFile);
     
-    // Simple status check:
-    assertEquals(resultDocSet.status, ResultDocSet.SAME_TRASH_PATH_DIFF_HASH,
-                            String.format("[%s] already exists in database with the same path. Status should be %d.\n"
+    // Validate
+    Trash trash = new Trash();
+    Document trashDoc = trash.findDocByHash(Utils.getHash(duplicateFile));
+    assertEquals(trashDoc.last_modified, expected_last_modified+1,
+                            String.format("Last modified time from Trash should be the same as the file to add.\n"
                                                 + "%s"
                                                 + "\n"
                                                 + "%s"
-                                                , resultDocSet.file.getName(), resultDocSet.status, 
-                                                    Data.getFileInfo(duplicateFile, "File to add"),
-                                                    resultDocSet.document.getInfo("Trash")
+                                                , Data.getFileInfo(duplicateFile, "File to add"),
+                                                trashDoc.getInfo("Trash")
                                           ));
     
     // Clean up after validations. Otherwise, resultDocSet.file will be empty because it is deleted.
