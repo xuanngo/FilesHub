@@ -78,7 +78,7 @@ public class Data
    * @param title
    * @return
    */
-  public final String getFileInfo(final File file, final String title)
+  public static final String getFileInfo(final File file, final String title)
   {
     return String.format("%s:\n"
         + "\tlast_modified  = %d\n"
