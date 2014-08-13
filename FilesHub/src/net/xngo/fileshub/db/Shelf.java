@@ -90,6 +90,32 @@ public class Shelf
     return this.findDocBy(null, null);
   }
   
+  /**
+   * @deprecated Currently used in unit test. Otherwise, remove deprecated.
+   * @return
+   */
+  public int getTotalDocs()
+  {
+    final String query = String.format("SELECT COUNT(*) FROM %s", this.tablename);
+    
+    try
+    {
+      this.select = this.conn.connection.prepareStatement(query);
+      
+      ResultSet resultSet =  this.select.executeQuery();
+      if(resultSet.next())
+      {
+        return resultSet.getInt(1);
+      }
+    }
+    catch(SQLException e)
+    {
+      e.printStackTrace();
+    }
+    
+    return 0;
+  }
+  
   /****************************************************************************
    * 
    *                             PRIVATE FUNCTIONS
