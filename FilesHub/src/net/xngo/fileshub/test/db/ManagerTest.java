@@ -236,7 +236,7 @@ public class ManagerTest
                                                 trashDoc.getInfo("Trash")
                                           ));
     
-    // Clean up after validations. Otherwise, resultDocSet.file will be empty because it is deleted.
+    // Clean up.
     uniqueFile.delete();
     duplicateFile.delete();      
     
