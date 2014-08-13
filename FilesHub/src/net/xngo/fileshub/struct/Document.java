@@ -54,6 +54,23 @@ public class Document
     if(this.uid<1)
       throw new RuntimeException(uidErrorMsg);
   }
+  /**
+   * Return information of the document with user define title.
+   * @param title
+   * @return
+   */
+  public String getInfo(String title)
+  {
+    return String.format( "%s:\n"
+        + "\tuid            = %d\n"
+        + "\tlast_modified  = %d\n"
+        + "\thash           = %s\n"
+        + "\tfilename       = %s\n"
+        + "\tcanonical_path = %s\n"
+        + "\tcomment        = %s\n"
+          , title, 
+          this.uid, this.last_modified, this.hash, this.filename, this.canonical_path, this.comment);    
+  }
   
   /****************************************************************************
    * 
