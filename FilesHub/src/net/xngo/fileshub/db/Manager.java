@@ -124,6 +124,12 @@ public class Manager
         }
         else
         {
+          // Add new entry in Trash table because it file has new hash.
+          Document newTrashDoc = new Document(file);
+          newTrashDoc.uid = trashDoc.uid;
+          newTrashDoc.hash = Utils.getHash(file);
+          trash.addDoc(newTrashDoc);
+          
           // Update status.
           resultDocSet.status = ResultDocSet.SAME_TRASH_PATH_DIFF_HASH; // Potential deleted duplicate: Same path as deleted files but different content.
           resultDocSet.document = trashDoc; // Use trashDoc because it conflict with 'file'.             
