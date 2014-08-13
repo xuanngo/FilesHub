@@ -57,13 +57,10 @@ public class ManagerTest
     Shelf shelf = new Shelf();
     Document shelfDoc = shelf.findDocByCanonicalPath(Utils.getCanonicalPath(uniqueFile));
     
-    assertNotNull(shelfDoc, String.format("[%s] can't be added. It is not found in Shelf table.\n"
-                                                + "File to add:\n"
-                                                + "\tcanonical_path = %s\n"
-                                                + "\tlast_modified = %d\n"
-                                                + "\tsize = %d\n"
+    assertNotNull(shelfDoc, String.format("Expected [%s] to be added in Shelf table but it is not.\n"
+                                                + "%s"
                                                 ,uniqueFile.getName(),
-                                                Utils.getCanonicalPath(uniqueFile), uniqueFile.lastModified(), uniqueFile.length()
+                                                Data.getFileInfo(uniqueFile, "File to add")
                                           ));
     
     // Clean up.
@@ -125,7 +122,7 @@ public class ManagerTest
     
     // Clean up.
     uniqueFile.delete();
-    duplicateFile.delete();    
+    duplicateFile.delete();
   }
   
 
