@@ -89,6 +89,7 @@ public class Shelf
   {
     return this.findDocBy(null, null);
   }
+
   
   /**
    * @deprecated Currently used in unit test. Otherwise, remove deprecated.
