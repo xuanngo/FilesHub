@@ -125,8 +125,6 @@ public class ManagerTest
     duplicateFile.delete();
   }
   
-
- 
   @Test(description="Add the same file that has changed since FilesHub last ran.")
   public void addFileChangedSinceLastRun()
   {
@@ -134,42 +132,39 @@ public class ManagerTest
     File uniqueFile = Data.createTempFile("AddFileChangedSinceLastRun");
     long expected_trash_last_modified = uniqueFile.lastModified();
     this.manager.addFile(uniqueFile);
+    Shelf shelf = new Shelf();
+    Document oldShelfDoc = shelf.findDocByHash(Utils.getHash(uniqueFile));     
     
     // Update the unique file.
-    try { FileUtils.touch(uniqueFile); } catch(IOException e){ e.printStackTrace(); }
+    Data.writeStringToFile(uniqueFile, "new content");
     long expected_repo_last_modified = uniqueFile.lastModified();
     
     // Add the exact same file again with new last modified time.
-    ResultDocSet resultDocSet = this.manager.addFile(uniqueFile);
+    this.manager.addFile(uniqueFile);
     
-    // Simple status check:
-    assertEquals(resultDocSet.status, ResultDocSet.SAME_PATH_DIFF_HASH,
-        String.format("[%s] already exists in database with the same hash. Status should be %d.\n"
-                            + "File to add:\n"
-                            + "\tlast_modified = %d\n"
-                            + "\tcanonical_path = %s\n"
-                            
-                            + "\n"
-                            + "Shelf:\n"
-                            + "\tuid = %d\n"
-                            + "\tlast_modified = %d\n"
-                            + "\tcanonical_path = %s\n"
-                            + "\thash = %s\n"
-                            , resultDocSet.file.getName(), resultDocSet.status, 
-                                resultDocSet.file.lastModified(), Utils.getCanonicalPath(resultDocSet.file),
-                                resultDocSet.document.uid, resultDocSet.document.last_modified, resultDocSet.document.canonical_path, resultDocSet.document.hash));       
-    
-    // Testing: Check old last modified time is moved to Trash table and new last modified time is in Shelf table.
+    // Validations: Check that Shelf document info is moved to Trash table and the new document is updated in Shelf table.
     Trash trash = new Trash();
     Document trashDoc = trash.findDocByCanonicalPath(Utils.getCanonicalPath(uniqueFile));
-    assertEquals(trashDoc.last_modified, expected_trash_last_modified, "Check last modified time in Trash table.");
+    assertEquals(trashDoc.last_modified, expected_trash_last_modified,
+                                  String.format("Last modified time from Trash should be the same as the old file.\n"
+                                                      + "%s"
+                                                      + "\n"
+                                                      + "%s"
+                                                      , oldShelfDoc.getInfo("Old file"),
+                                                      trashDoc.getInfo("Trash")
+                                                ));      
     
-    Shelf shelf = new Shelf();
-    Document shelfDoc = shelf.findDocByUid(resultDocSet.document.uid);
-    assertNotNull(shelfDoc, String.format("Row in Manager table not found. Expected row: uid=%d, %s", resultDocSet.document.uid, Utils.getCanonicalPath(uniqueFile)));
-    assertEquals(shelfDoc.last_modified, expected_repo_last_modified, "Check last modified time in Shelf table.");
+    Document newShelfDoc = shelf.findDocByHash(Utils.getHash(uniqueFile)); 
+    assertEquals(newShelfDoc.last_modified, expected_repo_last_modified,
+                                  String.format("Last modified time from Shelf should be the same as the file to add.\n"
+                                                      + "%s"
+                                                      + "\n"
+                                                      + "%s"
+                                                      , Data.getFileInfo(uniqueFile, "File to add"),
+                                                      newShelfDoc.getInfo("Shelf")
+                                                ));      
     
-    // Clean up after validations. Otherwise, resultDocSet.file will be empty because it is deleted.
+    // Clean up.
     uniqueFile.delete();    
     
   }
@@ -197,7 +192,7 @@ public class ManagerTest
     // Validate
     Trash trash = new Trash();
     Document trashDoc = trash.findDocByHash(Utils.getHash(duplicateFile));
-    assertEquals(trashDoc.last_modified, expected_last_modified+1,
+    assertEquals(trashDoc.last_modified, expected_last_modified,
                             String.format("Last modified time from Trash should be the same as the file to add.\n"
                                                 + "%s"
                                                 + "\n"
