@@ -74,7 +74,7 @@ public class ManagerTest
     File uniqueFile = Data.createTempFile("addExactSameFile");
     this.manager.addFile(uniqueFile); // Add file 1st time.
     
-    // Expected
+    // Expected values.
     Shelf shelf = new Shelf();
     final int expected_totalDocsShelf = shelf.getTotalDocs();
     Trash trash = new Trash();
@@ -83,12 +83,13 @@ public class ManagerTest
     // Add the same unique file again.
     this.manager.addFile(uniqueFile); // Add the exact same file the 2nd time.
 
+    // Actual values.
     final int actual_totalDocsShelf = shelf.getTotalDocs();
     final int actual_totalDocsTrash = trash.getTotalDocs();
     
     // Validations
-    assertEquals(actual_totalDocsShelf, expected_totalDocsShelf, String.format("The expected number of documents in Shelf is %d but it is %d. Expect no change.", expected_totalDocsShelf, actual_totalDocsShelf));
-    assertEquals(actual_totalDocsTrash, expected_totalDocsTrash, String.format("The expected number of documents in Shelf is %d but it is %d. Expect no change.", expected_totalDocsTrash, actual_totalDocsTrash));
+    assertEquals(actual_totalDocsShelf, expected_totalDocsShelf, String.format("The expected number of documents in Shelf is %d but it is %d. Expect to be equal.", expected_totalDocsShelf, actual_totalDocsShelf));
+    assertEquals(actual_totalDocsTrash, expected_totalDocsTrash, String.format("The expected number of documents in Shelf is %d but it is %d. Expect to be equal.", expected_totalDocsTrash, actual_totalDocsTrash));
     
     // Clean up.
     uniqueFile.delete();
@@ -125,11 +126,11 @@ public class ManagerTest
     duplicateFile.delete();
   }
   
-  @Test(description="Add the same file that has changed since FilesHub last ran.")
-  public void addFileChangedSinceLastRun()
+  @Test(description="Add the same file in Shelf that has changed since FilesHub last ran.")
+  public void addFileShelfFileChanged()
   {
     // Add unique file in Shelf.
-    File uniqueFile = Data.createTempFile("AddFileChangedSinceLastRun");
+    File uniqueFile = Data.createTempFile("addFileShelfFileChanged");
     this.manager.addFile(uniqueFile);
     Shelf shelf = new Shelf();
     Document oldShelfDoc = shelf.findDocByHash(Utils.getHash(uniqueFile));     
@@ -167,7 +168,7 @@ public class ManagerTest
     
   }
   
-  @Test(description="Add duplicated file that has changed since last run.")
+  @Test(description="Add same file in Trash that has changed since last run.")
   public void addFileTrashFileChanged()
   {
     // Add unique file in Shelf.
@@ -205,40 +206,36 @@ public class ManagerTest
     
   }
   
-  @Test(description="Add exactly the same deleted file. Status check only.")
+  @Test(description="Add exactly the same Trash file.")
   public void addFileTrashSameFile()
   {
     // Add unique file in Shelf.
-    File uniqueFile = Data.createTempFile("addFileDeletedChangedFile");
+    File uniqueFile = Data.createTempFile("addFileTrashSameFile");
     this.manager.addFile(uniqueFile);
     
     // Copy unique file and then add to database. This file is going to Trash table.
-    File duplicateFile = Data.createTempFile("addFileDeletedChangedFile_duplicate");
+    File duplicateFile = Data.createTempFile("addFileTrashSameFile_duplicate");
     Data.copyFile(uniqueFile, duplicateFile);
     this.manager.addFile(duplicateFile);
     
+    // Expected values.
+    Shelf shelf = new Shelf();
+    final int expected_totalDocsShelf = shelf.getTotalDocs();
+    Trash trash = new Trash();
+    final int expected_totalDocsTrash = trash.getTotalDocs();    
     
-    // Add the exact same file again with new last modified time.
-    ResultDocSet resultDocSet = this.manager.addFile(duplicateFile);
+    // Add the exact same file again.
+    this.manager.addFile(duplicateFile);
 
-    // Simple status check:
-    assertEquals(resultDocSet.status, ResultDocSet.EXACT_SAME_TRASH_FILE,
-        String.format("[%s] already exists in database. Status should be %d.\n"
-                            + "File to add:\n"
-                            + "\tlast_modified = %d\n"
-                            + "\tcanonical_path = %s\n"
-                            
-                            + "\n"
-                            + "Trash:\n"
-                            + "\tuid = %d\n"
-                            + "\tlast_modified = %d\n"
-                            + "\tcanonical_path = %s\n"
-                            + "\thash = %s\n"
-                            , resultDocSet.file.getName(), resultDocSet.status, 
-                                resultDocSet.file.lastModified(), Utils.getCanonicalPath(resultDocSet.file),
-                                resultDocSet.document.uid, resultDocSet.document.last_modified, resultDocSet.document.canonical_path, resultDocSet.document.hash));
+    // Actual values.
+    final int actual_totalDocsShelf = shelf.getTotalDocs();
+    final int actual_totalDocsTrash = trash.getTotalDocs();
     
-    // Clean up after validations. Otherwise, resultDocSet.file will be empty because it is deleted.
+    // Validations
+    assertEquals(actual_totalDocsShelf, expected_totalDocsShelf, String.format("The expected number of documents in Shelf is %d but it is %d. Expect to be equal.", expected_totalDocsShelf, actual_totalDocsShelf));
+    assertEquals(actual_totalDocsTrash, expected_totalDocsTrash, String.format("The expected number of documents in Shelf is %d but it is %d. Expect to be equal.", expected_totalDocsTrash, actual_totalDocsTrash));
+        
+    // Clean up.
     uniqueFile.delete();
     duplicateFile.delete();    
     
