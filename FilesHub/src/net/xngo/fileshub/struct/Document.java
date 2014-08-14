@@ -72,6 +72,25 @@ public class Document
           this.uid, this.last_modified, this.hash, this.filename, this.canonical_path, this.comment);    
   }
   
+  /**
+   * Define equality of state.
+   */
+   @Override public boolean equals(Object obj) 
+   {
+     if (this == obj) return true;
+     if (!(obj instanceof Document)) return false;
+
+     Document doc = (Document)obj;
+     return
+       ( this.uid           == doc.uid                 ) &&
+       ( this.last_modified == doc.last_modified       ) &&
+       ( this.hash          .equals(doc.hash          )) &&
+       ( this.filename      .equals(doc.filename      )) &&
+       ( this.canonical_path.equals(doc.canonical_path)) &&
+       ( this.comment       .equals(doc.comment       ))
+       ;
+   }
+  
   /****************************************************************************
    * 
    *                             PRIVATE FUNCTIONS
