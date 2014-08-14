@@ -243,13 +243,13 @@ public class ManagerTest
   
   
   @Test(description="Add same filename but different content.")
-  public void addFileSameFilenameDiffContent()
+  public void addFileSameNameDiffContent()
   {
     // Add a temporary file in database.
-    File tmpFile = Data.createTempFile("addFileSameFilenameDiffContent");
+    File tmpFile = Data.createTempFile("addFileSameNameDiffContent");
     File tmpDirectory = new File(System.getProperty("java.io.tmpdir")+System.nanoTime());
     tmpDirectory.mkdir();
-    Document ShelfDoc = this.manager.addFile(tmpFile).document;
+    Document shelfDoc = this.manager.addFile(tmpFile).document;
     
     // Copied temporary file to another directory and add content to the copied file so it will have different content.
     File copiedFile = Data.copyFileToDirectory(tmpFile, tmpDirectory);
@@ -261,21 +261,11 @@ public class ManagerTest
     Document trashDoc = trash.findDocByCanonicalPath(Utils.getCanonicalPath(copiedFile));
     
     assertNotNull(trashDoc, String.format("Expected a row is added in Trash table but it is not.\n"
-                                            + "File to add:\n"
-                                            + "\tlast_modified = %d\n"
-                                            + "\tcanonical_path = %s\n"
-                                            + "\thash = %s\n"
-                                            + "\tfilename = %s\n"
-                                            
+                                            + "%s"
                                             + "\n"
-                                            + "Shelf:\n"
-                                            + "\tuid = %d\n"
-                                            + "\tlast_modified = %d\n"
-                                            + "\tcanonical_path = %s\n"
-                                            + "\thash = %s\n"
-                                            + "\tfilename = %s\n"
-                                            ,   copiedFile.lastModified(), Utils.getCanonicalPath(copiedFile), Utils.getHash(copiedFile), copiedFile.getName(),
-                                            ShelfDoc.uid, ShelfDoc.last_modified, ShelfDoc.canonical_path, ShelfDoc.hash, ShelfDoc.filename));
+                                            + "%s"
+                                            , Data.getFileInfo(copiedFile, "File to add"),
+                                            shelfDoc.getInfo("Shelf")));
 
   }  
   
