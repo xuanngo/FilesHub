@@ -130,14 +130,12 @@ public class ManagerTest
   {
     // Add unique file in Shelf.
     File uniqueFile = Data.createTempFile("AddFileChangedSinceLastRun");
-    long expected_trash_last_modified = uniqueFile.lastModified();
     this.manager.addFile(uniqueFile);
     Shelf shelf = new Shelf();
     Document oldShelfDoc = shelf.findDocByHash(Utils.getHash(uniqueFile));     
     
     // Update the unique file.
     Data.writeStringToFile(uniqueFile, "new content");
-    long expected_repo_last_modified = uniqueFile.lastModified();
     
     // Add the exact same file again with new last modified time.
     this.manager.addFile(uniqueFile);
@@ -145,8 +143,8 @@ public class ManagerTest
     // Validations: Check that Shelf document info is moved to Trash table and the new document is updated in Shelf table.
     Trash trash = new Trash();
     Document trashDoc = trash.findDocByCanonicalPath(Utils.getCanonicalPath(uniqueFile));
-    assertEquals(trashDoc.last_modified, expected_trash_last_modified,
-                                  String.format("Last modified time from Trash should be the same as the old file.\n"
+    assertEquals(trashDoc, oldShelfDoc,
+                                  String.format("Document information should be moved from Shelf to Trash.\n"
                                                       + "%s"
                                                       + "\n"
                                                       + "%s"
@@ -155,8 +153,8 @@ public class ManagerTest
                                                 ));      
     
     Document newShelfDoc = shelf.findDocByHash(Utils.getHash(uniqueFile)); 
-    assertEquals(newShelfDoc.last_modified, expected_repo_last_modified,
-                                  String.format("Last modified time from Shelf should be the same as the file to add.\n"
+    assertEquals(newShelfDoc.last_modified, uniqueFile.lastModified(),
+                                  String.format("Last modified time in Shelf table should be the same as the file to add.\n"
                                                       + "%s"
                                                       + "\n"
                                                       + "%s"
