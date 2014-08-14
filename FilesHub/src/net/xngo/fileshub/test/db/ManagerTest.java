@@ -27,6 +27,7 @@ import static org.testng.Assert.assertNotNull;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.ArrayList;
 
 import org.apache.commons.io.FileUtils;
 
@@ -269,50 +270,74 @@ public class ManagerTest
 
   }  
   
-  @Test(description="Update file that has changed since added in database.")
+  @Test(description="Update file that has changed since added in database. Note: This is exactly the same as addFileShelfFileChanged(), except that it uses Manager.update() instead of Manager.addFile().")
   public void updateFileChanged()
   {
     // Add unique file in Shelf.
     File uniqueFile = Data.createTempFile("updateFileChanged");
-    long expected_trash_last_modified = uniqueFile.lastModified();
-    ResultDocSet resultDocSet = this.manager.addFile(uniqueFile);
+    this.manager.addFile(uniqueFile);
+    Shelf shelf = new Shelf();
+    Document oldShelfDoc = shelf.findDocByHash(Utils.getHash(uniqueFile));       
     
     // Update the unique file.
-    try { FileUtils.touch(uniqueFile); } catch(IOException e){ e.printStackTrace(); }
-    long expected_shelf_last_modified = uniqueFile.lastModified();
+    Data.writeStringToFile(uniqueFile, "new content");
     
     // Update database
     this.manager.update();
     
-    // Testing: Check old last modified time is moved to Trash table and new last modified time is in Shelf table.
+    // Validations: Check that Shelf document info is moved to Trash table and the new document is updated in Shelf table.
     Trash trash = new Trash();
     Document trashDoc = trash.findDocByCanonicalPath(Utils.getCanonicalPath(uniqueFile));
-    assertEquals(trashDoc.last_modified, expected_trash_last_modified, "Check last modified time in Trash table.");
+    assertEquals(trashDoc, oldShelfDoc,
+                                  String.format("Document information should be moved from Shelf to Trash.\n"
+                                                      + "%s"
+                                                      + "\n"
+                                                      + "%s"
+                                                      , oldShelfDoc.getInfo("Old file"),
+                                                      trashDoc.getInfo("Trash")
+                                                ));      
     
-    Shelf shelf = new Shelf();
-    Document shelfDoc = shelf.findDocByUid(resultDocSet.document.uid);
-    assertEquals(shelfDoc.last_modified, expected_shelf_last_modified, "Check last modified time in Shelf table.");
+    Document newShelfDoc = shelf.findDocByHash(Utils.getHash(uniqueFile)); 
+    assertEquals(newShelfDoc.last_modified, uniqueFile.lastModified(),
+                                  String.format("Last modified time in Shelf table should be the same as the file to add.\n"
+                                                      + "%s"
+                                                      + "\n"
+                                                      + "%s"
+                                                      , Data.getFileInfo(uniqueFile, "File to add"),
+                                                      newShelfDoc.getInfo("Shelf")
+                                                ));       
     
-    // Clean up after validations. Otherwise, resultDocSet.file will be empty because it is deleted.
+    // Clean up.
     uniqueFile.delete();      
   }
   
-  @Test(description="Update missing files. Do simple count check. Note: For each run, it will take longer time to run because the database grow.")
-  public void updateMissingFiles()
+  @Test(description="Check whether or not Update() returns the correct number of missing files.")
+  public void updateMissingFilesCount()
   {
     // Add unique files in Shelf.
-    int MAX = new Shelf().getTotalDocs()+3; // Bigger than total files in Shelf so that it is not fooled by the remnant deleted files of the other tests.
+    List<Document> expectedMissingDocList = new ArrayList<Document>();
+    Shelf shelf = new Shelf();
+    int MAX = 17;
     for(int i=0; i<MAX; i++)
     {
-      File uniqueFile = Data.createTempFile("updateMissingFiles_"+i);
+      File uniqueFile = Data.createTempFile("updateMissingFilesCount_"+i);
       this.manager.addFile(uniqueFile);
+      expectedMissingDocList.add(shelf.findDocByCanonicalPath(Utils.getCanonicalPath(uniqueFile)));
       uniqueFile.delete();
     }
 
     // Get a list of missing files through update().
-    List<Document> docList = this.manager.update();
+    List<Document> actualMissingDocList = this.manager.update();
     
-    assertTrue((docList.size()>=MAX), String.format("Missing files=%d, Deleted files=%d, Missing Files >= Deleted files", docList.size(), MAX));
+    for(Document doc: expectedMissingDocList)
+    {
+      if(actualMissingDocList.contains(doc))
+        assertTrue(true);
+      else
+        assertTrue(false, String.format("The following document should be missing:\n"
+                                          + "%s", doc.getInfo("Missing file info")
+                                       ));
+    }
   }
   
 
