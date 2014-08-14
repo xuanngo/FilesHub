@@ -198,7 +198,7 @@ public class Trash
   {
     Document doc = null;
     
-    final String query = String.format("SELECT uid, canonical_path, filename, last_modified, hash, comment "
+    final String query = String.format("SELECT duid, canonical_path, filename, last_modified, hash, comment "
                                         + " FROM %s "
                                         + "WHERE %s = ?", this.tablename, column);
     
@@ -214,7 +214,7 @@ public class Trash
       {
         doc = new Document();
         int j=1;
-        doc.uid             = resultSet.getInt(j++);
+        doc.uid             = resultSet.getInt(j++); // Shelf.uid is equal to Trash.duid.
         doc.canonical_path  = resultSet.getString(j++);
         doc.filename        = resultSet.getString(j++);
         doc.last_modified   = resultSet.getLong(j++);
