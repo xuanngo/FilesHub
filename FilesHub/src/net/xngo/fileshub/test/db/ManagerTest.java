@@ -191,7 +191,7 @@ public class ManagerTest
     Trash trash = new Trash();
     Document trashDoc = trash.findDocByHash(Utils.getHash(duplicateFile));
     assertEquals(trashDoc.last_modified, expected_last_modified,
-                            String.format("Last modified time from Trash should be the same as the file to add.\n"
+                            String.format("Last modified time in Trash table should be the same as the file to add.\n"
                                                 + "%s"
                                                 + "\n"
                                                 + "%s"
