@@ -126,37 +126,7 @@ public class ManagerTest
   }
   
 
-  @Test(description="Add file with existing hash but different file path and check Trash table.")
-  public void addFileWithSameHashCheckTrash()
-  {
-    // Add unique file.
-    File uniqueFile = Data.createTempFile("AddFileWithSameHashCheckTrash");
-    this.manager.addFile(uniqueFile);
-    
-    // Copy unique file and then add to database.
-    File duplicateFile = null;
-    try
-    {
-      duplicateFile = Data.createTempFile("AddFileWithSameHashCheckTrash_duplicate_hash");
-      FileUtils.copyFile(uniqueFile, duplicateFile);
-    }
-    catch(IOException e)
-    {
-      e.printStackTrace();
-    }
-    
-    ResultDocSet resultDocSet = this.manager.addFile(duplicateFile); // Add duplicate file with different file name/path.
-    
-    Trash trash = new Trash();
-    int actual_duid = trash.getDuidByCanonicalPath(Utils.getCanonicalPath(duplicateFile));
-    
-    // Clean up.
-    uniqueFile.delete();
-    duplicateFile.delete();
-    
-    assertEquals(actual_duid, resultDocSet.document.uid, String.format("Shelf.uid=%d should be equal to Trash.duid=%d", resultDocSet.document.uid, actual_duid));
-  }  
-  
+ 
   @Test(description="Add the same file that has changed since FilesHub last ran.")
   public void addFileChangedSinceLastRun()
   {
