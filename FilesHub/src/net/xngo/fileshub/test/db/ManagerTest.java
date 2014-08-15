@@ -248,11 +248,10 @@ public class ManagerTest
   {
     // Add a temporary file in database.
     File tmpFile = Data.createTempFile("addFileSameNameDiffContent");
-    File tmpDirectory = new File(System.getProperty("java.io.tmpdir")+System.nanoTime());
-    tmpDirectory.mkdir();
-    Document shelfDoc = this.manager.addFile(tmpFile).document;
     
     // Copied temporary file to another directory and add content to the copied file so it will have different content.
+    File tmpDirectory = new File(System.getProperty("java.io.tmpdir")+System.nanoTime());
+    tmpDirectory.mkdir();
     File copiedFile = Data.copyFileToDirectory(tmpFile, tmpDirectory);
     Data.writeStringToFile(copiedFile, System.nanoTime()+"");
     this.manager.addFile(copiedFile);
@@ -260,7 +259,8 @@ public class ManagerTest
     // Validations
     Trash trash = new Trash();
     Document trashDoc = trash.findDocByCanonicalPath(Utils.getCanonicalPath(copiedFile));
-    
+    Shelf shelf = new Shelf();
+    Document shelfDoc = shelf.findDocByHash(Utils.getHash(tmpFile));
     assertNotNull(trashDoc, String.format("Expected a row is added in Trash table but it is not.\n"
                                             + "%s"
                                             + "\n"
