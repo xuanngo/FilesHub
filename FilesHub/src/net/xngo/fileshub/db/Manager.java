@@ -90,7 +90,7 @@ public class Manager
       {// File has changed. 
 
         // Move docFromDb to Trash table.
-        this.trash.addFile(docFromDb);
+        this.trash.addDoc(docFromDb);
         
         // Update changed file to Shelf table.
         String hash = Utils.getHash(file);
@@ -149,7 +149,7 @@ public class Manager
           Document trashNewDoc = new Document(file);
           trashNewDoc.uid  = doc.uid;
           trashNewDoc.hash = doc.hash;
-          trash.addFile(trashNewDoc);
+          trash.addDoc(trashNewDoc);
       
           // Update status.
           resultDocSet.status   = ResultDocSet.DIFF_PATH_SAME_HASH; // Duplicate file.
@@ -190,7 +190,7 @@ public class Manager
         if(file.lastModified()!=doc.last_modified)
         {// File has changed.
           // Copy old file info in Trash table.
-          this.trash.addFile(doc);
+          this.trash.addDoc(doc);
           
           // Update changed file to Shelf table.
           String hash = Utils.getHash(file);
