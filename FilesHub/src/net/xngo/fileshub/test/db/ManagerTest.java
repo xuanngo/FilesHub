@@ -270,6 +270,44 @@ public class ManagerTest
 
   }  
   
+  @Test(description="Add same file from multiple paths.")
+  public void addFileSameFileWithDiffPaths()
+  {
+    // Add a unique file in database.
+    File uniqueFile = Data.createTempFile("addFileSameFileWithDiffPaths");
+    this.manager.addFile(uniqueFile);
+    
+    // Expected values.
+    Shelf shelf = new Shelf();
+    final int expectedTotalDocsShelf = shelf.getTotalDocs();
+    Trash trash = new Trash();
+    final int expectedTotalDocsTrash = trash.getTotalDocs()+1;
+    
+    // Add same file from multiple paths
+    for(int i=0; i<5; i++)
+    {
+      File tmpDirectory = new File(System.getProperty("java.io.tmpdir")+System.nanoTime()+i);
+      tmpDirectory.mkdir();
+      File copiedFile = Data.copyFileToDirectory(uniqueFile, tmpDirectory);
+      this.manager.addFile(copiedFile);
+      copiedFile.delete();
+      tmpDirectory.delete();
+    }
+    
+    // Actual values.
+    final int actualTotalDocsShelf = shelf.getTotalDocs();
+    final int actualTotalDocsTrash = trash.getTotalDocs();
+    
+    // Validate that no unexpected row are added.
+    assertEquals(actualTotalDocsShelf, expectedTotalDocsShelf, String.format("More rows are added in Shelf table than expected."));
+    assertEquals(actualTotalDocsTrash, expectedTotalDocsTrash, String.format("More rows are added in Trash table than expected."));
+    
+    // Clean up.
+    uniqueFile.delete();
+
+  }   
+  
+  
   @Test(description="Update file that has changed since added in database. Note: This is exactly the same as addFileShelfFileChanged(), except that it uses Manager.update() instead of Manager.addFile().")
   public void updateFileChanged()
   {
