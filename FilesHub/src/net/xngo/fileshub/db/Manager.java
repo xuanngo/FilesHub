@@ -55,7 +55,7 @@ public class Manager
    *       If same modified time
    *         Return Duplicate(same as deleted file)
    *       else
-   *         Return Potential Duplicate: need user invervention
+   *         Return Potential Duplicate: need user intervention
    *     else
    *       If hash exists in Shelf table
    *         Save document in Trash // No need to check for duplicates as it has been checked.
