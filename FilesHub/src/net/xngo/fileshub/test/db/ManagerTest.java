@@ -113,9 +113,10 @@ public class ManagerTest
     // Add duplicate file to database.
     this.manager.addFile(duplicateFile); // Add duplicate file with different file name/path.
     
-    // Validate
+    // Validate:
+    //  Check new hash is added in Trash.
     Trash trash = new Trash();
-    Document trashDoc = trash.findDocByCanonicalPath(Utils.getCanonicalPath(duplicateFile));
+    Document trashDoc = trash.findDocByHash(Utils.getHash(duplicateFile));
     assertNotNull(trashDoc, String.format("[%s] is not added in Trash table. It should.\n"
                                                       + "%s"
                                                       + "\n"
