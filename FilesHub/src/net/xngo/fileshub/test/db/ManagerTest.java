@@ -54,10 +54,10 @@ public class ManagerTest
     File uniqueFile = Data.createTempFile("AddUniqueFile");
     this.manager.addFile(uniqueFile);
 
-    
+    // Validation:
+    //  Check if file path exists in Shelf.
     Shelf shelf = new Shelf();
     Document shelfDoc = shelf.findDocByCanonicalPath(Utils.getCanonicalPath(uniqueFile));
-    
     assertNotNull(shelfDoc, String.format("Expected [%s] to be added in Shelf table but it is not.\n"
                                                 + "%s"
                                                 ,uniqueFile.getName(),
