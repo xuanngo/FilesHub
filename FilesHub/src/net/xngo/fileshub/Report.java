@@ -92,9 +92,8 @@ public class Report
   }
   
   
-  public void write(ArrayList<ResultDocSet> listOfDuplicates)
+  public void write()
   {
-
     try
     {
       FileWriter toDeleteFile = new FileWriter("result_to_delete.txt");
@@ -102,10 +101,10 @@ public class Report
       BufferedWriter toDeleteFileBuffer = new BufferedWriter(toDeleteFile);
       BufferedWriter fromDatabaseFileBuffer = new BufferedWriter(fromDatabaseFile);
       
-      for(int i=0; i<listOfDuplicates.size(); i++)
+      for(int i=0; i<this.toAddPaths.size(); i++)
       {
-        toDeleteFileBuffer.write(Utils.getCanonicalPath(listOfDuplicates.get(i).file)+"\n");
-        fromDatabaseFileBuffer.write(listOfDuplicates.get(i).document.canonical_path+"\n");
+        toDeleteFileBuffer.write(this.toAddPaths.get(i)+"\n");
+        fromDatabaseFileBuffer.write(this.existingPaths.get(i)+"\n");
       } 
       
       toDeleteFileBuffer.close();
@@ -115,8 +114,6 @@ public class Report
     {
       e.printStackTrace();
     }     
-    
- 
   }
 
 }
