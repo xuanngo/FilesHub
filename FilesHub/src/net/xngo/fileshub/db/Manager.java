@@ -43,6 +43,8 @@ public class Manager
 
   /**
    * Goal: Avoid processing hash multiple times:
+   * <pre>
+   * {@code
    * If name found in Shelf
    *    If last modified time found
    *        Return Duplicate
@@ -76,6 +78,8 @@ public class Manager
    *            else
    *                -Add file info in Shelf
    *                -Return New File(Completely new file)
+   * }
+   * </pre>               
    * @param file
    * @return  Existing and conflicting document. Otherwise, null.
    */
