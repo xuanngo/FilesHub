@@ -32,6 +32,19 @@ public class Hub
     long totalSize = 0;
     for (File file : listOfFiles) 
     {
+      this.manager.addFile(file);
+    }
+
+    
+  }
+  /*
+  public void addFiles_old(Set<File> listOfFiles)
+  {
+    ArrayList<ResultDocSet> listOfDuplicateFiles = new ArrayList<ResultDocSet>();
+    
+    long totalSize = 0;
+    for (File file : listOfFiles) 
+    {
       ResultDocSet resultDocSet = this.manager.addFile(file);
       if(resultDocSet.status==ResultDocSet.DIFF_PATH_SAME_HASH)
       {
@@ -55,7 +68,7 @@ public class Hub
     report.write(listOfDuplicateFiles);
     
   }
-  
+  */
   public void update()
   {
     List<Document> missingFileList = this.manager.update();
