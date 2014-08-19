@@ -40,7 +40,7 @@ public class Shelf
   /**
    * @deprecated This is only used by unit test. Remove this if used in application.
    * @param uid
-   * @return
+   * @return {@link Document}
    */
   public Document findDocByUid(final int uid)
   {
@@ -51,6 +51,11 @@ public class Shelf
       return docList.get(0);
   } 
   
+  /**
+   * 
+   * @param canonicalPath
+   * @return {@link Document}
+   */
   public Document findDocByCanonicalPath(final String canonicalPath)
   {
     List<Document> docList = this.findDocBy("canonical_path", canonicalPath);
@@ -60,6 +65,11 @@ public class Shelf
       return docList.get(0);    
   }
   
+  /**
+   * 
+   * @param hash
+   * @return {@link Document}
+   */
   public Document findDocByHash(final String hash)
   {
     List<Document> docList = this.findDocBy("hash", hash);
@@ -69,6 +79,11 @@ public class Shelf
       return docList.get(0);       
   }
 
+  /**
+   * 
+   * @param filename
+   * @return {@link Document}
+   */
   public Document findDocByFilename(final String filename)
   {
     List<Document> docList = this.findDocBy("filename", filename);
@@ -101,7 +116,7 @@ public class Shelf
   
   /**
    * @deprecated Currently used in unit test. Otherwise, remove deprecated.
-   * @return
+   * @return {@link Document}
    */
   public int getTotalDocs()
   {

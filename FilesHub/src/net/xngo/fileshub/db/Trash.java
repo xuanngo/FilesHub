@@ -72,7 +72,7 @@ public class Trash
   /**
    * @deprecated This is only used by unit test. Remove this if used in application.
    * @param canonicalPath
-   * @return
+   * @return {@link Document}
    */
   public Document findDocByCanonicalPath(final String canonicalPath)
   {
@@ -82,7 +82,7 @@ public class Trash
   /**
    * @deprecated This is only used by unit test. Remove this if used in application.
    * @param hash
-   * @return
+   * @return {@link Document}
    */
   public Document findDocByHash(String hash)
   {
@@ -120,11 +120,22 @@ public class Trash
     return this.insertDoc(doc);
   }
   
+  /**
+   * 
+   * @param filename
+   * @return {@link Document}
+   */
   public Document findDocByFilename(String filename)
   {
     return this.findDocBy("filename", filename);
   }
   
+  /**
+   * 
+   * @param modifiedTime
+   * @param filename
+   * @return {@link Document}
+   */
   public Document findDocByModifiedTimeAndFilename(long modifiedTime, String filename)
   {
     Document doc = null;
@@ -240,6 +251,12 @@ public class Trash
     }
   }
   
+  /**
+   * 
+   * @param column
+   * @param value
+   * @return {@link Document}
+   */
   private Document findDocBy(String column, String value)
   {
     Document doc = null;
