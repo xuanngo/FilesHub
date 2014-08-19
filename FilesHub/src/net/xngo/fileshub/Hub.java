@@ -27,15 +27,20 @@ public class Hub
   
   public void addFiles(Set<File> listOfFiles)
   {
-    ArrayList<ResultDocSet> listOfDuplicateFiles = new ArrayList<ResultDocSet>();
-    
-    long totalSize = 0;
+    Report report = new Report();
     for (File file : listOfFiles) 
     {
-      this.manager.addFile(file);
+      Document doc = this.manager.addFile(file);
+      if(doc!=null)
+      {
+        if(doc.canonical_path.compareTo(Utils.getCanonicalPath(file))!=0) // Ignore if users add the exact same file and the same path.
+          report.addDuplicate(Utils.getCanonicalPath(file), doc.canonical_path);
+      }
     }
-
     
+    report.display();
+    report.writeCSV("./results.csv");
+    report.write();
   }
   /*
   public void addFiles_old(Set<File> listOfFiles)
