@@ -14,8 +14,6 @@ import org.supercsv.prefs.CsvPreference;
 import org.supercsv.cellprocessor.ift.CellProcessor;
 import org.supercsv.cellprocessor.constraint.NotNull;
 
-import net.xngo.fileshub.struct.ResultDocSet;
-
 public class Report
 {
   private ArrayList<String> toAddPaths = new ArrayList<String>();
