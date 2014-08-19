@@ -101,7 +101,9 @@ public class ManagerTest
   {
     // Add unique file.
     File uniqueFile = Data.createTempFile("addFileWithSameHash");
-    Document shelfDoc = this.manager.addFile(uniqueFile).document;
+    this.manager.addFile(uniqueFile);
+    Shelf shelf = new Shelf();
+    Document shelfDoc = shelf.findDocByFilename(uniqueFile.getName());
     
     // Copy unique file and then add to database.
     File duplicateFile = Data.createTempFile("addFileWithSameHash_duplicate_hash");
@@ -183,7 +185,7 @@ public class ManagerTest
 
 
     // Update the duplicated file.
-    Data.writeStringToFile(duplicateFile, "new content");
+    Data.writeStringToFile(duplicateFile, " new content");
     long expected_last_modified = duplicateFile.lastModified();    
     
     // Add the exact same duplicated file again with new last modified time.
@@ -246,27 +248,33 @@ public class ManagerTest
   @Test(description="Add same filename but different content.")
   public void addFileSameNameDiffContent()
   {
-    // Add a temporary file in database.
-    File tmpFile = Data.createTempFile("addFileSameNameDiffContent");
+    // Add a unique file in database.
+    File uniqueFile = Data.createTempFile("addFileSameNameDiffContent");
+    this.manager.addFile(uniqueFile);
     
     // Copied temporary file to another directory and add content to the copied file so it will have different content.
     File tmpDirectory = new File(System.getProperty("java.io.tmpdir")+System.nanoTime());
     tmpDirectory.mkdir();
-    File copiedFile = Data.copyFileToDirectory(tmpFile, tmpDirectory);
-    Data.writeStringToFile(copiedFile, System.nanoTime()+"");
+    File copiedFile = Data.copyFileToDirectory(uniqueFile, tmpDirectory);
+    Data.writeStringToFile(copiedFile, " new content");
     this.manager.addFile(copiedFile);
     
     // Validations
     Trash trash = new Trash();
     Document trashDoc = trash.findDocByCanonicalPath(Utils.getCanonicalPath(copiedFile));
     Shelf shelf = new Shelf();
-    Document shelfDoc = shelf.findDocByHash(Utils.getHash(tmpFile));
+    Document shelfDoc = shelf.findDocByHash(Utils.getHash(uniqueFile));
     assertNotNull(trashDoc, String.format("Expected a row is added in Trash table but it is not.\n"
                                             + "%s"
                                             + "\n"
                                             + "%s"
                                             , Data.getFileInfo(copiedFile, "File to add"),
                                             shelfDoc.getInfo("Shelf")));
+    
+    // Clean up.
+    uniqueFile.delete();
+    copiedFile.delete();
+    tmpDirectory.delete();
 
   }  
   
@@ -277,11 +285,12 @@ public class ManagerTest
     File uniqueFile = Data.createTempFile("addFileSameFileWithDiffPaths");
     this.manager.addFile(uniqueFile);
     
-    // Expected values.
+    // Expected values:
+    //  Total # of documents should stay the same after the initial add of new file.
     Shelf shelf = new Shelf();
     final int expectedTotalDocsShelf = shelf.getTotalDocs();
     Trash trash = new Trash();
-    final int expectedTotalDocsTrash = trash.getTotalDocs()+1;
+    final int expectedTotalDocsTrash = trash.getTotalDocs();
     
     // Add same file from multiple paths
     for(int i=0; i<5; i++)
