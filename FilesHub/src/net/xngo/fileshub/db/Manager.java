@@ -6,7 +6,6 @@ import java.util.ArrayList;
 
 import net.xngo.fileshub.Utils;
 import net.xngo.fileshub.struct.Document;
-import net.xngo.fileshub.struct.ResultDocSet;
 import net.xngo.fileshub.db.Shelf;
 
 /**

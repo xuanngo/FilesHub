@@ -5,7 +5,6 @@ import net.xngo.fileshub.db.Manager;
 import net.xngo.fileshub.db.Trash;
 import net.xngo.fileshub.db.Shelf;
 import net.xngo.fileshub.struct.Document;
-import net.xngo.fileshub.struct.ResultDocSet;
 import net.xngo.fileshub.Utils;
 
 // FilesHub test helper classes.

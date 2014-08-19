@@ -7,7 +7,6 @@ import java.util.Set;
 
 
 import net.xngo.fileshub.db.Manager;
-import net.xngo.fileshub.struct.ResultDocSet;
 import net.xngo.fileshub.struct.Document;
 
 
