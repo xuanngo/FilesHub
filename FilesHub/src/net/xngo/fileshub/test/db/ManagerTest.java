@@ -75,7 +75,8 @@ public class ManagerTest
     File uniqueFile = Data.createTempFile("addExactSameFile");
     this.manager.addFile(uniqueFile); // Add file 1st time.
     
-    // Expected values.
+    // Expected values:
+    //   Regardless of how many times you add the exact same file, the number of documents in Shelf and Trash.
     Shelf shelf = new Shelf();
     final int expected_totalDocsShelf = shelf.getTotalDocs();
     Trash trash = new Trash();
