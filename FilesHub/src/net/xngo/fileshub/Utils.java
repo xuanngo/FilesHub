@@ -188,19 +188,19 @@ public class Utils
   }
   
   /**
-   * Return human readable file size.
-   * This is a help function.
+   * Return human readable file size. This function is limited to exabyte.
+   * 
    * Source: http://stackoverflow.com/questions/3263892/format-file-size-as-mb-gb-etc
    * 
    * @param size
-   * @return
+   * @return a human-readable display value (includes units - EB, PB, TB, GB, MB, KB or bytes).
    */
   public static String readableFileSize(long size) 
   {
-    if(size <= 0) return "0";
-    final String[] units = new String[] { "B", "KB", "MB", "GB", "TB" };
+    if(size <= 1) return size +" byte";
+    final String[] units = new String[] { "bytes", "KB", "MB", "GB", "TB", "PB", "EB" };
     int digitGroups = (int) (Math.log10(size)/Math.log10(1024));
-    return new DecimalFormat("#,##0.#").format(size/Math.pow(1024, digitGroups)) + " " + units[digitGroups];
-  }  
+    return new DecimalFormat("#,##0.##").format(size/Math.pow(1024, digitGroups)) + " " + units[digitGroups];
+  }
   
 }
