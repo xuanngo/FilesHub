@@ -69,6 +69,14 @@ public class Shelf
       return docList.get(0);       
   }
 
+  public Document findDocByFilename(final String filename)
+  {
+    List<Document> docList = this.findDocBy("filename", filename);
+    if(docList.size()==0)
+      return null;
+    else
+      return docList.get(0);       
+  }
   
   public int removeDoc(int duid)
   {
@@ -190,6 +198,7 @@ public class Shelf
   private final int updateDoc(Document doc)
   {
     doc.sanityCheck();
+    doc.checkUid();
     
     final String query = "UPDATE "+this.tablename+  " SET canonical_path = ?, filename = ?, last_modified = ?, hash = ?, comment = ? WHERE uid = ?";
     
