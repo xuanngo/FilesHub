@@ -14,30 +14,32 @@ import org.supercsv.prefs.CsvPreference;
 import org.supercsv.cellprocessor.ift.CellProcessor;
 import org.supercsv.cellprocessor.constraint.NotNull;
 
+import net.xngo.fileshub.struct.Document;
+
 public class Report
 {
-  private ArrayList<String> toAddPaths = new ArrayList<String>();
-  private ArrayList<String> existingPaths = new ArrayList<String>();
+  private ArrayList<Document> toAddDocs = new ArrayList<Document>();
+  private ArrayList<Document> existingDocs = new ArrayList<Document>();
   
-  public void addDuplicate(String toAddPath, String existingPath)
+  public void addDuplicate(Document toAddDoc, Document existingDoc)
   {
-    this.toAddPaths.add(toAddPath);
-    this.existingPaths.add(existingPath);
+    this.toAddDocs.add(toAddDoc);
+    this.existingDocs.add(existingDoc);
   }
   public void display()
   {
-    if(toAddPaths.size()>0)
+    if(this.toAddDocs.size()>0)
     {
       System.out.println("Duplicate files:");
       System.out.println("=================");
       
       // Get total size.
       long totalSize = 0;
-      for(String toAddPath: toAddPaths)
+      for(Document toAddDoc: this.toAddDocs)
       {
-        File file = new File(toAddPath);
+        File file = new File(toAddDoc.canonical_path);
         totalSize += file.length();
-        System.out.println(toAddPath);
+        System.out.println(toAddDoc);
       }
       
       System.out.println(String.format("Total size of duplicate files = %s.", Utils.readableFileSize(totalSize)));
@@ -60,9 +62,9 @@ public class Report
       listWriter.writeHeader(header);
       
       // write
-      for(int i=0; i<toAddPaths.size(); i++)
+      for(int i=0; i<toAddDocs.size(); i++)
       {
-        final List<Object> row = Arrays.asList(new Object[] { this.toAddPaths.get(i), this.existingPaths.get(i)});            
+        final List<Object> row = Arrays.asList(new Object[] { this.toAddDocs.get(i).canonical_path, this.existingDocs.get(i).canonical_path});            
         listWriter.write(row, processors);
       }
             
@@ -99,10 +101,10 @@ public class Report
       BufferedWriter toDeleteFileBuffer = new BufferedWriter(toDeleteFile);
       BufferedWriter fromDatabaseFileBuffer = new BufferedWriter(fromDatabaseFile);
       
-      for(int i=0; i<this.toAddPaths.size(); i++)
+      for(int i=0; i<this.toAddDocs.size(); i++)
       {
-        toDeleteFileBuffer.write(this.toAddPaths.get(i)+"\n");
-        fromDatabaseFileBuffer.write(this.existingPaths.get(i)+"\n");
+        toDeleteFileBuffer.write(this.toAddDocs.get(i)+"\n");
+        fromDatabaseFileBuffer.write(this.existingDocs.get(i)+"\n");
       } 
       
       toDeleteFileBuffer.close();
