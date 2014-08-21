@@ -42,7 +42,8 @@ public class Report
         System.out.println(toAddDoc.canonical_path);
       }
       
-      System.out.println(String.format("Total size of duplicate files = %s.", Utils.readableFileSize(totalSize)));
+      System.out.println("========================================================");
+      System.out.println(String.format("Total size of %s duplicate files = %s.", toAddDocs.size(), Utils.readableFileSize(totalSize)));
     }
     else
       System.out.println("There is no duplicate file.");
