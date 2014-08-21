@@ -39,7 +39,7 @@ public class Report
       {
         File file = new File(toAddDoc.canonical_path);
         totalSize += file.length();
-        System.out.println(toAddDoc);
+        System.out.println(toAddDoc.canonical_path);
       }
       
       System.out.println(String.format("Total size of duplicate files = %s.", Utils.readableFileSize(totalSize)));
