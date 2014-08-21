@@ -291,7 +291,7 @@ public class ManagerTest
     Shelf shelf = new Shelf();
     final int expectedTotalDocsShelf = shelf.getTotalDocs();
     Trash trash = new Trash();
-    final int expectedTotalDocsTrash = trash.getTotalDocs();
+    final int expectedTotalDocsTrash = trash.getTotalDocs()+1;
     
     // Add same file from multiple paths
     for(int i=0; i<5; i++)

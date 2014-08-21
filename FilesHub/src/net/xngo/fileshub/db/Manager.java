@@ -85,98 +85,66 @@ public class Manager
    */
   public Document addFile(File file)
   {
-    final String filename = file.getName();
-    final long lastModified = file.lastModified();
+    Document doc = new Document(file);
     
-    Document shelfDoc = shelf.findDocByFilename(filename);
-    if(shelfDoc != null)
+    Document shelfDoc = shelf.findDocByCanonicalPath(doc.canonical_path);
+    if(shelfDoc == null)
     {
-      if(shelfDoc.last_modified == lastModified)
-        return shelfDoc;
-      else
-      {
-        Document tmpShelfDoc = shelf.findDocByCanonicalPath(Utils.getCanonicalPath(file));
-        if(tmpShelfDoc != null)
-        {
-          trash.addDoc(tmpShelfDoc);
-          
-          Document newShelfDoc = new Document(file);
-          newShelfDoc.uid = tmpShelfDoc.uid;
-          newShelfDoc.hash = Utils.getHash(file);
-          shelf.saveDoc(newShelfDoc);
-          
-          return null; // Dilemma null or newShelfDoc. In this case, it's the exact same file and path but content has changed.
-        }
-        else
-        {
-          Document trashDoc = trash.findDocByModifiedTimeAndFilename(lastModified, filename);
-          if(trashDoc != null)
-            return shelfDoc;
-          else
-          {
-            Document newTrashDoc = new Document(file);
-            newTrashDoc.uid = shelfDoc.uid;
-            newTrashDoc.hash = Utils.getHash(file);
-            trash.addDoc(newTrashDoc);
-  
-            return shelfDoc;
-          }
-        }
-      }
-    }
-    else
-    {
-      Document trashDoc = trash.findDocByFilename(filename);
+      Document trashDoc = trash.findDocByCanonicalPath(doc.canonical_path);
       if(trashDoc != null)
       {
-        if(trash.findDocByModifiedTimeAndFilename(lastModified, filename) != null)
-        {
-          return shelf.findDocByUid(trashDoc.uid);
-        }
-        else
-        {
-          Document newTrashDoc = new Document(file);
-          newTrashDoc.uid = trashDoc.uid;
-          newTrashDoc.hash = Utils.getHash(file);
-          trash.addDoc(newTrashDoc);
-          return shelf.findDocByUid(trashDoc.uid);
-        }
+        return shelf.findDocByUid(trashDoc.uid);
       }
       else
       {
-        final String hash = Utils.getHash(file);
-        shelfDoc = shelf.findDocByHash(hash);
+        shelfDoc = shelf.findDocByFilename(doc.filename);
         if(shelfDoc != null)
         {
-          Document newTrashDoc = new Document(file);
-          newTrashDoc.uid = shelfDoc.uid;
-          newTrashDoc.hash = hash;
-          trash.addDoc(newTrashDoc);
+          doc.uid = shelfDoc.uid;
+          doc.hash = Utils.getHash(file);
+          trash.addDocIfDiffHash(doc);
+          
           return shelfDoc;
         }
         else
         {
-          trashDoc = trash.findDocByHash(hash);
+          trashDoc = trash.findDocByFilename(doc.filename);
           if(trashDoc != null)
           {
-            Document newTrashDoc = new Document(file);
-            newTrashDoc.uid = trashDoc.uid;
-            newTrashDoc.hash = hash;
-            trash.addDoc(newTrashDoc);
-            return shelf.findDocByUid(trashDoc.uid);
+            doc.uid = trashDoc.uid;
+            doc.hash = Utils.getHash(file);
+            trash.addDocIfDiffHash(doc);
+            
+            return shelf.findDocByUid(trashDoc.uid);            
           }
           else
           {
-            Document newShelfDoc = new Document(file);
-            newShelfDoc.hash = hash;
-            shelf.addDoc(newShelfDoc);
-            
-            return null;
+            doc.hash = Utils.getHash(file);
+            shelfDoc = shelf.findDocByHash(doc.hash);
+            if(shelfDoc != null)
+            {
+              doc.uid = shelfDoc.uid;
+              trash.addDocIfDiffHash(doc);
+              return shelfDoc;
+            }
+            else
+            {
+              trashDoc = trash.findDocByHash(doc.hash);
+              if(trashDoc != null)
+                return shelf.findDocByUid(trashDoc.uid);
+              else
+              {
+                shelf.addDoc(doc);
+                return null; // New file.
+              }
+            }
           }
+            
         }
-        
       }
     }
+    // Exact same file in Shelf. Therefore, do nothing.
+    return null;
   }
   
   /**

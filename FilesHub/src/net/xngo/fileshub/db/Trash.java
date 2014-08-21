@@ -120,6 +120,15 @@ public class Trash
     return this.insertDoc(doc);
   }
   
+  public int addDocIfDiffHash(Document doc)
+  {
+    Document tmpDoc = this.findDocByHash(doc.hash);
+    if(tmpDoc != null)
+      return 0;
+    else
+      return this.addDoc(doc);
+  }
+  
   /**
    * 
    * @param filename
