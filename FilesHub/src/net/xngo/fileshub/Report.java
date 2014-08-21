@@ -104,8 +104,8 @@ public class Report
       
       for(int i=0; i<this.toAddDocs.size(); i++)
       {
-        toDeleteFileBuffer.write(this.toAddDocs.get(i)+"\n");
-        fromDatabaseFileBuffer.write(this.existingDocs.get(i)+"\n");
+        toDeleteFileBuffer.write(this.toAddDocs.get(i).canonical_path+"\n");
+        fromDatabaseFileBuffer.write(this.existingDocs.get(i).canonical_path+"\n");
       } 
       
       toDeleteFileBuffer.close();
