@@ -70,7 +70,6 @@ public class Trash
   }
   
   /**
-   * @deprecated This is only used by unit test. Remove this if used in application.
    * @param canonicalPath
    * @return {@link Document}
    */
@@ -80,7 +79,6 @@ public class Trash
   }
   
   /**
-   * @deprecated This is only used by unit test. Remove this if used in application.
    * @param hash
    * @return {@link Document}
    */
