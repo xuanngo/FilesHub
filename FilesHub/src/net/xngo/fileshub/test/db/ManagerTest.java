@@ -18,6 +18,7 @@ import org.testng.annotations.BeforeClass;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
 import static org.testng.Assert.assertNotNull;
+import static org.testng.Assert.assertNull;
 
 
 
@@ -254,17 +255,22 @@ public class ManagerTest
     Data.writeStringToFile(copiedFile, " new content");
     this.manager.addFile(copiedFile);
     
-    // Validations
-    Trash trash = new Trash();
-    Document trashDoc = trash.findDocByCanonicalPath(Utils.getCanonicalPath(copiedFile));
+    // Validations:
+    //  -A new row is created in Shelf for copiedFile.
+    //  -No row is created in Trash.
+    String hash = Utils.getHash(copiedFile);
     Shelf shelf = new Shelf();
-    Document shelfDoc = shelf.findDocByHash(Utils.getHash(uniqueFile));
-    assertNotNull(trashDoc, String.format("Expected a row is added in Trash table but it is not.\n"
+    Document shelfDoc = shelf.findDocByHash(hash);
+    assertEquals(shelfDoc.canonical_path, Utils.getCanonicalPath(copiedFile), String.format("Expected a row is added in Shelf table but it is not.\n"
                                             + "%s"
                                             + "\n"
                                             + "%s"
                                             , Data.getFileInfo(copiedFile, "File to add"),
-                                            shelfDoc.getInfo("Shelf")));
+                                            shelfDoc.getInfo("Return document from Shelf")));
+    
+    Trash trash = new Trash();
+    Document trashDoc = trash.findDocByHash(hash);
+    assertNull(trashDoc, String.format("No new row should be created in Trash.", shelfDoc.getInfo("Unexpected Trash document returned")));
     
     // Clean up.
     uniqueFile.delete();
@@ -281,14 +287,16 @@ public class ManagerTest
     this.manager.addFile(uniqueFile);
     
     // Expected values:
-    //  Total # of documents should stay the same after the initial add of new file.
+    //  Total # of documents in Shelf should stay the same after the initial add of new file.
+    //  Total # of documents in Trash should be added to the number of different paths.
     Shelf shelf = new Shelf();
     final int expectedTotalDocsShelf = shelf.getTotalDocs();
     Trash trash = new Trash();
-    final int expectedTotalDocsTrash = trash.getTotalDocs()+1;
+    final int NUM_OF_DIFF_PATHS = 5;
+    final int expectedTotalDocsTrash = trash.getTotalDocs()+NUM_OF_DIFF_PATHS;
     
     // Add same file from multiple paths
-    for(int i=0; i<5; i++)
+    for(int i=0; i<NUM_OF_DIFF_PATHS; i++)
     {
       File tmpDirectory = new File(System.getProperty("java.io.tmpdir")+System.nanoTime()+i);
       tmpDirectory.mkdir();
