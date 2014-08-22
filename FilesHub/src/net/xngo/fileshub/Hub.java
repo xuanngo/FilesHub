@@ -33,6 +33,7 @@ public class Hub
     {
       System.out.println(String.format("[%d/%d]: Processing %s", i, totalFiles, Utils.getCanonicalPath(file)));
       Document doc = this.manager.addFile(file);
+      i++;
       if(doc!=null)
       {
         if(doc.canonical_path.compareTo(Utils.getCanonicalPath(file))!=0) // Ignore if users add the exact same file and the same path.
