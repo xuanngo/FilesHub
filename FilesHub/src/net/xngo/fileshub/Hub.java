@@ -8,6 +8,7 @@ import java.util.Set;
 
 import net.xngo.fileshub.db.Manager;
 import net.xngo.fileshub.struct.Document;
+import net.xngo.utils.java.time.ElapsedTime;
 
 
 /**
@@ -28,6 +29,9 @@ public class Hub
   {
     Report report = new Report();
     int i=1;
+    ElapsedTime elapsedTime = new ElapsedTime();
+    
+    elapsedTime.start();
     int totalFiles = listOfFiles.size();
     for (File file : listOfFiles) 
     {
@@ -40,6 +44,11 @@ public class Hub
           report.addDuplicate(new Document(file), doc);
       }
     }
+    elapsedTime.stop();
+    
+    System.out.println("===============================================");
+    elapsedTime.display();
+    System.out.println("===============================================");
     
     report.display();
     report.writeCSV("./results.csv");
