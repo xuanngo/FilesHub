@@ -42,31 +42,24 @@ public class Manager
   
 
   /**
-   * Add a file in database. A file is identified by its name or hash.
+   * Add a file in database. A file is identified by its hash.
+   * For optimization, check the path first and then the hash.
+   * We can't use filename to identify a file because filename can
+   *  be generic, e.g. ../something/Track 1.
    * <pre>
    * {@code
-   * -Check path
-   * -Check name
-   * -Check hash
    * If path found in Shelf
    *   -Exact file path. Do nothing
    * else
    *   If path found in Trash
    *     -Return Duplicate
    *   else
-   *     If name found in Shelf
-   *       -Add to Trash if different hash
-   *       -Return Duplicate
-   *     else
-   *       If name found in Trash
-   *         -Add to Trash if different hash
-   *         -Return Duplicate
-   *       else
    *         If hash found in Shelf
-   *           -Add to Trash if different hash
+   *           -Add to Trash (New Path)
    *           -Return Duplicate
    *         else
    *           If hash found in Trash
+   *             -Add to Trash (New Path)
    *             -Return Duplicate
    *           else
    *             -Add to Shelf
@@ -82,58 +75,38 @@ public class Manager
     
     Document shelfDoc = shelf.findDocByCanonicalPath(doc.canonical_path);
     if(shelfDoc == null)
-    {
+    {// Path not found in Shelf.
+      
       Document trashDoc = trash.findDocByCanonicalPath(doc.canonical_path);
       if(trashDoc != null)
-      {
+      {// Path found in Trash.
         return shelf.findDocByUid(trashDoc.uid);
       }
       else
       {
-        shelfDoc = shelf.findDocByFilename(doc.filename);
-        if(shelfDoc != null)
-        {
-          doc.uid = shelfDoc.uid;
           doc.hash = Utils.getHash(file);
-          trash.addDocIfDiffHash(doc);
-          
-          return shelfDoc;
-        }
-        else
-        {
-          trashDoc = trash.findDocByFilename(doc.filename);
-          if(trashDoc != null)
-          {
-            doc.uid = trashDoc.uid;
-            doc.hash = Utils.getHash(file);
-            trash.addDocIfDiffHash(doc);
-            
-            return shelf.findDocByUid(trashDoc.uid);            
+          shelfDoc = shelf.findDocByHash(doc.hash);
+          if(shelfDoc != null)
+          {// Hash found in Shelf.
+            doc.uid = shelfDoc.uid;
+            trash.addDoc(doc);
+            return shelfDoc;
           }
           else
           {
-            doc.hash = Utils.getHash(file);
-            shelfDoc = shelf.findDocByHash(doc.hash);
-            if(shelfDoc != null)
-            {
-              doc.uid = shelfDoc.uid;
-              trash.addDocIfDiffHash(doc);
-              return shelfDoc;
+            trashDoc = trash.findDocByHash(doc.hash);
+            if(trashDoc != null)
+            {// Hash found in Trash.
+              doc.uid = trashDoc.uid;
+              trash.addDoc(doc);              
+              return shelf.findDocByUid(trashDoc.uid);
             }
             else
             {
-              trashDoc = trash.findDocByHash(doc.hash);
-              if(trashDoc != null)
-                return shelf.findDocByUid(trashDoc.uid);
-              else
-              {
-                shelf.addDoc(doc);
-                return null; // New file.
-              }
+              shelf.addDoc(doc);
+              return null; // New file.
             }
           }
-            
-        }
       }
     }
     // Exact same file in Shelf. Therefore, do nothing.
