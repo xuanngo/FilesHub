@@ -177,25 +177,26 @@ public class ManagerTest
     Data.copyFile(uniqueFile, duplicateFile);
     this.manager.addFile(duplicateFile);
 
-
-    // Update the duplicated file.
-    Data.writeStringToFile(duplicateFile, " new content");
-    long expected_last_modified = duplicateFile.lastModified();    
+    // Expected values:
+    //   Regardless of how many times you add the exact same file with new content, 
+    //      no new row should be added to Shelf and Trash tables.
+    Shelf shelf = new Shelf();
+    final int expected_totalDocsShelf = shelf.getTotalDocs();
+    Trash trash = new Trash();
+    final int expected_totalDocsTrash = trash.getTotalDocs();    
     
-    // Add the exact same duplicated file again with new last modified time.
+  
+    // Add the exact same duplicated file again with new content.
+    Data.writeStringToFile(duplicateFile, " new content");
     this.manager.addFile(duplicateFile);
     
-    // Validate
-    Trash trash = new Trash();
-    Document trashDoc = trash.findDocByHash(Utils.getHash(duplicateFile));
-    assertEquals(trashDoc.last_modified, expected_last_modified,
-                            String.format("Last modified time in Trash table should be the same as the file to add.\n"
-                                                + "%s"
-                                                + "\n"
-                                                + "%s"
-                                                , Data.getFileInfo(duplicateFile, "File to add"),
-                                                trashDoc.getInfo("Trash")
-                                          ));
+    // Actual values.
+    final int actual_totalDocsShelf = shelf.getTotalDocs();
+    final int actual_totalDocsTrash = trash.getTotalDocs();
+    
+    // Validations
+    assertEquals(actual_totalDocsShelf, expected_totalDocsShelf, "No new row should be created in Shelf table.");
+    assertEquals(actual_totalDocsTrash, expected_totalDocsTrash, "No new row should be created in Trash table.");
     
     // Clean up.
     uniqueFile.delete();
