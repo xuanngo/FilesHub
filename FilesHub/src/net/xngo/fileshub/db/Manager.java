@@ -42,42 +42,35 @@ public class Manager
   
 
   /**
-   * Goal: Avoid processing hash multiple times:
+   * Add a file in database. A file is identified by its name or hash.
    * <pre>
    * {@code
-   * If name found in Shelf
-   *    If last modified time found
-   *        Return Duplicate
-   *    else
-   *        If exact file path found in Shelf
-   *            -Copy Shelf document to Trash.
-   *            -Update Shelf document with current file.
-   *            -Return New File(File content has changed.)
-   *        else
-   *            If last modifed time found in Trash
-   *                Return Duplicate
-   *            else
-   *                -Add file info in Trash(New Hash)
-   *                -Return Duplicate
+   * -Check path
+   * -Check name
+   * -Check hash
+   * If path found in Shelf
+   *   -Exact file path. Do nothing
    * else
-   *    If name found in Trash
-   *        If last modified time found
-   *            Return Duplicate
-   *        else
-   *            -Add file info in Trash(New hash)
-   *            -Return Duplicate
-   *    else
-   *        hash = getHash(file)
-   *        If hash found in Shelf
-   *            -Add file info in Trash(New name)
-   *            -Return Duplicate
-   *        else
-   *            If hash found in Trash
-   *                -Add file info in Trash(New name)
-   *                -Return Duplicate
-   *            else
-   *                -Add file info in Shelf
-   *                -Return New File(Completely new file)
+   *   If path found in Trash
+   *     -Return Duplicate
+   *   else
+   *     If name found in Shelf
+   *       -Add to Trash if different hash
+   *       -Return Duplicate
+   *     else
+   *       If name found in Trash
+   *         -Add to Trash if different hash
+   *         -Return Duplicate
+   *       else
+   *         If hash found in Shelf
+   *           -Add to Trash if different hash
+   *           -Return Duplicate
+   *         else
+   *           If hash found in Trash
+   *             -Return Duplicate
+   *           else
+   *             -Add to Shelf
+   *             -Return New File
    * }
    * </pre>               
    * @param file
