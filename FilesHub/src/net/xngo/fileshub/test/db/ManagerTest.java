@@ -75,22 +75,23 @@ public class ManagerTest
     this.manager.addFile(uniqueFile); // Add file 1st time.
     
     // Expected values:
-    //   Regardless of how many times you add the exact same file, the number of documents in Shelf and Trash.
+    //   Regardless of how many times you add the exact same file, 
+    //      no new row should be added to Shelf and Trash tables.
     Shelf shelf = new Shelf();
     final int expected_totalDocsShelf = shelf.getTotalDocs();
     Trash trash = new Trash();
     final int expected_totalDocsTrash = trash.getTotalDocs();
     
-    // Add the same unique file again.
-    this.manager.addFile(uniqueFile); // Add the exact same file the 2nd time.
+    // Add the exact same file the 2nd time.
+    this.manager.addFile(uniqueFile); 
 
     // Actual values.
     final int actual_totalDocsShelf = shelf.getTotalDocs();
     final int actual_totalDocsTrash = trash.getTotalDocs();
     
     // Validations
-    assertEquals(actual_totalDocsShelf, expected_totalDocsShelf, String.format("The expected number of documents in Shelf is %d but it is %d. Expect to be equal.", expected_totalDocsShelf, actual_totalDocsShelf));
-    assertEquals(actual_totalDocsTrash, expected_totalDocsTrash, String.format("The expected number of documents in Shelf is %d but it is %d. Expect to be equal.", expected_totalDocsTrash, actual_totalDocsTrash));
+    assertEquals(actual_totalDocsShelf, expected_totalDocsShelf, "No new row should be created in Shelf table.");
+    assertEquals(actual_totalDocsTrash, expected_totalDocsTrash, "No new row should be created in Trash table.");
     
     // Clean up.
     uniqueFile.delete();
@@ -136,36 +137,28 @@ public class ManagerTest
     // Add unique file in Shelf.
     File uniqueFile = Data.createTempFile("addFileShelfFileChanged");
     this.manager.addFile(uniqueFile);
+    
+    // Expected values:
+    //   Regardless of how many times you add the exact same file with different content, 
+    //      no new row should be added to Shelf and Trash tables.
     Shelf shelf = new Shelf();
-    Document oldShelfDoc = shelf.findDocByHash(Utils.getHash(uniqueFile));     
+    final int expected_totalDocsShelf = shelf.getTotalDocs();
+    Trash trash = new Trash();
+    final int expected_totalDocsTrash = trash.getTotalDocs();    
+
     
-    // Update the unique file.
+    // Add the exact same file again with new content.
     Data.writeStringToFile(uniqueFile, "new content");
-    
-    // Add the exact same file again with new last modified time.
     this.manager.addFile(uniqueFile);
     
-    // Validations: Check that Shelf document info is moved to Trash table and the new document is updated in Shelf table.
-    Trash trash = new Trash();
-    Document trashDoc = trash.findDocByCanonicalPath(Utils.getCanonicalPath(uniqueFile));
-    assertEquals(trashDoc, oldShelfDoc,
-                                  String.format("Document information should be moved from Shelf to Trash.\n"
-                                                      + "%s"
-                                                      + "\n"
-                                                      + "%s"
-                                                      , oldShelfDoc.getInfo("Old file"),
-                                                      trashDoc.getInfo("Trash")
-                                                ));      
+    // Actual values.
+    final int actual_totalDocsShelf = shelf.getTotalDocs();
+    final int actual_totalDocsTrash = trash.getTotalDocs();
     
-    Document newShelfDoc = shelf.findDocByHash(Utils.getHash(uniqueFile)); 
-    assertEquals(newShelfDoc.last_modified, uniqueFile.lastModified(),
-                                  String.format("Last modified time in Shelf table should be the same as the file to add.\n"
-                                                      + "%s"
-                                                      + "\n"
-                                                      + "%s"
-                                                      , Data.getFileInfo(uniqueFile, "File to add"),
-                                                      newShelfDoc.getInfo("Shelf")
-                                                ));      
+    // Validations
+    assertEquals(actual_totalDocsShelf, expected_totalDocsShelf, "No new row should be created in Shelf table.");
+    assertEquals(actual_totalDocsTrash, expected_totalDocsTrash, "No new row should be created in Trash table.");
+       
     
     // Clean up.
     uniqueFile.delete();    
