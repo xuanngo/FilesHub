@@ -27,8 +27,11 @@ public class Hub
   public void addFiles(Set<File> listOfFiles)
   {
     Report report = new Report();
+    int i=1;
+    int totalFiles = listOfFiles.size();
     for (File file : listOfFiles) 
     {
+      System.out.println(String.format("[%d/%d]: Processing %s", i, totalFiles, Utils.getCanonicalPath(file)));
       Document doc = this.manager.addFile(file);
       if(doc!=null)
       {
