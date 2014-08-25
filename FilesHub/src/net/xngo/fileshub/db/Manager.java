@@ -146,4 +146,83 @@ public class Manager
     return missingFileList;
   }
   
+  /**
+   * 
+   * @param duplicate
+   * @param of
+   * @return False if nothing is committed in the database. Otherwise, true.
+   */
+  public boolean markDuplicate(File duplicate, File of)
+  {
+    if(!this.validateMarkDuplicate(duplicate, of))
+      return false;
+    else
+    {
+      String duplicateCanonicalPath = Utils.getCanonicalPath(duplicate);
+      String ofCanonicalPath        = Utils.getCanonicalPath(of);
+      
+      if(duplicateCanonicalPath.compareTo(ofCanonicalPath)==0)
+      {
+        System.out.println("Error: Both files are exactly the same files.");
+        return false;
+      }
+      else
+      {
+        Document shelfDoc = this.shelf.findDocByCanonicalPath(ofCanonicalPath);
+        if(shelfDoc!=null)
+        {// Found 'of' in Shelf table.
+          String duplicateHash = Utils.getHash(duplicate);
+          Document trashDoc = this.trash.findDocByHash(duplicateHash);
+          if(trashDoc==null)
+          {// Duplicate is not in Trash table.
+            Document newTrashDoc = new Document(duplicate);
+            newTrashDoc.uid = shelfDoc.uid;
+            newTrashDoc.hash = duplicateHash;
+            trash.addDoc(newTrashDoc);
+            return true;
+          }
+          return false;
+        }
+        else
+        {
+          System.out.println(String.format("Error: [%s] doesn't exist in Shelf table.", ofCanonicalPath));
+          return true;
+        }
+      }
+      
+    }
+    
+    
+    
+  }
+  
+  private boolean validateMarkDuplicate(File duplicate, File of)
+  {
+    if(!of.exists())
+    {
+      System.out.println(String.format("Error: [%s] doesn't exist.", of.getAbsolutePath()));
+      return false;
+    }
+    
+    if(!duplicate.exists())
+    {
+      System.out.println(String.format("Error: [%s] doesn't exist.", duplicate.getAbsolutePath()));
+      return false;
+    }
+    
+    if(!of.isFile())
+    {
+      System.out.println(String.format("Error: [%s] is not a file.", of.getAbsolutePath()));
+      return false;
+    }
+    
+    if(!duplicate.isFile())
+    {
+      System.out.println(String.format("Error: [%s] is not a file.", duplicate.getAbsolutePath()));
+      return false;
+    }
+    
+    return true;
+    
+  }
 }
