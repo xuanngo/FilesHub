@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.List;
 
 import net.xngo.fileshub.Utils;
 
@@ -21,6 +22,9 @@ public class Options
   
   @Parameter(names = {"-u", "--update"}, description = "Update database: check if files have changes, not available files.")
   public boolean update;  
+  
+  @Parameter(names = {"-d", "--duplicate"}, description = "Mark 2 files that are duplicate.", arity = 2)
+  public List<File> duplicateFiles;    
   
   public final Set<File> getAllUniqueFiles()
   {
