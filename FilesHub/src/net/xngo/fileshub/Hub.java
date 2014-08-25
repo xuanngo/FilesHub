@@ -54,38 +54,7 @@ public class Hub
     report.writeCSV("./results.csv");
     report.write();
   }
-  /*
-  public void addFiles_old(Set<File> listOfFiles)
-  {
-    ArrayList<ResultDocSet> listOfDuplicateFiles = new ArrayList<ResultDocSet>();
-    
-    long totalSize = 0;
-    for (File file : listOfFiles) 
-    {
-      ResultDocSet resultDocSet = this.manager.addFile(file);
-      if(resultDocSet.status==ResultDocSet.DIFF_PATH_SAME_HASH)
-      {
-        listOfDuplicateFiles.add(resultDocSet);
-        totalSize += file.length();
-      }
-      
-    }
-    
-    System.out.println();
-    System.out.println(String.format("%s duplicates files [%s]:", listOfDuplicateFiles.size(), Utils.readableFileSize(totalSize)));
-    System.out.println("==============================");
-    System.out.println("To delete ==> From database");
-    for(int i=0; i<listOfDuplicateFiles.size(); i++)
-    {
-      System.out.println(String.format("%s ==> %s", Utils.getCanonicalPath(listOfDuplicateFiles.get(i).file), listOfDuplicateFiles.get(i).document.canonical_path));
-    }
-    
-    Report report = new Report();
-    report.writeCSV(listOfDuplicateFiles, "./results.csv");
-    report.write(listOfDuplicateFiles);
-    
-  }
-  */
+  
   public void update()
   {
     List<Document> missingFileList = this.manager.update();
@@ -102,5 +71,9 @@ public class Hub
     }
   }
   
+  public void markDuplicate(File duplicate, File of)
+  {
+    this.manager.markDuplicate(duplicate, of);
+  }
   
 }
