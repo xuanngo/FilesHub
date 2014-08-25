@@ -390,6 +390,24 @@ public class ManagerTest
     }
   }
   
-
+  @Test(description="Mark duplicate File B is duplicate of File A even if hash of File B is not equal to File A.")
+  public void markDuplicateBisDuplicateOfA()
+  {
+    // Add File A in database.
+    File fileA = Data.createTempFile("markDuplicateAisDuplicateOfB_FileA");
+    this.manager.addFile(fileA);
+    
+    // Create File B with different content(hash).
+    File fileB = Data.createTempFile("markDuplicateAisDuplicateOfB_FileB");
+    Data.copyFile(fileA, fileB);    
+    Data.writeStringToFile(fileB, "new content");
+    
+    // Mark File B is a duplicate of File A.
+    this.manager.markDuplicate(fileB, fileA);
+    
+    Trash trash = new Trash();
+    Document trashDoc = trash.findDocByHash(Utils.getHash(fileB));
+    assertNotNull(trashDoc, String.format("[%s] should be found in Trash table. [%s] is a duplicated of [%s]", fileB.getAbsolutePath(), fileB.getAbsolutePath(), fileA.getAbsolutePath() ));
+  }
   
 }
