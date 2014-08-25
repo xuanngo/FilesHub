@@ -13,6 +13,7 @@ import static org.testng.Assert.assertNotNull;
 import net.xngo.fileshub.Utils;
 import net.xngo.fileshub.cmd.Cmd;
 import net.xngo.fileshub.db.Shelf;
+import net.xngo.fileshub.db.Trash;
 import net.xngo.fileshub.struct.Document;
 import net.xngo.fileshub.test.helpers.Data;
 
@@ -87,5 +88,38 @@ public class CmdTest
     FileUtils.deleteQuietly(testDirectory);    
   }
   
- 
+  @Test(description="Test -u option with file content changed.")
+  public void updateContentChanged()
+  {
+    // Add unique file in Shelf.
+    File uniqueFile = Data.createTempFile("updateContentChanged");
+    String oldHash = Utils.getHash(uniqueFile);
+    String[] args = new String[] { "-a", uniqueFile.getAbsolutePath() };
+    Cmd cmd = new Cmd(args);    
+    
+    
+    // Execute update option with file where its content has changed.
+    Data.writeStringToFile(uniqueFile, "new content");
+    String newHash = Utils.getHash(uniqueFile);
+    args = new String[] { "-u" };
+    cmd = new Cmd(args);    
+    
+    
+    // Validations
+    Shelf shelf = new Shelf();
+    Document shelfDoc = shelf.findDocByHash(newHash);
+    assertNotNull(shelfDoc, String.format("The new hash, %s, should be found in Shelf table.\n"
+                                              + "%s", 
+                                              newHash, Data.getFileInfo(uniqueFile, "Info of file where its content has changed")));
+
+
+    Trash trash = new Trash();
+    Document trashDoc = trash.findDocByHash(oldHash);
+    assertNotNull(trashDoc, String.format("The old hash, %s, should be found in Trash table.\n"
+                                              + "%s", 
+                                              newHash, Data.getFileInfo(uniqueFile, "Info of file where its content has changed")));    
+    
+    // Clean up.
+    uniqueFile.delete();    
+  } 
 }
