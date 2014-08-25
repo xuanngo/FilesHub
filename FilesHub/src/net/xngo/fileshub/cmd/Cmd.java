@@ -31,6 +31,10 @@ public class Cmd
       {
         hub.update();
       }
+      else if(options.duplicateFiles.size()==2)
+      {
+        hub.markDuplicate(options.duplicateFiles.get(0), options.duplicateFiles.get(1));
+      }
       else
       { // Anything else, display the help.
         System.out.println();
