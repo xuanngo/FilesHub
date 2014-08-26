@@ -25,9 +25,11 @@
 	  	<!-- Add Library -->
       <zipfileset dir="./lib" includes="*.jar" excludes="testng*.jar"/>
 	  </jar>
-	
+
 	  <antcall target="copy_build_to_test_dir"/>
 		<antcall target="delete_files"/>
+	  <antcall target="add_timestamp"/>		
+
 	</target>
 	
 	<target name="copy_build_to_test_dir">
@@ -48,6 +50,11 @@
     <delete file="./test/result_from_database.txt"/>
     <delete file="./test/result_to_delete.txt"/>		
 		<delete dir="./test/test-output"/>
+	</target>
+	
+	<target name="add_timestamp">
+    <tstamp><format property="DAY_TIME_NOW" pattern="yyyy-MM-dd_HH.mm.ss" /></tstamp>
+    <echo file="${latest.release.directory}/BUILT_ON" message="fileshub.jar is built on ${DAY_TIME_NOW}."/>
 	</target>
 	
 </project>
