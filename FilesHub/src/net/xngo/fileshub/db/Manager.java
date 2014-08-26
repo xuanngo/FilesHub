@@ -59,8 +59,13 @@ public class Manager
    *           -Return Duplicate
    *         else
    *           If hash found in Trash
-   *             -Add to Trash (New Path)
-   *             -Return Duplicate
+   *              If file was moved
+   *                  -Update Shelf.
+   *                  -Move info from Shelf to Trash.
+   *                  -Return Nothing.
+   *              else
+   *                  -Add to Trash (New Path)
+   *                  -Return Duplicate
    *           else
    *             -Add to Shelf
    *             -Return New File
