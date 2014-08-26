@@ -198,27 +198,28 @@ public class Manager
   
   private boolean validateMarkDuplicate(File duplicate, File of)
   {
-    if(!of.exists())
-    {
-      System.out.println(String.format("Error: [%s] doesn't exist.", of.getAbsolutePath()));
-      return false;
-    }
-    
     if(!duplicate.exists())
     {
       System.out.println(String.format("Error: [%s] doesn't exist.", duplicate.getAbsolutePath()));
       return false;
     }
     
-    if(!of.isFile())
+    if(!of.exists())
     {
-      System.out.println(String.format("Error: [%s] is not a file.", of.getAbsolutePath()));
+      System.out.println(String.format("Error: [%s] doesn't exist.", of.getAbsolutePath()));
       return false;
     }
+    
     
     if(!duplicate.isFile())
     {
       System.out.println(String.format("Error: [%s] is not a file.", duplicate.getAbsolutePath()));
+      return false;
+    }
+    
+    if(!of.isFile())
+    {
+      System.out.println(String.format("Error: [%s] is not a file.", of.getAbsolutePath()));
       return false;
     }
     
