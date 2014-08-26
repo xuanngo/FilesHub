@@ -406,9 +406,15 @@ public class ManagerTest
     // Mark File B is a duplicate of File A.
     this.manager.markDuplicate(fileB, fileA);
     
+    // Validate
     Trash trash = new Trash();
     Document trashDoc = trash.findDocByHash(Utils.getHash(fileB));
     assertNotNull(trashDoc, String.format("[%s] should be found in Trash table. [%s] is a duplicated of [%s].", fileB.getAbsolutePath(), fileB.getAbsolutePath(), fileA.getAbsolutePath() ));
+    
+    // Clean up.
+    fileA.delete();
+    fileB.delete();    
+    
   }
   
   @Test(description="File B is a duplicate of File A but File A doesn't exist in database. Therefore, no commit.")
@@ -426,7 +432,12 @@ public class ManagerTest
     // Mark File B is a duplicate of File A.
     boolean commit = this.manager.markDuplicate(fileB, fileA);
     
-    assertFalse(commit, String.format("Should return false because File A(%s) is not in the Shelf table. Therefore, no commit.", fileA.getName())); 
+    // Validate
+    assertFalse(commit, String.format("Should return false because File A(%s) is not in the Shelf table. Therefore, no commit.", fileA.getName()));
+    
+    // Clean up.
+    fileA.delete();
+    fileB.delete();
   }
   
   @Test(description="Files don't exist. Therefore, no commit.")
