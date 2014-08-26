@@ -121,5 +121,35 @@ public class CmdTest
     
     // Clean up.
     uniqueFile.delete();    
-  } 
+  }
+  
+  @Test(description="Test -d option with files that have different content/hash.")
+  public void markDuplicateDiffContent()
+  {// Mark file B is a duplicate of file A.
+    
+    // Add unique file in Shelf.
+    File fileA = Data.createTempFile("markDuplicateDiffContent_A");
+    String[] args = new String[] { "-a", fileA.getAbsolutePath() };
+    Cmd cmd = new Cmd(args);    
+    
+    
+    // Execute duplicate option with file where its content has changed.
+    File fileB = Data.createTempFile("markDuplicateDiffContent_B");
+    Data.copyFile(fileA, fileB);
+    Data.writeStringToFile(fileB, "new content");
+    args = new String[] { "-d", fileB.getAbsolutePath(), fileA.getAbsolutePath()};
+    cmd = new Cmd(args);    
+    
+    
+    // Validations
+    Trash trash = new Trash();
+    Document trashDoc = trash.findDocByCanonicalPath(Utils.getCanonicalPath(fileB));
+    assertNotNull(trashDoc, String.format("[%s] should be found in Trash table. [%s] is a duplicated of [%s].", fileB.getAbsolutePath(), fileB.getAbsolutePath(), fileA.getAbsolutePath() )); 
+    
+    // Clean up.
+    fileA.delete();
+    fileB.delete();
+  }  
+  
+  
 }
