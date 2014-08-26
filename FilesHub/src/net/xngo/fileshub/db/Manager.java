@@ -186,7 +186,7 @@ public class Manager
         else
         {
           System.out.println(String.format("Error: [%s] doesn't exist in Shelf table.", ofCanonicalPath));
-          return true;
+          return false;
         }
       }
       
