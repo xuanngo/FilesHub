@@ -88,9 +88,25 @@ public class Manager
           shelfDoc = shelf.findDocByHash(doc.hash);
           if(shelfDoc != null)
           {// Hash found in Shelf.
-            doc.uid = shelfDoc.uid;
-            trash.addDoc(doc);
-            return shelfDoc;
+            
+            if(new File(shelfDoc.canonical_path).exists())
+            {// File still exists
+              doc.uid = shelfDoc.uid;
+              trash.addDoc(doc);
+              return shelfDoc;
+            }
+            else
+            {// File doesn't exist anymore.
+              
+              // Move non-existing file to Trash.
+              trash.addDoc(shelfDoc);
+              
+              // Update current document in Shelf.
+              doc.uid = shelfDoc.uid;
+              shelf.saveDoc(doc);
+              
+              return null;
+            }
           }
           else
           {
