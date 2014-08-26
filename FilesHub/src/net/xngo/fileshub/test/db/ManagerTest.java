@@ -392,14 +392,14 @@ public class ManagerTest
   }
   
   @Test(description="Mark File B is a duplicate of File A even if hash of File B is not equal to File A.")
-  public void markDuplicateBisDuplicateOfA()
+  public void markDuplicateDiffContent()
   {
     // Add File A in database.
-    File fileA = Data.createTempFile("markDuplicateAisDuplicateOfB_FileA");
+    File fileA = Data.createTempFile("markDuplicateDiffContent_FileA");
     this.manager.addFile(fileA);
     
     // Create File B with different content(hash).
-    File fileB = Data.createTempFile("markDuplicateAisDuplicateOfB_FileB");
+    File fileB = Data.createTempFile("markDuplicateDiffContent_FileB");
     Data.copyFile(fileA, fileB);    
     Data.writeStringToFile(fileB, "new content");
     
