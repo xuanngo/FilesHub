@@ -89,4 +89,21 @@ public class Data
         , title
         , file.length(), file.lastModified(), Utils.getHash(file), file.getName(), Utils.getCanonicalPath(file));
   }
+  
+  public static File moveFileToDirectory(File srcFile, File destDir, boolean createDestDir)
+  {
+    try
+    {
+      FileUtils.moveFileToDirectory(srcFile, destDir, createDestDir);
+      return new File(destDir.getAbsolutePath()+File.separator+srcFile.getName());
+    }
+    catch(IOException e)
+    {
+      e.printStackTrace();
+    }
+    return null;
+  }
+
+  
+  
 }
