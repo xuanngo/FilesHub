@@ -321,6 +321,38 @@ public class ManagerTest
   }   
   
   
+  @Test(description="Add the file that have been moved.")
+  public void addFileShelfFileMoved()
+  {
+    // Add a unique file in database.
+    File uniqueFile = Data.createTempFile("addFileShelfFileMoved");
+    this.manager.addFile(uniqueFile);
+    String originalCanonicalPath = Utils.getCanonicalPath(uniqueFile);
+    
+    // Move file to another directory.
+    File tmpDirectory = new File(System.getProperty("java.io.tmpdir")+System.nanoTime());
+    tmpDirectory.mkdir();
+    File fileMoved = Data.moveFileToDirectory(uniqueFile, tmpDirectory, false);
+    String newCanonicalPath = Utils.getCanonicalPath(fileMoved);
+    
+    // Add moved file again.
+    this.manager.addFile(fileMoved);
+    
+    // Validations
+    Shelf shelf = new Shelf();
+    Document shelfDoc = shelf.findDocByCanonicalPath(newCanonicalPath);
+    assertNotNull(shelfDoc, String.format("[%s] should be in Shelf table.", newCanonicalPath));
+    
+    Trash trash = new Trash();
+    Document trashDoc = trash.findDocByCanonicalPath(originalCanonicalPath);
+    assertNotNull(trashDoc, String.format("[%s] should be in Trash table.", originalCanonicalPath));
+    
+    // Clean up.
+    uniqueFile.delete();
+
+  }   
+  
+  
   @Test(description="Update file that has changed since added in database. Note: This is exactly the same as addFileShelfFileChanged(), except that it uses Manager.update() instead of Manager.addFile().")
   public void updateFileChanged()
   {
