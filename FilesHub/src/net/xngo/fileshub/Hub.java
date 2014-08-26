@@ -33,20 +33,28 @@ public class Hub
     
     elapsedTime.start();
     int totalFiles = listOfFiles.size();
+    int whenToDisplay = 5;
     for (File file : listOfFiles) 
     {
-      System.out.println(String.format("[%d/%d]: Processing %s", i, totalFiles, Utils.getCanonicalPath(file)));
+      // Print progress to console.
+      if( (i%whenToDisplay)==0)
+        report.progressPrint(String.format("[%d/%d]", i, totalFiles));
+      
+      // Add file to database.
       Document doc = this.manager.addFile(file);
-      i++;
+      
+      // Collect duplicate entries for report.
       if(doc!=null)
       {
         if(doc.canonical_path.compareTo(Utils.getCanonicalPath(file))!=0) // Ignore if users add the exact same file and the same path.
           report.addDuplicate(new Document(file), doc);
       }
+      
+      i++;
     }
     elapsedTime.stop();
     
-    System.out.println("===============================================");
+    System.out.println("\n===============================================");
     elapsedTime.display();
     System.out.println("===============================================");
     
