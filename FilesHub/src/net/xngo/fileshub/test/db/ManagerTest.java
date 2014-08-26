@@ -17,6 +17,7 @@ import org.testng.annotations.BeforeClass;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
+import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertNull;
 
@@ -390,7 +391,7 @@ public class ManagerTest
     }
   }
   
-  @Test(description="Mark duplicate File B is duplicate of File A even if hash of File B is not equal to File A.")
+  @Test(description="Mark File B is a duplicate of File A even if hash of File B is not equal to File A.")
   public void markDuplicateBisDuplicateOfA()
   {
     // Add File A in database.
@@ -407,7 +408,35 @@ public class ManagerTest
     
     Trash trash = new Trash();
     Document trashDoc = trash.findDocByHash(Utils.getHash(fileB));
-    assertNotNull(trashDoc, String.format("[%s] should be found in Trash table. [%s] is a duplicated of [%s]", fileB.getAbsolutePath(), fileB.getAbsolutePath(), fileA.getAbsolutePath() ));
+    assertNotNull(trashDoc, String.format("[%s] should be found in Trash table. [%s] is a duplicated of [%s].", fileB.getAbsolutePath(), fileB.getAbsolutePath(), fileA.getAbsolutePath() ));
   }
   
+  @Test(description="File B is a duplicate of File A but File A doesn't exist in database. Therefore, no commit.")
+  public void markDuplicateANotExist()
+  {
+    // Add File A in database.
+    File fileA = Data.createTempFile("markDuplicateAisDuplicateOfB_FileA");
+    //this.manager.addFile(fileA);
+    
+    // Create File B with different content(hash).
+    File fileB = Data.createTempFile("markDuplicateAisDuplicateOfB_FileB");
+    Data.copyFile(fileA, fileB);    
+    Data.writeStringToFile(fileB, "new content");
+    
+    // Mark File B is a duplicate of File A.
+    boolean commit = this.manager.markDuplicate(fileB, fileA);
+    
+    assertFalse(commit, String.format("Should return false because File A(%s) is not in the Shelf table. Therefore, no commit.", fileA.getName())); 
+  }
+  
+  @Test(description="Files don't exist. Therefore, no commit.")
+  public void markDuplicateFilesNotExist()
+  {
+    File duplicate = new File("./markDuplicateFilesNotExist_file_A_NotExist");
+    File of        = new File("./markDuplicateFilesNotExist_file_B_NotExist");
+    // Mark File B is a duplicate of File A.
+    boolean commit = this.manager.markDuplicate(duplicate, of);
+    
+    assertFalse(commit, String.format("Should return false because %s and %s don't exist. Therefore, no commit.", duplicate.getName(), of.getName())); 
+  }    
 }
