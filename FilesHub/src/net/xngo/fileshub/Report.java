@@ -26,6 +26,7 @@ public class Report
     this.toAddDocs.add(toAddDoc);
     this.existingDocs.add(existingDoc);
   }
+  
   public void display()
   {
     if(this.toAddDocs.size()>0)
@@ -117,4 +118,25 @@ public class Report
     }     
   }
 
+  public void progressPrint(String s)
+  {
+    for(int i=0; i<s.length(); i++)
+    {
+      System.out.print('\b');
+    }
+    System.out.print(s);
+  }
+  
+  public static void sleep()
+  {
+    int time = 50; // milliseconds.
+    try
+    {
+      Thread.sleep(time);
+    }
+    catch(InterruptedException ex)
+    {
+      ex.printStackTrace();
+    }
+  }  
 }
