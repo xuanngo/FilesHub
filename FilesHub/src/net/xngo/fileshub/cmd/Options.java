@@ -23,7 +23,7 @@ public class Options
   @Parameter(names = {"-u", "--update"}, description = "Update database: check if files have changes, not available files.")
   public boolean update;  
   
-  @Parameter(names = {"-d", "--duplicate"}, description = "Mark 2 files that are duplicate.", arity = 2)
+  @Parameter(names = {"-d", "--duplicate"}, description = "Mark 2 files that are duplicate.", arity = 2) // Use case: Both files have different hash.
   public List<File> duplicateFiles;    
   
   public final Set<File> getAllUniqueFiles()
