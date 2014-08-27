@@ -63,15 +63,16 @@ public class Hub
       }
       
     }
+    report.progressPrint(String.format("100.00% [%s]", Math.getReadablePercentage(size, totalSize), totalReadableSize));// Last display because of the remainder of modulus.
     elapsedTime.stop();
-    
-    System.out.println("\n===============================================");
-    elapsedTime.display();
-    System.out.println("===============================================");
     
     report.display();
     report.writeCSV("./results.csv");
     report.write();
+    
+    System.out.println("\n===============================================");
+    elapsedTime.display();
+    System.out.println("===============================================");    
   }
   
   public void update()
