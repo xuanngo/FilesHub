@@ -32,13 +32,13 @@ public class Hub
     ElapsedTime elapsedTime = new ElapsedTime();
     
     elapsedTime.start();
-    int totalFiles = listOfFiles.size();
+    int numOfFiles = listOfFiles.size();
     int whenToDisplay = 5;
     for (File file : listOfFiles) 
     {
       // Print progress to console.
       if( (i%whenToDisplay)==0)
-        report.progressPrint(String.format("[%d/%d]", i, totalFiles));
+        report.progressPrint(String.format("[%d/%d]", i, numOfFiles));
       
       // Add file to database.
       Document doc = this.manager.addFile(file);
