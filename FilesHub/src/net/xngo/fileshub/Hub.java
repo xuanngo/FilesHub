@@ -1,14 +1,16 @@
 package net.xngo.fileshub;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.ArrayList;
 import java.util.Set;
 
 
 import net.xngo.fileshub.db.Manager;
 import net.xngo.fileshub.struct.Document;
 import net.xngo.utils.java.time.ElapsedTime;
+import net.xngo.utils.java.io.FileUtils;
+import net.xngo.utils.java.math.Math;
 
 
 /**
@@ -27,19 +29,20 @@ public class Hub
   
   public void addFiles(Set<File> listOfFiles)
   {
+    // Preparation to display the progress.
+    long totalSize = FileUtils.getTotalSize(listOfFiles);
+    String totalReadableSize = FileUtils.readableFileSize(totalSize);
+    long size = 0;
+
+    
     Report report = new Report();
-    int i=1;
     ElapsedTime elapsedTime = new ElapsedTime();
     
     elapsedTime.start();
-    int numOfFiles = listOfFiles.size();
     int whenToDisplay = 5;
+    int i=1;
     for (File file : listOfFiles) 
     {
-      // Print progress to console.
-      if( (i%whenToDisplay)==0)
-        report.progressPrint(String.format("[%d/%d]", i, numOfFiles));
-      
       // Add file to database.
       Document doc = this.manager.addFile(file);
       
@@ -50,7 +53,15 @@ public class Hub
           report.addDuplicate(new Document(file), doc);
       }
       
+      
+      // Print progress to console.      
+      size += file.length();
       i++;
+      if( (i%whenToDisplay)==0)
+      {
+        report.progressPrint(String.format("%s [%s]", Math.getReadablePercentage(size, totalSize), totalReadableSize));
+      }
+      
     }
     elapsedTime.stop();
     
