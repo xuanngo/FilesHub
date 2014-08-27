@@ -127,16 +127,6 @@ public class Report
     System.out.print(s);
   }
   
-  public static void sleep()
-  {
-    int time = 50; // milliseconds.
-    try
-    {
-      Thread.sleep(time);
-    }
-    catch(InterruptedException ex)
-    {
-      ex.printStackTrace();
-    }
-  }  
+
+  
 }
