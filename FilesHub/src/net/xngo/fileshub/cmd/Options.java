@@ -36,14 +36,14 @@ public class Options
       {
         try
         {
-          File canonicalPath = path.getCanonicalFile(); // Get all input files/directories paths as canonical to ensure that there will be no duplicate.
-          if(canonicalPath.isFile())
+          File canonicalFilePath = path.getCanonicalFile(); // Get all input files/directories paths as canonical to ensure that there will be no duplicate.
+          if(canonicalFilePath.isFile())
           {
-            listOfAllUniqueFiles.add(canonicalPath);
+            listOfAllUniqueFiles.add(canonicalFilePath);
           }
           else
           {// It is a directory.
-            Collection<File> filesList = FileUtils.listFiles(canonicalPath, TrueFileFilter.INSTANCE, TrueFileFilter.INSTANCE);
+            Collection<File> filesList = FileUtils.listFiles(canonicalFilePath, TrueFileFilter.INSTANCE, TrueFileFilter.INSTANCE);
             listOfAllUniqueFiles.addAll(filesList);
           }
         }
