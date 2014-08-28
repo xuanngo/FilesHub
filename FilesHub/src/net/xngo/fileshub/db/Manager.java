@@ -184,7 +184,7 @@ public class Manager
       
       if(duplicateCanonicalPath.compareTo(ofCanonicalPath)==0)
       {
-        System.out.println("Error: Both files are exactly the same files.");
+        System.out.println("Error: Both files are exactly the same.");
         return false;
       }
       else
@@ -247,4 +247,6 @@ public class Manager
     return true;
     
   }
+  
+  
 }
