@@ -4,6 +4,8 @@ import net.xngo.fileshub.Hub;
 import net.xngo.fileshub.cmd.Options;
 
 
+import net.xngo.fileshub.db.Debug;
+
 import com.beust.jcommander.JCommander;
 import com.beust.jcommander.ParameterException;
 

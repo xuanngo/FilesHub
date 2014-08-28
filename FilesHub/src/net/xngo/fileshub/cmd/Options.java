@@ -8,6 +8,7 @@ import java.util.Set;
 import java.util.List;
 
 import net.xngo.fileshub.Utils;
+import net.xngo.fileshub.db.Debug;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.TrueFileFilter;
@@ -32,6 +33,7 @@ public class Options
     
     for(File path: this.addPaths)
     {
+      Debug.msg(String.format("Number of input paths = %d.", this.addPaths.size()));
       if(path.exists())
       {
         try
@@ -43,6 +45,7 @@ public class Options
           }
           else
           {// It is a directory.
+            Debug.msg(String.format("[%s] is a directory.", canonicalFilePath.getAbsolutePath()));
             Collection<File> filesList = FileUtils.listFiles(canonicalFilePath, TrueFileFilter.INSTANCE, TrueFileFilter.INSTANCE);
             listOfAllUniqueFiles.addAll(filesList);
           }

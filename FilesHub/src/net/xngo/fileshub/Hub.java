@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.Set;
 
 
+
+import net.xngo.fileshub.db.Debug;
 import net.xngo.fileshub.db.Manager;
 import net.xngo.fileshub.struct.Document;
 import net.xngo.utils.java.time.ElapsedTime;
@@ -29,6 +31,8 @@ public class Hub
   
   public void addFiles(Set<File> listOfFiles)
   {
+    Debug.msg(String.format("Total number of files to add = %d", listOfFiles.size()));
+    
     // Preparation to display the progress.
     long totalSize = FileUtils.getTotalSize(listOfFiles);
     String totalReadableSize = FileUtils.readableFileSize(totalSize);
@@ -43,6 +47,8 @@ public class Hub
     int i=1;
     for (File file : listOfFiles) 
     {
+      Debug.msg(String.format("Adding [%s]", file.getAbsolutePath()));
+      
       // Add file to database.
       Document doc = this.manager.addFile(file);
       
@@ -64,6 +70,7 @@ public class Hub
       
     }
     report.progressPrint(String.format("100.00%% [%s]", totalReadableSize));// Last display because of the remainder of modulus.
+    System.out.println();
     elapsedTime.stop();
     
     report.display();

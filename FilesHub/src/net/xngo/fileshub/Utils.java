@@ -14,6 +14,7 @@ import java.util.ArrayList;
 
 import net.jpountz.xxhash.StreamingXXHash32;
 import net.jpountz.xxhash.XXHashFactory;
+import net.xngo.fileshub.db.Debug;
 
 
 /**
@@ -53,6 +54,8 @@ public class Utils
    */
   public static final String getHash(File file)
   {
+    Debug.msg(String.format("Hashing [%s]", file.getAbsolutePath()));
+    
     XXHashFactory factory = XXHashFactory.fastestInstance();
     int seed = 0x9747b28c;  // used to initialize the hash value, use whatever
                             // value you want, but always the same
