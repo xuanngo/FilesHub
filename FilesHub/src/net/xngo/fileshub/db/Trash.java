@@ -20,6 +20,7 @@ public class Trash
   
   private PreparedStatement insert = null;
   private PreparedStatement select = null;
+  private PreparedStatement update = null;
  
   /**
    * @deprecated This is bad. Use addDoc() instead.
@@ -115,26 +116,7 @@ public class Trash
   
   public int addDoc(Document doc)
   {
-    return this.addDoc(doc, false);
-  }
-  
-  /**
-   * Add document
-   * @param doc
-   * @param checkHash
-   * @return generated key. Otherwise, 0 for failure or hash exists.
-   */
-  public int addDoc(Document doc, boolean checkHash)
-  {
-    if(checkHash)
-    {
-      if(this.isHashExists(doc.hash))
-        return 0;
-      else
-        return this.insertDoc(doc);
-    }
-    else
-      return this.insertDoc(doc);
+    return this.insertDoc(doc);
   }
   
   /**
@@ -193,6 +175,32 @@ public class Trash
     }
     
     return doc;    
+  }
+  
+  public int markDuplicate(int duplicate, int of)
+  {
+    final String query = "UPDATE "+this.tablename+  " SET duid = ? WHERE duid = ?";
+    
+    int rowAffected = 0;
+    try
+    {
+      // Prepare the query.
+      this.update = this.conn.connection.prepareStatement(query);
+      
+      // Set the data.
+      int i=1;
+      this.update.setInt(i++, of);
+      this.update.setInt(i++, duplicate);
+      
+      // update row.
+      rowAffected = this.update.executeUpdate();
+    }
+    catch(SQLException e)
+    {
+      e.printStackTrace();
+    }
+  
+    return rowAffected;    
   }
   /****************************************************************************
    * 
