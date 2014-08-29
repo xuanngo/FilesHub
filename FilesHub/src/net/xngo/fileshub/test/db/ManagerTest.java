@@ -435,7 +435,7 @@ public class ManagerTest
     Data.copyFile(fileB, fileA);    
     Data.writeStringToFile(fileA, "new content");
     
-    // File A is a duplicate of File B
+    // Mark File A is a duplicate of File B.
     this.manager.markDuplicate(fileA, fileB);
     
     // Validate
@@ -466,7 +466,7 @@ public class ManagerTest
     Data.copyFile(fileB, fileA);    
     Data.writeStringToFile(fileA, "new content");
     
-    // File A is a duplicate of File B
+    // Mark File A is a duplicate of File B.
     this.manager.markDuplicate(fileA, fileB);
     
     // Validate
@@ -493,9 +493,11 @@ public class ManagerTest
   {
     File duplicate = new File("./markDuplicateFilesNotExist_file_A_NotExist");
     File of        = new File("./markDuplicateFilesNotExist_file_B_NotExist");
-    // Mark File B is a duplicate of File A.
+    // Mark File A is a duplicate of File B.
     boolean commit = this.manager.markDuplicate(duplicate, of);
     
     assertFalse(commit, String.format("Should return false because %s and %s don't exist. Therefore, no commit.", duplicate.getName(), of.getName())); 
-  }    
+  }
+  
+  
 }
