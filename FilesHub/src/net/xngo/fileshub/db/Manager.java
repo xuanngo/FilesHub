@@ -189,26 +189,57 @@ public class Manager
       }
       else
       {
-        Document shelfDoc = this.shelf.findDocByCanonicalPath(ofCanonicalPath);
-        if(shelfDoc!=null)
-        {// Found 'of' in Shelf table.
-          String duplicateHash = Utils.getHash(duplicate);
-          Document trashDoc = this.trash.findDocByHash(duplicateHash);
-          if(trashDoc==null)
-          {// Duplicate is not in Trash table.
-            Document newTrashDoc = new Document(duplicate);
-            newTrashDoc.uid = shelfDoc.uid;
-            newTrashDoc.hash = duplicateHash;
-            trash.addDoc(newTrashDoc);
+        Document shelfDocOf = this.shelf.findDocByCanonicalPath(ofCanonicalPath);
+        if(shelfDocOf!=null)
+        {// File B found in Shelf
+          Document shelfDocDuplicate = this.shelf.findDocByCanonicalPath(duplicateCanonicalPath);
+          if(shelfDocDuplicate!=null)
+          {// File A found in Shelf
+            this.shelf.removeDoc(shelfDocDuplicate.uid);
+            shelfDocDuplicate.uid = shelfDocOf.uid;
+            this.trash.addDoc(shelfDocDuplicate, true);
+            
             return true;
           }
-          return false;
+          else
+          {
+            Document newTrashDoc = new Document(duplicate);
+            newTrashDoc.uid = shelfDocOf.uid;
+            newTrashDoc.hash = Utils.getHash(duplicate);
+            this.trash.addDoc(newTrashDoc, true);
+            return true;
+          }
+
         }
         else
         {
-          System.out.println(String.format("Error: [%s] doesn't exist in Shelf table.", ofCanonicalPath));
-          return false;
+          Document newShelfDoc = this.addFile(of);
+          
+          // Get uid.
+          int uid = 0;
+          if(newShelfDoc==null)
+            uid = this.shelf.findDocByCanonicalPath(ofCanonicalPath).uid;
+          
+          Document shelfDocDuplicate = this.shelf.findDocByCanonicalPath(duplicateCanonicalPath);
+          if(shelfDocDuplicate!=null)
+          {// File A found in Shelf
+            this.shelf.removeDoc(shelfDocDuplicate.uid);
+            shelfDocDuplicate.uid = uid;
+            this.trash.addDoc(shelfDocDuplicate);
+            return true;
+          }
+          else
+          {
+            Document newTrashDoc = new Document(duplicate);
+            newTrashDoc.uid = uid;
+            newTrashDoc.hash = Utils.getHash(duplicate);
+            this.trash.addDoc(newTrashDoc, true);
+            return true;            
+          }
         }
+
+        
+        
       }
       
     }
