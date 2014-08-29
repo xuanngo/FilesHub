@@ -118,6 +118,12 @@ public class Trash
     return this.addDoc(doc, false);
   }
   
+  /**
+   * Add document
+   * @param doc
+   * @param checkHash
+   * @return generated key. Otherwise, 0 for failure or hash exists.
+   */
   public int addDoc(Document doc, boolean checkHash)
   {
     if(checkHash)
@@ -315,7 +321,7 @@ public class Trash
   /**
    * Insert a document.
    * @param doc
-   * @return Generated key. Otherwise, 0, for failure.
+   * @return Generated key. Otherwise, 0 for failure.
    */
   private final int insertDoc(final Document doc)
   {
