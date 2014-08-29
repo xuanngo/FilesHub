@@ -458,7 +458,7 @@ public class ManagerTest
   @Test(description="File A is a duplicate of File B but File B doesn't exist in database.")
   public void markDuplicateFileBNotExistInDb()
   {
-    // Add File B in database.
+    // Create File B.
     File fileB = Data.createTempFile("markDuplicateFileBNotExistInDb_fileB");
     
     // Create File A with different content(hash).
@@ -488,7 +488,7 @@ public class ManagerTest
     fileB.delete();
   }
   
-  @Test(description="Files don't exist. Therefore, no commit.")
+  @Test(description="File A is a duplicate of File B but files don't exist. Therefore, no commit.")
   public void markDuplicateFilesNotExist()
   {
     File duplicate = new File("./markDuplicateFilesNotExist_file_A_NotExist");
@@ -499,5 +499,104 @@ public class ManagerTest
     assertFalse(commit, String.format("Should return false because %s and %s don't exist. Therefore, no commit.", duplicate.getName(), of.getName())); 
   }
   
+  @Test(description="File A is a duplicate of File B but File A itself has a lot of duplicate entries and File B doesn't exist in database.")
+  public void markDuplicateTrailingDuplicatesFileBNotInDb()
+  {
+    // Create duplicates for File A and add them in the database.
+    ArrayList<File> fileAs = new ArrayList<File>();
+    fileAs.add(Data.createTempFile("markDuplicateTrailingDuplicatesFileBNotInDb_fileA"));
+    this.manager.addFile(fileAs.get(0));
+    final int NUM_OF_DUPLICATES = 7;
+    for(int i=0;i<NUM_OF_DUPLICATES;i++)
+    {
+      File tmpFileA = Data.createTempFile("markDuplicateTrailingDuplicatesFileBNotInDb_fileA_"+i);
+      Data.copyFile(fileAs.get(0), tmpFileA);
+      this.manager.addFile(tmpFileA);
+      fileAs.add(tmpFileA);
+
+    }
+    
+    // Create File B.
+    File fileB = Data.createTempFile("markDuplicateTrailingDuplicatesFileBNotInDb_fileB");
+    
+    // Mark File A is a duplicate of File B.
+    this.manager.markDuplicate(fileAs.get(0), fileB);
+    
+    // Validations
+    Shelf shelf = new Shelf();
+    Document shelfDoc = shelf.findDocByCanonicalPath(Utils.getCanonicalPath(fileB));
+    Trash trash = new Trash();
+    for(File fA: fileAs)
+    {
+      Document trashDoc = trash.findDocByFilename(fA.getName());
+      assertEquals(trashDoc.uid, shelfDoc.uid, String.format("[%s] is not linked to/duplicate of [%s]. Trash.uid should be equal to Shelf.uid.\n"
+                                                                    + "%s"
+                                                                    + "\n"
+                                                                    + "%s", 
+                                                                    fA.getName(), fileB.getName(),
+                                                                    shelfDoc.getInfo("Shelf"),
+                                                                    trashDoc.getInfo("Trash")));
+      
+    }
+
+    // Clean up.
+    fileB.delete();
+    for(File f: fileAs)
+    {
+      f.delete();
+    }
+    
+  }
+
+
+  @Test(description="File A is a duplicate of File B but File A itself has a lot of duplicate entries and File B exist in database.")
+  public void markDuplicateTrailingDuplicatesFileBInDb()
+  {
+    // Create duplicates for File A and add them in the database.
+    ArrayList<File> fileAs = new ArrayList<File>();
+    fileAs.add(Data.createTempFile("markDuplicateTrailingDuplicatesFileBNotInDb_fileA"));
+    this.manager.addFile(fileAs.get(0));
+    final int NUM_OF_DUPLICATES = 7;
+    for(int i=0;i<NUM_OF_DUPLICATES;i++)
+    {
+      File tmpFileA = Data.createTempFile("markDuplicateTrailingDuplicatesFileBNotInDb_fileA_"+i);
+      Data.copyFile(fileAs.get(0), tmpFileA);
+      this.manager.addFile(tmpFileA);
+      fileAs.add(tmpFileA);
+    }
+    
+    // Add File B in database.
+    File fileB = Data.createTempFile("markDuplicateTrailingDuplicatesFileBNotInDb_fileB");
+    this.manager.addFile(fileB);
+    
+    // Mark File A is a duplicate of File B.
+    this.manager.markDuplicate(fileAs.get(0), fileB);
+ 
+    // Validations
+    Shelf shelf = new Shelf();
+    Document shelfDoc = shelf.findDocByCanonicalPath(Utils.getCanonicalPath(fileB));
+    Trash trash = new Trash();
+    for(File fA: fileAs)
+    {
+      Document trashDoc = trash.findDocByFilename(fA.getName());
+      assertEquals(trashDoc.uid, shelfDoc.uid, String.format("[%s] is not linked to/duplicate of [%s]. Trash.uid should be equal to Shelf.uid.\n"
+                                                                    + "%s"
+                                                                    + "\n"
+                                                                    + "%s", 
+                                                                    fA.getName(), fileB.getName(),
+                                                                    shelfDoc.getInfo("Shelf"),
+                                                                    trashDoc.getInfo("Trash")));
+      
+    }
+      
+
+    // Clean up.
+    fileB.delete();
+    for(File f: fileAs)
+    {
+      f.delete();
+    }
+    
+  }
   
 }
