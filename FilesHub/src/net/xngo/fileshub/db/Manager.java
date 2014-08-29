@@ -168,7 +168,7 @@ public class Manager
   }
   
   /**
-   * 
+   * Mark 2 files to be duplicate regardless of the content.
    * @param duplicate
    * @param of
    * @return False if nothing is committed in the database. Otherwise, true.
