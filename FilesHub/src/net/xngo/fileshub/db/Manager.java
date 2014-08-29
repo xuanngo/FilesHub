@@ -195,9 +195,13 @@ public class Manager
           Document shelfDocDuplicate = this.shelf.findDocByCanonicalPath(duplicateCanonicalPath);
           if(shelfDocDuplicate!=null)
           {// File A found in Shelf
+            
+            // Execution order is important.
+            //    Move File A from Shelf to Trash.            
             this.shelf.removeDoc(shelfDocDuplicate.uid);
+            this.trash.markDuplicate(shelfDocDuplicate.uid, shelfDocOf.uid);
             shelfDocDuplicate.uid = shelfDocOf.uid;
-            this.trash.addDoc(shelfDocDuplicate, true);
+            this.trash.addDoc(shelfDocDuplicate);
             
             return true;
           }
@@ -206,7 +210,7 @@ public class Manager
             Document newTrashDoc = new Document(duplicate);
             newTrashDoc.uid = shelfDocOf.uid;
             newTrashDoc.hash = Utils.getHash(duplicate);
-            this.trash.addDoc(newTrashDoc, true);
+            this.trash.addDoc(newTrashDoc);
             return true;
           }
 
@@ -223,7 +227,11 @@ public class Manager
           Document shelfDocDuplicate = this.shelf.findDocByCanonicalPath(duplicateCanonicalPath);
           if(shelfDocDuplicate!=null)
           {// File A found in Shelf
+            
+            // Execution order is important.
+            //    Move File A from Shelf to Trash.
             this.shelf.removeDoc(shelfDocDuplicate.uid);
+            this.trash.markDuplicate(shelfDocDuplicate.uid, uid);
             shelfDocDuplicate.uid = uid;
             this.trash.addDoc(shelfDocDuplicate);
             return true;
@@ -233,7 +241,7 @@ public class Manager
             Document newTrashDoc = new Document(duplicate);
             newTrashDoc.uid = uid;
             newTrashDoc.hash = Utils.getHash(duplicate);
-            this.trash.addDoc(newTrashDoc, true);
+            this.trash.addDoc(newTrashDoc);
             return true;            
           }
         }
