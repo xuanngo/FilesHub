@@ -169,6 +169,28 @@ public class Manager
   
   /**
    * Mark 2 files as duplicate regardless of their content.
+   * <pre>
+   * {@code
+   * If file B found in Shelf
+   *    If file A found in Shelf
+   *        -Move file A from Shelf to Trash
+   *        -Link all duplicates of A to B.
+   *        -Return OK
+   *    else
+   *        -Add file A in Trash & it should be linked to file B
+   *        -Return OK
+   * else
+   *    -Add file B in Shelf
+   *    If file A found in Shelf
+   *        -Move file A from Shelf to Trash
+   *        -Link all duplicates of A to B.
+   *        -Return OK
+   *    else
+   *        -Add file A to Trash & it should be linked to file B
+   *        -Return OK
+   * }
+   * 
+   * </pre>
    * @param duplicate
    * @param of
    * @return False if nothing is committed in the database. Otherwise, true.
@@ -208,7 +230,7 @@ public class Manager
           else
           {
             Document newTrashDoc = new Document(duplicate);
-            newTrashDoc.uid = shelfDocOf.uid;
+            newTrashDoc.uid = shelfDocOf.uid; // linked to file B
             newTrashDoc.hash = Utils.getHash(duplicate);
             this.trash.addDoc(newTrashDoc);
             return true;
@@ -232,7 +254,7 @@ public class Manager
             //    Move File A from Shelf to Trash.
             this.shelf.removeDoc(shelfDocDuplicate.uid);
             this.trash.markDuplicate(shelfDocDuplicate.uid, uid);
-            shelfDocDuplicate.uid = uid;
+            shelfDocDuplicate.uid = uid;  // linked to file B
             this.trash.addDoc(shelfDocDuplicate);
             return true;
           }
