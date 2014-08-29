@@ -31,7 +31,7 @@ public class Hub
   
   public void addFiles(Set<File> listOfFiles)
   {
-    Debug.msg(String.format("Total number of files to add = %d", listOfFiles.size()));
+    System.out.println(String.format("Total number of files to process = %d", listOfFiles.size()));
     
     // Preparation to display the progress.
     long totalSize = FileUtils.getTotalSize(listOfFiles);
