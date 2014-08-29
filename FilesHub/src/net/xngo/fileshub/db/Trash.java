@@ -115,7 +115,20 @@ public class Trash
   
   public int addDoc(Document doc)
   {
-    return this.insertDoc(doc);
+    return this.addDoc(doc, false);
+  }
+  
+  public int addDoc(Document doc, boolean checkHash)
+  {
+    if(checkHash)
+    {
+      if(this.isHashExists(doc.hash))
+        return 0;
+      else
+        return this.insertDoc(doc);
+    }
+    else
+      return this.insertDoc(doc);
   }
   
   /**
@@ -181,7 +194,10 @@ public class Trash
    * 
    ****************************************************************************/
   
-  
+  private boolean isHashExists(final String hash)
+  {
+    return this.isStringExists("hash", hash);
+  }
 
   
   private boolean isStringExists(String columnName, String value)
@@ -296,6 +312,11 @@ public class Trash
     return doc;
   }
   
+  /**
+   * Insert a document.
+   * @param doc
+   * @return Generated key. Otherwise, 0, for failure.
+   */
   private final int insertDoc(final Document doc)
   {
     doc.checkUid();
