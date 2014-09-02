@@ -438,7 +438,7 @@ public class ManagerTest
     // Mark File A is a duplicate of File B.
     this.manager.markDuplicate(fileA, fileB);
     
-    // Validate
+    // Validate: File A is linked as duplicate to File B.
     Shelf shelf = new Shelf();
     Document shelfDoc = shelf.findDocByCanonicalPath(fileB.getAbsolutePath());
     Trash trash = new Trash();
@@ -469,7 +469,9 @@ public class ManagerTest
     // Mark File A is a duplicate of File B.
     this.manager.markDuplicate(fileA, fileB);
     
-    // Validate
+    // Validate:
+    //  1-File B is created in Shelf.
+    //  2-File A is linked as duplicate of File B.
     Shelf shelf = new Shelf();
     Document shelfDoc = shelf.findDocByCanonicalPath(fileB.getAbsolutePath());
     assertNotNull(shelfDoc, String.format("[%s] should be created in Shelf table.\n"
@@ -522,7 +524,8 @@ public class ManagerTest
     // Mark File A is a duplicate of File B.
     this.manager.markDuplicate(fileAs.get(0), fileB);
     
-    // Validations
+    // Validate:
+    //  Duplicates of File A and itself are linked to File B as duplicates.
     Shelf shelf = new Shelf();
     Document shelfDoc = shelf.findDocByCanonicalPath(Utils.getCanonicalPath(fileB));
     Trash trash = new Trash();
@@ -572,7 +575,8 @@ public class ManagerTest
     // Mark File A is a duplicate of File B.
     this.manager.markDuplicate(fileAs.get(0), fileB);
  
-    // Validations
+    // Validate:
+    //  Duplicates of File A and itself are linked to File B as duplicates.
     Shelf shelf = new Shelf();
     Document shelfDoc = shelf.findDocByCanonicalPath(Utils.getCanonicalPath(fileB));
     Trash trash = new Trash();
