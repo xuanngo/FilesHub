@@ -37,13 +37,13 @@ public class Hub
     long totalSize = FileUtils.getTotalSize(listOfFiles);
     String totalReadableSize = FileUtils.readableFileSize(totalSize);
     long size = 0;
-
+    long totalFiles = listOfFiles.size();
+    int whenToDisplay = 5;
     
     Report report = new Report();
     ElapsedTime elapsedTime = new ElapsedTime();
     
     elapsedTime.start();
-    int whenToDisplay = 5;
     int i=1;
     for (File file : listOfFiles) 
     {
@@ -65,11 +65,11 @@ public class Hub
       i++;
       if( (i%whenToDisplay)==0)
       {
-        report.progressPrint(String.format("%s [%s]", Math.getReadablePercentage(size, totalSize), totalReadableSize));
+        report.progressPrint(String.format("%s [%s] [%d/%d]", Math.getReadablePercentage(size, totalSize), totalReadableSize, i, totalFiles));
       }
       
     }
-    report.progressPrint(String.format("100.00%% [%s]", totalReadableSize));// Last display because of the remainder of modulus.
+    report.progressPrint(String.format("100.00%% [%s] [%d/%d]", totalReadableSize, i, totalFiles));// Last display because of the remainder of modulus.
     System.out.println();
     elapsedTime.stop();
     
