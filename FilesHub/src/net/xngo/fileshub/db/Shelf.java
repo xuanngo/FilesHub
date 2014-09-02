@@ -42,7 +42,6 @@ public class Shelf
   }
   
   /**
-   * @deprecated This is only used by unit test. Remove this if used in application.
    * @param uid
    * @return {@link Document}
    */
