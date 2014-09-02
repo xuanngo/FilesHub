@@ -44,8 +44,12 @@ public class Trash
   
   public void createTable()
   {
+    // Create table.
     String query = this.createTableQuery();
     this.conn.executeUpdate(query);
+    
+    // Create indices.
+    this.createIndices();
   }
   
   public void deleteTable()
@@ -398,5 +402,14 @@ public class Trash
                 + ")";
   }
   
+  private void createIndices()
+  {
+    String[] indices={"CREATE INDEX trash_hash ON "+this.tablename+" (hash);",
+                      "CREATE INDEX trash_canonical_path ON "+this.tablename+" (canonical_path);"};
+    for(String query: indices)
+    {
+      this.conn.executeUpdate(query);
+    }
+  }
   
 }
