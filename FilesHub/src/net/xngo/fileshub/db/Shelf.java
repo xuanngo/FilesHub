@@ -26,8 +26,12 @@ public class Shelf
   
   public void createTable()
   {
+    // Create table.
     String query = this.createTableQuery();
     this.conn.executeUpdate(query);
+    
+    // Create indices.
+    this.createIndices();    
   }
   
   public void deleteTable()
@@ -310,6 +314,16 @@ public class Shelf
                 + "comment        TEXT "
                 + ")";
      
+  }
+  
+  private void createIndices()
+  {
+    String[] indices={"CREATE INDEX shelf_hash ON "+this.tablename+" (hash);",
+                      "CREATE INDEX shelf_canonical_path ON "+this.tablename+" (canonical_path);"};
+    for(String query: indices)
+    {
+      this.conn.executeUpdate(query);
+    }
   }
   
 }
