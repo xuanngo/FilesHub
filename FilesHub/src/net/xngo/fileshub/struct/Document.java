@@ -44,7 +44,7 @@ public class Document
       throw new RuntimeException(this.getErrorMsg());
     
     if(this.last_modified<1)
-      throw new RuntimeException(this.getErrorMsg());    
+      System.out.println(String.format("Warning: [%s] is older than January 1, 1970. Last modified = %d.", this.canonical_path, this.last_modified));
 
   }
   
@@ -103,7 +103,7 @@ public class Document
                         + "uid            = %d // Can be zero if document is not created in the database. \n"
                         + "canonical_path = %s // Can't be empty. \n"
                         + "filename       = %s // Can't be empty. \n"
-                        + "last_modified  = %d // Has to > 0. \n"
+                        + "last_modified  = %d // Warning will display if less than January 1, 1970. \n"
                         + "hash           = %s // Can't be empty. \n"
                         + "comment        = %s"
                           , this.uid, this.canonical_path, this.filename, this.last_modified, this.hash, this.comment);
