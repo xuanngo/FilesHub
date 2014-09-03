@@ -1,15 +1,20 @@
 package net.xngo.fileshub.test.cmd;
 
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotNull;
+import static org.testng.Assert.assertNull;
 
 import java.io.File;
+import java.io.RandomAccessFile;
+import java.nio.channels.FileChannel;
+import java.nio.channels.FileLock;
 import java.util.Collection;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.TrueFileFilter;
 import org.testng.annotations.Test;
 
-import static org.testng.Assert.assertNotNull;
+
 import net.xngo.fileshub.Utils;
 import net.xngo.fileshub.cmd.Cmd;
 import net.xngo.fileshub.db.Shelf;
@@ -86,6 +91,56 @@ public class CmdTest
     
     // Clean up. Directory will be not be cleaned up if assertions failed. But at least the created directory is in the temporary directory.
     FileUtils.deleteQuietly(testDirectory);    
+  }
+  
+  @Test(description="Test -a option with locked file.")
+  public void addOptLockedUniqueFile()
+  {
+    // Create a unique file.
+    File uniqueFile = Data.createTempFile("addOptLockedUniqueFile");
+    
+    // Lock unique file.
+    FileChannel channel = null;
+    FileLock lock = null;
+    try
+    {
+      channel = new RandomAccessFile(uniqueFile, "rw").getChannel();
+      lock = channel.lock();
+    }
+    catch(Exception ex)
+    {
+      ex.printStackTrace();
+    }
+
+    // Add locked file.
+    String[] args = new String[] { "-a", uniqueFile.getAbsolutePath() };
+    Cmd cmd = new Cmd(args);
+    
+    // Validate
+    Shelf shelf = new Shelf();
+    Document shelfDoc = shelf.findDocByCanonicalPath(Utils.getCanonicalPath(uniqueFile));
+    Trash trash = new Trash();
+    Document trashDoc = trash.findDocByCanonicalPath(Utils.getCanonicalPath(uniqueFile));
+    assertNull(shelfDoc, String.format("[%s] should not be added in Shelf. It is locked. [%s]", uniqueFile.getName(), Utils.getCanonicalPath(uniqueFile)));
+    assertNull(trashDoc, String.format("[%s] should not be added in Trash. It is locked. [%s]", uniqueFile.getName(), Utils.getCanonicalPath(uniqueFile)));
+    
+    
+    // Release lock.
+    try
+    {
+      
+      lock.release();
+      channel.close();
+
+    }
+    catch(Exception ex)
+    {
+      ex.printStackTrace();
+    }
+    
+    // Clean up.
+    uniqueFile.delete();
+
   }
   
   @Test(description="Test -u option with file content changed.")
