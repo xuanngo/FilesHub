@@ -3,12 +3,14 @@ package net.xngo.fileshub;
 import java.io.File;
 import java.io.IOException;
 import java.io.FileNotFoundException;
+import java.io.RandomAccessFile;
 import java.io.UnsupportedEncodingException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.nio.channels.FileChannel;
+import java.nio.channels.FileLock;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 
@@ -206,4 +208,37 @@ public class Utils
     return new DecimalFormat("#,##0.##").format(size/Math.pow(1024, digitGroups)) + " " + units[digitGroups];
   }
   
+  
+  public static boolean isFileLocked(File f)
+  {
+    // Try to acquire exclusive lock.
+    FileChannel channel = null;
+    FileLock lock = null;
+    try
+    {
+      channel = new RandomAccessFile(f, "rw").getChannel();
+      lock = channel.tryLock();
+      
+      if(lock==null)
+        return true;
+
+    }
+    catch(Exception ex)
+    {
+      return true;
+    }
+    
+    // Release lock.
+    try
+    {
+      lock.release();
+      channel.close();
+    }
+    catch(Exception ex)
+    {
+      ex.printStackTrace();
+    }
+    
+    return false;
+  }
 }
