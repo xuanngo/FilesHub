@@ -49,15 +49,20 @@ public class Hub
     {
       Debug.msg(String.format("Adding [%s]", file.getAbsolutePath()));
       
-      // Add file to database.
-      Document doc = this.manager.addFile(file);
-      
-      // Collect duplicate entries for report.
-      if(doc!=null)
+      if(!Utils.isFileLocked(file))
       {
-        if(doc.canonical_path.compareTo(Utils.getCanonicalPath(file))!=0) // Ignore if users add the exact same file and the same path.
-          report.addDuplicate(new Document(file), doc);
+        // Add file to database.
+        Document doc = this.manager.addFile(file);
+        
+        // Collect duplicate entries for report.
+        if(doc!=null)
+        {
+          if(doc.canonical_path.compareTo(Utils.getCanonicalPath(file))!=0) // Ignore if users add the exact same file and the same path.
+            report.addDuplicate(new Document(file), doc);
+        }
       }
+      else
+        System.out.println(String.format("Warning: Ignore locked file [%s].", file.getAbsolutePath()));
       
       
       // Print progress to console.      
