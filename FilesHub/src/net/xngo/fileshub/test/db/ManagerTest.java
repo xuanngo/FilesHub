@@ -11,6 +11,7 @@ import net.xngo.fileshub.Utils;
 import net.xngo.fileshub.test.helpers.Data;
 
 
+
 // TestNG
 import org.testng.annotations.Test;
 import org.testng.annotations.BeforeClass;
@@ -23,14 +24,13 @@ import static org.testng.Assert.assertNull;
 
 
 
-
 // Java Library
 import java.io.File;
-import java.io.IOException;
 import java.util.List;
 import java.util.ArrayList;
 
-import org.apache.commons.io.FileUtils;
+
+
 
 /**
  * Test net.xngo.fileshub.db.Manager class.
@@ -351,7 +351,6 @@ public class ManagerTest
     uniqueFile.delete();
 
   }   
-  
   
   @Test(description="Update file that has changed since added in database. Note: This is exactly the same as addFileShelfFileChanged(), except that it uses Manager.update() instead of Manager.addFile().")
   public void updateFileChanged()
