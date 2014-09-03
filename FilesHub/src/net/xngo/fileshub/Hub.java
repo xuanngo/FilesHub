@@ -69,7 +69,7 @@ public class Hub
       }
       
     }
-    report.progressPrint(String.format("100.00%% [%s] [%d/%d]", totalReadableSize, i, totalFiles));// Last display because of the remainder of modulus.
+    report.progressPrint(String.format("100.00%% [%s] [%d/%d]", totalReadableSize, totalFiles, totalFiles));// Last display because of the remainder of modulus.
     System.out.println();
     elapsedTime.stop();
     
