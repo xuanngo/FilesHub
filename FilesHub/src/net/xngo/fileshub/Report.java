@@ -105,7 +105,7 @@ public class Report
       
       for(int i=0; i<this.toAddDocs.size(); i++)
       {
-        toDeleteFileBuffer.write(this.toAddDocs.get(i).canonical_path+"\n");
+        toDeleteFileBuffer.write(this.printDelete(this.toAddDocs.get(i).canonical_path)+"\n");
         fromDatabaseFileBuffer.write(this.existingDocs.get(i).canonical_path+"\n");
       } 
       
@@ -115,7 +115,8 @@ public class Report
     catch(IOException e)
     {
       e.printStackTrace();
-    }     
+    }
+    
   }
 
   public void progressPrint(String s)
@@ -127,6 +128,23 @@ public class Report
     System.out.print(s);
   }
   
-
+  private String printDelete(String path)
+  {
+    String os_name = System.getProperty("os.name");
+    if(os_name.indexOf("Windows")!=-1)
+      return this.printDeleteWin(path);
+    else
+      return this.printDeleteUnix(path);
+    
+  }
+  private String printDeleteWin(String path)
+  {
+    return String.format("del /q \"%s\"", path);
+  }
+  
+  private String printDeleteUnix(String path)
+  {
+    return String.format("rm -f \"%s\"", path);
+  }
   
 }
