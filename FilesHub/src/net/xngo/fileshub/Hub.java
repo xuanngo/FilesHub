@@ -49,7 +49,7 @@ public class Hub
     {
       Debug.msg(String.format("Adding [%s]", file.getAbsolutePath()));
       
-      if(!Utils.isFileLocked(file))
+      try
       {
         // Add file to database.
         Document doc = this.manager.addFile(file);
@@ -61,9 +61,18 @@ public class Hub
             report.addDuplicate(new Document(file), doc);
         }
       }
-      else
-        System.out.println(String.format("Warning: Ignore locked file [%s].", file.getAbsolutePath()));
-      
+      catch(RuntimeException e)
+      {
+        if(e.getMessage().indexOf("The process cannot access the file because another process has locked a portion of the file")!=-1)
+          System.out.println(String.format("Warning: Ignore locked file(%s).", file.getAbsolutePath()));
+        else
+        {
+          RuntimeException rException = new RuntimeException(e.getMessage());
+          rException.setStackTrace(e.getStackTrace());
+          throw rException;
+        }
+        
+      }
       
       // Print progress to console.      
       size += file.length();
