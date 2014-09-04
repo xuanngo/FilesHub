@@ -34,6 +34,8 @@ public class Document
    */
   public void sanityCheck()
   {
+    try
+    {
     if(this.hash.isEmpty())
       throw new RuntimeException(this.getErrorMsg());
 
@@ -45,6 +47,12 @@ public class Document
     
     if(this.last_modified<1)
       System.out.println(String.format("Warning: [%s] is older than January 1, 1970. Last modified = %d.", this.canonical_path, this.last_modified));
+    }
+    catch(Exception ex)
+    {
+      System.out.println(this.canonical_path);
+      ex.printStackTrace();
+    }
 
   }
   
