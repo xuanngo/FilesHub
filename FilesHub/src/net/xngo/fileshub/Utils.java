@@ -16,7 +16,9 @@ import java.util.ArrayList;
 
 import net.jpountz.xxhash.StreamingXXHash32;
 import net.jpountz.xxhash.XXHashFactory;
+
 import net.xngo.fileshub.db.Debug;
+import net.xngo.utils.java.math.Hash;
 
 
 /**
@@ -56,38 +58,7 @@ public class Utils
    */
   public static final String getHash(File file)
   {
-    Debug.msg(String.format("Hashing [%s]", file.getAbsolutePath()));
-    
-    XXHashFactory factory = XXHashFactory.fastestInstance();
-    int seed = 0x9747b28c;  // used to initialize the hash value, use whatever
-                            // value you want, but always the same
-    StreamingXXHash32 hash32 = factory.newStreamingHash32(seed);
-  
-    try
-    {
-      byte[] bufferBlock = new byte[8192]; // 8192 bytes
-      FileInputStream fileInputStream = new FileInputStream(file);
-  
-      int read;
-      while ((read = fileInputStream.read(bufferBlock))!=-1) 
-      {
-        hash32.update(bufferBlock, 0, read);
-      }
-      
-      fileInputStream.close();
-      return hash32.getValue()+""; // Force to be a string so that if we can change to use another hashing algorithm.
-      
-    }
-    catch(UnsupportedEncodingException ex)
-    {
-      System.out.println(ex);
-    }
-    catch(IOException ex)
-    {
-      System.out.println(ex);
-    }
-    
-    return null;
+    return Hash.xxhash32(file);
   }
   
   /**
