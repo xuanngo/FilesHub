@@ -34,8 +34,8 @@ public class Hub
     System.out.println(String.format("Total number of files to process = %d", listOfFiles.size()));
     
     // Preparation to display the progress.
-    long totalSize = FileUtils.getTotalSize(listOfFiles);
-    String totalReadableSize = FileUtils.readableFileSize(totalSize);
+    long totalSize = FileUtils.totalSize(listOfFiles);
+    String totalReadableSize = FileUtils.readableSize(totalSize);
     long size = 0;
     long totalFiles = listOfFiles.size();
     int whenToDisplay = 5;
