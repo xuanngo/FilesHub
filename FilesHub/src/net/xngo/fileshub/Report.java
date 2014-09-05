@@ -99,18 +99,22 @@ public class Report
     try
     {
       FileWriter toDeleteFile = new FileWriter("result_to_delete.txt");
+      FileWriter toDeleteExecutable = new FileWriter("result_to_delete_executable.txt");
       FileWriter fromDatabaseFile = new FileWriter("result_from_database.txt");
       BufferedWriter toDeleteFileBuffer = new BufferedWriter(toDeleteFile);
+      BufferedWriter toDeleteFileExecutableBuffer = new BufferedWriter(toDeleteExecutable);
       BufferedWriter fromDatabaseFileBuffer = new BufferedWriter(fromDatabaseFile);
       
       for(int i=0; i<this.toAddDocs.size(); i++)
       {
-        toDeleteFileBuffer.write(this.printDelete(this.toAddDocs.get(i).canonical_path)+"\n");
+        toDeleteFileExecutableBuffer.write(this.printDelete(this.toAddDocs.get(i).canonical_path)+"\n");
+        toDeleteFileBuffer.write(this.toAddDocs.get(i).canonical_path+"\n");
         fromDatabaseFileBuffer.write(this.existingDocs.get(i).canonical_path+"\n");
       } 
       
       toDeleteFileBuffer.close();
       fromDatabaseFileBuffer.close();
+      toDeleteFileExecutableBuffer.close();
     }
     catch(IOException e)
     {
@@ -127,6 +131,12 @@ public class Report
     }
     System.out.print(s);
   }
+  
+  /****************************************************************************
+   * 
+   *                             PRIVATE FUNCTIONS
+   * 
+   ****************************************************************************/
   
   private String printDelete(String path)
   {
