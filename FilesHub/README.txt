@@ -18,4 +18,7 @@ Libraries
 ==========
   -CSV: http://csveed.org/comparison-matrix.html
   
-https://code.google.com/p/markdown-doclet/  
+https://code.google.com/p/markdown-doclet/ 
+
+
+Unicode filename not found: http://stackoverflow.com/questions/3072376/how-can-i-open-files-containing-accents-in-java
