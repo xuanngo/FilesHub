@@ -49,10 +49,10 @@ public class ManagerTest
   }
   
   @Test(description="Add new unique file.")
-  public void addUniqueFile()
+  public void addFileUniqueFile()
   {
     // Add a unique file.
-    File uniqueFile = Data.createTempFile("AddUniqueFile");
+    File uniqueFile = Data.createTempFile("addFileUniqueFile");
     this.manager.addFile(uniqueFile);
 
     // Validation:
@@ -70,10 +70,10 @@ public class ManagerTest
   }
   
   @Test(description="Add exact same file.")
-  public void addExactSameFile()
+  public void addFileExactSameFile()
   {
     // Add a unique file.
-    File uniqueFile = Data.createTempFile("addExactSameFile");
+    File uniqueFile = Data.createTempFile("addFileExactSameFile");
     this.manager.addFile(uniqueFile); // Add file 1st time.
     
     // Expected values:
