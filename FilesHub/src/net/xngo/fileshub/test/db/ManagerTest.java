@@ -86,7 +86,7 @@ public class ManagerTest
     }
 
     // Add a unique file.
-    File uniqueFile = Data.createTempFile("addFileSpecialCharacters_"+"äöüß_"+ diffEncodingString);
+    File uniqueFile = Data.createTempFile("addFileSpecialCharacters_"+"äöüß_一个人_"+ diffEncodingString);
     this.manager.addFile(uniqueFile);
 
     // Validation:
