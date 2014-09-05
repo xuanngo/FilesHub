@@ -12,6 +12,7 @@ import net.xngo.fileshub.test.helpers.Data;
 
 
 
+
 // TestNG
 import org.testng.annotations.Test;
 import org.testng.annotations.BeforeClass;
@@ -24,8 +25,10 @@ import static org.testng.Assert.assertNull;
 
 
 
+
 // Java Library
 import java.io.File;
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 import java.util.ArrayList;
 
@@ -68,6 +71,37 @@ public class ManagerTest
     // Clean up.
     uniqueFile.delete();
   }
+  
+  @Test(description="Add filename with special characters.")
+  public void addFileSpecialCharacters()
+  {
+    String diffEncodingString = null;
+    try
+    {
+      diffEncodingString = new String("�".getBytes("UTF-8"), "ISO-8859-1");
+    }
+    catch(UnsupportedEncodingException e)
+    {
+      e.printStackTrace();
+    }
+
+    // Add a unique file.
+    File uniqueFile = Data.createTempFile("addFileSpecialCharacters_"+"äöüß_"+ diffEncodingString);
+    this.manager.addFile(uniqueFile);
+
+    // Validation:
+    //  Check if file path exists in Shelf.
+    Shelf shelf = new Shelf();
+    Document shelfDoc = shelf.findDocByCanonicalPath(Utils.getCanonicalPath(uniqueFile));
+    assertNotNull(shelfDoc, String.format("Expected [%s] to be added in Shelf table but it is not.\n"
+                                                + "%s"
+                                                ,uniqueFile.getName(),
+                                                Data.getFileInfo(uniqueFile, "File to add")
+                                          ));
+    
+    // Clean up.
+    uniqueFile.delete();
+  }  
   
   @Test(description="Add exact same file.")
   public void addFileExactSameFile()
