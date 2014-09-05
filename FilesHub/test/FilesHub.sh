@@ -10,4 +10,5 @@ if [ -z "$FILESHUB_HOME" ] ; then
   exit 1  # fail
 fi
 
-java -DFilesHub.home=${FILESHUB_HOME} -jar ${FILESHUB_HOME}/fileshub.jar $@
+## ISO-8859-1
+java -Dfile.encoding=UTF-8 -DFilesHub.home=${FILESHUB_HOME} -jar ${FILESHUB_HOME}/fileshub.jar $@
