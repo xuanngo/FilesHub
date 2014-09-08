@@ -372,7 +372,8 @@ public class ManagerTest
     // Add moved file again.
     this.manager.addFile(fileMoved);
     
-    // Validations
+    // Validations:
+    //  New location of the moved file should be update in Shelf table.
     Shelf shelf = new Shelf();
     Document shelfDoc = shelf.findDocByCanonicalPath(newCanonicalPath);
     assertNotNull(shelfDoc, String.format("[%s] should be in Shelf table.", newCanonicalPath));
