@@ -417,6 +417,8 @@ public class ManagerTest
     Document trashDoc = trash.findDocByCanonicalPath(originalCanonicalPath);
     assertNotNull(trashDoc, String.format("The original file [%s] should be in Trash table.", originalCanonicalPath));
     
+    assertEquals(trashDoc.uid, shelfDoc.uid, String.format("trashDoc.uid = %d should be equal to shelfDoc.uid = %d", trashDoc.uid, shelfDoc.uid));
+    
     // Clean up.
     duplicateFile.delete();
 
