@@ -21,6 +21,7 @@ public class Trash
   private PreparedStatement insert = null;
   private PreparedStatement select = null;
   private PreparedStatement update = null;
+  private PreparedStatement delete = null;
  
   /**
    * @deprecated This is bad. Use addDoc() instead.
@@ -123,6 +124,11 @@ public class Trash
     return this.insertDoc(doc);
   }
   
+  public int removeDoc(int duid)
+  {
+    return this.deleteDoc(duid);
+  }
+  
   /**
    * 
    * @param filename
@@ -211,6 +217,26 @@ public class Trash
    *                             PRIVATE FUNCTIONS
    * 
    ****************************************************************************/
+  
+  private int deleteDoc(int duid)
+  {
+    final String query = "DELETE FROM "+this.tablename+" WHERE uid=?";
+    int rowsAffected = 0;
+    try
+    {
+      this.delete = this.conn.connection.prepareStatement(query);
+      
+      this.delete.setInt(1, duid);
+      
+      rowsAffected = this.delete.executeUpdate();
+    }
+    catch(SQLException e)
+    {
+      e.printStackTrace();
+    }
+    return rowsAffected;    
+  }
+  
   
   private boolean isHashExists(final String hash)
   {
