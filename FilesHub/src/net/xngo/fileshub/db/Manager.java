@@ -99,6 +99,7 @@ public class Manager
           return shelf.findDocByUid(trashDoc.uid);
         else
         {
+          // Switch Shelf<->Trash.
           shelf.removeDoc(originalDoc.uid);
           trash.removeDoc(trashDoc.uid);
           shelf.addDoc(trashDoc);
