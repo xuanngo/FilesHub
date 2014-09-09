@@ -385,7 +385,42 @@ public class ManagerTest
     // Clean up.
     uniqueFile.delete();
 
-  }   
+  }
+  
+  @Test(description="Add a duplicate file where the original file is deleted.")
+  public void addFileShelfFileDeletedAddTrashFile()
+  {
+    // Add a unique file in database.
+    File uniqueFile = Data.createTempFile("addFileShelfFileDeletedAddTrashFile");
+    this.manager.addFile(uniqueFile);
+    String originalCanonicalPath = Utils.getCanonicalPath(uniqueFile);
+    
+    // Copy unique file and then add to database. This file is going to Trash table.
+    File duplicateFile = Data.createTempFile("addFileShelfFileDeletedAddTrashFile_duplicate");
+    Data.copyFile(uniqueFile, duplicateFile);
+    this.manager.addFile(duplicateFile);
+    String duplicateCanonicalPath = Utils.getCanonicalPath(duplicateFile);
+    
+    // Delete original file.
+    uniqueFile.delete();
+    
+    // Add duplicate file again.
+    this.manager.addFile(duplicateFile);
+    
+    // Validations:
+    //  The duplicate file info should be move to Shelf.
+    Shelf shelf = new Shelf();
+    Document shelfDoc = shelf.findDocByCanonicalPath(duplicateCanonicalPath);
+    assertNotNull(shelfDoc, String.format("Duplicate file [%s] should be in Shelf table.", duplicateCanonicalPath));
+    
+    Trash trash = new Trash();
+    Document trashDoc = trash.findDocByCanonicalPath(originalCanonicalPath);
+    assertNotNull(trashDoc, String.format("The original file [%s] should be in Trash table.", originalCanonicalPath));
+    
+    // Clean up.
+    duplicateFile.delete();
+
+  }     
   
   @Test(description="Update file that has changed since added in database. Note: This is exactly the same as addFileShelfFileChanged(), except that it uses Manager.update() instead of Manager.addFile().")
   public void updateFileChanged()
