@@ -4,9 +4,25 @@
 <suite name="FilesHub test suite">
 
   <test verbose="5" name="FilesHub tests">
+  <!--
     <packages>
       <package name="net.xngo.fileshub.test.*" />
-   </packages>  
+   </packages>
+   -->
+   
+  <classes>
+    <class name="net.xngo.fileshub.test.db.ManagerTest">
+				<methods>
+<include name="DatabaseCreation" />
+<include name="addFileExactSameFile" />
+<include name="addFileShelfFileDeletedAddTrashFile" />
+
+
+        </methods>
+    </class>
+  </classes>
+   
+   
   </test>
   
 </suite>
