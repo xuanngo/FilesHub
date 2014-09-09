@@ -124,9 +124,9 @@ public class Trash
     return this.insertDoc(doc);
   }
   
-  public int removeDoc(int duid)
+  public int removeDoc(Document doc)
   {
-    return this.deleteDoc(duid);
+    return this.deleteDoc(doc);
   }
   
   /**
@@ -218,15 +218,19 @@ public class Trash
    * 
    ****************************************************************************/
   
-  private int deleteDoc(int duid)
+  private int deleteDoc(Document doc)
   {
-    final String query = "DELETE FROM "+this.tablename+" WHERE uid=?";
+    // Add conditions that make Document unique.
+    final String query = "DELETE FROM "+this.tablename+" WHERE uid=? AND hash=? and canonical_path=?";
     int rowsAffected = 0;
     try
     {
       this.delete = this.conn.connection.prepareStatement(query);
       
-      this.delete.setInt(1, duid);
+      int i=1; // Order must match with query.
+      this.delete.setInt   (i++, doc.uid);
+      this.delete.setString(i++, doc.hash);
+      this.delete.setString(i++, doc.canonical_path);
       
       rowsAffected = this.delete.executeUpdate();
     }
@@ -405,11 +409,24 @@ public class Trash
         e.printStackTrace();
       }
     }
+    finally
+    {
+      try
+      {
+        if(this.insert!=null)
+          this.insert.close();
+      }
+      catch(SQLException ex) 
+      {
+        RuntimeException rException = new RuntimeException();
+        rException.setStackTrace(ex.getStackTrace());
+        throw rException;
+      }
+    }    
   
     return generatedKey;
   }
   
-
   
   /**
    *   
