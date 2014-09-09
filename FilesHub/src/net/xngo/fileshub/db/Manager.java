@@ -314,6 +314,12 @@ public class Manager
     
   }
   
+  /****************************************************************************
+   * 
+   *                             PRIVATE FUNCTIONS
+   * 
+   ****************************************************************************/  
+  
   private boolean validateMarkDuplicate(File duplicate, File of)
   {
     if(!duplicate.exists())
