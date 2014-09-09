@@ -135,7 +135,7 @@ public class Report
   
   public void displayTotalFiles(int totalFiles)
   {
-    System.out.println(String.format("Total number of files to process = %,d", totalFiles));
+    System.out.println(String.format("Files to process = %,d", totalFiles));
   }
   
   /****************************************************************************
