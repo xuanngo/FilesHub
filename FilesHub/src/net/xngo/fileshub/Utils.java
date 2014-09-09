@@ -82,11 +82,11 @@ public class Utils
     } 
     catch(FileNotFoundException ex)
     {
-      System.out.println(ex);
+      ex.printStackTrace();
     }
     catch(IOException ex)
     {
-      System.out.println(ex);
+      ex.printStackTrace();
     }      
   }
   
@@ -109,11 +109,11 @@ public class Utils
     }
     catch(FileNotFoundException ex)
     {
-      System.out.println(ex);
+      ex.printStackTrace();
     }
     catch(IOException ex)
     {
-      System.out.println(ex);
+      ex.printStackTrace();
     }     
   }
   
@@ -153,11 +153,11 @@ public class Utils
     }
     catch(UnsupportedEncodingException ex)
     {
-      System.out.println(ex);
+      ex.printStackTrace();
     }
     catch(IOException ex)
     {
-      System.out.println(ex);
+      ex.printStackTrace();
     }
     
     return null;    
