@@ -100,10 +100,10 @@ public class Manager
         else
         {
           // Switch Shelf<->Trash.
-          shelf.removeDoc(originalDoc.uid);
-          trash.removeDoc(trashDoc.uid);
-          shelf.addDoc(trashDoc);
+          shelf.saveDoc(trashDoc);
+          trash.removeDoc(trashDoc);
           trash.addDoc(originalDoc);
+          return null;
         }
       }
       else
