@@ -209,7 +209,20 @@ public class Shelf
         e.printStackTrace();
       }
     }
-  
+    finally
+    {
+      try
+      {
+        if(this.insert!=null)
+          this.insert.close();
+      }
+      catch(SQLException ex) 
+      {
+        RuntimeException rException = new RuntimeException();
+        rException.setStackTrace(ex.getStackTrace());
+        throw rException;
+      }
+    }  
     return generatedKey;
   }
   
@@ -242,7 +255,21 @@ public class Shelf
     {
       e.printStackTrace();
     }
-  
+    finally
+    {
+      try
+      {
+        if(this.update!=null)
+          this.update.close();
+      }
+      catch(SQLException ex) 
+      {
+        RuntimeException rException = new RuntimeException();
+        rException.setStackTrace(ex.getStackTrace());
+        throw rException;
+      }
+    }
+    
     return rowAffected;
   }
   
