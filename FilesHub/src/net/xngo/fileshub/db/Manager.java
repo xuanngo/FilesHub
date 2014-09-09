@@ -54,7 +54,12 @@ public class Manager
    *   -Exact file path. Do nothing
    * else
    *   If path found in Trash
-   *     -Return Duplicate
+   *      If original file still exists
+   *        -Return Duplicate
+   *      else
+   *        -Move original file info from Shelf to Trash.
+   *        -Add file in Shelf. 
+   *        -Return New File
    *   else
    *         If hash found in Shelf
    *           -Add to Trash (New Path)
@@ -87,7 +92,18 @@ public class Manager
       Document trashDoc = trash.findDocByCanonicalPath(doc.canonical_path);
       if(trashDoc != null)
       {// Path found in Trash.
-        return shelf.findDocByUid(trashDoc.uid);
+        
+        // Switch if original file doesn't exist.
+        Document originalDoc = shelf.findDocByUid(trashDoc.uid);
+        if(new File(originalDoc.canonical_path).exists())
+          return shelf.findDocByUid(trashDoc.uid);
+        else
+        {
+          shelf.removeDoc(originalDoc.uid);
+          trash.removeDoc(trashDoc.uid);
+          shelf.addDoc(trashDoc);
+          trash.addDoc(originalDoc);
+        }
       }
       else
       {
