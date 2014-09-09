@@ -44,7 +44,6 @@ public class Hub
     int whenToDisplay = 5;
     
     ElapsedTime elapsedTime = new ElapsedTime();
-    
     elapsedTime.start();
     int i=1;
     for (File file : listOfFiles) 
