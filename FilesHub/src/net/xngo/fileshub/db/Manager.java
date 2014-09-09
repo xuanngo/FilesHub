@@ -162,12 +162,12 @@ public class Manager
     List<Document> docList = this.shelf.getAllDoc();
     List<Document> missingFileList = new ArrayList<Document>();
     
-    System.out.println(String.format("Total number of files to process = %d", docList.size()));
+    Report report = new Report();
+    report.displayTotalFiles(docList.size());
     
     // Variables for print progress.
     int whenToDisplay = 100;
     int i=1;
-    Report report = new Report();
     int totalFiles = docList.size();
     
     for(Document doc: docList)
