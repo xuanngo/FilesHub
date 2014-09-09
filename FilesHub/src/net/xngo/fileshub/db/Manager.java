@@ -181,6 +181,8 @@ public class Manager
         report.progressPrint(String.format("[%d/%d]", i, totalFiles));
       }      
     }
+    report.progressPrint(String.format("[%d/%d]", totalFiles, totalFiles)); // Print last result.
+
     return missingFileList;
   }
   
