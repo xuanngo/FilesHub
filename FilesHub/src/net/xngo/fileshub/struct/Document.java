@@ -36,21 +36,21 @@ public class Document
   {
     try
     {
-    if(this.hash.isEmpty())
-      throw new RuntimeException(this.getErrorMsg());
-
-    if(this.canonical_path.isEmpty())
-      throw new RuntimeException(this.getErrorMsg());
-
-    if(this.filename.isEmpty())
-      throw new RuntimeException(this.getErrorMsg());
-    
-    if(this.last_modified<1)
-      System.out.println(String.format("Warning: [%s] is older than January 1, 1970. Last modified = %d.", this.canonical_path, this.last_modified));
+      if(this.hash.isEmpty())
+        throw new RuntimeException(this.getErrorMsg());
+  
+      if(this.canonical_path.isEmpty())
+        throw new RuntimeException(this.getErrorMsg());
+  
+      if(this.filename.isEmpty())
+        throw new RuntimeException(this.getErrorMsg());
+      
+      if(this.last_modified<1)
+        System.out.println(String.format("Warning: [%s] is older than January 1, 1970. Last modified = %d.", this.canonical_path, this.last_modified));
     }
     catch(Exception ex)
     {
-      System.out.println(this.canonical_path);
+      System.out.println(String.format("Failed on [%s].", this.canonical_path));
       ex.printStackTrace();
     }
 
