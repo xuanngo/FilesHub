@@ -31,7 +31,10 @@ public class Hub
   
   public void addFiles(Set<File> listOfFiles)
   {
-    System.out.println(String.format("Total number of files to process = %d", listOfFiles.size()));
+    // Display total number of files to process.
+    Report report = new Report();
+    report.displayTotalFiles(listOfFiles.size());
+      
     
     // Preparation to display the progress.
     long totalSize = FileUtils.totalSize(listOfFiles);
@@ -40,7 +43,6 @@ public class Hub
     long totalFiles = listOfFiles.size();
     int whenToDisplay = 5;
     
-    Report report = new Report();
     ElapsedTime elapsedTime = new ElapsedTime();
     
     elapsedTime.start();
