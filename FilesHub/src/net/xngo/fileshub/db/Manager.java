@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import net.xngo.fileshub.Utils;
 import net.xngo.fileshub.struct.Document;
 import net.xngo.fileshub.db.Shelf;
+import net.xngo.fileshub.Report;
+import net.xngo.utils.java.math.Math;
 
 /**
  * Manage documents.
@@ -141,8 +143,16 @@ public class Manager
   public List<Document> update()
   {
     List<Document> docList = this.shelf.getAllDoc();
-    
     List<Document> missingFileList = new ArrayList<Document>();
+    
+    System.out.println(String.format("Total number of files to process = %d", docList.size()));
+    
+    // Variables for print progress.
+    int whenToDisplay = 100;
+    int i=1;
+    Report report = new Report();
+    int totalFiles = docList.size();
+    
     for(Document doc: docList)
     {
       File file = new File(doc.canonical_path);
@@ -163,6 +173,13 @@ public class Manager
       }
       else
         missingFileList.add(doc);
+      
+      // Print progress
+      i++;
+      if( (i%whenToDisplay)==0)
+      {
+        report.progressPrint(String.format("[%d/%d]", i, totalFiles));
+      }      
     }
     return missingFileList;
   }
