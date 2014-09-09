@@ -132,6 +132,12 @@ public class Report
     System.out.print(s);
   }
   
+  
+  public void displayTotalFiles(int totalFiles)
+  {
+    System.out.println(String.format("Total number of files to process = %,d", totalFiles));
+  }
+  
   /****************************************************************************
    * 
    *                             PRIVATE FUNCTIONS
