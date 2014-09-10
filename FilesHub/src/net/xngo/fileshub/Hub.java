@@ -88,6 +88,7 @@ public class Hub
     System.out.println();
     elapsedTime.stop();
     
+    report.sort();
     report.display();
     report.writeCSV("./results.csv");
     report.write();
