@@ -2,13 +2,10 @@ package net.xngo.fileshub;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Set;
-
-
-
-
 
 import net.xngo.fileshub.db.Debug;
 import net.xngo.fileshub.db.Manager;
@@ -124,7 +121,10 @@ public class Hub
   
   public void hash(Set<File> files)
   {
-    for(File file: files)
+    ArrayList<File> sortedFiles = new ArrayList<File>(files);
+    
+    Collections.sort(sortedFiles);
+    for(File file: sortedFiles)
     {
       String hash = Utils.getHash(file);
       try
