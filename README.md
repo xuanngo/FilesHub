@@ -16,8 +16,8 @@ Mark a file is a duplicate of another.
 FilesHub -a SomeRandomFile.txt FilesHub.db
 ```
 
-Display the hash of a file
+Display the hash of files
 ```
-FilesHub hash FilesHub.db
+FilesHub hash FilesHub.db ./ FilesHub*
 ```
 
