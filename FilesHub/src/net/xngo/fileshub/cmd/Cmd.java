@@ -43,25 +43,20 @@ public class Cmd
       }
       else
       { // Check if there is a command passed.
-        
-        if(jc.getParsedCommand().compareTo(CmdHash.name)==0)
+        String parsedCmd = jc.getParsedCommand();
+        if(parsedCmd != null)
         {
-          if(cmdHash.paths!=null)
+          if(parsedCmd.compareTo(CmdHash.name)==0)
           {
-            hub.hash(cmdHash.getAllUniqueFiles());
-          }
-          else
-          {
-            System.out.println("\nERROR: Wrong usage!\n");            
-            jc.usage();
+            if(cmdHash.paths!=null)
+            {
+              hub.hash(cmdHash.getAllUniqueFiles());
+            }
           }
         }
-        else
-        {
-          // Anything else, display the help.
-          System.out.println("\nERROR: Wrong usage!\n");
-          jc.usage();
-        }
+        // Anything else, display the help.
+        System.out.println("\nERROR: Wrong usage!\n");
+        jc.usage();          
       }
      
     }
