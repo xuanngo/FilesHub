@@ -129,7 +129,7 @@ public class Hub
       String hash = Utils.getHash(file);
       try
       {
-        System.out.println(String.format("%s %s", hash, file.getCanonicalPath()));
+        System.out.println(String.format("%12s %s", hash, file.getCanonicalPath()));
       }
       catch(IOException ex)
       {
