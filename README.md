@@ -1,10 +1,17 @@
 FilesHub
 ========
 
-Files manager
+FilesHub is use to remove duplicate files.
 
-Features
-========
--Remove duplicate files.
--Tag files.
+Usage
+======
 
+Add files or directories
+```
+FilesHub -a FilesHub.db ./ FilesHub*
+```
+
+Mark a file is a duplicate of another.
+```
+FilesHub -a "SomeRandomFile.txt" FilesHub.db
+```
