@@ -1,7 +1,7 @@
 FilesHub
 ========
 
-FilesHub is use to remove duplicate files.
+FilesHub is used to remove duplicate files.
 
 Usage
 ======
