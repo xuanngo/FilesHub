@@ -64,7 +64,6 @@ public class Cmd
     catch(ParameterException e)
     {
       System.out.println("\nERROR: Wrong usage!");
-      System.out.println("======");
       System.out.println(e.getMessage());
       if(Debug.activate()){e.printStackTrace();}
       System.out.println("====================================");
