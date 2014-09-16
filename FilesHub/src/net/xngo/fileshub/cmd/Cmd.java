@@ -5,6 +5,8 @@ import net.xngo.fileshub.cmd.Options;
 import net.xngo.fileshub.cmd.CmdHash;
 
 
+import net.xngo.fileshub.db.Debug;
+
 import com.beust.jcommander.JCommander;
 import com.beust.jcommander.ParameterException;
 
@@ -44,7 +46,7 @@ public class Cmd
         
         if(jc.getParsedCommand().compareTo(CmdHash.name)==0)
         {
-          if(cmdHash.addPaths!=null)
+          if(cmdHash.paths!=null)
           {
             hub.hash(cmdHash.getAllUniqueFiles());
           }
@@ -69,6 +71,7 @@ public class Cmd
       System.out.println("ERROR:");
       System.out.println("======");
       System.out.println(e.getMessage());
+      if(Debug.activate()){e.printStackTrace();}
       System.out.println("====================================");
       System.out.println();
       jc.usage();
