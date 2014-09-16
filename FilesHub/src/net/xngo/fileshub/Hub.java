@@ -1,9 +1,12 @@
 package net.xngo.fileshub;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Set;
+
+
 
 
 
@@ -117,6 +120,22 @@ public class Hub
   public void markDuplicate(File duplicate, File of)
   {
     this.manager.markDuplicate(duplicate, of);
+  }
+  
+  public void hash(Set<File> files)
+  {
+    for(File file: files)
+    {
+      String hash = Utils.getHash(file);
+      try
+      {
+        System.out.println(String.format("%s %s", hash, file.getCanonicalPath()));
+      }
+      catch(IOException ex)
+      {
+        ex.printStackTrace();
+      }
+    }
   }
   
 }

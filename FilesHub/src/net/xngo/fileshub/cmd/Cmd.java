@@ -2,9 +2,8 @@ package net.xngo.fileshub.cmd;
 
 import net.xngo.fileshub.Hub;
 import net.xngo.fileshub.cmd.Options;
+import net.xngo.fileshub.cmd.CmdHash;
 
-
-import net.xngo.fileshub.db.Debug;
 
 import com.beust.jcommander.JCommander;
 import com.beust.jcommander.ParameterException;
@@ -20,6 +19,9 @@ public class Cmd
     JCommander jc = new JCommander(options);
     jc.setProgramName("FilesHub");
     
+    CmdHash cmdHash = new CmdHash();
+    jc.addCommand(CmdHash.name, cmdHash);
+    
     Hub hub = new Hub();
     try
     {
@@ -33,14 +35,31 @@ public class Cmd
       {
         hub.update();
       }
-      else if(options.duplicateFiles.size()==2)
+      else if(options.duplicateFiles != null)
       {
         hub.markDuplicate(options.duplicateFiles.get(0), options.duplicateFiles.get(1));
       }
       else
-      { // Anything else, display the help.
-        System.out.println();
-        jc.usage();
+      { // Check if there is a command passed.
+        
+        if(jc.getParsedCommand().compareTo(CmdHash.name)==0)
+        {
+          if(cmdHash.addPaths!=null)
+          {
+            hub.hash(cmdHash.getAllUniqueFiles());
+          }
+          else
+          {
+            System.out.println("\nERROR: Wrong usage!\n");            
+            jc.usage();
+          }
+        }
+        else
+        {
+          // Anything else, display the help.
+          System.out.println("\nERROR: Wrong usage!\n");
+          jc.usage();
+        }
       }
      
     }
