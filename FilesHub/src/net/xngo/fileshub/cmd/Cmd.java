@@ -49,14 +49,15 @@ public class Cmd
           if(parsedCmd.compareTo(CmdHash.name)==0)
           {
             if(cmdHash.paths!=null)
-            {
               hub.hash(cmdHash.getAllUniqueFiles());
-            }
+            else
+              this.displayUsage(jc);
           }
+          else
+            this.displayUsage(jc);
         }
-        // Anything else, display the help.
-        System.out.println("\nERROR: Wrong usage!\n");
-        jc.usage();          
+        else
+          this.displayUsage(jc);
       }
      
     }
@@ -71,11 +72,12 @@ public class Cmd
       System.out.println();
       jc.usage();
     }
-
-
-    
-    
   }
-  
+
+  private void displayUsage(JCommander jc)
+  {
+    System.out.println("\nERROR: Wrong usage!\n");
+    jc.usage();     
+  }
   
 }
