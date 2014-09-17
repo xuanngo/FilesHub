@@ -154,7 +154,7 @@ public class Report
   {
     String html = "<html><head><style>";
     html += ".line-even{background-color: rgb(220, 240, 251);}";
-    html += ".delete, insert{background-color: rgb(252, 173, 180);}";
+    html += ".delete, .insert{background-color: rgb(252, 173, 180);}";
     html += ".right{margin-left: 2em;}";
     html += "</style></head>";
     for(int i=0; i<this.duplicates.size(); i++)
