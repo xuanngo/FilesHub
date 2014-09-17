@@ -118,9 +118,9 @@ public class Report
       
       for(int i=0; i<this.duplicates.size(); i++)
       {
-        toDeleteFileExecutableBuffer.write(this.printDelete(this.duplicates.get(i).toAddDoc.canonical_path)+"\n");
-        toDeleteFileBuffer.write(this.duplicates.get(i).toAddDoc.canonical_path+"\n");
-        fromDatabaseFileBuffer.write(this.duplicates.get(i).shelfDoc.canonical_path+"\n");
+        toDeleteFileExecutableBuffer.write(this.printDelete(this.doubleQuote(this.duplicates.get(i).toAddDoc.canonical_path))+"\n");
+        toDeleteFileBuffer.write(this.doubleQuote(this.duplicates.get(i).toAddDoc.canonical_path)+"\n");
+        fromDatabaseFileBuffer.write(this.doubleQuote(this.duplicates.get(i).shelfDoc.canonical_path)+"\n");
       } 
       
       toDeleteFileBuffer.close();
@@ -174,4 +174,8 @@ public class Report
     return String.format("rm -f \"%s\"", path);
   }
   
+  private String doubleQuote(String s)
+  {
+    return String.format("\"%s\"", s);
+  }
 }
