@@ -45,12 +45,14 @@
 		<delete file="./result_from_database.txt"/>
 		<delete file="./result_to_delete.txt"/>
 		<delete file="./result_to_delete_executable.txt"/>
+		<delete file="./results.html"/>
 		
 		<delete file="./test/results.csv"/>
 		<delete file="./test/fileshub.db"/>
     <delete file="./test/result_from_database.txt"/>
     <delete file="./test/result_to_delete.txt"/>
 		<delete file="./test/result_to_delete_executable.txt"/>
+		<delete file="./test/results.html"/>
 		<delete dir="./test/test-output"/>
 	</target>
 	
