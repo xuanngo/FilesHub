@@ -16,7 +16,8 @@ public class Difference
   public Difference(String left, String right)
   {
     diff_match_patch diffMatchPatch = new diff_match_patch();
-    this.deltas = diffMatchPatch.diff_main(left, right);    
+    this.deltas = diffMatchPatch.diff_main(left, right);
+    diffMatchPatch.diff_cleanupSemantic(this.deltas);
   }
 
   public void computeSpan()
