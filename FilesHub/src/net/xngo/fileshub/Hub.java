@@ -92,6 +92,7 @@ public class Hub
     report.display();
     report.writeCSV("./results.csv");
     report.write();
+    report.writeHtml("./results.html");
     
     System.out.println("\n===============================================");
     elapsedTime.display();

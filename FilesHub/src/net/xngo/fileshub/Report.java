@@ -149,6 +149,44 @@ public class Report
     System.out.println(String.format("Files to process = %,d", totalFiles));
   }
   
+  
+  public void writeHtml(String filename)
+  {
+    String html = "<html><head><style>";
+    html += ".line-even{background-color: rgb(220, 240, 251);}";
+    html += ".delete, insert{background-color: rgb(252, 173, 180);}";
+    html += ".right{margin-left: 2em;}";
+    html += "</style></head>";
+    for(int i=0; i<this.duplicates.size(); i++)
+    {
+      String left = this.doubleQuote(this.duplicates.get(i).toAddDoc.canonical_path);
+      String right= this.doubleQuote(this.duplicates.get(i).shelfDoc.canonical_path);
+      
+      Difference difference = new Difference(left, right);
+      difference.computeSpan();
+      String leftSpan = this.printDelete(difference.getLeftSpan()); // Not elegant.
+      String rightSpan= difference.getRightSpan();
+      if(i%2==0)
+        html += String.format("<div class=\"line-even\">%s<br/>%s</div>", leftSpan, rightSpan);
+      else
+        html += String.format("<div class=\"line-odd\">%s<br/>%s</div>", leftSpan, rightSpan);
+    }     
+    html += "</body></html>";
+    
+    try
+    {
+      FileWriter htmlWriter = new FileWriter(filename);
+      BufferedWriter htmlWriterBuffer = new BufferedWriter(htmlWriter);
+      htmlWriterBuffer.write(html);
+      htmlWriterBuffer.close();
+//      htmlWriter.close();
+    }
+    catch(IOException e)
+    {
+      e.printStackTrace();
+    }
+    
+  }  
   /****************************************************************************
    * 
    *                             PRIVATE FUNCTIONS
