@@ -10,6 +10,8 @@ import java.io.IOException;
 import java.io.BufferedWriter;
 
 
+
+
 import org.supercsv.io.CsvListWriter;
 import org.supercsv.io.ICsvListWriter;
 import org.supercsv.prefs.CsvPreference;
@@ -19,6 +21,7 @@ import org.supercsv.cellprocessor.constraint.NotNull;
 import net.xngo.fileshub.Utils;
 import net.xngo.fileshub.struct.Document;
 import net.xngo.fileshub.struct.Duplicate;
+import net.xngo.utils.java.io.FileUtils;
 
 public class Report
 {
@@ -124,22 +127,8 @@ public class Report
   
   public void writeHtml(String filename)
   {
-    String html = "<html><head>"
-                          + "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"/>"
-                          + "<style>"
-                            + ".line-even, .line-odd{border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D3D3D3;}"
 
-                            + ".line-even{background-color: rgb(220, 240, 251);}"
-                            + ".line-even .delete, .line-even .insert{background-color: rgb(255, 201, 42);}"
-                            
-                            + ".line-odd{background-color: rgb(115, 175, 173);}"
-                            + ".line-odd .delete, .line-odd .insert{background-color: rgb(217, 133, 60);}"
-                            
-                            + ".right{margin-left: 2em;}"
-                          + "</style>"
-                      + "</head>"
-                      + "<body>\n";
-    
+    String divLines = "";
     for(int i=0; i<this.duplicates.size(); i++)
     {
       String left = this.doubleQuote(this.duplicates.get(i).toAddDoc.canonical_path);
@@ -150,19 +139,21 @@ public class Report
       String leftSpan = this.printDelete(difference.getLeftSpan()); // Not elegant.
       String rightSpan= difference.getRightSpan();
       if(i%2==0)
-        html += String.format("<div class=\"line-even\">%s<br/>%s</div>\n", leftSpan, rightSpan); // Add \n so that user can process the output HTML.
+        divLines += String.format("<div class=\"line-even\">%s<br/>%s</div>\n", leftSpan, rightSpan); // Add \n so that user can process the output HTML.
       else
-        html += String.format("<div class=\"line-odd\">%s<br/>%s</div>\n", leftSpan, rightSpan);  // Add \n so that user can process the output HTML.
-    }     
-    html += "</body></html>";
+        divLines += String.format("<div class=\"line-odd\">%s<br/>%s</div>\n", leftSpan, rightSpan);  // Add \n so that user can process the output HTML.
+    }
     
+    String html = FileUtils.load(System.getProperty("FilesHub.home")+File.separator+"template.html");
+    html = html.replace("<!-- @DIFF -->", divLines);
+
     try
     {
       FileWriter htmlWriter = new FileWriter(filename);
       BufferedWriter htmlWriterBuffer = new BufferedWriter(htmlWriter);
       htmlWriterBuffer.write(html);
       htmlWriterBuffer.close();
-//      htmlWriter.close();
+      htmlWriter.close();
     }
     catch(IOException e)
     {
