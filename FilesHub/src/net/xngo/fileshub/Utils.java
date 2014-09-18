@@ -34,17 +34,16 @@ public class Utils
    */
   public static final String getCanonicalPath(File file)
   {
-    String path="";
     try
     {
-      path = file.getCanonicalPath(); // Get the canonical path, the file path in full and expanded.
+      return file.getCanonicalPath(); // Get the canonical path, the file path in full and expanded.
     }
     catch(IOException e)
     {
       e.printStackTrace();
     }
     
-    return path;
+    return null;
   }  
  
   /**
