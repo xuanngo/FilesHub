@@ -153,8 +153,12 @@ public class Report
   public void writeHtml(String filename)
   {
     String html = "<html><head><style>";
+    html += ".line-even, .line-odd{border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D3D3D3;}";
     html += ".line-even{background-color: rgb(220, 240, 251);}";
-    html += ".delete, .insert{background-color: rgb(252, 173, 180);}";
+    html += ".line-even .delete, .line-odd .insert{background-color: rgb(255, 201, 42);}";
+    html += ".line-odd{background-color: rgb(115, 175, 173);}";
+    html += ".line-odd .delete, .line-odd .insert{background-color: rgb(217, 133, 60);}";
+    //html += ".delete, .insert{background-color: rgb(252, 173, 180);}";
     html += ".right{margin-left: 2em;}";
     html += "</style></head>";
     for(int i=0; i<this.duplicates.size(); i++)
@@ -200,20 +204,21 @@ public class Report
       return this.printDeleteWin(path);
     else
       return this.printDeleteUnix(path);
-    
   }
+  
   private String printDeleteWin(String path)
   {
-    return String.format("del /q \"%s\"", path);
+    return String.format("del /q %s", path);
   }
   
   private String printDeleteUnix(String path)
   {
-    return String.format("rm -f \"%s\"", path);
+    return String.format("rm -f %s", path);
   }
   
   private String doubleQuote(String s)
   {
     return String.format("\"%s\"", s);
   }
+  
 }
