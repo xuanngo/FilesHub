@@ -139,9 +139,9 @@ public class Report
       String leftSpan = this.printDelete(difference.getLeftSpan()); // Not elegant.
       String rightSpan= difference.getRightSpan();
       if(i%2==0)
-        divLines += String.format("<div class=\"line-even\">%s<br/>%s</div>\n", leftSpan, rightSpan); // Add \n so that user can process the output HTML.
+        divLines += String.format("<div class=\"line-even\">%s<br/>%s</div>\n", leftSpan, rightSpan); // Add \n so that user can process the HTML output.
       else
-        divLines += String.format("<div class=\"line-odd\">%s<br/>%s</div>\n", leftSpan, rightSpan);  // Add \n so that user can process the output HTML.
+        divLines += String.format("<div class=\"line-odd\">%s<br/>%s</div>\n", leftSpan, rightSpan);  // Add \n so that user can process the HTML output.
     }
     
     String html = FileUtils.load(System.getProperty("FilesHub.home")+File.separator+"template.html");
