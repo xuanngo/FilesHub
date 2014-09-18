@@ -105,7 +105,7 @@ public class Hub
     
     if(missingFileList.size()>0)
     {
-      System.out.println(String.format("Missing files not in your system:", missingFileList.size()));
+      System.out.println(String.format("\nMissing files not in your system:", missingFileList.size()));
       System.out.println("===================================");
       for(Document doc: missingFileList)
       {
