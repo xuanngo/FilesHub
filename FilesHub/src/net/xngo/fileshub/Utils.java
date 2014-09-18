@@ -43,7 +43,7 @@ public class Utils
       e.printStackTrace();
     }
     
-    return null;
+    return null; // Return NULL to make this function more brittle so caller will know something is wrong.
   }  
  
   /**
