@@ -91,7 +91,7 @@ public class Hub
     
     report.sort();
     report.display();
-    report.writeCSV("./results.csv");
+    report.writeCSV("./results.csv");   // Use ./XYZ so it writes results to the executed location.
     report.writeHtml("./results.html");
     
     System.out.println("\n===============================================");

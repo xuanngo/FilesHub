@@ -1,10 +1,11 @@
 package net.xngo.fileshub.db;
 
-import java.io.File;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
+
+import net.xngo.fileshub.AppInfo;
 
 /**
  * Implement database connection and generic query functions.
@@ -14,8 +15,8 @@ import java.sql.Statement;
  */
 public class Conn
 {
-  public static final String DB_NAME      = "FilesHub";
-  public static final String DB_FILE_PATH = System.getProperty(DB_NAME+".home")+File.separator+DB_NAME+".db"; // File.separator might be double depending on how dbname.home system property is supplied.
+
+  public static final String DB_FILE_PATH = AppInfo.DB_FILE_PATH; 
   
   
   private static Conn instance = null;

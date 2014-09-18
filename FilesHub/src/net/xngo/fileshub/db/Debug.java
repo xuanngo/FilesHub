@@ -1,5 +1,7 @@
 package net.xngo.fileshub.db;
 
+import net.xngo.fileshub.AppInfo;
+
 public class Debug
 {
   private static boolean debug = false;
@@ -20,9 +22,9 @@ public class Debug
    */
   public static boolean activate()
   {
-    String sDebug = System.getProperty(Conn.DB_NAME+".debug");
-    if(sDebug!=null)
-      debug = Boolean.parseBoolean(sDebug);    
+    
+    if(AppInfo.DEBUG!=null)
+      debug = Boolean.parseBoolean(AppInfo.DEBUG);    
     return debug;
   }  
 }
