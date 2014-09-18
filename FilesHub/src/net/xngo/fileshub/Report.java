@@ -165,7 +165,8 @@ public class Report
                             
                             + ".right{margin-left: 2em;}"
                           + "</style>"
-                      + "</head>";
+                      + "</head>"
+                      + "<body>\n";
     
     for(int i=0; i<this.duplicates.size(); i++)
     {
