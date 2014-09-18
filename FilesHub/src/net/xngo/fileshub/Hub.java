@@ -91,7 +91,6 @@ public class Hub
     report.sort();
     report.display();
     report.writeCSV("./results.csv");
-    report.write();
     report.writeHtml("./results.html");
     
     System.out.println("\n===============================================");

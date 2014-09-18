@@ -3,7 +3,6 @@ package net.xngo.fileshub;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Arrays;
-import java.util.Comparator;
 import java.util.Collections;
 import java.io.File;
 import java.io.FileWriter;
@@ -60,6 +59,7 @@ public class Report
     else
       System.out.println("There is no duplicate file.");
   }
+  
   public void writeCSV(String csvFilePath)
   {
     ICsvListWriter listWriter = null;
@@ -105,35 +105,6 @@ public class Report
   }
   
   
-  public void write()
-  {
-    try
-    {
-      FileWriter toDeleteFile = new FileWriter("result_to_delete.txt");
-      FileWriter toDeleteExecutable = new FileWriter("result_to_delete_executable.txt");
-      FileWriter fromDatabaseFile = new FileWriter("result_from_database.txt");
-      BufferedWriter toDeleteFileBuffer = new BufferedWriter(toDeleteFile);
-      BufferedWriter toDeleteFileExecutableBuffer = new BufferedWriter(toDeleteExecutable);
-      BufferedWriter fromDatabaseFileBuffer = new BufferedWriter(fromDatabaseFile);
-      
-      for(int i=0; i<this.duplicates.size(); i++)
-      {
-        toDeleteFileExecutableBuffer.write(this.printDelete(this.doubleQuote(this.duplicates.get(i).toAddDoc.canonical_path))+"\n");
-        toDeleteFileBuffer.write(this.doubleQuote(this.duplicates.get(i).toAddDoc.canonical_path)+"\n");
-        fromDatabaseFileBuffer.write(this.doubleQuote(this.duplicates.get(i).shelfDoc.canonical_path)+"\n");
-      } 
-      
-      toDeleteFileBuffer.close();
-      fromDatabaseFileBuffer.close();
-      toDeleteFileExecutableBuffer.close();
-    }
-    catch(IOException e)
-    {
-      e.printStackTrace();
-    }
-    
-  }
-
   public void progressPrint(String s)
   {
     for(int i=0; i<s.length(); i++)
