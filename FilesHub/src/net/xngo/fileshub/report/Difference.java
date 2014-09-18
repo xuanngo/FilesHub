@@ -1,4 +1,4 @@
-package net.xngo.fileshub;
+package net.xngo.fileshub.report;
 
 import java.util.LinkedList;
 

@@ -5,9 +5,9 @@ import java.util.List;
 import java.util.ArrayList;
 
 import net.xngo.fileshub.Utils;
+import net.xngo.fileshub.report.Report;
 import net.xngo.fileshub.struct.Document;
 import net.xngo.fileshub.db.Shelf;
-import net.xngo.fileshub.Report;
 
 /**
  * Manage documents.

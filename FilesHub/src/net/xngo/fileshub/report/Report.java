@@ -1,4 +1,4 @@
-package net.xngo.fileshub;
+package net.xngo.fileshub.report;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,12 +10,15 @@ import java.io.IOException;
 import java.io.BufferedWriter;
 
 
+
+
 import org.supercsv.io.CsvListWriter;
 import org.supercsv.io.ICsvListWriter;
 import org.supercsv.prefs.CsvPreference;
 import org.supercsv.cellprocessor.ift.CellProcessor;
 import org.supercsv.cellprocessor.constraint.NotNull;
 
+import net.xngo.fileshub.Utils;
 import net.xngo.fileshub.struct.Document;
 import net.xngo.fileshub.struct.Duplicate;
 

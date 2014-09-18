@@ -9,6 +9,7 @@ import java.util.Set;
 
 import net.xngo.fileshub.db.Debug;
 import net.xngo.fileshub.db.Manager;
+import net.xngo.fileshub.report.Report;
 import net.xngo.fileshub.struct.Document;
 import net.xngo.utils.java.time.ElapsedTime;
 import net.xngo.utils.java.io.FileUtils;
