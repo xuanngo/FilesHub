@@ -155,7 +155,7 @@ public class Report
     String html = "<html><head><style>";
     html += ".line-even, .line-odd{border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D3D3D3;}";
     html += ".line-even{background-color: rgb(220, 240, 251);}";
-    html += ".line-even .delete, .line-odd .insert{background-color: rgb(255, 201, 42);}";
+    html += ".line-even .delete, .line-even .insert{background-color: rgb(255, 201, 42);}";
     html += ".line-odd{background-color: rgb(115, 175, 173);}";
     html += ".line-odd .delete, .line-odd .insert{background-color: rgb(217, 133, 60);}";
     //html += ".delete, .insert{background-color: rgb(252, 173, 180);}";
