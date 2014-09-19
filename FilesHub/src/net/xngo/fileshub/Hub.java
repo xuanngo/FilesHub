@@ -34,14 +34,14 @@ public class Hub
   {
     // Display total number of files to process.
     Report report = new Report();
-    report.displayTotalFiles(listOfFiles.size());
+    Report.FILES_TO_PROCESS = listOfFiles.size();
+    report.displayTotalFilesToProcess();
       
     
     // Preparation to display the progress.
-    long totalSize = FileUtils.totalSize(listOfFiles);
-    String totalReadableSize = FileUtils.readableSize(totalSize);
+    Report.FILES_SIZE = FileUtils.totalSize(listOfFiles);
+    String totalReadableSize = FileUtils.readableSize(Report.FILES_SIZE);
     long size = 0;
-    long totalFiles = listOfFiles.size();
     int whenToDisplay = 5;
     
     ElapsedTime elapsedTime = new ElapsedTime();
@@ -81,22 +81,24 @@ public class Hub
       i++;
       if( (i%whenToDisplay)==0)
       {
-        report.progressPrint(String.format("%s [%s] [%d/%d]", Math.getReadablePercentage(size, totalSize), totalReadableSize, i, totalFiles));
+        report.progressPrint(String.format("%s [%s] [%d/%d]", Math.getReadablePercentage(size, Report.FILES_SIZE), totalReadableSize, i, Report.FILES_TO_PROCESS));
       }
       
     }
-    report.progressPrint(String.format("100.00%% [%s] [%d/%d]", totalReadableSize, totalFiles, totalFiles));// Last display because of the remainder of modulus.
+    report.progressPrint(String.format("100.00%% [%s] [%d/%d]", totalReadableSize, Report.FILES_TO_PROCESS, Report.FILES_TO_PROCESS));// Last display because of the remainder of modulus.
     System.out.println();
     elapsedTime.stop();
+    Report.START_TIME = elapsedTime.getStartTime();
+    Report.END_TIME = elapsedTime.getEndTime();
+    Report.ELAPSED_TIME = elapsedTime.getElapsedTime();
     
     report.sort();
     report.display();
     report.writeCSV("./results.csv");   // Use ./XYZ so it writes results to the executed location.
     report.writeHtml("./results.html");
     
-    System.out.println("\n===============================================");
-    elapsedTime.display();
-    System.out.println("===============================================");    
+    report.displaySummary();
+
   }
   
   public void update()

@@ -162,7 +162,8 @@ public class Manager
     List<Document> missingFileList = new ArrayList<Document>();
     
     Report report = new Report();
-    report.displayTotalFiles(docList.size());
+    Report.FILES_TO_PROCESS = docList.size();
+    report.displayTotalFilesToProcess();    
     
     // Variables for print progress.
     int whenToDisplay = 100;
