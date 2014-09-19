@@ -88,7 +88,7 @@ public class Chronometer
   {
     for(int i=0; i<this.periods.size()-1; i++) // The 1st period is discard because it is the start.
     {
-      System.out.println(String.format("%s ran for %,d ms.", this.getStopName(i+1), this.getStop(i+1)));
+      System.out.println(String.format("%s ran for %s", this.getStopName(i+1), this.formatTime(this.getStop(i+1))));
     }
   }
   
