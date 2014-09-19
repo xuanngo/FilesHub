@@ -54,6 +54,8 @@ public class Chronometer
    */
   public final long getStop(int stop)
   {
+    if(stop<1) throw new RuntimeException("Stop can't be less than 1. The 1st stop is 1.");
+    
     long start = this.periods.get(stop-1).time().getTimeInMillis();
     long end   = this.periods.get(stop).time().getTimeInMillis();
     return end-start;
@@ -75,10 +77,9 @@ public class Chronometer
    ************************************************************************************************************/
   public void display()
   {
-    for(int i=1; i<this.periods.size(); i++)
+    for(int i=0; i<this.periods.size()-1; i++) // The 1st period is discard because it is the start.
     {
-System.out.println(String.format("%d / %d",i, this.periods.size()));      
-      System.out.println(String.format("%s ran for %,d ms.", this.getStopName(i), this.getStop(i+1)));
+      System.out.println(String.format("%s ran for %,d ms.", this.getStopName(i+1), this.getStop(i+1)));
     }
   }
   
