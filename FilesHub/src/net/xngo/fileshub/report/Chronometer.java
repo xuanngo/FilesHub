@@ -46,6 +46,15 @@ public class Chronometer
   {
     this.stop("");
   }
+  
+  /**
+   * Return the total number of stops.
+   * @return
+   */
+  public int getStopSize()
+  {
+    return this.periods.size()+1;
+  }
 
   /**
    * The 1st stop is 1.
