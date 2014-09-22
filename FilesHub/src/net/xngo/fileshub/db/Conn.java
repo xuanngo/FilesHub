@@ -32,7 +32,7 @@ public class Conn
     if(instance == null)
     {
       instance = new Conn();
-      instance.checkWritePermission();
+//      instance.checkWritePermission();
       instance.connectToSqlite();
     }
     return instance;    
