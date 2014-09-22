@@ -79,18 +79,19 @@ public class Report
   public void constructSummary()
   {
     this.summary.append("========================================================\n");
+    this.summary.append("Summary:\n");
     
-    this.summary.append(String.format("%d files processed.\n", Report.FILES_TO_PROCESS));
-    this.summary.append(String.format("%d duplicate file(s) found totalling %s.\n", DUPLICATE_FILES, FileUtils.readableSize(DUPLICATE_FILES_SIZE)));
+    this.summary.append(String.format("\t%d files processed.\n", Report.FILES_TO_PROCESS));
+    this.summary.append(String.format("\t%d duplicate file(s) found totalling %s.\n", DUPLICATE_FILES, FileUtils.readableSize(DUPLICATE_FILES_SIZE)));
     
     // Start at YYYY-MM-DD HH:MM:SS.mmm
-    this.summary.append(String.format("Start at %s\n", Report.START_TIME));
+    this.summary.append(String.format("\tStart at %s\n", Report.START_TIME));
     
     // End at YYYY-MM-DD HH:MM:SS.mmm
-    this.summary.append(String.format("End   at %s\n", Report.END_TIME));
+    this.summary.append(String.format("\tEnd   at %s\n", Report.END_TIME));
 
     // Ran for HH:MM:SS.mmm (milliseconds)
-    this.summary.append(String.format("Ran  for %s\n", Report.ELAPSED_TIME));    
+    this.summary.append(String.format("\tRan  for %s\n", Report.ELAPSED_TIME));    
   }
   
   public void displaySummary()
