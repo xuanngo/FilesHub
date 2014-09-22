@@ -46,7 +46,7 @@ public class Hub
     
     ElapsedTime elapsedTime = new ElapsedTime();
     elapsedTime.start();
-    int i=1;
+    int i=1; // 1 because progress % is print after some files are processed.
     for (File file : listOfFiles) 
     {
       Debug.msg(String.format("Adding [%s]", file.getAbsolutePath()));
