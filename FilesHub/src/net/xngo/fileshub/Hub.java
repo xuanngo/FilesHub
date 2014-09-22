@@ -30,7 +30,7 @@ public class Hub
     this.manager.createDbStructure();
   }
   
-  public void addFiles(Set<File> listOfFiles)
+  public void addFiles(Set<File> listOfFiles, List<File> addPaths)
   {
     // Display total number of files to process.
     Report report = new Report();
