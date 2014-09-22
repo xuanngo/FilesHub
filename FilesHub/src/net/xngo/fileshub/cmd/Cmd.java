@@ -64,7 +64,7 @@ public class Cmd
     }
     catch(ParameterException e)
     {
-      System.out.println("\nERROR: Wrong usage!");
+      System.out.println("\nError: Wrong usage!");
       System.out.println(e.getMessage());
       if(Debug.activate()){e.printStackTrace();}
       System.out.println("====================================");
@@ -75,7 +75,7 @@ public class Cmd
 
   private void displayUsage(JCommander jc)
   {
-    System.out.println("\nERROR: Wrong usage!\n");
+    System.out.println("\nError: Wrong usage!\n");
     jc.usage();     
   }
   
