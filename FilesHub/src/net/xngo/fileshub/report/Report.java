@@ -54,7 +54,6 @@ public class Report
   {
     if(this.duplicates.size()>0)
     {
-
       System.out.println("Duplicate files:");
       System.out.println("=================");
       
@@ -81,8 +80,8 @@ public class Report
     this.summary.append("========================================================\n");
     this.summary.append("Summary:\n");
     
-    this.summary.append(String.format("\t%d files processed.\n", Report.FILES_TO_PROCESS));
-    this.summary.append(String.format("\t%d duplicate file(s) found totalling %s.\n", DUPLICATE_FILES, FileUtils.readableSize(DUPLICATE_FILES_SIZE)));
+    this.summary.append(String.format("\t%,d files processed.\n", Report.FILES_TO_PROCESS));
+    this.summary.append(String.format("\t%,d duplicate file(s) found totalling %s.\n", DUPLICATE_FILES, FileUtils.readableSize(DUPLICATE_FILES_SIZE)));
     
     // Start at YYYY-MM-DD HH:MM:SS.mmm
     this.summary.append(String.format("\tStart at %s\n", Report.START_TIME));
@@ -163,9 +162,6 @@ public class Report
   
   public void writeHtml(String filename)
   {
-    Chronometer chrono = new Chronometer();
-    
-chrono.start();
     StringBuilder divLines = new StringBuilder();
     for(int i=0; i<this.duplicates.size(); i++)
     {
@@ -181,15 +177,10 @@ chrono.start();
       else
         divLines.append(String.format("<div class=\"line-odd\">%s<br/>%s</div>\n", leftSpan, rightSpan));  // Add \n so that user can process the HTML output.
     }
-    
-chrono.stop("DIV");    
 
     String html = FileUtils.load(AppInfo.HTML_TEMPLATE_PATH);
     html = html.replace("<!-- @SUMMARY -->", this.summary.toString());
     html = html.replace("<!-- @DIFF -->", divLines);
-
-chrono.stop("REPLACE");
-chrono.display();
     
     try
     {

@@ -35,6 +35,8 @@ public class Hub
   
   public void addFiles(Set<File> listOfFiles, List<File> addPaths)
   {
+    AppInfo.chrono.stop("Get all files to process");
+    
     // Display total number of files to process.
     Report report = new Report();
     Report.FILES_TO_PROCESS = listOfFiles.size();
@@ -47,8 +49,7 @@ public class Hub
     long size = 0;
     int whenToDisplay = 5;
     
-    ElapsedTime elapsedTime = new ElapsedTime();
-    elapsedTime.start();
+    AppInfo.chrono.stop("Get total file size");
     int i=1; // 1 because progress % is print after some files are processed.
     for (File file : listOfFiles) 
     {
@@ -90,17 +91,25 @@ public class Hub
     }
     report.progressPrint(String.format("100.00%% [%s] [%d/%d]", totalReadableSize, Report.FILES_TO_PROCESS, Report.FILES_TO_PROCESS));// Last display because of the remainder of modulus.
     System.out.println();
-    elapsedTime.stop();
-    Report.START_TIME = elapsedTime.getStartTime();
-    Report.END_TIME = elapsedTime.getEndTime();
-    Report.ELAPSED_TIME = elapsedTime.getElapsedTime();
+    AppInfo.chrono.stop("Add files");
+    
+    Report.START_TIME = AppInfo.chrono.getStartTime();
+    Report.END_TIME = AppInfo.chrono.getEndTime();
+    Report.ELAPSED_TIME = AppInfo.chrono.getTotalRuntimeString();
     
     report.sort();
+    AppInfo.chrono.stop("Sort duplicates");
     report.displayDuplicates();
+    AppInfo.chrono.stop("Display duplicates");
     report.constructSummary();    
     report.writeCSV(String.format("./results_%s.csv", this.getResultsSuffix(addPaths)));   // Use ./XYZ so it writes results to the executed location.
+    AppInfo.chrono.stop("Write CSV file");
     report.writeHtml(String.format("./results_%s.html", this.getResultsSuffix(addPaths)));
+    AppInfo.chrono.stop("Write HTML file");
     report.displaySummary();
+    AppInfo.chrono.display();
+    
+    //try { Thread.sleep(3*1000*60); } catch(InterruptedException ex) { ex.printStackTrace(); }
 
   }
   

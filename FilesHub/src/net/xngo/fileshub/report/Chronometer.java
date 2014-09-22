@@ -6,6 +6,8 @@ import java.util.Date;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
+import net.xngo.fileshub.AppInfo;
+
 /**
  * Measure time elapsed.
  * @author Xuan Ngo
@@ -29,6 +31,7 @@ public class Chronometer
   }
   
   private ArrayList<Period> periods = new ArrayList<Period>();
+  private int maxPeriodNameLength = 0;
   
   public Chronometer(){}
  
@@ -40,6 +43,9 @@ public class Chronometer
   public void stop(String name)
   {
     this.periods.add(new Period(name, Calendar.getInstance()));
+    
+    if(name.length() > maxPeriodNameLength)
+      maxPeriodNameLength = name.length();
   }
   
   public void stop()
@@ -51,55 +57,66 @@ public class Chronometer
    * Return the total number of stops.
    * @return
    */
-  public int getStopSize()
+  public int getNumberOfStops()
   {
-    return this.periods.size()+1;
+    return this.periods.size();
+  }  
+  
+  public String getStartTime()
+  {
+    return this.getDateTimeFormatted(this.periods.get(0).time());
+  }
+  public String getEndTime()
+  {
+    return this.getDateTimeFormatted(this.periods.get(this.periods.size()-1).time());
   }
 
-  /**
-   * The 1st stop is 1.
-   * @param stop
-   * @return
-   */
-  public final long getStop(int stop)
+  
+  public long getRuntime(int fromStopA, int toStopB)
   {
-    if(stop<1) throw new RuntimeException("Stop can't be less than 1. The 1st stop is 1.");
+    if(fromStopA<0) throw new RuntimeException(String.format("%d can't be less than 1.", fromStopA));
+    if(toStopB>this.periods.size()) throw new RuntimeException(String.format("%d can't be bigger than %d.", toStopB, this.periods.size()));
     
-    long start = this.periods.get(stop-1).time().getTimeInMillis();
-    long end   = this.periods.get(stop).time().getTimeInMillis();
-    return end-start;
+    long start = this.periods.get(fromStopA).time().getTimeInMillis();
+    long end   = this.periods.get(toStopB).time().getTimeInMillis();
+    return end-start;    
   }
 
-  /**
-   * The 1st stop is 1.
-   * @param stop
-   * @return
-   */
-  public String getStopName(int stop)
+  public String getRuntimeName(int fromStopA, int toStopB)
   {
-    return this.periods.get(stop).name();
+    if(fromStopA<0) throw new RuntimeException(String.format("%d can't be less than 1.", fromStopA));
+    if(toStopB>this.periods.size()) throw new RuntimeException(String.format("%d can't be bigger than %d.", toStopB, this.periods.size()));
+    
+    return this.periods.get(toStopB).name();
   }
   
+  public String getRuntimeString(int fromStopA, int toStopB)
+  {
+    return this.formatTime(this.getRuntime(fromStopA, toStopB));
+  }
   
+  public String getTotalRuntimeString()
+  {
+    return this.getRuntimeString(0, this.periods.size()-1);
+  }
+
+  public int getMaxPeriodNameLength()
+  {
+    return this.maxPeriodNameLength;
+  }
   /************************************************************************************************************
    *                                    Superfluous functions
    ************************************************************************************************************/
   public void display()
   {
-    for(int i=0; i<this.periods.size()-1; i++) // The 1st period is discard because it is the start.
+    System.out.println("========================================================");
+    System.out.println("Chronometer periods:");
+    int i=0;
+    for(; i<this.periods.size()-1; i++) // The 1st period is discard because it is the start.
     {
-      System.out.println(String.format("%s ran for %s", this.getStopName(i+1), this.formatTime(this.getStop(i+1))));
+      System.out.println(String.format("\t[%02d] %"+AppInfo.chrono.getMaxPeriodNameLength()+"s = %s", i+1, this.getRuntimeName(i, i+1), this.getRuntimeString(i, i+1)));
     }
-  }
-  
-  /**
-   * The 1st stop is 1.
-   * @param stop
-   * @return
-   */
-  public String getFormattedStop(int stop)
-  {
-    return this.formatTime(this.getStop(stop));
+    System.out.println(String.format("\t[%02d] %"+AppInfo.chrono.getMaxPeriodNameLength()+"s = %s", i+1, "[Total]", this.getTotalRuntimeString()));
   }
   
   /**
