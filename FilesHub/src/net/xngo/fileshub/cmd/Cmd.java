@@ -32,7 +32,7 @@ public class Cmd
       
       if(options.addPaths!=null)
       {
-        hub.addFiles(options.getAllUniqueFiles());
+        hub.addFiles(options.getAllUniqueFiles(), options.addPaths);
       }
       else if(options.update)
       {
