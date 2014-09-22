@@ -11,11 +11,6 @@ import java.io.IOException;
 import java.io.BufferedWriter;
 
 
-
-
-
-
-
 import org.supercsv.io.CsvListWriter;
 import org.supercsv.io.ICsvListWriter;
 import org.supercsv.prefs.CsvPreference;
@@ -31,9 +26,9 @@ import net.xngo.utils.java.io.FileUtils;
 public class Report
 {
   public static int  FILES_TO_PROCESS      = 0;
-  public static long FILES_SIZE            = 0;
+  public static long FILES_SIZE            = 0; // in bytes.
   public static int  DUPLICATE_FILES       = 0;
-  public static long DUPLICATE_FILES_SIZE  = 0;
+  public static long DUPLICATE_FILES_SIZE  = 0; // in bytes.
   
   public static String START_TIME   = "";
   public static String END_TIME     = "";
@@ -55,7 +50,7 @@ public class Report
     Collections.sort(this.duplicates);
   }
   
-  public void display()
+  public void displayDuplicates()
   {
     if(this.duplicates.size()>0)
     {
@@ -71,7 +66,8 @@ public class Report
         totalDuplicateSize += file.length();
         System.out.println(dup.toAddDoc.canonical_path);
       }
-      
+      DUPLICATE_FILES = this.duplicates.size();
+      DUPLICATE_FILES_SIZE = totalDuplicateSize;
       System.out.println("========================================================");
       this.setDuplicateSizeString(this.duplicates.size(), totalDuplicateSize);
       System.out.println(this.getDuplicateSizeString());
@@ -80,11 +76,12 @@ public class Report
       System.out.println("There is no duplicate file.");
   }
   
-  public void displaySummary()
+  public void constructSummary()
   {
     this.summary.append("========================================================\n");
     
     this.summary.append(String.format("%d files processed.\n", Report.FILES_TO_PROCESS));
+    this.summary.append(String.format("%d duplicate file(s) found totalling %s.\n", DUPLICATE_FILES, FileUtils.readableSize(DUPLICATE_FILES_SIZE)));
     
     // Start at YYYY-MM-DD HH:MM:SS.mmm
     this.summary.append(String.format("Start at %s\n", Report.START_TIME));
@@ -93,10 +90,12 @@ public class Report
     this.summary.append(String.format("End   at %s\n", Report.END_TIME));
 
     // Ran for HH:MM:SS.mmm (milliseconds)
-    this.summary.append(String.format("Ran  for %s\n", Report.ELAPSED_TIME));
-    
+    this.summary.append(String.format("Ran  for %s\n", Report.ELAPSED_TIME));    
+  }
+  
+  public void displaySummary()
+  {
     System.out.println(this.summary.toString());
-    
   }
   
   public void writeCSV(String csvFilePath)

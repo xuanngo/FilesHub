@@ -96,7 +96,8 @@ public class Hub
     Report.ELAPSED_TIME = elapsedTime.getElapsedTime();
     
     report.sort();
-    report.display();
+    report.displayDuplicates();
+    report.constructSummary();    
     report.writeCSV(String.format("./results_%s.csv", this.getResultsSuffix(addPaths)));   // Use ./XYZ so it writes results to the executed location.
     report.writeHtml(String.format("./results_%s.html", this.getResultsSuffix(addPaths)));
     report.displaySummary();
