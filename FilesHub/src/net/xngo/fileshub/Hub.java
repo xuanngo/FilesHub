@@ -2,7 +2,10 @@ package net.xngo.fileshub;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Set;
@@ -94,9 +97,8 @@ public class Hub
     
     report.sort();
     report.display();
-    report.writeCSV("./results.csv");   // Use ./XYZ so it writes results to the executed location.
-    report.writeHtml("./results.html");
-    
+    report.writeCSV(String.format("./results_%s.csv", this.getResultsSuffix(addPaths)));   // Use ./XYZ so it writes results to the executed location.
+    report.writeHtml(String.format("./results_%s.html", this.getResultsSuffix(addPaths)));
     report.displaySummary();
 
   }
@@ -141,4 +143,43 @@ public class Hub
     }
   }
   
+  /****************************************************************************
+   * 
+   *                             PRIVATE FUNCTIONS
+   * 
+   ****************************************************************************/  
+  
+  private String getResultsSuffix(List<File> addPaths)
+  {
+    StringBuilder directories = new StringBuilder();
+    for(File path: addPaths)
+    {
+      if(path.exists())
+      {
+        File canonicalPath = null;
+        try
+        {
+          canonicalPath = path.getCanonicalFile();
+        }
+        catch(IOException ex) { ex.printStackTrace(); }
+        
+        if(canonicalPath.isDirectory())
+        {
+          if(!canonicalPath.getName().isEmpty())
+          {
+            directories.append(canonicalPath.getName());
+            directories.append("_");
+          }
+        }
+      }
+    }
+    
+    String timestamp = System.currentTimeMillis()+"";
+    
+    if(directories.toString().isEmpty())
+      return timestamp;
+    else
+      return directories.toString()+timestamp;
+
+  }
 }
