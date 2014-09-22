@@ -47,17 +47,16 @@
 	
 	<target name="delete_files">
 		<delete file="${latest.release.directory}/fileshub.db"/><!-- Guarantee no database will be touched when upgraded. -->
-		<delete file="${latest.release.directory}/results.csv"/>
-		<delete file="${latest.release.directory}/results.html"/>
-		
-		<delete file="./results.csv"/>
-		<delete file="./results.html"/>
 		
 		<delete file="./test/fileshub.db"/>
-    <delete file="./test/results.csv"/>
-		<delete file="./test/results.html"/>
-		
 		<delete dir="./test/test-output"/>
+	  
+    	<!-- Delete all results*.csv & results*.html -->
+    <delete>
+      <fileset dir="./" includes="**/results_*.csv"/>
+      <fileset dir="./" includes="**/results_*.html"/>
+    </delete>   
+
 	</target>
 	
 </project>
