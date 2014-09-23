@@ -8,6 +8,7 @@ import java.util.ArrayList;
 
 import net.xngo.fileshub.struct.Document;
 import net.xngo.fileshub.report.Chronometer;
+import net.xngo.utils.java.db.DbUtils;
 
 /**
  * Class that manipulate documents.
@@ -162,6 +163,7 @@ public class Shelf
       this.delete.setInt(1, duid);
       
       rowsAffected = this.delete.executeUpdate();
+      DbUtils.close(this.delete);      
     }
     catch(SQLException e)
     {
@@ -205,6 +207,7 @@ long runTime = c.getRuntime(0, c.getNumberOfStops()-1);
 if(runTime>10)
   System.out.println(String.format("INSERT = %,dms | Shelf.insertDoc()=%s", c.getRuntime(0, c.getNumberOfStops()-1), doc.canonical_path));
       
+      DbUtils.close(resultSet);
     }
     catch(SQLException e)
     {
@@ -219,17 +222,7 @@ if(runTime>10)
     }
     finally
     {
-      try
-      {
-        if(this.insert!=null)
-          this.insert.close();
-      }
-      catch(SQLException ex) 
-      {
-        RuntimeException rException = new RuntimeException();
-        rException.setStackTrace(ex.getStackTrace());
-        throw rException;
-      }
+      DbUtils.close(this.insert);
     }  
     return generatedKey;
   }
@@ -258,6 +251,8 @@ if(runTime>10)
       
       // update row.
       rowAffected = this.update.executeUpdate();
+
+      DbUtils.close(this.update);         
     }
     catch(SQLException e)
     {
@@ -328,6 +323,8 @@ if(runTime>10)
         
         docList.add(doc);
       }
+      DbUtils.close(resultSet);
+      DbUtils.close(this.select);      
     }
     catch(SQLException e)
     {

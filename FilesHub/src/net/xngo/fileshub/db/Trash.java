@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import net.xngo.fileshub.db.Conn;
 import net.xngo.fileshub.report.Chronometer;
 import net.xngo.fileshub.struct.Document;
+import net.xngo.utils.java.db.DbUtils;
 
 /**
  * Implement functionalities related to duplicate documents(files) in database.
@@ -215,6 +216,8 @@ public class Trash
       this.delete.setString(i++, doc.canonical_path);
       
       rowsAffected = this.delete.executeUpdate();
+
+      DbUtils.close(this.delete);        
     }
     catch(SQLException e)
     {
@@ -244,6 +247,8 @@ public class Trash
       if(resultSet.next())
       {
         int count = resultSet.getInt(1);
+        DbUtils.close(resultSet);
+        DbUtils.close(this.select);          
         if(count>0)
           return true;
         else
@@ -281,6 +286,9 @@ public class Trash
         returnValue = resultSet.getString(1);
       }
       
+
+      DbUtils.close(resultSet);
+      DbUtils.close(this.select);      
       if(returnValue == null)
       {
         String e = String.format("Result not found: SELECT %s FROM %s WHERE %s = %s", returnColumn, this.tablename, findColumn, findValue);
@@ -335,6 +343,8 @@ if(runTime>10)
         doc.hash            = resultSet.getString(j++);
         doc.comment         = resultSet.getString(j++);
         
+        DbUtils.close(resultSet);
+        DbUtils.close(this.select);        
         return doc;
       }
       else
@@ -391,6 +401,8 @@ long runTime = c.getRuntime(0, c.getNumberOfStops()-1);
 if(runTime>10)
   System.out.println(String.format("INSERT = %,dms | Trash.insertDoc()=%s", c.getRuntime(0, c.getNumberOfStops()-1), doc.canonical_path));
 
+      DbUtils.close(resultSet);
+      DbUtils.close(this.insert);
     }
     catch(SQLException e)
     {
