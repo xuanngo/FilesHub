@@ -47,7 +47,7 @@ public class Hub
     Report.FILES_SIZE = FileUtils.totalSize(listOfFiles);
     String totalReadableSize = FileUtils.readableSize(Report.FILES_SIZE);
     long size = 0;
-    int whenToDisplay = 5;
+    int whenToDisplay = 11;
     
     AppInfo.chrono.stop("Get total file size");
     int i=1; // 1 because progress % is print after some files are processed.

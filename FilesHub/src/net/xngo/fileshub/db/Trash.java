@@ -199,7 +199,7 @@ public class Trash
    *                             PRIVATE FUNCTIONS
    * 
    ****************************************************************************/
-  
+ 
   private int deleteDoc(Document doc)
   {
     // Add conditions that make Document unique.
