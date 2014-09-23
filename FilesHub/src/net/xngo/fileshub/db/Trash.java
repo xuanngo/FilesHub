@@ -24,26 +24,7 @@ public class Trash
   private PreparedStatement update = null;
   private PreparedStatement delete = null;
  
-  /**
-   * @deprecated This is bad. Use addDoc() instead.
-   * Add file if it doesn't exist.
-   * @param duid Document UID.
-   * @param hash
-   * @param file
-   * @return Duplicate UID added. Otherwise, 0.
-   */
-  public int addFile(final Document doc)
-  {
-    int generatedKey = 0;
-    
-    if(!this.isSameFile(doc.canonical_path))
-    {// File was never processed before.
-      generatedKey = this.insertDoc(doc);
-    }
-    
-    return generatedKey;
-  }
-  
+ 
   public void createTable()
   {
     // Create table.
