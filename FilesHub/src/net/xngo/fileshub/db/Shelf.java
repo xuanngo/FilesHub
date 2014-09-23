@@ -124,7 +124,7 @@ public class Shelf
    */
   public int getTotalDocs()
   {
-    final String query = String.format("SELECT COUNT(*) FROM %s", this.tablename);
+    final String query = "SELECT COUNT(*) FROM " + this.tablename;
     
     try
     {

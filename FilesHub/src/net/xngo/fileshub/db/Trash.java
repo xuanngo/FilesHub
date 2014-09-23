@@ -81,7 +81,7 @@ public class Trash
    */
   public int getTotalDocs()
   {
-    final String query = "SELECT COUNT(*) FROM "+this.tablename;
+    final String query = "SELECT COUNT(*) FROM " + this.tablename;
     
     try
     {
