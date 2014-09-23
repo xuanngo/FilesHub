@@ -39,6 +39,9 @@ public class Report
   private ArrayList<Duplicate> duplicates = new ArrayList<Duplicate>();
   private String totalDuplicateSizeString = "";
   
+  
+  public Console console = new Console();
+  
   public void addDuplicate(Document toAddDoc, Document shelfDoc)
   {
     this.duplicates.add(new Duplicate(toAddDoc, shelfDoc));
@@ -90,7 +93,11 @@ public class Report
     this.summary.append(String.format("\tEnd   at %s\n", Report.END_TIME));
 
     // Ran for HH:MM:SS.mmm (milliseconds)
-    this.summary.append(String.format("\tRan  for %s\n", Report.ELAPSED_TIME));    
+    this.summary.append(String.format("\tRan  for %s\n", Report.ELAPSED_TIME));
+
+    // Ran for HH:MM:SS.mmm (milliseconds)
+    this.summary.append(String.format("\t%s\n", this.getRAMUsage()));
+    
   }
   
   public void displaySummary()
@@ -143,20 +150,9 @@ public class Report
     return processors;
   }
   
-  
-  public void progressPrint(String s)
-  {
-    for(int i=0; i<s.length(); i++)
-    {
-      System.out.print('\b');
-    }
-    System.out.print(s);
-  }
-  
-  
   public void displayTotalFilesToProcess()
   {
-    System.out.println(String.format("Files to process = %,d", Report.FILES_TO_PROCESS));
+    System.out.println(String.format("File(s) to process = %,d", Report.FILES_TO_PROCESS));
   }
   
   
@@ -228,11 +224,20 @@ public class Report
   
   private void setDuplicateSizeString(int numOfFiles, long size)
   {
-    this.totalDuplicateSizeString = String.format("Total size of %s duplicate files = %s.", numOfFiles, Utils.readableFileSize(size));
+    this.totalDuplicateSizeString = String.format("Total size of %s duplicate file(s) = %s.", numOfFiles, Utils.readableFileSize(size));
   }
   private String getDuplicateSizeString()
   {
     return this.totalDuplicateSizeString;
+  }
+  
+  public String getRAMUsage()
+  {
+    Runtime runtime = Runtime.getRuntime();
+    long usedMemory = runtime.totalMemory()-runtime.freeMemory();
+    return String.format("RAM: %s / %s Max=%s", FileUtils.readableSize(usedMemory           ), 
+                                                FileUtils.readableSize(runtime.totalMemory()), 
+                                                FileUtils.readableSize(runtime.maxMemory()) );
   }
   
 }

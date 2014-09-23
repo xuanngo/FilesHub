@@ -85,11 +85,15 @@ public class Hub
       i++;
       if( (i%whenToDisplay)==0)
       {
-        report.progressPrint(String.format("%s [%s] [%d/%d]", Math.getReadablePercentage(size, Report.FILES_SIZE), totalReadableSize, i, Report.FILES_TO_PROCESS));
+        report.console.printProgress(String.format("%s [%s] [%d/%d] %s", Math.getReadablePercentage(size, Report.FILES_SIZE), 
+                                                                          totalReadableSize, 
+                                                                          i, 
+                                                                          Report.FILES_TO_PROCESS,
+                                                                          report.getRAMUsage()));
       }
       
     }
-    report.progressPrint(String.format("100.00%% [%s] [%d/%d]", totalReadableSize, Report.FILES_TO_PROCESS, Report.FILES_TO_PROCESS));// Last display because of the remainder of modulus.
+    report.console.printProgress(String.format("100.00%% [%s] [%d/%d]", totalReadableSize, Report.FILES_TO_PROCESS, Report.FILES_TO_PROCESS));// Last display because of the remainder of modulus.
     System.out.println();
     AppInfo.chrono.stop("Add files");
     
@@ -109,8 +113,6 @@ public class Hub
     report.displaySummary();
     AppInfo.chrono.display();
     
-    //try { Thread.sleep(3*1000*60); } catch(InterruptedException ex) { ex.printStackTrace(); }
-
   }
   
   public void update()

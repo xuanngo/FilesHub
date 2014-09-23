@@ -38,11 +38,17 @@ public class Conn
     return instance;    
   }
   
+  /**
+   * Executes the given SQL statement, which may be an INSERT, UPDATE, or DELETE statement or 
+   *    an SQL statement that returns nothing, such as an SQL DDL statement.
+   * @param query
+   */
   public void executeUpdate(final String query)
   {
     try
     {
-      statement.executeUpdate(query);
+      this.statement.executeUpdate(query);
+      this.statement.close();
     }
     catch(SQLException e)
     {

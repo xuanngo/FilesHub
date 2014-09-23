@@ -5,6 +5,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import net.xngo.fileshub.db.Conn;
+import net.xngo.fileshub.report.Chronometer;
 import net.xngo.fileshub.struct.Document;
 
 /**
@@ -334,7 +335,14 @@ public class Trash
       int i=1;
       this.select.setString(i++, value);
       
+Chronometer c = new Chronometer();
+c.start();       
       ResultSet resultSet =  this.select.executeQuery();
+c.stop();
+long runTime = c.getRuntime(0, c.getNumberOfStops()-1);
+if(runTime>10)
+  System.out.println(String.format("SELECT = %,dms | Trash.findDocBy()=%s", c.getRuntime(0, c.getNumberOfStops()-1), query));
+
       if(resultSet.next())
       {
         doc = new Document();
@@ -387,7 +395,8 @@ public class Trash
       this.insert.setString(i++, doc.hash);
       this.insert.setString(i++, doc.comment);
 
-      
+Chronometer c = new Chronometer();
+c.start();      
       // Insert row.
       this.insert.executeUpdate();
       ResultSet resultSet =  this.insert.getGeneratedKeys();
@@ -396,7 +405,11 @@ public class Trash
         generatedKey = resultSet.getInt(1);
  
       }
-      
+c.stop();
+long runTime = c.getRuntime(0, c.getNumberOfStops()-1);
+if(runTime>10)
+  System.out.println(String.format("INSERT = %,dms | Trash.insertDoc()=%s", c.getRuntime(0, c.getNumberOfStops()-1), doc.canonical_path));
+
     }
     catch(SQLException e)
     {

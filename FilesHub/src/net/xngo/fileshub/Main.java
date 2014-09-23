@@ -15,6 +15,8 @@ public class Main
   {
     AppInfo.chrono.start();
     Cmd cmd = new Cmd(args);
+    
+    //try { Thread.sleep(3*1000*60); } catch(InterruptedException ex) { ex.printStackTrace(); }
   }
  
 }
