@@ -35,7 +35,7 @@ public class Hub
   
   public void addFiles(Set<File> listOfFiles, List<File> addPaths)
   {
-    AppInfo.chrono.stop("Get all files to process");
+    Config.chrono.stop("Get all files to process");
     
     // Display total number of files to process.
     Report report = new Report();
@@ -49,7 +49,7 @@ public class Hub
     long size = 0;
     int whenToDisplay = 11;
     
-    AppInfo.chrono.stop("Get total file size");
+    Config.chrono.stop("Get total file size");
     int i=1; // 1 because progress % is print after some files are processed.
     for (File file : listOfFiles) 
     {
@@ -95,23 +95,23 @@ public class Hub
     }
     report.console.printProgress(String.format("100.00%% [%s] [%d/%d]", totalReadableSize, Report.FILES_TO_PROCESS, Report.FILES_TO_PROCESS));// Last display because of the remainder of modulus.
     System.out.println();
-    AppInfo.chrono.stop("Add files");
+    Config.chrono.stop("Add files");
     
-    Report.START_TIME = AppInfo.chrono.getStartTime();
-    Report.END_TIME = AppInfo.chrono.getEndTime();
-    Report.ELAPSED_TIME = AppInfo.chrono.getTotalRuntimeString();
+    Report.START_TIME   = Config.chrono.getStartTime();
+    Report.END_TIME     = Config.chrono.getEndTime();
+    Report.ELAPSED_TIME = Config.chrono.getTotalRuntimeString();
     
     report.sort();
-    AppInfo.chrono.stop("Sort duplicates");
+    Config.chrono.stop("Sort duplicates");
     report.displayDuplicates();
-    AppInfo.chrono.stop("Display duplicates");
+    Config.chrono.stop("Display duplicates");
     report.constructSummary();    
     report.writeCSV(String.format("./results_%s.csv", this.getResultsSuffix(addPaths)));   // Use ./XYZ so it writes results to the executed location.
-    AppInfo.chrono.stop("Write CSV file");
+    Config.chrono.stop("Write CSV file");
     report.writeHtml(String.format("./results_%s.html", this.getResultsSuffix(addPaths)));
-    AppInfo.chrono.stop("Write HTML file");
+    Config.chrono.stop("Write HTML file");
     report.displaySummary();
-    AppInfo.chrono.display();
+    Config.chrono.display();
     
   }
   

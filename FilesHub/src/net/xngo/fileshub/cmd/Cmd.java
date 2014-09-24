@@ -1,6 +1,6 @@
 package net.xngo.fileshub.cmd;
 
-import net.xngo.fileshub.AppInfo;
+import net.xngo.fileshub.Config;
 import net.xngo.fileshub.Hub;
 import net.xngo.fileshub.cmd.Options;
 import net.xngo.fileshub.cmd.CmdHash;
@@ -20,7 +20,7 @@ public class Cmd
 
     Options options = new Options();
     JCommander jc = new JCommander(options);
-    jc.setProgramName(AppInfo.NAME);
+    jc.setProgramName(Config.NAME);
     
     CmdHash cmdHash = new CmdHash();
     jc.addCommand(CmdHash.name, cmdHash);

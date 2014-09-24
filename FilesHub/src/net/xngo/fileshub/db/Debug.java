@@ -1,6 +1,6 @@
 package net.xngo.fileshub.db;
 
-import net.xngo.fileshub.AppInfo;
+import net.xngo.fileshub.Config;
 
 public class Debug
 {
@@ -23,8 +23,8 @@ public class Debug
   public static boolean activate()
   {
     
-    if(AppInfo.DEBUG!=null)
-      debug = Boolean.parseBoolean(AppInfo.DEBUG);    
+    if(Config.DEBUG!=null)
+      debug = Boolean.parseBoolean(Config.DEBUG);    
     return debug;
   }  
 }

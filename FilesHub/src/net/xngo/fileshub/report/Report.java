@@ -17,7 +17,7 @@ import org.supercsv.prefs.CsvPreference;
 import org.supercsv.cellprocessor.ift.CellProcessor;
 import org.supercsv.cellprocessor.constraint.NotNull;
 
-import net.xngo.fileshub.AppInfo;
+import net.xngo.fileshub.Config;
 import net.xngo.fileshub.Utils;
 import net.xngo.fileshub.struct.Document;
 import net.xngo.fileshub.struct.Duplicate;
@@ -174,7 +174,7 @@ public class Report
         divLines.append(String.format("<div class=\"line-odd\">%s<br/>%s</div>\n", leftSpan, rightSpan));  // Add \n so that user can process the HTML output.
     }
 
-    String html = FileUtils.load(AppInfo.HTML_TEMPLATE_PATH);
+    String html = FileUtils.load(Config.HTML_TEMPLATE_PATH);
     html = html.replace("<!-- @SUMMARY -->", this.summary.toString());
     html = html.replace("<!-- @DIFF -->", divLines);
     

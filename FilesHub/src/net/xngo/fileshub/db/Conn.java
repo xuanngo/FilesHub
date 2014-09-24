@@ -6,7 +6,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.io.File;
 
-import net.xngo.fileshub.AppInfo;
+import net.xngo.fileshub.Config;
 
 /**
  * Implement database connection and generic query functions.
@@ -17,7 +17,7 @@ import net.xngo.fileshub.AppInfo;
 public class Conn
 {
 
-  public static final String DB_FILE_PATH = AppInfo.DB_FILE_PATH; 
+  public static final String DB_FILE_PATH = Config.DB_FILE_PATH; 
   
   
   private static Conn instance = null;
@@ -83,10 +83,10 @@ public class Conn
   
   private void checkWritePermission()
   {
-    File dbFile = new File(AppInfo.DB_FILE_PATH);
+    File dbFile = new File(Config.DB_FILE_PATH);
     if(!dbFile.canWrite())
     {
-      System.out.println(String.format("Error: You don't have permission to write to '%s'.", AppInfo.DB_FILE_PATH));
+      System.out.println(String.format("Error: You don't have permission to write to '%s'.", Config.DB_FILE_PATH));
       System.exit(-1);
     }
   }
