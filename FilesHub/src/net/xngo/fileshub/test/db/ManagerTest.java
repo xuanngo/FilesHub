@@ -674,4 +674,44 @@ public class ManagerTest
     
   }
   
+  @Test(description="File A is a duplicate of File B but File B is a duplicate of File C.")
+  public void markDuplicateOfDuplicate()
+  {
+    //*** Prepare data ****
+    // Create File C.
+    File fileC = Data.createTempFile("markDuplicateOfDuplicate_fileC");
+    this.manager.addFile(fileC);
+    
+    // Create File B with different content(hash).
+    File fileB = Data.createTempFile("markDuplicateOfDuplicate_fileB");
+    Data.copyFile(fileC, fileB);    
+    Data.writeStringToFile(fileB, "new content fileB");
+    
+    // Mark File B is a duplicate of File C.
+    this.manager.markDuplicate(fileB, fileC);
+    
+    //*** Main test ****
+    // Create File A with different content(hash).
+    File fileA = Data.createTempFile("markDuplicateOfDuplicate_fileA");
+    Data.copyFile(fileB, fileA);    
+    Data.writeStringToFile(fileB, "new content fileA");
+    
+    // Mark File A is a duplicate of File B.
+    this.manager.markDuplicate(fileA, fileB);
+    
+    // Validate
+    Shelf shelf = new Shelf();
+    Document shelfDoc = shelf.findDocByFilename(fileC.getName());
+    Trash trash = new Trash();
+    Document trashDoc = trash.findDocByFilename(fileA.getName());
+    
+    assertEquals(trashDoc.uid, shelfDoc.uid, String.format("[%s] is not linked to/duplicate of [%s]. Trash.uid should be equal to Shelf.uid.\n"
+                                                                    + "%s"
+                                                                    + "\n"
+                                                                    + "%s", 
+                                                                    fileA.getName(), fileC.getName(),
+                                                                    shelfDoc.getInfo("Shelf"),
+                                                                    trashDoc.getInfo("Trash")));    
+  }
+  
 }
