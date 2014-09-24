@@ -207,6 +207,7 @@ public class Manager
    * Mark 2 files as duplicate regardless of their content.
    * <pre>
    * {@code
+   * Mark file A is a duplicate of file B.
    * If file B found in Shelf
    *    If file A found in Shelf
    *        -Move file A from Shelf to Trash
