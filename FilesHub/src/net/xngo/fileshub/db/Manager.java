@@ -286,7 +286,7 @@ public class Manager
           int shelfUID = 0;
           Document trashDocOf = this.trash.findDocByCanonicalPath(ofCanonicalPath);
           if(trashDocOf!=null)
-          {
+          {//file B found in Trash
             shelfUID = trashDocOf.uid;
           }
           else
