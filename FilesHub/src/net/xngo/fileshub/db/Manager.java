@@ -78,7 +78,7 @@ public class Manager
    * }
    * </pre>               
    * @param file
-   * @return  Existing and conflicting document. Otherwise, null = new unique file.
+   * @return  Existing and conflicting document. Otherwise, null = new unique file. NULL is used to find duplicates.
    */
   public Document addFile(File file)
   {
