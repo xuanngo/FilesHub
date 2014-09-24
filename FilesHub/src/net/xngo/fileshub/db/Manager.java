@@ -45,8 +45,8 @@ public class Manager
   /**
    * Add a file in database. A file is identified by its hash.
    * For optimization, check the path first and then the hash.
-   * We can't use filename to identify a file because filename can
-   *  be generic, e.g. ../something/Track 1.
+   * We can't use filename to identify a file because filenames can
+   *  be generic and have different content, e.g. ../something/Track 1.
    * <pre>
    * {@code
    * If path found in Shelf
@@ -78,7 +78,7 @@ public class Manager
    * }
    * </pre>               
    * @param file
-   * @return  Existing and conflicting document. Otherwise, null.
+   * @return  Existing and conflicting document. Otherwise, null = new unique file.
    */
   public Document addFile(File file)
   {
@@ -208,23 +208,30 @@ public class Manager
    * <pre>
    * {@code
    * Mark file A is a duplicate of file B.
+   * 
    * If file B found in Shelf
    *    If file A found in Shelf
    *        -Move file A from Shelf to Trash
    *        -Link all duplicates of A to B.
-   *        -Return OK
+   *        -Return committed.
    *    else
    *        -Add file A in Trash & it should be linked to file B
-   *        -Return OK
+   *        -Return committed.
    * else
-   *    -Add file B in Shelf
+   *    ShelfID = ?
+   *    If file B found in Trash
+   *        -ShelfID = file B.duid
+   *    else
+   *        -Add file B in Shelf
+   *        -ShelfID = file B.uid
+   *
    *    If file A found in Shelf
    *        -Move file A from Shelf to Trash
-   *        -Link all duplicates of A to B.
-   *        -Return OK
+   *        -Link all duplicates of A to ShelfID.
+   *        -Return committed.
    *    else
-   *        -Add file A to Trash & it should be linked to file B
-   *        -Return OK
+   *        -Add file A to Trash & it should be linked to ShelfID
+   *        -Return committed.
    * }
    * 
    * </pre>
@@ -276,13 +283,19 @@ public class Manager
         }
         else
         {
-          Document newShelfDoc = this.addFile(of);
+          int shelfUID = 0;
+          Document trashDocOf = this.trash.findDocByCanonicalPath(ofCanonicalPath);
+          if(trashDocOf!=null)
+          {
+            shelfUID = trashDocOf.uid;
+          }
+          else
+          {
+            this.addFile(of); // This will always return null because 'of' is at the current state unique.
+            shelfUID = this.shelf.findDocByCanonicalPath(ofCanonicalPath).uid;
+          }
           
-          // Get uid.
-          int uid = 0;
-          if(newShelfDoc==null)
-            uid = this.shelf.findDocByCanonicalPath(ofCanonicalPath).uid;
-          
+         
           Document shelfDocDuplicate = this.shelf.findDocByCanonicalPath(duplicateCanonicalPath);
           if(shelfDocDuplicate!=null)
           {// File A found in Shelf
@@ -290,15 +303,15 @@ public class Manager
             // Execution order is important.
             //    Move File A from Shelf to Trash.
             this.shelf.removeDoc(shelfDocDuplicate.uid);
-            this.trash.markDuplicate(shelfDocDuplicate.uid, uid);
-            shelfDocDuplicate.uid = uid;  // linked to file B
+            this.trash.markDuplicate(shelfDocDuplicate.uid, shelfUID);
+            shelfDocDuplicate.uid = shelfUID;  // linked to file B
             this.trash.addDoc(shelfDocDuplicate);
             return true;
           }
           else
           {
             Document newTrashDoc = new Document(duplicate);
-            newTrashDoc.uid = uid;
+            newTrashDoc.uid = shelfUID;
             newTrashDoc.hash = Utils.getHash(duplicate);
             this.trash.addDoc(newTrashDoc);
             return true;            
