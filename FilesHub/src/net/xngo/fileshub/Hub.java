@@ -155,6 +155,21 @@ public class Hub
     }
   }
   
+  public void searchByUid(int uid)
+  {
+    this.manager.searchByUid(uid);
+  }
+  
+  public void searchByHash(String hash)
+  {
+    this.manager.searchByHash(hash);
+  }
+  
+  public void searchByFilename(String filename)
+  {
+    this.manager.searchByFilename(filename);
+  }
+  
   /****************************************************************************
    * 
    *                             PRIVATE FUNCTIONS

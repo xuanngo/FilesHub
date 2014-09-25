@@ -326,12 +326,119 @@ public class Manager
     
   }
 
+  public void searchByUid(int uid)
+  {
+    this.display(uid);
+  }
+  
+  public void searchByHash(String hash)
+  {
+    Document shelfDoc = this.shelf.findDocByHash(hash);
+    if(shelfDoc==null)
+    {
+      Document trashDoc = this.trash.findDocByHash(hash);
+      if(trashDoc==null)
+      {
+        System.out.println(String.format("%s is not found.", hash));
+      }
+      else
+        this.display(trashDoc.uid);
+    }
+    else
+      this.display(shelfDoc.uid);
+  }
+
+  public void searchByFilename(String filename)
+  {
+    System.out.println(this.getClass().getName()+".searchByFilename not implemented yet.");
+  }
   
   /****************************************************************************
    * 
    *                             PRIVATE FUNCTIONS
    * 
    ****************************************************************************/  
+  
+  /**
+   * select duid, count(hash) from Trash group by hash having count(hash)>10 ;
+   * @param uid
+   */
+  private void display(int uid)
+  {
+    Document shelfDoc = this.shelf.findDocByUid(uid);
+    if(shelfDoc==null)
+    {
+      System.out.println(String.format("%d is not found!", uid));
+    }
+    else
+    {
+      // Display Shelf document.
+      ArrayList<Document> shelfDocsList = new ArrayList<Document>();
+      shelfDocsList.add(shelfDoc);
+      this.displayDocument("Shelf:", true, shelfDocsList);
+      
+      List<Document> trashDocsList = this.trash.findDocsByUid(uid);
+      this.displayDocument("Trash:", false, trashDocsList);
+    }
+  }
+  
+  private void displayDocument(String title, boolean header, List<Document> docsList)
+  {
+    int uidLength      = this.getMaxLengthOfUid(docsList);
+    int hashLength     = this.getMaxLengthOfHash(docsList);
+    int filenameLength = this.getMaxLengthOfFilename(docsList);
+    
+    System.out.println(title);
+    if(header)
+    {
+      System.out.println(String.format( "  %"+uidLength     +"s | "
+                                      + "%"+hashLength      +"s | "
+                                      + "%-"+filenameLength +"s | "
+                                      + "%s", 
+                                      "<UID>", "<HASH>", "<FILENAME>", "<CANONICAL_PATH>"));
+    }
+    for(Document doc: docsList)
+    {
+      System.out.println(String.format( "  %"+uidLength     +"d | "
+                                      + "%"+hashLength      +"s | "
+                                      + "%-"+filenameLength +"s | "
+                                      + "%s", 
+                                      doc.uid, doc.hash, doc.filename, doc.canonical_path));
+    }
+  }
+  private int getMaxLengthOfUid(List<Document> docsList)
+  {
+    int maxLength="<UID>".length(); // default value.
+    
+    for(Document doc: docsList)
+    {
+      String uidStr = doc.uid+"";
+      if(uidStr.length()>maxLength)
+        maxLength = uidStr.length();
+    }
+    return maxLength;
+  }
+  private int getMaxLengthOfHash(List<Document> docsList)
+  {
+    int maxLength="<HASH>".length(); // default value.
+    for(Document doc: docsList)
+    {
+      if(doc.hash.length()>maxLength)
+        maxLength = doc.hash.length();
+    }
+    return maxLength;
+  }
+  
+  private int getMaxLengthOfFilename(List<Document> docsList)
+  {
+    int maxLength="<FILENAME>".length(); // default value.
+    for(Document doc: docsList)
+    {
+      if(doc.filename.length()>maxLength)
+        maxLength = doc.filename.length();
+    }
+    return maxLength;
+  }
   
   private boolean validateMarkDuplicate(File duplicate, File of)
   {

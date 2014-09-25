@@ -3,6 +3,8 @@ package net.xngo.fileshub.db;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import net.xngo.fileshub.db.Conn;
 import net.xngo.fileshub.report.Chronometer;
@@ -120,6 +122,11 @@ public class Trash
   public Document findDocByFilename(String filename)
   {
     return this.findDocBy("filename", filename);
+  }
+  
+  public List<Document> findDocsByUid(int uid)
+  {
+    return this.findDocsBy("duid", uid+"");
   }
   
   /**
@@ -357,6 +364,44 @@ if(runTime>10)
     }
     
     return doc;
+  }
+  
+  private List<Document> findDocsBy(String column, String value)
+  {
+    final String query = String.format("SELECT duid, canonical_path, filename, last_modified, hash, comment "
+                                        + " FROM %s"
+                                        + " WHERE %s = ?", this.tablename, column);
+    
+    ArrayList<Document> docsList = new ArrayList<Document>();
+    try
+    {
+      this.select = this.conn.connection.prepareStatement(query);
+      this.select.setString(1, value);
+      ResultSet resultSet =  this.select.executeQuery();
+
+      while(resultSet.next())
+      {
+        Document doc = new Document();
+        int j=1;
+        doc.uid             = resultSet.getInt(j++); // Shelf.uid is equal to Trash.duid.
+        doc.canonical_path  = resultSet.getString(j++);
+        doc.filename        = resultSet.getString(j++);
+        doc.last_modified   = resultSet.getLong(j++);
+        doc.hash            = resultSet.getString(j++);
+        doc.comment         = resultSet.getString(j++);
+        
+        docsList.add(doc);
+        
+      }
+      DbUtils.close(resultSet);
+      DbUtils.close(this.select);         
+    }
+    catch(SQLException e)
+    {
+      e.printStackTrace();
+    }
+    
+    return docsList;
   }
   
   /**

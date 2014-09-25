@@ -23,7 +23,9 @@ public class Cmd
     jc.setProgramName(Config.NAME);
     
     CmdHash cmdHash = new CmdHash();
+    CmdSearch cmdSearch = new CmdSearch();
     jc.addCommand(CmdHash.name, cmdHash);
+    jc.addCommand(CmdSearch.name, cmdSearch);
     
     Hub hub = new Hub();
     try
@@ -53,6 +55,24 @@ public class Cmd
               hub.hash(cmdHash.getAllUniqueFiles());
             else
               this.displayUsage(jc);
+          }
+          else if(parsedCmd.compareTo(CmdSearch.name)==0)
+          {
+            if(cmdSearch.uid!=0)
+            {
+              hub.searchByUid(cmdSearch.uid);
+            }
+            else if(cmdSearch.hash!=null)
+            {
+              hub.searchByHash(cmdSearch.hash);
+            }
+            else if(cmdSearch.filename!=null)
+            {
+              hub.searchByFilename(cmdSearch.filename);
+            }
+            else
+              this.displayUsage(jc);
+
           }
           else
             this.displayUsage(jc);

@@ -422,7 +422,47 @@ public class ManagerTest
     // Clean up.
     duplicateFile.delete();
 
-  }     
+  }
+  
+  @Test(description="Add a duplicate of duplicate: Add file A but file A is a duplicate of file B and file B is mark a duplicate of file C.")
+  public void addFileDuplicateOfDuplicate()
+  {
+    //*** Prepare data ****
+    // Create File C.
+    File fileC = Data.createTempFile("addFileDuplicateOfDuplicate_fileC");
+    this.manager.addFile(fileC);
+    
+    // Create File B with different content(hash).
+    File fileB = Data.createTempFile("addFileDuplicateOfDuplicate_fileB");
+    Data.copyFile(fileC, fileB);    
+    Data.writeStringToFile(fileB, "new content fileB");
+    
+    // Mark File B is a duplicate of File C.
+    this.manager.markDuplicate(fileB, fileC);
+    
+    //*** Main test ****
+    // Create File A with the same content as File B.
+    File fileA = Data.createTempFile("markDuplicateOfDuplicate_fileA");
+    Data.copyFile(fileB, fileA);    
+
+    // Add File A in database
+    this.manager.addFile(fileA);
+    
+    // Validate: File A should be in Trash and has the same UID of File C.
+    Shelf shelf = new Shelf();
+    Document shelfDoc = shelf.findDocByFilename(fileC.getName());
+    Trash trash = new Trash();
+    Document trashDoc = trash.findDocByFilename(fileA.getName());
+    
+    assertEquals(trashDoc.uid, shelfDoc.uid, String.format("[%s] is not linked to/duplicate of [%s]. Trash.uid should be equal to Shelf.uid.\n"
+                                                                    + "%s"
+                                                                    + "\n"
+                                                                    + "%s", 
+                                                                    fileA.getName(), fileC.getName(),
+                                                                    shelfDoc.getInfo("Shelf: File C"),
+                                                                    trashDoc.getInfo("Trash: File A")));        
+    
+  }
   
   @Test(description="Update file that has changed since added in database. Note: This is exactly the same as addFileShelfFileChanged(), except that it uses Manager.update() instead of Manager.addFile().")
   public void updateFileChanged()
@@ -699,7 +739,7 @@ public class ManagerTest
     // Mark File A is a duplicate of File B.
     this.manager.markDuplicate(fileA, fileB);
     
-    // Validate
+    // Validate: File A should be in Trash and has same UID of File C.
     Shelf shelf = new Shelf();
     Document shelfDoc = shelf.findDocByFilename(fileC.getName());
     Trash trash = new Trash();
