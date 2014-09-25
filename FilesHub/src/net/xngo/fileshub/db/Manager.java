@@ -97,7 +97,7 @@ public class Manager
         if(new File(originalDoc.canonical_path).exists())
           return shelf.findDocByUid(trashDoc.uid);
         else
-        {
+        {// Shelf file doesn't exist.
           // Switch Shelf<->Trash.
           shelf.saveDoc(trashDoc);
           trash.removeDoc(trashDoc);
@@ -113,13 +113,13 @@ public class Manager
           {// Hash found in Shelf.
             
             if(new File(shelfDoc.canonical_path).exists())
-            {// File still exists
+            {// Shelf file still exists
               doc.uid = shelfDoc.uid;
               trash.addDoc(doc);
               return shelfDoc;
             }
             else
-            {// File doesn't exist anymore.
+            {// Shelf file doesn't exist anymore.
               
               // Move non-existing file to Trash.
               trash.addDoc(shelfDoc);
@@ -132,7 +132,7 @@ public class Manager
             }
           }
           else
-          {
+          {// Hash not found in Shelf.
             trashDoc = trash.findDocByHash(doc.hash);
             if(trashDoc != null)
             {// Hash found in Trash.
