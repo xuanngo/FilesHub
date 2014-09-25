@@ -114,9 +114,9 @@ public class Chronometer
     int i=0;
     for(; i<this.periods.size()-1; i++) // The 1st period is discard because it is the start.
     {
-      System.out.println(String.format("\t[%02d] %"+Config.chrono.getMaxPeriodNameLength()+"s = %s", i+1, this.getRuntimeName(i, i+1), this.getRuntimeString(i, i+1)));
+      System.out.println(String.format("\t[%02d] %"+this.getMaxPeriodNameLength()+"s = %s", i+1, this.getRuntimeName(i, i+1), this.getRuntimeString(i, i+1)));
     }
-    System.out.println(String.format("\t[%02d] %"+Config.chrono.getMaxPeriodNameLength()+"s = %s", i+1, "[Total]", this.getTotalRuntimeString()));
+    System.out.println(String.format("\t[%02d] %"+this.getMaxPeriodNameLength()+"s = %s", i+1, "[Total]", this.getTotalRuntimeString()));
   }
   
   /**

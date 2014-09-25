@@ -13,6 +13,4 @@ public class Config
   public static final String DEBUG              = System.getProperty(NAME+".debug");          // Debug mode: true or false
   public static final int FILES_IN_BATCH        = Integer.parseInt(System.getProperty(NAME+".files.in.batch")); // Number of files to process within a batch.
   
-  public static Chronometer chrono              = new Chronometer();
-  
 }

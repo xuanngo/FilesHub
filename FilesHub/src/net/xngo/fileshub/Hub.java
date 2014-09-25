@@ -35,7 +35,7 @@ public class Hub
   
   public void addFiles(Set<File> listOfFiles, List<File> addPaths)
   {
-    Config.chrono.stop("Get all files to process");
+    Main.chrono.stop("Get all files to process");
     
     // Display total number of files to process.
     Report report = new Report();
@@ -49,7 +49,7 @@ public class Hub
     long size = 0;
     int whenToDisplay = 11;
     
-    Config.chrono.stop("Get total file size");
+    Main.chrono.stop("Get total file size");
     int i=1; // 1 because progress % is print after some files are processed.
     for (File file : listOfFiles) 
     {
@@ -95,23 +95,23 @@ public class Hub
     }
     report.console.printProgress(String.format("100.00%% [%s] [%d/%d]", totalReadableSize, Report.FILES_TO_PROCESS, Report.FILES_TO_PROCESS));// Last display because of the remainder of modulus.
     System.out.println();
-    Config.chrono.stop("Add files");
+    Main.chrono.stop("Add files");
     
-    Report.START_TIME   = Config.chrono.getStartTime();
-    Report.END_TIME     = Config.chrono.getEndTime();
-    Report.ELAPSED_TIME = Config.chrono.getTotalRuntimeString();
+    Report.START_TIME   = Main.chrono.getStartTime();
+    Report.END_TIME     = Main.chrono.getEndTime();
+    Report.ELAPSED_TIME = Main.chrono.getTotalRuntimeString();
     
     report.sort();
-    Config.chrono.stop("Sort duplicates");
+    Main.chrono.stop("Sort duplicates");
     report.displayDuplicates();
-    Config.chrono.stop("Display duplicates");
+    Main.chrono.stop("Display duplicates");
     report.constructSummary();    
     report.writeCSV(String.format("./results_%s.csv", this.getResultsSuffix(addPaths)));   // Use ./XYZ so it writes results to the executed location.
-    Config.chrono.stop("Write CSV file");
+    Main.chrono.stop("Write CSV file");
     report.writeHtml(String.format("./results_%s.html", this.getResultsSuffix(addPaths)));
-    Config.chrono.stop("Write HTML file");
+    Main.chrono.stop("Write HTML file");
     report.displaySummary();
-    Config.chrono.display();
+    Main.chrono.display();
     
   }
   
