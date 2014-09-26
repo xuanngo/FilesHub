@@ -1,7 +1,7 @@
 FilesHub
 ========
 
-FilesHub is used to remove duplicate files.
+FilesHub is used to find duplicate files.
 
 Usage
 ======
@@ -38,3 +38,9 @@ Search by filename: Can use wildcard(*)
 ```
 FilesHub search -f "*fileshub*"
 ```
+
+Output
+======
+When using '-a' option, FilesHub will also save duplicate file paths in CSV and HTML format automatically in the executing directory. They have the following filename pattern:
+* CSV: results_<directories>_<timestamp>.csv
+* HTML: results_<directories>_<timestamp>.html

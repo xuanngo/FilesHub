@@ -71,11 +71,9 @@ public class Report
       DUPLICATE_FILES = this.duplicates.size();
       DUPLICATE_FILES_SIZE = totalDuplicateSize;
       System.out.println("========================================================");
-      this.setDuplicateSizeString(this.duplicates.size(), totalDuplicateSize);
-      System.out.println(this.getDuplicateSizeString());
     }
     else
-      System.out.println("There is no duplicate file.");
+      System.out.println("No duplicate found.");
   }
   
   public void constructSummary()
@@ -220,15 +218,6 @@ public class Report
   private String doubleQuote(String s)
   {
     return String.format("\"%s\"", s);
-  }
-  
-  private void setDuplicateSizeString(int numOfFiles, long size)
-  {
-    this.totalDuplicateSizeString = String.format("Total size of %s duplicate file(s) = %s.", numOfFiles, Utils.readableFileSize(size));
-  }
-  private String getDuplicateSizeString()
-  {
-    return this.totalDuplicateSizeString;
   }
   
   public String getRAMUsage()

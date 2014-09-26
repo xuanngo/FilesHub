@@ -361,7 +361,7 @@ public class Manager
     else
     {
       this.displayDocument("Shelf:", true, shelfDocsList);
-      System.out.println(String.format("%d founded in Shelf table.\n", shelfDocsList.size()));
+      System.out.println(String.format("%d found in Shelf table.\n", shelfDocsList.size()));
     }
     
     // Search in Trash table and display results.
@@ -373,7 +373,7 @@ public class Manager
     else
     {
       this.displayDocument("Trash:", true, trashDocsList);
-      System.out.println(String.format("%d founded in Trash table.", trashDocsList.size()));
+      System.out.println(String.format("%d found in Trash table.", trashDocsList.size()));
     }
     
   }
