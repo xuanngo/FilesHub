@@ -39,6 +39,11 @@ Search by filename: Can use wildcard(*)
 FilesHub search -f "*fileshub*"
 ```
 
+Search by file path: Can use wildcard(*)
+```
+FilesHub search -p "*\somewhere\fileshub\*"
+```
+
 Output
 ======
 When using '-a' option, FilesHub will also save duplicate file paths in CSV and HTML format automatically in the executing directory. They have the following filename pattern:
