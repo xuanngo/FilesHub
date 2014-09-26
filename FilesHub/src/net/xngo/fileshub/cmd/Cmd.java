@@ -70,6 +70,10 @@ public class Cmd
             {
               hub.searchByFilename(cmdSearch.filename);
             }
+            else if(cmdSearch.filepath!=null)
+            {
+              hub.searchByFilepath(cmdSearch.filepath);
+            }            
             else
               this.displayUsage(jc);
 

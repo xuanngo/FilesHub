@@ -170,6 +170,11 @@ public class Hub
     this.manager.searchByFilename(filename);
   }
   
+  public void searchByFilepath(String filepath)
+  {
+    this.manager.searchByFilepath(filepath);
+  }  
+  
   /****************************************************************************
    * 
    *                             PRIVATE FUNCTIONS

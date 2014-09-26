@@ -148,10 +148,14 @@ public class Shelf
   
   public List<Document> searchDocsByFilename(String filename)
   {
-    // Convert wildcard(*) to %.
-    String likeFilename = filename.replace('*', '%');
-    return this.searchLikeDocsBy("filename", likeFilename);
+    return this.searchLikeDocsBy("filename", filename);
   }
+  
+  public List<Document> searchDocsByFilepath(String filepath)
+  {
+    return this.searchLikeDocsBy("canonical_path", filepath);
+  }  
+  
  
   /****************************************************************************
    * 
@@ -350,11 +354,13 @@ if(runTime>10)
       throw new RuntimeException(column+" is an integer field. It is not allowed to be used in LIKE statement."); 
     }
     
+    // Convert wildcard(*) to %.
+    String likeValue = value.replace('*', '%');
     
     // Construct the query.
     final String query = String.format("SELECT uid, canonical_path, filename, last_modified, hash, comment "
                                         + " FROM %s"
-                                        + " WHERE %s like ?", this.tablename, column, value);
+                                        + " WHERE %s like ?", this.tablename, column, likeValue);
     
     
     List<Document> docsList = new ArrayList<Document>();
@@ -362,7 +368,7 @@ if(runTime>10)
     {
       this.select = this.conn.connection.prepareStatement(query);
       
-      this.select.setString(1, value);
+      this.select.setString(1, likeValue);
 
       ResultSet resultSet =  this.select.executeQuery();
 

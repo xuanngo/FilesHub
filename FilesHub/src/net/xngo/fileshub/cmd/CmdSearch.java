@@ -1,7 +1,5 @@
 package net.xngo.fileshub.cmd;
 
-import java.io.File;
-import java.util.List;
 
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;
@@ -19,5 +17,8 @@ public class CmdSearch
   public String hash;
   
   @Parameter(names = {"-f", "--filename"}, description = "Search by filename. Use * as wildcard.", arity = 1)
-  public String filename;   
+  public String filename;
+  
+  @Parameter(names = {"-p", "--path"}, description = "Search by file path. Use * as wildcard.", arity = 1)
+  public String filepath;     
 }

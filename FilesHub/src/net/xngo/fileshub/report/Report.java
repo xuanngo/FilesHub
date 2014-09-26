@@ -78,7 +78,6 @@ public class Report
   
   public void constructSummary()
   {
-    this.summary.append("========================================================\n");
     this.summary.append("Summary:\n");
     
     this.summary.append(String.format("\t%,d files processed.\n", Report.FILES_TO_PROCESS));

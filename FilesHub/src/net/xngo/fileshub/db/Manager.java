@@ -378,6 +378,34 @@ public class Manager
     
   }
   
+  public void searchByFilepath(String filepath)
+  {
+    // Search in Shelf table and display results.
+    List<Document> shelfDocsList = this.shelf.searchDocsByFilepath(filepath);
+    if(shelfDocsList.size()==0)
+    {
+      System.out.println(String.format("Filepath '%s' is not found in Shelf table.", filepath));
+    }
+    else
+    {
+      this.displayDocument("Shelf:", true, shelfDocsList);
+      System.out.println(String.format("%d found in Shelf table.\n", shelfDocsList.size()));
+    }
+    
+    // Search in Trash table and display results.
+    List<Document> trashDocsList = this.trash.searchDocsByFilepath(filepath);
+    if(trashDocsList.size()==0)
+    {
+      System.out.println(String.format("Filepath '%s' is not found in Trash table.", filepath));
+    }
+    else
+    {
+      this.displayDocument("Trash:", true, trashDocsList);
+      System.out.println(String.format("%d found in Trash table.", trashDocsList.size()));
+    }
+    
+  }
+  
   /****************************************************************************
    * 
    *                             PRIVATE FUNCTIONS
