@@ -78,55 +78,57 @@ public class Manager
    * }
    * </pre>               
    * @param file
-   * @return  Existing and conflicting document. Otherwise, null = new unique file. NULL is used to find duplicates.
+   * @return  Existing and conflicting document. Otherwise, null = new unique file. 
+   *              NULL is used to find duplicates.
    */
   public Document addFile(File file)
   {
     Document doc = new Document(file);
     
-    Document shelfDoc = shelf.findDocByCanonicalPath(doc.canonical_path);
+    Document shelfDoc = this.shelf.findDocByCanonicalPath(doc.canonical_path);
     if(shelfDoc == null)
     {// Path not found in Shelf.
       
-      Document trashDoc = trash.findDocByCanonicalPath(doc.canonical_path);
+      Document trashDoc = this.trash.findDocByCanonicalPath(doc.canonical_path);
       if(trashDoc != null)
       {// Path found in Trash.
         
-        // Switch if original file doesn't exist.
-        Document originalDoc = shelf.findDocByUid(trashDoc.uid);
+        // Check if original file doesn't exist.
+        Document originalDoc = this.shelf.findDocByUid(trashDoc.uid);
         if(new File(originalDoc.canonical_path).exists())
-          return shelf.findDocByUid(trashDoc.uid);
+          return this.shelf.findDocByUid(trashDoc.uid);
         else
         {// Shelf file doesn't exist.
-          // Switch Shelf<->Trash.
-          shelf.saveDoc(trashDoc);
-          trash.removeDoc(trashDoc);
-          trash.addDoc(originalDoc);
+          // Move original file info from Shelf to Trash.
+          this.shelf.saveDoc(trashDoc);      // trashDoc is used instead of 'doc' because they both
+                                        //    have exact same path. It will save hash time.
+          this.trash.removeDoc(trashDoc);
+          this.trash.addDoc(originalDoc);
           return null;
         }
       }
       else
       {
           doc.hash = Utils.getHash(file);
-          shelfDoc = shelf.findDocByHash(doc.hash);
+          shelfDoc = this.shelf.findDocByHash(doc.hash);
           if(shelfDoc != null)
           {// Hash found in Shelf.
             
             if(new File(shelfDoc.canonical_path).exists())
             {// Shelf file still exists
               doc.uid = shelfDoc.uid;
-              trash.addDoc(doc);
+              this.trash.addDoc(doc);
               return shelfDoc;
             }
             else
             {// Shelf file doesn't exist anymore.
               
               // Move non-existing file to Trash.
-              trash.addDoc(shelfDoc);
+              this.trash.addDoc(shelfDoc);
               
               // Update current document in Shelf.
               doc.uid = shelfDoc.uid;
-              shelf.saveDoc(doc);
+              this.shelf.saveDoc(doc);
               
               return null;
             }
@@ -138,11 +140,11 @@ public class Manager
             {// Hash found in Trash.
               doc.uid = trashDoc.uid;
               trash.addDoc(doc);              
-              return shelf.findDocByUid(trashDoc.uid);
+              return this.shelf.findDocByUid(trashDoc.uid);
             }
             else
             {
-              shelf.addDoc(doc);
+              this.shelf.addDoc(doc);
               return null; // New file.
             }
           }
