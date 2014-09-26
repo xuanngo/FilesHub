@@ -45,21 +45,7 @@ public class Trash
     this.conn.executeUpdate(query);    
   }
   
-  public boolean isSameFile(String canonicalPath)
-  {
-    return this.isStringExists("canonical_path", canonicalPath);
-  }  
-  
-  /**
-   * @deprecated This is only used by unit test. Remove this if used in application.
-   * @param canonicalPath
-   * @return Document UID.
-   */
-  public int getDuidByCanonicalPath(String canonicalPath)
-  {
-    return Integer.parseInt(this.getString("duid", "canonical_path", canonicalPath));
-  }
-  
+ 
   /**
    * @param canonicalPath
    * @return {@link Document}
@@ -196,83 +182,6 @@ public class Trash
       e.printStackTrace();
     }
     return rowsAffected;    
-  }
-  
-  
-  private boolean isHashExists(final String hash)
-  {
-    return this.isStringExists("hash", hash);
-  }
-
-  
-  private boolean isStringExists(String columnName, String value)
-  {
-    final String query = String.format("SELECT COUNT(*) FROM %s WHERE %s = ?", this.tablename, columnName);
-    try
-    {
-      this.select = this.conn.connection.prepareStatement(query);
-      
-      this.select.setString(1, value);
-      
-      ResultSet resultSet =  this.select.executeQuery();
-      
-      if(resultSet.next())
-      {
-        int count = resultSet.getInt(1);
-        DbUtils.close(resultSet);
-        DbUtils.close(this.select);          
-        if(count>0)
-          return true;
-        else
-          return false;        
-      }
-      else
-        return false;
-
-    }
-    catch(SQLException e)
-    {
-      e.printStackTrace();
-    }
-    
-    return false;
-  }
-  
-  
- 
-  private String getString(String returnColumn, String findColumn, String findValue)
-  {
-    String returnValue = null;
-    
-    final String query = String.format("SELECT %s FROM %s WHERE %s = ?", returnColumn, this.tablename, findColumn);
-    try
-    {
-      this.select = this.conn.connection.prepareStatement(query);
-      
-      this.select.setString(1, findValue);
-      
-      ResultSet resultSet =  this.select.executeQuery();
-      
-      if(resultSet.next())
-      {
-        returnValue = resultSet.getString(1);
-      }
-      
-
-      DbUtils.close(resultSet);
-      DbUtils.close(this.select);      
-      if(returnValue == null)
-      {
-        String e = String.format("Result not found: SELECT %s FROM %s WHERE %s = %s", returnColumn, this.tablename, findColumn, findValue);
-        throw new RuntimeException(e);
-      }
-      return returnValue;
-    }
-    catch(SQLException e)
-    {
-      e.printStackTrace();
-      return returnValue;
-    }
   }
   
   private List<Document> searchLikeDocsBy(String column, String value)
