@@ -102,6 +102,7 @@ public class Shelf
   {
     return this.deleteDoc(duid);
   }
+  
   public int addDoc(Document doc)
   {
     return this.insertDoc(doc);
@@ -145,6 +146,12 @@ public class Shelf
     return 0;
   }
   
+  public List<Document> searchLikeDocsByFilename(String filename)
+  {
+    // Convert wildcard(*) to %.
+    String likeFilename = filename.replace('*', '%');
+    return this.searchLikeDocsBy("filename", likeFilename);
+  }
  
   /****************************************************************************
    * 
@@ -332,6 +339,55 @@ if(runTime>10)
     }
     
     return docList;
+  }  
+  
+  private List<Document> searchLikeDocsBy(String column, String value)
+  {
+    // Input validations.
+    if(column==null){ throw new RuntimeException("column can't be null."); }
+    if(column.compareTo("uid")==0 || column.compareTo("last_modified")==0)
+    { 
+      throw new RuntimeException(column+" is an integer field. It is not allowed to be used in LIKE statement."); 
+    }
+    
+    
+    // Construct the query.
+    final String query = String.format("SELECT uid, canonical_path, filename, last_modified, hash, comment "
+                                        + " FROM %s"
+                                        + " WHERE %s like ?", this.tablename, column, value);
+    
+    
+    List<Document> docsList = new ArrayList<Document>();
+    try
+    {
+      this.select = this.conn.connection.prepareStatement(query);
+      
+      this.select.setString(1, value);
+
+      ResultSet resultSet =  this.select.executeQuery();
+
+      while(resultSet.next())
+      {
+        Document doc = new Document();
+        int j=1;
+        doc.uid             = resultSet.getInt(j++);
+        doc.canonical_path  = resultSet.getString(j++);
+        doc.filename        = resultSet.getString(j++);
+        doc.last_modified   = resultSet.getLong(j++);
+        doc.hash            = resultSet.getString(j++);
+        doc.comment         = resultSet.getString(j++);
+        
+        docsList.add(doc);
+      }
+      DbUtils.close(resultSet);
+      DbUtils.close(this.select);      
+    }
+    catch(SQLException e)
+    {
+      e.printStackTrace();
+    }
+    
+    return docsList;
   }  
   
   /**

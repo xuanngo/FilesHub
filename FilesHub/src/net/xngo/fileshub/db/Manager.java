@@ -352,7 +352,30 @@ public class Manager
 
   public void searchByFilename(String filename)
   {
-    System.out.println(this.getClass().getName()+".searchByFilename not implemented yet.");
+    // Search in Shelf table and display results.
+    List<Document> shelfDocsList = this.shelf.searchLikeDocsByFilename(filename);
+    if(shelfDocsList.size()==0)
+    {
+      System.out.println(String.format("Filename '%s' is not found in Shelf table.", filename));
+    }
+    else
+    {
+      this.displayDocument("Shelf:", true, shelfDocsList);
+      System.out.println(String.format("%d founded in Shelf table.\n", shelfDocsList.size()));
+    }
+    
+    // Search in Trash table and display results.
+    List<Document> trashDocsList = this.trash.searchLikeDocsByFilename(filename);
+    if(trashDocsList.size()==0)
+    {
+      System.out.println(String.format("Filename '%s' is not found in Trash table.", filename));
+    }
+    else
+    {
+      this.displayDocument("Trash:", true, trashDocsList);
+      System.out.println(String.format("%d founded in Trash table.", trashDocsList.size()));
+    }
+    
   }
   
   /****************************************************************************
