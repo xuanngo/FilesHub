@@ -129,53 +129,6 @@ public class Trash
     return this.findDocsBy("duid", uid+"");
   }
   
-  /**
-   * 
-   * @param modifiedTime
-   * @param filename
-   * @return {@link Document}
-   */
-  public Document findDocByModifiedTimeAndFilename(long modifiedTime, String filename)
-  {
-    Document doc = null;
-    
-    final String query = String.format("SELECT duid, canonical_path, filename, last_modified, hash, comment "
-                                        + " FROM %s "
-                                        + "WHERE last_modified = ? and filename = ?", this.tablename);
-    
-    try
-    {
-      this.select = this.conn.connection.prepareStatement(query);
-      
-      int i=1;
-      this.select.setLong(i++, modifiedTime);
-      this.select.setString(i++, filename);
-      
-      ResultSet resultSet =  this.select.executeQuery();
-      if(resultSet.next())
-      {
-        doc = new Document();
-        int j=1;
-        doc.uid             = resultSet.getInt(j++); // Shelf.uid is equal to Trash.duid.
-        doc.canonical_path  = resultSet.getString(j++);
-        doc.filename        = resultSet.getString(j++);
-        doc.last_modified   = resultSet.getLong(j++);
-        doc.hash            = resultSet.getString(j++);
-        doc.comment         = resultSet.getString(j++);
-        
-        return doc;
-      }
-      else
-        return doc;
-
-    }
-    catch(SQLException e)
-    {
-      e.printStackTrace();
-    }
-    
-    return doc;    
-  }
   
   public int markDuplicate(int duplicate, int of)
   {
