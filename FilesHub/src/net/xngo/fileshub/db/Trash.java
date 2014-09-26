@@ -203,7 +203,7 @@ public class Trash
     return rowAffected;    
   }
   
-  public List<Document> searchLikeDocsByFilename(String filename)
+  public List<Document> searchDocsByFilename(String filename)
   {
     // Convert wildcard(*) to %.
     String likeFilename = filename.replace('*', '%');

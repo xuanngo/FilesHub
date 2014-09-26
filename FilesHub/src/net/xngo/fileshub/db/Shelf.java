@@ -146,7 +146,7 @@ public class Shelf
     return 0;
   }
   
-  public List<Document> searchLikeDocsByFilename(String filename)
+  public List<Document> searchDocsByFilename(String filename)
   {
     // Convert wildcard(*) to %.
     String likeFilename = filename.replace('*', '%');

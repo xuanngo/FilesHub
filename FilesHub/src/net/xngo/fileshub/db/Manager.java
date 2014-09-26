@@ -353,7 +353,7 @@ public class Manager
   public void searchByFilename(String filename)
   {
     // Search in Shelf table and display results.
-    List<Document> shelfDocsList = this.shelf.searchLikeDocsByFilename(filename);
+    List<Document> shelfDocsList = this.shelf.searchDocsByFilename(filename);
     if(shelfDocsList.size()==0)
     {
       System.out.println(String.format("Filename '%s' is not found in Shelf table.", filename));
@@ -365,7 +365,7 @@ public class Manager
     }
     
     // Search in Trash table and display results.
-    List<Document> trashDocsList = this.trash.searchLikeDocsByFilename(filename);
+    List<Document> trashDocsList = this.trash.searchDocsByFilename(filename);
     if(trashDocsList.size()==0)
     {
       System.out.println(String.format("Filename '%s' is not found in Trash table.", filename));
