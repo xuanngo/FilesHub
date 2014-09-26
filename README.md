@@ -18,7 +18,7 @@ Mark a file is a duplicate of another.
 FilesHub -d SomeRandomFile.txt FilesHub.db
 ```
 
-Compute the [hash](https://code.google.com/p/xxhash/) of files
+Compute the [xxhash](https://code.google.com/p/xxhash/) of files
 ```
 # FilesHub hash <files, directories or mix>
 FilesHub hash FilesHub.db ./ FilesHub*
