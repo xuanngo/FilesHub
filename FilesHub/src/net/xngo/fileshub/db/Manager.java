@@ -90,7 +90,7 @@ public class Manager
     if(shelfDoc == null)
     {// Path not found in Shelf.
       
-      Document trashDoc = this.trash.findDocByCanonicalPath(doc.canonical_path);
+      Document trashDoc = this.trash.getDocByCanonicalPath(doc.canonical_path);
       if(trashDoc != null)
       {// Path found in Trash.
         
@@ -136,7 +136,7 @@ public class Manager
           }
           else
           {// Hash not found in Shelf.
-            trashDoc = trash.findDocByHash(doc.hash);
+            trashDoc = trash.getDocByHash(doc.hash);
             if(trashDoc != null)
             {// Hash found in Trash.
               doc.uid = trashDoc.uid;
@@ -257,7 +257,7 @@ public class Manager
     else
     {// fileB path NOT found in Shelf
       
-      Document trashDocB = this.trash.findDocByCanonicalPath(fileBPath);
+      Document trashDocB = this.trash.getDocByCanonicalPath(fileBPath);
       if(trashDocB!=null)
       {// fileB path found in Trash
         
@@ -288,7 +288,7 @@ public class Manager
         else
         {// fileB hash NOT found in Shelf
           
-          trashDocB = this.trash.findDocByHash(fileBHash);
+          trashDocB = this.trash.getDocByHash(fileBHash);
           if(trashDocB!=null)
           {// fileB hash found in Trash
             this.linkUIDs(fileAPath, trashDocB.uid);
@@ -317,7 +317,7 @@ public class Manager
   {
     // Get uid of file A.
     Document shelfDocA = this.shelf.findDocByCanonicalPath(fromPathA);
-    Document trashDocA = this.trash.findDocByCanonicalPath(fromPathA);
+    Document trashDocA = this.trash.getDocByCanonicalPath(fromPathA);
     
     // Move file A and its duplicates to B.
     if(shelfDocA!=null)
@@ -358,7 +358,7 @@ public class Manager
     Document shelfDoc = this.shelf.findDocByHash(hash);
     if(shelfDoc==null)
     {
-      Document trashDoc = this.trash.findDocByHash(hash);
+      Document trashDoc = this.trash.getDocByHash(hash);
       if(trashDoc==null)
       {
         System.out.println(String.format("%s is not found.", hash));

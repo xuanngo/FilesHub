@@ -152,7 +152,7 @@ public class ManagerTest
     // Validate:
     //  Check new hash is added in Trash.
     Trash trash = new Trash();
-    Document trashDoc = trash.findDocByHash(Utils.getHash(duplicateFile));
+    Document trashDoc = trash.getDocByHash(Utils.getHash(duplicateFile));
     assertNotNull(trashDoc, String.format("[%s] is not added in Trash table. It should.\n"
                                                       + "%s"
                                                       + "\n"
@@ -304,7 +304,7 @@ public class ManagerTest
                                             shelfDoc.getInfo("Return document from Shelf")));
     
     Trash trash = new Trash();
-    Document trashDoc = trash.findDocByHash(hash);
+    Document trashDoc = trash.getDocByHash(hash);
     assertNull(trashDoc, String.format("No new row should be created in Trash.", shelfDoc.getInfo("Unexpected Trash document returned")));
     
     // Clean up.
@@ -379,7 +379,7 @@ public class ManagerTest
     assertNotNull(shelfDoc, String.format("[%s] should be in Shelf table.", newCanonicalPath));
     
     Trash trash = new Trash();
-    Document trashDoc = trash.findDocByCanonicalPath(originalCanonicalPath);
+    Document trashDoc = trash.getDocByCanonicalPath(originalCanonicalPath);
     assertNotNull(trashDoc, String.format("[%s] should be in Trash table.", originalCanonicalPath));
     
     // Clean up.
@@ -414,7 +414,7 @@ public class ManagerTest
     assertNotNull(shelfDoc, String.format("Duplicate file [%s] should be in Shelf table.", duplicateCanonicalPath));
     
     Trash trash = new Trash();
-    Document trashDoc = trash.findDocByCanonicalPath(originalCanonicalPath);
+    Document trashDoc = trash.getDocByCanonicalPath(originalCanonicalPath);
     assertNotNull(trashDoc, String.format("The original file [%s] should be in Trash table.", originalCanonicalPath));
     
     assertEquals(trashDoc.uid, shelfDoc.uid, String.format("trashDoc.uid = %d should be equal to shelfDoc.uid = %d", trashDoc.uid, shelfDoc.uid));
@@ -452,7 +452,7 @@ public class ManagerTest
     Shelf shelf = new Shelf();
     Document shelfDoc = shelf.findDocByFilename(fileC.getName());
     Trash trash = new Trash();
-    Document trashDoc = trash.findDocByFilename(fileA.getName());
+    Document trashDoc = trash.getDocByFilename(fileA.getName());
     
     assertEquals(trashDoc.uid, shelfDoc.uid, String.format("[%s] is not linked to/duplicate of [%s]. Trash.uid should be equal to Shelf.uid.\n"
                                                                     + "%s"
@@ -481,7 +481,7 @@ public class ManagerTest
     
     // Validations: Check that Shelf document info is moved to Trash table and the new document is updated in Shelf table.
     Trash trash = new Trash();
-    Document trashDoc = trash.findDocByCanonicalPath(Utils.getCanonicalPath(uniqueFile));
+    Document trashDoc = trash.getDocByCanonicalPath(Utils.getCanonicalPath(uniqueFile));
     assertEquals(trashDoc, oldShelfDoc,
                                   String.format("Document information should be moved from Shelf to Trash.\n"
                                                       + "%s"
@@ -553,7 +553,7 @@ public class ManagerTest
     Shelf shelf = new Shelf();
     Document shelfDoc = shelf.findDocByCanonicalPath(fileB.getAbsolutePath());
     Trash trash = new Trash();
-    Document trashDoc = trash.findDocByCanonicalPath(fileA.getAbsolutePath());
+    Document trashDoc = trash.getDocByCanonicalPath(fileA.getAbsolutePath());
     assertEquals(trashDoc.uid, shelfDoc.uid, String.format("[%s] is not linked to/duplicate of [%s]. Shelf.uid should be equal to Trash.uid.\n"
                                                                   + "%s"
                                                                   + "\n"
@@ -589,7 +589,7 @@ public class ManagerTest
                                               + "%s", fileB.getName(), Data.getFileInfo(fileB, "File B to add in Shelf")));
     
     Trash trash = new Trash();
-    Document trashDoc = trash.findDocByCanonicalPath(fileA.getAbsolutePath());
+    Document trashDoc = trash.getDocByCanonicalPath(fileA.getAbsolutePath());
     assertEquals(trashDoc.uid, shelfDoc.uid, String.format("[%s] is not linked to/duplicate of [%s]. Shelf.uid should be equal to Trash.uid.\n"
                                                                   + "%s"
                                                                   + "\n"
@@ -644,7 +644,7 @@ public class ManagerTest
     Trash trash = new Trash();
     for(File fA: fileAs)
     {
-      Document trashDoc = trash.findDocByFilename(fA.getName());
+      Document trashDoc = trash.getDocByFilename(fA.getName());
       assertEquals(trashDoc.uid, shelfDoc.uid, String.format("[%s] is not linked to/duplicate of [%s]. Trash.uid should be equal to Shelf.uid.\n"
                                                                     + "%s"
                                                                     + "\n"
@@ -697,7 +697,7 @@ public class ManagerTest
     Trash trash = new Trash();
     for(File fA: fileAs)
     {
-      Document trashDoc = trash.findDocByFilename(fA.getName());
+      Document trashDoc = trash.getDocByFilename(fA.getName());
       assertEquals(trashDoc.uid, shelfDoc.uid, String.format("[%s] is not linked to/duplicate of [%s]. Trash.uid should be equal to Shelf.uid.\n"
                                                                     + "%s"
                                                                     + "\n"
@@ -747,7 +747,7 @@ public class ManagerTest
     Shelf shelf = new Shelf();
     Document shelfDoc = shelf.findDocByFilename(fileC.getName());
     Trash trash = new Trash();
-    Document trashDoc = trash.findDocByFilename(fileA.getName());
+    Document trashDoc = trash.getDocByFilename(fileA.getName());
     
     assertEquals(trashDoc.uid, shelfDoc.uid, String.format("[%s] is not linked to/duplicate of [%s]. Trash.uid should be equal to Shelf.uid.\n"
                                                                     + "%s"
@@ -785,7 +785,7 @@ public class ManagerTest
     Shelf shelf = new Shelf();
     Document shelfDoc = shelf.findDocByFilename(fileA.getName());
     Trash trash = new Trash();
-    Document trashDoc = trash.findDocByFilename(fileB.getName());
+    Document trashDoc = trash.getDocByFilename(fileB.getName());
     
     assertEquals(trashDoc.uid, shelfDoc.uid, String.format("[%s] is not linked to/duplicate of [%s]. Trash.uid should be equal to Shelf.uid.\n"
                                                                     + "%s"

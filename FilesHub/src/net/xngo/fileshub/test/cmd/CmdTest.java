@@ -120,7 +120,7 @@ public class CmdTest
     Shelf shelf = new Shelf();
     Document shelfDoc = shelf.findDocByCanonicalPath(Utils.getCanonicalPath(uniqueFile));
     Trash trash = new Trash();
-    Document trashDoc = trash.findDocByCanonicalPath(Utils.getCanonicalPath(uniqueFile));
+    Document trashDoc = trash.getDocByCanonicalPath(Utils.getCanonicalPath(uniqueFile));
     assertNull(shelfDoc, String.format("[%s] should not be added in Shelf. It is locked. [%s]", uniqueFile.getName(), Utils.getCanonicalPath(uniqueFile)));
     assertNull(trashDoc, String.format("[%s] should not be added in Trash. It is locked. [%s]", uniqueFile.getName(), Utils.getCanonicalPath(uniqueFile)));
     
@@ -169,7 +169,7 @@ public class CmdTest
 
 
     Trash trash = new Trash();
-    Document trashDoc = trash.findDocByHash(oldHash);
+    Document trashDoc = trash.getDocByHash(oldHash);
     assertNotNull(trashDoc, String.format("The old hash, %s, should be found in Trash table.\n"
                                               + "%s", 
                                               newHash, Data.getFileInfo(uniqueFile, "Info of file where its content has changed")));    
@@ -198,7 +198,7 @@ public class CmdTest
     
     // Validations
     Trash trash = new Trash();
-    Document trashDoc = trash.findDocByCanonicalPath(Utils.getCanonicalPath(fileB));
+    Document trashDoc = trash.getDocByCanonicalPath(Utils.getCanonicalPath(fileB));
     assertNotNull(trashDoc, String.format("[%s] should be found in Trash table. [%s] is a duplicated of [%s].", fileB.getAbsolutePath(), fileB.getAbsolutePath(), fileA.getAbsolutePath() )); 
     
     // Clean up.

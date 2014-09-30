@@ -50,7 +50,7 @@ public class Trash
    * @param canonicalPath
    * @return {@link Document}
    */
-  public Document findDocByCanonicalPath(final String canonicalPath)
+  public Document getDocByCanonicalPath(final String canonicalPath)
   {
     return this.getDocBy("canonical_path", canonicalPath);
   }
@@ -59,7 +59,7 @@ public class Trash
    * @param hash
    * @return {@link Document}
    */
-  public Document findDocByHash(String hash)
+  public Document getDocByHash(String hash)
   {
     return this.getDocBy("hash", hash);
   }
@@ -105,7 +105,7 @@ public class Trash
    * @param filename
    * @return {@link Document}
    */
-  public Document findDocByFilename(String filename)
+  public Document getDocByFilename(String filename)
   {
     return this.getDocBy("filename", filename);
   }
