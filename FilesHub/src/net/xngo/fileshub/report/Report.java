@@ -158,17 +158,21 @@ public class Report
     StringBuilder divLines = new StringBuilder();
     for(int i=0; i<this.duplicates.size(); i++)
     {
+      // Add double quote so that it is easier to manipulate on command line.
       String left = this.doubleQuote(this.duplicates.get(i).toAddDoc.canonical_path);
       String right= this.doubleQuote(this.duplicates.get(i).shelfDoc.canonical_path);
+      long toAddSize = new File(this.duplicates.get(i).toAddDoc.canonical_path).length();
       
+      // Construct the difference with HTML elements.
       Difference difference = new Difference(left, right);
       difference.computeSpan();
       String leftSpan = this.printDelete(difference.getLeftSpan()); // Not elegant.
       String rightSpan= difference.getRightSpan();
+      String sizeSpan = String.format("<span class=\"size\">%s</span>", FileUtils.readableSize(toAddSize));
       if(i%2==0)
-        divLines.append(String.format("<div class=\"line-even\">%s<br/>%s</div>\n", leftSpan, rightSpan)); // Add \n so that user can process the HTML output.
+        divLines.append(String.format("<div class=\"line-even\">%s<br/>%s %s</div>\n", leftSpan, rightSpan, sizeSpan)); // Add \n so that user can process the HTML output.
       else
-        divLines.append(String.format("<div class=\"line-odd\">%s<br/>%s</div>\n", leftSpan, rightSpan));  // Add \n so that user can process the HTML output.
+        divLines.append(String.format("<div class=\"line-odd\">%s<br/>%s %s</div>\n", leftSpan, rightSpan, sizeSpan));  // Add \n so that user can process the HTML output.
     }
 
     String html = FileUtils.load(Config.HTML_TEMPLATE_PATH);

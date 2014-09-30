@@ -335,8 +335,6 @@ public class Trash
       this.insert.setString(i++, doc.hash);
       this.insert.setString(i++, doc.comment);
 
-Chronometer c = new Chronometer();
-c.start();      
       // Insert row.
       this.insert.executeUpdate();
       ResultSet resultSet =  this.insert.getGeneratedKeys();
@@ -345,10 +343,6 @@ c.start();
         generatedKey = resultSet.getInt(1);
  
       }
-c.stop();
-long runTime = c.getRuntime(0, c.getNumberOfStops()-1);
-if(runTime>10)
-  System.out.println(String.format("INSERT = %,dms | Trash.insertDoc()=%s", c.getRuntime(0, c.getNumberOfStops()-1), doc.canonical_path));
 
       DbUtils.close(resultSet);
       DbUtils.close(this.insert);
