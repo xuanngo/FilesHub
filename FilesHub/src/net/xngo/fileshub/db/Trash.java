@@ -65,6 +65,21 @@ public class Trash
   }
   
   /**
+   * 
+   * @param filename
+   * @return {@link Document}
+   */
+  public Document getDocByFilename(String filename)
+  {
+    return this.getDocBy("filename", filename);
+  }
+  
+  public List<Document> getDocsByUid(int uid)
+  {
+    return this.getDocsBy("duid", uid+"");
+  }  
+  
+  /**
    * @deprecated Currently used in unit test. Otherwise, remove deprecated.
    * @return
    */
@@ -100,20 +115,7 @@ public class Trash
     return this.deleteDoc(doc);
   }
   
-  /**
-   * 
-   * @param filename
-   * @return {@link Document}
-   */
-  public Document getDocByFilename(String filename)
-  {
-    return this.getDocBy("filename", filename);
-  }
-  
-  public List<Document> getDocsByUid(int uid)
-  {
-    return this.getDocsBy("duid", uid+"");
-  }
+
   
   
   public int markDuplicate(int duplicate, int of)
