@@ -52,7 +52,7 @@ public class Trash
    */
   public Document findDocByCanonicalPath(final String canonicalPath)
   {
-    return this.findDocBy("canonical_path", canonicalPath);
+    return this.getDocBy("canonical_path", canonicalPath);
   }
   
   /**
@@ -61,7 +61,7 @@ public class Trash
    */
   public Document findDocByHash(String hash)
   {
-    return this.findDocBy("hash", hash);
+    return this.getDocBy("hash", hash);
   }
   
   /**
@@ -107,7 +107,7 @@ public class Trash
    */
   public Document findDocByFilename(String filename)
   {
-    return this.findDocBy("filename", filename);
+    return this.getDocBy("filename", filename);
   }
   
   public List<Document> getDocsByUid(int uid)
@@ -234,62 +234,30 @@ public class Trash
     return docsList;
   }
   
+ 
   /**
    * 
    * @param column
    * @param value
    * @return {@link Document}
    */
-  private Document findDocBy(String column, String value)
+  private Document getDocBy(String column, String value)
   {
-    Document doc = null;
-    
-    final String query = String.format("SELECT duid, canonical_path, filename, last_modified, hash, comment "
-                                        + " FROM %s "
-                                        + "WHERE %s = ?", this.tablename, column);
-    
-    try
+    List<Document> docs = this.getDocsBy(column, value);
+    if(docs.size()==0)
     {
-      this.select = this.conn.connection.prepareStatement(query);
-      
-      int i=1;
-      this.select.setString(i++, value);
-      
-Chronometer c = new Chronometer();
-c.start();       
-      ResultSet resultSet =  this.select.executeQuery();
-c.stop();
-long runTime = c.getRuntime(0, c.getNumberOfStops()-1);
-if(runTime>10)
-  System.out.println(String.format("SELECT = %,dms | Trash.findDocBy()=%s", c.getRuntime(0, c.getNumberOfStops()-1), query));
-
-      if(resultSet.next())
-      {
-        doc = new Document();
-        int j=1;
-        doc.uid             = resultSet.getInt(j++); // Shelf.uid is equal to Trash.duid.
-        doc.canonical_path  = resultSet.getString(j++);
-        doc.filename        = resultSet.getString(j++);
-        doc.last_modified   = resultSet.getLong(j++);
-        doc.hash            = resultSet.getString(j++);
-        doc.comment         = resultSet.getString(j++);
-        
-        DbUtils.close(resultSet);
-        DbUtils.close(this.select);        
-        return doc;
-      }
-      else
-        return doc;
-
+      return null;
     }
-    catch(SQLException e)
+    else if(docs.size()==1)
     {
-      e.printStackTrace();
+      return docs.get(0);
     }
-    
-    return doc;
+    else
+    {
+      String msg = String.format("'WHERE %s = %s' returns %d entries. Expect 0 or 1.", column, value, docs.size());
+      throw new RuntimeException(msg);
+    }
   }
-  
   private List<Document> getDocsBy(String column, String value)
   {
     final String query = String.format("SELECT duid, canonical_path, filename, last_modified, hash, comment "
