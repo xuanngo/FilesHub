@@ -433,15 +433,18 @@ public class Manager
    ****************************************************************************/  
   
   /**
-   * select duid, count(hash) from Trash group by hash having count(hash)>10 ;
+   * Display all entries of a document.
    * @param uid
    */
   private void display(int uid)
   {
+    /**
+     * It is assumed that a document must always have a row in Shelf table.
+     */
     Document shelfDoc = this.shelf.findDocByUid(uid);
     if(shelfDoc==null)
     {
-      System.out.println(String.format("%d is not found!", uid));
+      System.out.println(String.format("'%d' is not found!", uid));
     }
     else
     {
