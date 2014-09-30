@@ -714,7 +714,7 @@ public class ManagerTest
     
   }
   
-  @Test(description="File A is a duplicate of File B but File B is a duplicate of File C.")
+  @Test(description="File B is a duplicate of File C but now you want to mark File A to be a duplicate of File B.")
   public void markDuplicateOfDuplicate()
   {
     //*** Prepare data ****
@@ -753,7 +753,10 @@ public class ManagerTest
                                                                     shelfDoc.getInfo("Shelf"),
                                                                     trashDoc.getInfo("Trash")));
     
-
+    // Clean up.
+    fileA.delete();
+    fileB.delete();
+    fileC.delete();
   }
   
   
