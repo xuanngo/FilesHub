@@ -612,9 +612,10 @@ public class ManagerTest
     assertFalse(commit, String.format("Should return false because %s and %s don't exist. Therefore, no commit.", duplicate.getName(), of.getName())); 
   }
   
-  @Test(description="File A is a duplicate of File B but File A itself has a lot of duplicate entries and File B doesn't exist in database.")
+  @Test(description="Mark File A to be a duplicate of File B but File A itself has a lot of duplicate entries and File B doesn't exist in database.")
   public void markDuplicateTrailingDuplicatesFileBNotInDb()
   {
+    // **** Prepare data ****
     // Create duplicates for File A and add them in the database.
     ArrayList<File> fileAs = new ArrayList<File>();
     fileAs.add(Data.createTempFile("markDuplicateTrailingDuplicatesFileBNotInDb_fileA"));
@@ -632,6 +633,7 @@ public class ManagerTest
     // Create File B.
     File fileB = Data.createTempFile("markDuplicateTrailingDuplicatesFileBNotInDb_fileB");
     
+    // **** Main test ****
     // Mark File A is a duplicate of File B.
     this.manager.markDuplicate(fileAs.get(0), fileB);
     
@@ -663,26 +665,28 @@ public class ManagerTest
   }
 
 
-  @Test(description="File A is a duplicate of File B but File A itself has a lot of duplicate entries and File B exist in database.")
+  @Test(description="Mark File A to be a duplicate of File B but File A itself has a lot of duplicate entries and File B exists in database.")
   public void markDuplicateTrailingDuplicatesFileBInDb()
   {
+    // **** Prepare data ****
     // Create duplicates for File A and add them in the database.
     ArrayList<File> fileAs = new ArrayList<File>();
-    fileAs.add(Data.createTempFile("markDuplicateTrailingDuplicatesFileBNotInDb_fileA"));
+    fileAs.add(Data.createTempFile("markDuplicateTrailingDuplicatesFileBInDb_fileA"));
     this.manager.addFile(fileAs.get(0));
     final int NUM_OF_DUPLICATES = 7;
     for(int i=0;i<NUM_OF_DUPLICATES;i++)
     {
-      File tmpFileA = Data.createTempFile("markDuplicateTrailingDuplicatesFileBNotInDb_fileA_"+i);
+      File tmpFileA = Data.createTempFile("markDuplicateTrailingDuplicatesFileBInDb_fileA_"+i);
       Data.copyFile(fileAs.get(0), tmpFileA);
       this.manager.addFile(tmpFileA);
       fileAs.add(tmpFileA);
     }
     
     // Add File B in database.
-    File fileB = Data.createTempFile("markDuplicateTrailingDuplicatesFileBNotInDb_fileB");
+    File fileB = Data.createTempFile("markDuplicateTrailingDuplicatesFileBInDb_fileB");
     this.manager.addFile(fileB);
     
+    // **** Main test ****
     // Mark File A is a duplicate of File B.
     this.manager.markDuplicate(fileAs.get(0), fileB);
  
