@@ -453,7 +453,7 @@ public class Manager
       shelfDocsList.add(shelfDoc);
       this.displayDocument("Shelf:", true, shelfDocsList);
       
-      List<Document> trashDocsList = this.trash.findDocsByUid(uid);
+      List<Document> trashDocsList = this.trash.getDocsByUid(uid);
       this.displayDocument("Trash:", false, trashDocsList);
     }
   }

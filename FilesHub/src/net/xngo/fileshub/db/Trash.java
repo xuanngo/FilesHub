@@ -110,9 +110,9 @@ public class Trash
     return this.findDocBy("filename", filename);
   }
   
-  public List<Document> findDocsByUid(int uid)
+  public List<Document> getDocsByUid(int uid)
   {
-    return this.findDocsBy("duid", uid+"");
+    return this.getDocsBy("duid", uid+"");
   }
   
   
@@ -290,7 +290,7 @@ if(runTime>10)
     return doc;
   }
   
-  private List<Document> findDocsBy(String column, String value)
+  private List<Document> getDocsBy(String column, String value)
   {
     final String query = String.format("SELECT duid, canonical_path, filename, last_modified, hash, comment "
                                         + " FROM %s"

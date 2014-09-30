@@ -14,10 +14,7 @@
     <class name="net.xngo.fileshub.test.db.ManagerTest">
 				<methods>
 <include name="DatabaseCreation" />
-<include name="addFileExactSameFile" />
-<include name="addFileShelfFileDeletedAddTrashFile" />
-
-
+<include name="markDuplicateTrailingDuplicatesFileBInDb" />
         </methods>
     </class>
   </classes>
