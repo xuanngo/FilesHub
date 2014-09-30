@@ -206,133 +206,6 @@ public class Manager
     return missingFileList;
   }
   
-  /**
-   * Mark 2 files as duplicate regardless of their content.
-   * <pre>
-   * {@code
-   * Mark file A is a duplicate of file B.
-   * 
-   * If file B found in Shelf
-   *    If file A found in Shelf
-   *        -Move file A from Shelf to Trash
-   *        -Link all duplicates of A to B.
-   *        -Return committed.
-   *    else
-   *        -Add file A in Trash & it should be linked to file B
-   *        -Return committed.
-   * else
-   *    ShelfID = ? // Find UID.
-   *    If file B found in Trash
-   *        -ShelfID = file B.duid
-   *        -Move file B info from Trash to Shelf.
-   *    else
-   *        -Add file B in Shelf
-   *        -ShelfID = file B.uid
-   *
-   *    If file A found in Shelf
-   *        -Move file A from Shelf to Trash
-   *        -Link all duplicates of A to ShelfID.
-   *        -Return committed.
-   *    else
-   *        -Add file A to Trash & it should be linked to ShelfID
-   *        -Return committed.
-   * }
-   * 
-   * </pre>
-   * @param fileA
-   * @param fileB
-   * @return False if nothing is committed in the database. Otherwise, true.
-   */
-  public boolean markDuplicate_old(File fileA, File fileB)
-  {
-    if(!this.validateMarkDuplicate(fileA, fileB))
-      return false;
-    else
-    {
-      String fileACanonicalPath = Utils.getCanonicalPath(fileA);
-      String fileBCanonicalPath = Utils.getCanonicalPath(fileB);
-      
-      if(fileACanonicalPath.compareTo(fileBCanonicalPath)==0)
-      {
-        System.out.println("Error: Both files are exactly the same.");
-        return false;
-      }
-      else
-      {
-        Document shelfDocFileB = this.shelf.findDocByCanonicalPath(fileBCanonicalPath);
-        if(shelfDocFileB!=null)
-        {// File B found in Shelf
-          Document shelfDocFileA = this.shelf.findDocByCanonicalPath(fileACanonicalPath);
-          if(shelfDocFileA!=null)
-          {// File A found in Shelf
-            
-            // Execution order is important.
-            //    Move File A from Shelf to Trash.            
-            this.shelf.removeDoc(shelfDocFileA.uid);
-            this.trash.markDuplicate(shelfDocFileA.uid, shelfDocFileB.uid);
-            shelfDocFileA.uid = shelfDocFileB.uid;
-            this.trash.addDoc(shelfDocFileA);
-            
-            return true;
-          }
-          else
-          {
-            Document newTrashDoc = new Document(fileA);
-            newTrashDoc.uid = shelfDocFileB.uid; // linked to file B
-            newTrashDoc.hash = Utils.getHash(fileA);
-            this.trash.addDoc(newTrashDoc);
-            return true;
-          }
-
-        }
-        else
-        {
-          int shelfUID = 0;
-          Document trashDocOf = this.trash.findDocByCanonicalPath(fileBCanonicalPath);
-          if(trashDocOf!=null)
-          {//file B found in Trash
-            shelfUID = trashDocOf.uid;
-            
-            //Move file B info from Trash to Shelf.
-//            this.shelf.addDoc(trashDocOf);
-//            this.trash.removeDoc(trashDocOf);
-          }
-          else
-          {
-            this.addFile(fileB); // This will always return null because 'fileB' is at the current state unique.
-            shelfUID = this.shelf.findDocByCanonicalPath(fileBCanonicalPath).uid;
-          }
-          
-         
-          Document shelfDocDuplicate = this.shelf.findDocByCanonicalPath(fileACanonicalPath);
-          if(shelfDocDuplicate!=null)
-          {// File A found in Shelf
-            
-            // Execution order is important.
-            //    Move File A from Shelf to Trash.
-            this.shelf.removeDoc(shelfDocDuplicate.uid);
-            this.trash.markDuplicate(shelfDocDuplicate.uid, shelfUID);
-            shelfDocDuplicate.uid = shelfUID;  // linked to file B
-            this.trash.addDoc(shelfDocDuplicate);
-            return true;
-          }
-          else
-          {
-            Document newTrashDoc = new Document(fileA);
-            newTrashDoc.uid = shelfUID;
-            newTrashDoc.hash = Utils.getHash(fileA);
-            this.trash.addDoc(newTrashDoc);
-            return true;            
-          }
-        }
-
-        
-        
-      }
-      
-    }
-    
-  }
 
   /**
    * Mark fileA is a duplicate of fileB
@@ -343,6 +216,7 @@ public class Manager
    *    -Link fileA's to fileB
    * else
    *    If fileB path found in Trash
+   *        -Handle circular duplication case: A was duplicate of B. Now B is duplicate of A.
    *        -Link fileA's to fileB
    *    else
    *        If fileB hash found in Shelf
@@ -374,6 +248,7 @@ public class Manager
       return false;
     }
     
+    // *** Main logic start here *****
     Document shelfDocB = this.shelf.findDocByCanonicalPath(fileBPath);
     if(shelfDocB!=null)
     {// fileB path found in Shelf
