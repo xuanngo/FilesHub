@@ -751,7 +751,57 @@ public class ManagerTest
                                                                     + "%s", 
                                                                     fileA.getName(), fileC.getName(),
                                                                     shelfDoc.getInfo("Shelf"),
-                                                                    trashDoc.getInfo("Trash")));    
+                                                                    trashDoc.getInfo("Trash")));
+    
+
   }
+  
+  
+  @Test(description="File A is a duplicate of File B in the database but now you want to mark File B to be the duplicate of File A")
+  public void markDuplicateMainBecomeDuplicate()
+  {
+    //*** Prepare data: Make File A to be a duplicate of File B ****
+    // Create File B and add to database.
+    File fileB = Data.createTempFile("markDuplicateMainBecomeDuplicate_fileB");
+    this.manager.addFile(fileB);
+    
+    // Copy File B to File A and add to database.
+    File fileA = Data.createTempFile("markDuplicateMainBecomeDuplicate_fileA");
+    Data.copyFile(fileB, fileA);
+    this.manager.addFile(fileA);
+
+    //*** Main test ****
+    // Mark File B is a duplicate of File A.
+    this.manager.markDuplicate(fileB, fileA);
+    
+    // Validate: File B should be in Trash and has same UID of File A.
+    Shelf shelf = new Shelf();
+    Document shelfDoc = shelf.findDocByFilename(fileA.getName());
+    Trash trash = new Trash();
+    Document trashDoc = trash.findDocByFilename(fileB.getName());
+    
+    assertEquals(trashDoc.uid, shelfDoc.uid, String.format("[%s] is not linked to/duplicate of [%s]. Trash.uid should be equal to Shelf.uid.\n"
+                                                                    + "%s"
+                                                                    + "\n"
+                                                                    + "%s", 
+                                                                    fileB.getName(), fileA.getName(),
+                                                                    shelfDoc.getInfo("Shelf"),
+                                                                    trashDoc.getInfo("Trash")));
+    
+    // Validate: Check number of rows in Shelf and Trash table.
+    final int expectedShelfRows = 1;
+    final int expectedTrashRows = 1;
+    int actualShelfRows = shelf.searchDocsByFilepath(Utils.getCanonicalPath(fileA)).size();
+    int actualTrashRows = trash.searchDocsByFilepath(Utils.getCanonicalPath(fileB)).size();
+    
+    assertEquals(actualShelfRows, expectedShelfRows, "There should be only 1 row in Shelf table.");
+    assertEquals(actualTrashRows, expectedTrashRows, "There should be only 1 row in Trash table.");
+    
+    // Clean up.
+    fileA.delete();
+    fileB.delete();
+  }
+  
+  
   
 }
