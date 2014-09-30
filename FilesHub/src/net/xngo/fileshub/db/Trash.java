@@ -262,10 +262,20 @@ public class Trash
   }
   private List<Document> getDocsBy(String column, String value)
   {
-    final String query = String.format("SELECT duid, canonical_path, filename, last_modified, hash, comment "
-                                        + " FROM %s"
-                                        + " WHERE %s = ?", this.tablename, column);
+
+    // Construct sql query.
+    String where = "";
+    if(column!=null)
+    {
+      if(!column.isEmpty())
+        where = String.format("WHERE %s = ?", column);
+    }    
     
+    final String query = String.format("SELECT duid, canonical_path, filename, last_modified, hash, comment "
+                                      + " FROM %s"
+                                      + " %s", this.tablename, where);
+    
+    // Get the documents.
     ArrayList<Document> docsList = new ArrayList<Document>();
     try
     {

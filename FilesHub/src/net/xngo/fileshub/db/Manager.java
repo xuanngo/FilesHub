@@ -161,7 +161,7 @@ public class Manager
    */
   public List<Document> update()
   {
-    List<Document> docList = this.shelf.getAllDoc();
+    List<Document> docList = this.shelf.getDocs();
     List<Document> missingFileList = new ArrayList<Document>();
     
     Report report = new Report();

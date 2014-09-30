@@ -97,8 +97,11 @@ public class Shelf
     return this.updateDoc(doc);
   }
   
-  
-  public List<Document> getAllDoc()
+  /**
+   * Return all documents from Shelf table.
+   * @return all documents from Shelf table.
+   */
+  public List<Document> getDocs()
   {
     return this.getDocsBy(null, null);
   }
@@ -306,9 +309,10 @@ if(runTime>10)
     }
     
     final String query = String.format("SELECT uid, canonical_path, filename, last_modified, hash, comment "
-                                        + " FROM %s "
-                                        + "%s", this.tablename, where);
+                                        + " FROM %s"
+                                        + " %s", this.tablename, where);
     
+    // Get the documents.
     List<Document> docList = new ArrayList<Document>();
     try
     {
