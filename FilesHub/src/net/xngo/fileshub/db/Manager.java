@@ -86,7 +86,7 @@ public class Manager
   {
     Document doc = new Document(file);
     
-    Document shelfDoc = this.shelf.findDocByCanonicalPath(doc.canonical_path);
+    Document shelfDoc = this.shelf.getDocByCanonicalPath(doc.canonical_path);
     if(shelfDoc == null)
     {// Path not found in Shelf.
       
@@ -95,9 +95,9 @@ public class Manager
       {// Path found in Trash.
         
         // Check if original file doesn't exist.
-        Document originalDoc = this.shelf.findDocByUid(trashDoc.uid);
+        Document originalDoc = this.shelf.getDocByUid(trashDoc.uid);
         if(new File(originalDoc.canonical_path).exists())
-          return this.shelf.findDocByUid(trashDoc.uid);
+          return this.shelf.getDocByUid(trashDoc.uid);
         else
         {// Shelf file doesn't exist.
           // Move original file info from Shelf to Trash.
@@ -111,7 +111,7 @@ public class Manager
       else
       {
           doc.hash = Utils.getHash(file);
-          shelfDoc = this.shelf.findDocByHash(doc.hash);
+          shelfDoc = this.shelf.getDocByHash(doc.hash);
           if(shelfDoc != null)
           {// Hash found in Shelf.
             
@@ -141,7 +141,7 @@ public class Manager
             {// Hash found in Trash.
               doc.uid = trashDoc.uid;
               trash.addDoc(doc);              
-              return this.shelf.findDocByUid(trashDoc.uid);
+              return this.shelf.getDocByUid(trashDoc.uid);
             }
             else
             {
@@ -249,7 +249,7 @@ public class Manager
     }
     
     // *** Main logic start here *****
-    Document shelfDocB = this.shelf.findDocByCanonicalPath(fileBPath);
+    Document shelfDocB = this.shelf.getDocByCanonicalPath(fileBPath);
     if(shelfDocB!=null)
     {// fileB path found in Shelf
       this.linkUIDs(fileAPath, shelfDocB.uid);
@@ -263,13 +263,13 @@ public class Manager
         
         // Circular duplication case: A was duplicate of B. Now B is duplicate of A.
         int uidB = trashDocB.uid;
-        Document shelfDocMainB = this.shelf.findDocByUid(trashDocB.uid);
+        Document shelfDocMainB = this.shelf.getDocByUid(trashDocB.uid);
         if(shelfDocMainB!=null)
         {
           if(shelfDocMainB.canonical_path.compareTo(fileAPath)==0)
           {
             this.shelf.addDoc(trashDocB); // New uid will be created.
-            uidB = this.shelf.findDocByCanonicalPath(fileBPath).uid;
+            uidB = this.shelf.getDocByCanonicalPath(fileBPath).uid;
             this.trash.removeDoc(trashDocB);
           }
         }
@@ -280,7 +280,7 @@ public class Manager
       {// fileB path NOT found in Trash
         
         String fileBHash = Utils.getHash(fileB);
-        shelfDocB = this.shelf.findDocByHash(fileBHash);
+        shelfDocB = this.shelf.getDocByHash(fileBHash);
         if(shelfDocB!=null)
         {// fileB hash found in Shelf
           this.linkUIDs(fileAPath, shelfDocB.uid);
@@ -301,7 +301,7 @@ public class Manager
             newDoc.hash = fileBHash;
             this.shelf.addDoc(newDoc);
             
-            shelfDocB = this.shelf.findDocByCanonicalPath(fileBPath);
+            shelfDocB = this.shelf.getDocByCanonicalPath(fileBPath);
             this.linkUIDs(fileAPath, shelfDocB.uid);
             
           }
@@ -316,7 +316,7 @@ public class Manager
   private void linkUIDs(String fromPathA, int uidB)
   {
     // Get uid of file A.
-    Document shelfDocA = this.shelf.findDocByCanonicalPath(fromPathA);
+    Document shelfDocA = this.shelf.getDocByCanonicalPath(fromPathA);
     Document trashDocA = this.trash.getDocByCanonicalPath(fromPathA);
     
     // Move file A and its duplicates to B.
@@ -355,7 +355,7 @@ public class Manager
   
   public void searchByHash(String hash)
   {
-    Document shelfDoc = this.shelf.findDocByHash(hash);
+    Document shelfDoc = this.shelf.getDocByHash(hash);
     if(shelfDoc==null)
     {
       Document trashDoc = this.trash.getDocByHash(hash);
@@ -441,7 +441,7 @@ public class Manager
     /**
      * It is assumed that a document must always have a row in Shelf table.
      */
-    Document shelfDoc = this.shelf.findDocByUid(uid);
+    Document shelfDoc = this.shelf.getDocByUid(uid);
     if(shelfDoc==null)
     {
       System.out.println(String.format("'%d' is not found!", uid));

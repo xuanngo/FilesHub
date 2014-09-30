@@ -33,7 +33,7 @@ public class CmdTest
     Cmd cmd = new Cmd(args);
     
     Shelf shelf = new Shelf();
-    Document doc = shelf.findDocByCanonicalPath(canonicalFilePath);
+    Document doc = shelf.getDocByCanonicalPath(canonicalFilePath);
     
     uniqueFile.delete(); // Clean up before validations.
     
@@ -51,8 +51,8 @@ public class CmdTest
     Cmd cmd = new Cmd(args);
     
     Shelf shelf = new Shelf();
-    Document firstDoc = shelf.findDocByCanonicalPath(firstCanonicalFilePath);
-    Document secondDoc = shelf.findDocByCanonicalPath(firstCanonicalFilePath);
+    Document firstDoc = shelf.getDocByCanonicalPath(firstCanonicalFilePath);
+    Document secondDoc = shelf.getDocByCanonicalPath(firstCanonicalFilePath);
     
     // Clean up before validations.
     firstUniqueFile.delete(); 
@@ -85,7 +85,7 @@ public class CmdTest
     for(File file: filesList)
     {
       String canonicalPath = Utils.getCanonicalPath(file);
-      Document doc = shelf.findDocByCanonicalPath(canonicalPath);
+      Document doc = shelf.getDocByCanonicalPath(canonicalPath);
       assertNotNull(doc, String.format("Command [%s %s] doesn't work. [%s] is not found in the database.", args[0], args[1], canonicalPath));
     }
     
@@ -118,7 +118,7 @@ public class CmdTest
     
     // Validate
     Shelf shelf = new Shelf();
-    Document shelfDoc = shelf.findDocByCanonicalPath(Utils.getCanonicalPath(uniqueFile));
+    Document shelfDoc = shelf.getDocByCanonicalPath(Utils.getCanonicalPath(uniqueFile));
     Trash trash = new Trash();
     Document trashDoc = trash.getDocByCanonicalPath(Utils.getCanonicalPath(uniqueFile));
     assertNull(shelfDoc, String.format("[%s] should not be added in Shelf. It is locked. [%s]", uniqueFile.getName(), Utils.getCanonicalPath(uniqueFile)));
@@ -162,7 +162,7 @@ public class CmdTest
     
     // Validations
     Shelf shelf = new Shelf();
-    Document shelfDoc = shelf.findDocByHash(newHash);
+    Document shelfDoc = shelf.getDocByHash(newHash);
     assertNotNull(shelfDoc, String.format("The new hash, %s, should be found in Shelf table.\n"
                                               + "%s", 
                                               newHash, Data.getFileInfo(uniqueFile, "Info of file where its content has changed")));

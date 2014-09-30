@@ -47,13 +47,9 @@ public class Shelf
    * @param uid
    * @return {@link Document}
    */
-  public Document findDocByUid(final int uid)
+  public Document getDocByUid(final int uid)
   {
-    List<Document> docList = this.findDocBy("uid", uid+"");
-    if(docList.size()==0)
-      return null;
-    else
-      return docList.get(0);
+    return this.getDocBy("uid", uid+"");
   } 
   
   /**
@@ -61,13 +57,9 @@ public class Shelf
    * @param canonicalPath
    * @return {@link Document}
    */
-  public Document findDocByCanonicalPath(final String canonicalPath)
+  public Document getDocByCanonicalPath(final String canonicalPath)
   {
-    List<Document> docList = this.findDocBy("canonical_path", canonicalPath);
-    if(docList.size()==0)
-      return null;
-    else
-      return docList.get(0);    
+    return this.getDocBy("canonical_path", canonicalPath);
   }
   
   /**
@@ -75,13 +67,9 @@ public class Shelf
    * @param hash
    * @return {@link Document}
    */
-  public Document findDocByHash(final String hash)
+  public Document getDocByHash(final String hash)
   {
-    List<Document> docList = this.findDocBy("hash", hash);
-    if(docList.size()==0)
-      return null;
-    else
-      return docList.get(0);       
+    return this.getDocBy("hash", hash);
   }
 
   /**
@@ -89,13 +77,9 @@ public class Shelf
    * @param filename
    * @return {@link Document}
    */
-  public Document findDocByFilename(final String filename)
+  public Document getDocByFilename(final String filename)
   {
-    List<Document> docList = this.findDocBy("filename", filename);
-    if(docList.size()==0)
-      return null;
-    else
-      return docList.get(0);       
+    return this.getDocBy("filename", filename);
   }
   
   public int removeDoc(int duid)
@@ -116,7 +100,7 @@ public class Shelf
   
   public List<Document> getAllDoc()
   {
-    return this.findDocBy(null, null);
+    return this.getDocsBy(null, null);
   }
 
   
@@ -287,7 +271,31 @@ if(runTime>10)
     return rowAffected;
   }
 
-  private List<Document> findDocBy(String column, String value)
+  /**
+   * 
+   * @param column
+   * @param value
+   * @return {@link Document}
+   */
+  private Document getDocBy(String column, String value)
+  {
+    List<Document> docs = this.getDocsBy(column, value);
+    if(docs.size()==0)
+    {
+      return null;
+    }
+    else if(docs.size()==1)
+    {
+      return docs.get(0);
+    }
+    else
+    {
+      String msg = String.format("'WHERE %s = %s' returns %d entries. Expect 0 or 1.", column, value, docs.size());
+      throw new RuntimeException(msg);
+    }
+  }
+  
+  private List<Document> getDocsBy(String column, String value)
   {
     // Construct sql query.
     String where = "";
@@ -301,7 +309,6 @@ if(runTime>10)
                                         + " FROM %s "
                                         + "%s", this.tablename, where);
     
-    
     List<Document> docList = new ArrayList<Document>();
     try
     {
@@ -312,14 +319,8 @@ if(runTime>10)
         int i=1;
         this.select.setString(i++, value);
       }
-      
-Chronometer c = new Chronometer();
-c.start();      
+    
       ResultSet resultSet =  this.select.executeQuery();
-c.stop();
-long runTime = c.getRuntime(0, c.getNumberOfStops()-1);
-if(runTime>10)
-  System.out.println(String.format("SELECT = %,dms | Shelf.findDocBy()=%s", c.getRuntime(0, c.getNumberOfStops()-1), query));
 
       while(resultSet.next())
       {

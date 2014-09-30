@@ -61,7 +61,7 @@ public class ManagerTest
     // Validation:
     //  Check if file path exists in Shelf.
     Shelf shelf = new Shelf();
-    Document shelfDoc = shelf.findDocByCanonicalPath(Utils.getCanonicalPath(uniqueFile));
+    Document shelfDoc = shelf.getDocByCanonicalPath(Utils.getCanonicalPath(uniqueFile));
     assertNotNull(shelfDoc, String.format("Expected [%s] to be added in Shelf table but it is not.\n"
                                                 + "%s"
                                                 ,uniqueFile.getName(),
@@ -92,7 +92,7 @@ public class ManagerTest
     // Validation:
     //  Check if file path exists in Shelf.
     Shelf shelf = new Shelf();
-    Document shelfDoc = shelf.findDocByCanonicalPath(Utils.getCanonicalPath(uniqueFile));
+    Document shelfDoc = shelf.getDocByCanonicalPath(Utils.getCanonicalPath(uniqueFile));
     assertNotNull(shelfDoc, String.format("Expected [%s] to be added in Shelf table but it is not.\n"
                                                 + "%s"
                                                 ,uniqueFile.getName(),
@@ -140,7 +140,7 @@ public class ManagerTest
     File uniqueFile = Data.createTempFile("addFileWithSameHash");
     this.manager.addFile(uniqueFile);
     Shelf shelf = new Shelf();
-    Document shelfDoc = shelf.findDocByFilename(uniqueFile.getName());
+    Document shelfDoc = shelf.getDocByFilename(uniqueFile.getName());
     
     // Copy unique file and then add to database.
     File duplicateFile = Data.createTempFile("addFileWithSameHash_duplicate_hash");
@@ -295,7 +295,7 @@ public class ManagerTest
     //  -No row is created in Trash.
     String hash = Utils.getHash(copiedFile);
     Shelf shelf = new Shelf();
-    Document shelfDoc = shelf.findDocByHash(hash);
+    Document shelfDoc = shelf.getDocByHash(hash);
     assertEquals(shelfDoc.canonical_path, Utils.getCanonicalPath(copiedFile), String.format("Expected a row is added in Shelf table but it is not.\n"
                                             + "%s"
                                             + "\n"
@@ -375,7 +375,7 @@ public class ManagerTest
     // Validations:
     //  New location of the moved file should be update in Shelf table.
     Shelf shelf = new Shelf();
-    Document shelfDoc = shelf.findDocByCanonicalPath(newCanonicalPath);
+    Document shelfDoc = shelf.getDocByCanonicalPath(newCanonicalPath);
     assertNotNull(shelfDoc, String.format("[%s] should be in Shelf table.", newCanonicalPath));
     
     Trash trash = new Trash();
@@ -410,7 +410,7 @@ public class ManagerTest
     // Validations:
     //  The duplicate file info should be move to Shelf.
     Shelf shelf = new Shelf();
-    Document shelfDoc = shelf.findDocByCanonicalPath(duplicateCanonicalPath);
+    Document shelfDoc = shelf.getDocByCanonicalPath(duplicateCanonicalPath);
     assertNotNull(shelfDoc, String.format("Duplicate file [%s] should be in Shelf table.", duplicateCanonicalPath));
     
     Trash trash = new Trash();
@@ -450,7 +450,7 @@ public class ManagerTest
     
     // Validate: File A should be in Trash and has the same UID of File C.
     Shelf shelf = new Shelf();
-    Document shelfDoc = shelf.findDocByFilename(fileC.getName());
+    Document shelfDoc = shelf.getDocByFilename(fileC.getName());
     Trash trash = new Trash();
     Document trashDoc = trash.getDocByFilename(fileA.getName());
     
@@ -471,7 +471,7 @@ public class ManagerTest
     File uniqueFile = Data.createTempFile("updateFileChanged");
     this.manager.addFile(uniqueFile);
     Shelf shelf = new Shelf();
-    Document oldShelfDoc = shelf.findDocByHash(Utils.getHash(uniqueFile));       
+    Document oldShelfDoc = shelf.getDocByHash(Utils.getHash(uniqueFile));       
     
     // Update the unique file.
     Data.writeStringToFile(uniqueFile, "new content");
@@ -491,7 +491,7 @@ public class ManagerTest
                                                       trashDoc.getInfo("Trash")
                                                 ));      
     
-    Document newShelfDoc = shelf.findDocByHash(Utils.getHash(uniqueFile)); 
+    Document newShelfDoc = shelf.getDocByHash(Utils.getHash(uniqueFile)); 
     assertEquals(newShelfDoc.last_modified, uniqueFile.lastModified(),
                                   String.format("Last modified time in Shelf table should be the same as the file to add.\n"
                                                       + "%s"
@@ -516,7 +516,7 @@ public class ManagerTest
     {
       File uniqueFile = Data.createTempFile("updateMissingFilesCount_"+i);
       this.manager.addFile(uniqueFile);
-      expectedMissingDocList.add(shelf.findDocByCanonicalPath(Utils.getCanonicalPath(uniqueFile)));
+      expectedMissingDocList.add(shelf.getDocByCanonicalPath(Utils.getCanonicalPath(uniqueFile)));
       uniqueFile.delete();
     }
 
@@ -551,7 +551,7 @@ public class ManagerTest
     
     // Validate: File A is linked as duplicate to File B.
     Shelf shelf = new Shelf();
-    Document shelfDoc = shelf.findDocByCanonicalPath(fileB.getAbsolutePath());
+    Document shelfDoc = shelf.getDocByCanonicalPath(fileB.getAbsolutePath());
     Trash trash = new Trash();
     Document trashDoc = trash.getDocByCanonicalPath(fileA.getAbsolutePath());
     assertEquals(trashDoc.uid, shelfDoc.uid, String.format("[%s] is not linked to/duplicate of [%s]. Shelf.uid should be equal to Trash.uid.\n"
@@ -584,7 +584,7 @@ public class ManagerTest
     //  1-File B is created in Shelf.
     //  2-File A is linked as duplicate of File B.
     Shelf shelf = new Shelf();
-    Document shelfDoc = shelf.findDocByCanonicalPath(fileB.getAbsolutePath());
+    Document shelfDoc = shelf.getDocByCanonicalPath(fileB.getAbsolutePath());
     assertNotNull(shelfDoc, String.format("[%s] should be created in Shelf table.\n"
                                               + "%s", fileB.getName(), Data.getFileInfo(fileB, "File B to add in Shelf")));
     
@@ -640,7 +640,7 @@ public class ManagerTest
     // Validate:
     //  Duplicates of File A and itself are linked to File B as duplicates.
     Shelf shelf = new Shelf();
-    Document shelfDoc = shelf.findDocByCanonicalPath(Utils.getCanonicalPath(fileB));
+    Document shelfDoc = shelf.getDocByCanonicalPath(Utils.getCanonicalPath(fileB));
     Trash trash = new Trash();
     for(File fA: fileAs)
     {
@@ -693,7 +693,7 @@ public class ManagerTest
     // Validate:
     //  Duplicates of File A and itself are linked to File B as duplicates.
     Shelf shelf = new Shelf();
-    Document shelfDoc = shelf.findDocByCanonicalPath(Utils.getCanonicalPath(fileB));
+    Document shelfDoc = shelf.getDocByCanonicalPath(Utils.getCanonicalPath(fileB));
     Trash trash = new Trash();
     for(File fA: fileAs)
     {
@@ -745,7 +745,7 @@ public class ManagerTest
     
     // Validate: File A should be in Trash and has same UID of File C.
     Shelf shelf = new Shelf();
-    Document shelfDoc = shelf.findDocByFilename(fileC.getName());
+    Document shelfDoc = shelf.getDocByFilename(fileC.getName());
     Trash trash = new Trash();
     Document trashDoc = trash.getDocByFilename(fileA.getName());
     
@@ -783,7 +783,7 @@ public class ManagerTest
     
     // Validate: File B should be in Trash and has same UID of File A.
     Shelf shelf = new Shelf();
-    Document shelfDoc = shelf.findDocByFilename(fileA.getName());
+    Document shelfDoc = shelf.getDocByFilename(fileA.getName());
     Trash trash = new Trash();
     Document trashDoc = trash.getDocByFilename(fileB.getName());
     
