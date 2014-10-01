@@ -3,6 +3,6 @@
 
 SET filename=%1
 SET outputFilename=%2
-chcp 65001
-:: [ KB]                         | [ byte]                 | [ bytes]                 | [ ? MB]                        | Want only > 100s MB ->[ ??.?? MB]
-sed "s/.* KB\x3C.*//" %filename% | sed "s/.* byte\x3C.*//" | sed "s/.* bytes\x3C.*//" | sed "s/.*\x3E[0-9] MB\x3C.*//" | sed "s/.*\x3E[0-9][0-9]*\.*[0-9][0-9]* MB\x3C.*//" > %outputFilename%
+
+:: Delete line with [ KB]        | Delete line with [ byte]| Delete line with [ bytes]| Delete line with less than 100 MB.
+sed "s/.* KB\x3C.*//" %filename% | sed "s/.* byte\x3C.*//" | sed "s/.* bytes\x3C.*//" | sed -r "s/.*\x3E[0-9][0-9]?\.?[0-9]* MB\x3C.*//" | sed -e "/^$/d"   > %outputFilename%
