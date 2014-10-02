@@ -108,10 +108,7 @@ public class Hub
     report.displayDuplicates();
         Main.chrono.stop("Display duplicates");
     report.constructSummary();
-    String reportFilenameSuffix = this.getResultsSuffix(addPaths);
-    report.writeCSV(String.format("./results_%s.csv", reportFilenameSuffix));   // Use ./XYZ so it writes results to the executed location.
-        Main.chrono.stop("Write CSV file");
-    report.writeHtml(String.format("./results_%s.html", reportFilenameSuffix));
+    report.writeHtml(String.format("./results_%s.html", this.getResultsSuffix(addPaths)));
         Main.chrono.stop("Write HTML file");
     report.displaySummary();
         Main.chrono.display();
