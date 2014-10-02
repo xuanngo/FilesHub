@@ -11,7 +11,8 @@ import net.xngo.fileshub.report.Chronometer;
  */
 public class Main
 {
-  public static Chronometer chrono              = new Chronometer();
+  public static Chronometer chrono = new Chronometer();
+//  public static Connection connection = new Connection();
   
   public static void main(String[] args)
   {

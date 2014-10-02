@@ -16,6 +16,7 @@ Libraries
 ==========
   -CSV: http://csveed.org/comparison-matrix.html
   -https://code.google.com/p/markdown-doclet/ 
+  -https://code.google.com/p/sqlite4java/wiki/ComparisonToOtherWrappers
 
 Indices
 ========
