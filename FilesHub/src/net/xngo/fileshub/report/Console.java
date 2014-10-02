@@ -4,8 +4,10 @@ public class Console
 {
   private int lastLineLength = 0;
   
-  public void printProgress(String line)
+  public void printProgress(String dline)
   {
+    String line = String.format("[%d] %s", this.lastLineLength, dline); // For debugging purposes.
+    
     for(int i=0; i<lastLineLength; i++)
     {
       System.out.print('\b');
