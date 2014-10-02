@@ -65,7 +65,10 @@ public class Hub
         {
           if(doc.canonical_path.compareTo(Utils.getCanonicalPath(file))!=0) // Ignore if users add the exact same file and the same path.
           {
-            report.addDuplicate(new Document(file), doc);
+            if(file.exists() && new File(doc.canonical_path).exists())
+            {// Ensure both files exist before adding them to the report as duplicate.
+              report.addDuplicate(new Document(file), doc);
+            }
           }
         }
       }
