@@ -2,7 +2,6 @@ package net.xngo.fileshub.db;
 
 import java.sql.DriverManager;
 import java.sql.ResultSet;
-import java.sql.Statement;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
@@ -110,6 +109,25 @@ public class Connection
     catch (SQLException e)
     {
       e.printStackTrace();
-    }    
+    }
+  }
+  
+  public void close()
+  {
+    // Close prepared statement.
+    this.closePStatement();
+    
+    // Close connection.
+    try
+    {
+      if(this.connection != null)
+      {
+        this.connection.close();
+      }
+    }
+    catch (SQLException e)
+    {
+      e.printStackTrace();
+    }
   }
 }
