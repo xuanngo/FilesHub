@@ -22,7 +22,12 @@ public class Trash
   {
     // Create table.
     String query = this.createTableQuery();
-    Main.connection.executeUpdate(query);
+    try
+    {
+      Main.connection.prepareStatement(query);
+      Main.connection.executeUpdate();
+    }
+    catch(SQLException ex) { ex.printStackTrace(); }
     
     // Create indices.
     this.createIndices();
@@ -32,7 +37,12 @@ public class Trash
   {
     // Delete table.
     String query="DROP TABLE IF EXISTS " + this.tablename;
-    Main.connection.executeUpdate(query);    
+    try
+    {
+      Main.connection.prepareStatement(query);
+      Main.connection.executeUpdate();
+    }
+    catch(SQLException ex) { ex.printStackTrace(); }   
   }
   
  
@@ -392,7 +402,12 @@ public class Trash
                       "CREATE INDEX trash_canonical_path ON "+this.tablename+" (canonical_path);"};
     for(String query: indices)
     {
-      Main.connection.executeUpdate(query);
+      try
+      {
+        Main.connection.prepareStatement(query);
+        Main.connection.executeUpdate();
+      }
+      catch(SQLException ex) { ex.printStackTrace(); }
     }
   }
   

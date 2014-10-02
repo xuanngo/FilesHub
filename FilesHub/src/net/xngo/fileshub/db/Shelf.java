@@ -23,7 +23,12 @@ public class Shelf
   {
     // Create table.
     String query = this.createTableQuery();
-    Main.connection.executeUpdate(query);
+    try
+    {
+      Main.connection.prepareStatement(query);
+      Main.connection.executeUpdate();
+    }
+    catch(SQLException ex) { ex.printStackTrace(); }
     
     // Create indices.
     this.createIndices();    
@@ -33,7 +38,12 @@ public class Shelf
   {
     // Delete table.
     String query="DROP TABLE IF EXISTS " + this.tablename;
-    Main.connection.executeUpdate(query);    
+    try
+    {
+      Main.connection.prepareStatement(query);
+      Main.connection.executeUpdate();
+    }
+    catch(SQLException ex) { ex.printStackTrace(); }   
   }
   
   /**
@@ -413,9 +423,15 @@ public class Shelf
   {
     String[] indices={"CREATE INDEX shelf_hash ON "+this.tablename+" (hash);",
                       "CREATE INDEX shelf_canonical_path ON "+this.tablename+" (canonical_path);"};
+    
     for(String query: indices)
     {
-      Main.connection.executeUpdate(query);
+      try
+      {
+        Main.connection.prepareStatement(query);
+        Main.connection.executeUpdate();
+      }
+      catch(SQLException ex) { ex.printStackTrace(); }
     }
   }
   

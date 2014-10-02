@@ -10,8 +10,7 @@ import net.xngo.fileshub.Config;
 
 public class Connection
 {
-  public java.sql.Connection  connection  = null;
-  public Statement            statement   = null;
+  public java.sql.Connection  connection        = null;
   public PreparedStatement    preparedStatement = null;
   
   
@@ -43,7 +42,6 @@ public class Connection
       
       // Create a database connection
       this.connection = DriverManager.getConnection(dbUrl);
-      this.statement  = connection.createStatement();
     }
     catch(SQLException e)
     {
@@ -84,19 +82,6 @@ public class Connection
   {
     return this.preparedStatement.getGeneratedKeys();
   }
-  
-  public int executeUpdate(String sql)
-  {
-    try
-    {
-      return this.statement.executeUpdate(sql);
-    }
-    catch(SQLException ex)
-    {
-      ex.printStackTrace();
-    }
-    return 0;
-  }  
   
   public void setString(int parameterIndex, String x) throws SQLException
   {
