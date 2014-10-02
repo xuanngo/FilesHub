@@ -8,7 +8,7 @@ import net.xngo.fileshub.Utils;
 import net.xngo.fileshub.report.Report;
 import net.xngo.fileshub.struct.Document;
 import net.xngo.fileshub.db.Shelf;
-import net.xngo.utils.java.io.FileUtils;
+import net.xngo.fileshub.Config;
 
 /**
  * Manage documents.
@@ -23,7 +23,7 @@ public class Manager
   public void createDbStructure()
   {
     // Create database structure if sqlite database file doesn't exist.
-    File DbFile = new File(Conn.DB_FILE_PATH);
+    File DbFile = new File(Config.DB_FILE_PATH);
     if(!DbFile.exists())
     {// Database file doesn't exist.
       this.shelf.createTable();

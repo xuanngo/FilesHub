@@ -1,13 +1,12 @@
 package net.xngo.fileshub.db;
 
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.ArrayList;
 
+import net.xngo.fileshub.Main;
 import net.xngo.fileshub.struct.Document;
-import net.xngo.fileshub.report.Chronometer;
 import net.xngo.utils.java.db.DbUtils;
 
 /**
@@ -19,18 +18,12 @@ public class Shelf
 {
   private final String tablename  = "Shelf";
   
-  private Conn conn = Conn.getInstance();
-  
-  private PreparedStatement insert = null;
-  private PreparedStatement select = null;
-  private PreparedStatement delete = null;
-  private PreparedStatement update = null;
   
   public void createTable()
   {
     // Create table.
     String query = this.createTableQuery();
-    this.conn.executeUpdate(query);
+    Main.connection.executeUpdate(query);
     
     // Create indices.
     this.createIndices();    
@@ -40,7 +33,7 @@ public class Shelf
   {
     // Delete table.
     String query="DROP TABLE IF EXISTS " + this.tablename;
-    this.conn.executeUpdate(query);    
+    Main.connection.executeUpdate(query);    
   }
   
   /**
@@ -117,9 +110,9 @@ public class Shelf
     
     try
     {
-      this.select = this.conn.connection.prepareStatement(query);
+      Main.connection.prepareStatement(query);
       
-      ResultSet resultSet =  this.select.executeQuery();
+      ResultSet resultSet =  Main.connection.executeQuery();
       if(resultSet.next())
       {
         return resultSet.getInt(1);
@@ -156,12 +149,12 @@ public class Shelf
     int rowsAffected = 0;
     try
     {
-      this.delete = this.conn.connection.prepareStatement(query);
+      Main.connection.prepareStatement(query);
       
-      this.delete.setInt(1, duid);
+      Main.connection.setInt(1, duid);
       
-      rowsAffected = this.delete.executeUpdate();
-      DbUtils.close(this.delete);      
+      rowsAffected = Main.connection.executeUpdate();
+      //DbUtils.close(this.delete);      
     }
     catch(SQLException e)
     {
@@ -180,23 +173,22 @@ public class Shelf
     try
     {
       // Prepare the query.
-      this.insert = this.conn.connection.prepareStatement(query);
+      Main.connection.prepareStatement(query);
       
       // Set the data.
       int i=1;
-      this.insert.setString (i++, doc.canonical_path);
-      this.insert.setString (i++, doc.filename);
-      this.insert.setLong   (i++, doc.last_modified);
-      this.insert.setString (i++, doc.hash);
-      this.insert.setString (i++, doc.comment);
+      Main.connection.setString (i++, doc.canonical_path);
+      Main.connection.setString (i++, doc.filename);
+      Main.connection.setLong   (i++, doc.last_modified);
+      Main.connection.setString (i++, doc.hash);
+      Main.connection.setString (i++, doc.comment);
       
       // Insert row.
-      this.insert.executeUpdate();
-      ResultSet resultSet =  this.insert.getGeneratedKeys();
+      Main.connection.executeUpdate();
+      ResultSet resultSet =  Main.connection.getGeneratedKeys();
       if(resultSet.next())
       {
         generatedKey = resultSet.getInt(1);
- 
       }
       
       DbUtils.close(resultSet);
@@ -214,7 +206,7 @@ public class Shelf
     }
     finally
     {
-      DbUtils.close(this.insert);
+     // DbUtils.close(this.insert);
     }  
     return generatedKey;
   }
@@ -230,21 +222,21 @@ public class Shelf
     try
     {
       // Prepare the query.
-      this.update = this.conn.connection.prepareStatement(query);
+      Main.connection.prepareStatement(query);
       
       // Set the data.
       int i=1;
-      this.update.setString(i++, doc.canonical_path  );
-      this.update.setString(i++, doc.filename        );
-      this.update.setLong  (i++, doc.last_modified   );
-      this.update.setString(i++, doc.hash            );
-      this.update.setString(i++, doc.comment         );      
-      this.update.setInt   (i++, doc.uid             );
+      Main.connection.setString(i++, doc.canonical_path  );
+      Main.connection.setString(i++, doc.filename        );
+      Main.connection.setLong  (i++, doc.last_modified   );
+      Main.connection.setString(i++, doc.hash            );
+      Main.connection.setString(i++, doc.comment         );      
+      Main.connection.setInt   (i++, doc.uid             );
       
       // update row.
-      rowAffected = this.update.executeUpdate();
+      rowAffected = Main.connection.executeUpdate();
 
-      DbUtils.close(this.update);         
+      //DbUtils.close(this.update);         
     }
     catch(SQLException e)
     {
@@ -252,6 +244,7 @@ public class Shelf
     }
     finally
     {
+      /* Temporarily comment out due to Conn.java refactoring.
       try
       {
         if(this.update!=null)
@@ -263,6 +256,7 @@ public class Shelf
         rException.setStackTrace(ex.getStackTrace());
         throw rException;
       }
+      */
     }
     
     return rowAffected;
@@ -310,15 +304,15 @@ public class Shelf
     List<Document> docList = new ArrayList<Document>();
     try
     {
-      this.select = this.conn.connection.prepareStatement(query);
+      Main.connection.prepareStatement(query);
       
       if(!where.isEmpty())
       {
         int i=1;
-        this.select.setString(i++, value);
+        Main.connection.setString(i++, value);
       }
     
-      ResultSet resultSet =  this.select.executeQuery();
+      ResultSet resultSet =  Main.connection.executeQuery();
 
       while(resultSet.next())
       {
@@ -334,7 +328,7 @@ public class Shelf
         docList.add(doc);
       }
       DbUtils.close(resultSet);
-      DbUtils.close(this.select);      
+      //DbUtils.close(this.select);      
     }
     catch(SQLException e)
     {
@@ -365,11 +359,11 @@ public class Shelf
     List<Document> docsList = new ArrayList<Document>();
     try
     {
-      this.select = this.conn.connection.prepareStatement(query);
+      Main.connection.prepareStatement(query);
       
-      this.select.setString(1, likeValue);
+      Main.connection.setString(1, likeValue);
 
-      ResultSet resultSet =  this.select.executeQuery();
+      ResultSet resultSet =  Main.connection.executeQuery();
 
       while(resultSet.next())
       {
@@ -385,7 +379,7 @@ public class Shelf
         docsList.add(doc);
       }
       DbUtils.close(resultSet);
-      DbUtils.close(this.select);      
+      //DbUtils.close(this.select);      
     }
     catch(SQLException e)
     {
@@ -421,7 +415,7 @@ public class Shelf
                       "CREATE INDEX shelf_canonical_path ON "+this.tablename+" (canonical_path);"};
     for(String query: indices)
     {
-      this.conn.executeUpdate(query);
+      Main.connection.executeUpdate(query);
     }
   }
   

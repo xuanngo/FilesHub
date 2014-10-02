@@ -1,13 +1,11 @@
 package net.xngo.fileshub.db;
 
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.xngo.fileshub.db.Conn;
-import net.xngo.fileshub.report.Chronometer;
+import net.xngo.fileshub.Main;
 import net.xngo.fileshub.struct.Document;
 import net.xngo.utils.java.db.DbUtils;
 
@@ -19,20 +17,12 @@ import net.xngo.utils.java.db.DbUtils;
 public class Trash
 {
   private final String tablename  = "Trash";
-  
-  private Conn conn = Conn.getInstance();
-  
-  private PreparedStatement insert = null;
-  private PreparedStatement select = null;
-  private PreparedStatement update = null;
-  private PreparedStatement delete = null;
- 
  
   public void createTable()
   {
     // Create table.
     String query = this.createTableQuery();
-    this.conn.executeUpdate(query);
+    Main.connection.executeUpdate(query);
     
     // Create indices.
     this.createIndices();
@@ -42,7 +32,7 @@ public class Trash
   {
     // Delete table.
     String query="DROP TABLE IF EXISTS " + this.tablename;
-    this.conn.executeUpdate(query);    
+    Main.connection.executeUpdate(query);    
   }
   
  
@@ -89,9 +79,9 @@ public class Trash
     
     try
     {
-      this.select = this.conn.connection.prepareStatement(query);
+      Main.connection.prepareStatement(query);
       
-      ResultSet resultSet =  this.select.executeQuery();
+      ResultSet resultSet =  Main.connection.executeQuery();
       if(resultSet.next())
       {
         return resultSet.getInt(1);
@@ -126,15 +116,15 @@ public class Trash
     try
     {
       // Prepare the query.
-      this.update = this.conn.connection.prepareStatement(query);
+      Main.connection.prepareStatement(query);
       
       // Set the data.
       int i=1;
-      this.update.setInt(i++, of);
-      this.update.setInt(i++, duplicate);
+      Main.connection.setInt(i++, of);
+      Main.connection.setInt(i++, duplicate);
       
       // update row.
-      rowAffected = this.update.executeUpdate();
+      rowAffected = Main.connection.executeUpdate();
     }
     catch(SQLException e)
     {
@@ -168,16 +158,16 @@ public class Trash
     int rowsAffected = 0;
     try
     {
-      this.delete = this.conn.connection.prepareStatement(query);
+      Main.connection.prepareStatement(query);
       
       int i=1; // Order must match with query.
-      this.delete.setInt   (i++, doc.uid);
-      this.delete.setString(i++, doc.hash);
-      this.delete.setString(i++, doc.canonical_path);
+      Main.connection.setInt   (i++, doc.uid);
+      Main.connection.setString(i++, doc.hash);
+      Main.connection.setString(i++, doc.canonical_path);
       
-      rowsAffected = this.delete.executeUpdate();
+      rowsAffected = Main.connection.executeUpdate();
 
-      DbUtils.close(this.delete);        
+//      DbUtils.close(this.delete);        
     }
     catch(SQLException e)
     {
@@ -205,11 +195,11 @@ public class Trash
     List<Document> docsList = new ArrayList<Document>();
     try
     {
-      this.select = this.conn.connection.prepareStatement(query);
+      Main.connection.prepareStatement(query);
       
-      this.select.setString(1, likeValue);
+      Main.connection.setString(1, likeValue);
       
-      ResultSet resultSet =  this.select.executeQuery();
+      ResultSet resultSet =  Main.connection.executeQuery();
 
       while(resultSet.next())
       {
@@ -225,7 +215,7 @@ public class Trash
         docsList.add(doc);
       }
       DbUtils.close(resultSet);
-      DbUtils.close(this.select);        
+//      DbUtils.close(this.select);        
 
     }
     catch(SQLException e)
@@ -279,9 +269,9 @@ public class Trash
     ArrayList<Document> docsList = new ArrayList<Document>();
     try
     {
-      this.select = this.conn.connection.prepareStatement(query);
-      this.select.setString(1, value);
-      ResultSet resultSet =  this.select.executeQuery();
+      Main.connection.prepareStatement(query);
+      Main.connection.setString(1, value);
+      ResultSet resultSet =  Main.connection.executeQuery();
 
       while(resultSet.next())
       {
@@ -298,7 +288,7 @@ public class Trash
         
       }
       DbUtils.close(resultSet);
-      DbUtils.close(this.select);         
+//      DbUtils.close(this.select);         
     }
     catch(SQLException e)
     {
@@ -324,20 +314,20 @@ public class Trash
     try
     {
       // Prepare the query.
-      this.insert = this.conn.connection.prepareStatement(query);
+      Main.connection.prepareStatement(query);
       
       // Set the data.
       int i=1; // Order must match with query.
-      this.insert.setInt   (i++, doc.uid);
-      this.insert.setString(i++, doc.canonical_path);
-      this.insert.setString(i++, doc.filename);
-      this.insert.setLong  (i++, doc.last_modified);
-      this.insert.setString(i++, doc.hash);
-      this.insert.setString(i++, doc.comment);
+      Main.connection.setInt   (i++, doc.uid);
+      Main.connection.setString(i++, doc.canonical_path);
+      Main.connection.setString(i++, doc.filename);
+      Main.connection.setLong  (i++, doc.last_modified);
+      Main.connection.setString(i++, doc.hash);
+      Main.connection.setString(i++, doc.comment);
 
       // Insert row.
-      this.insert.executeUpdate();
-      ResultSet resultSet =  this.insert.getGeneratedKeys();
+      Main.connection.executeUpdate();
+      ResultSet resultSet =  Main.connection.getGeneratedKeys();
       if(resultSet.next())
       {
         generatedKey = resultSet.getInt(1);
@@ -345,7 +335,7 @@ public class Trash
       }
 
       DbUtils.close(resultSet);
-      DbUtils.close(this.insert);
+//      DbUtils.close(this.insert);
     }
     catch(SQLException e)
     {
@@ -360,6 +350,7 @@ public class Trash
     }
     finally
     {
+      /* Temporarily comment this due to Conn.java refactoring.
       try
       {
         if(this.insert!=null)
@@ -371,6 +362,7 @@ public class Trash
         rException.setStackTrace(ex.getStackTrace());
         throw rException;
       }
+      */
     }    
   
     return generatedKey;
@@ -400,7 +392,7 @@ public class Trash
                       "CREATE INDEX trash_canonical_path ON "+this.tablename+" (canonical_path);"};
     for(String query: indices)
     {
-      this.conn.executeUpdate(query);
+      Main.connection.executeUpdate(query);
     }
   }
   
