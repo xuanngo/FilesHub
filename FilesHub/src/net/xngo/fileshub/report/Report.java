@@ -1,9 +1,6 @@
 package net.xngo.fileshub.report;
 
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
-import java.util.Arrays;
 import java.util.Collections;
 import java.io.File;
 import java.io.FileWriter;
@@ -11,14 +8,7 @@ import java.io.IOException;
 import java.io.BufferedWriter;
 
 
-import org.supercsv.io.CsvListWriter;
-import org.supercsv.io.ICsvListWriter;
-import org.supercsv.prefs.CsvPreference;
-import org.supercsv.cellprocessor.ift.CellProcessor;
-import org.supercsv.cellprocessor.constraint.NotNull;
-
 import net.xngo.fileshub.Config;
-import net.xngo.fileshub.Utils;
 import net.xngo.fileshub.struct.Document;
 import net.xngo.fileshub.struct.Duplicate;
 import net.xngo.utils.java.io.FileUtils;
@@ -37,8 +27,6 @@ public class Report
   private StringBuilder summary = new StringBuilder();
   
   private ArrayList<Duplicate> duplicates = new ArrayList<Duplicate>();
-  private String totalDuplicateSizeString = "";
-  
   
   public Console console = new Console();
   
@@ -102,50 +90,7 @@ public class Report
     System.out.println(this.summary.toString());
   }
   
-  public void writeCSV(String csvFilePath)
-  {
-    ICsvListWriter listWriter = null;
-    try
-    {
-      listWriter = new CsvListWriter(new FileWriter(csvFilePath),
-              CsvPreference.STANDARD_PREFERENCE);
-      
-      final CellProcessor[] processors = this.getProcessors();
-      final String[] header = new String[] { "Duplicate", "From Database" };
-      
-      // write the header
-      listWriter.writeHeader(header);
-      
-      // write
-      for(int i=0; i<this.duplicates.size(); i++)
-      {
-        final List<Object> row = Arrays.asList(new Object[] { this.duplicates.get(i).toAddDoc.canonical_path, this.duplicates.get(i).shelfDoc.canonical_path});            
-        listWriter.write(row, processors);
-      }
-            
-      if( listWriter != null )
-      {
-        listWriter.close();
-      }            
-    }
-    catch(IOException e)
-    {
-      e.printStackTrace();
-    }
   
-  }
-  
-  
-  private CellProcessor[] getProcessors()
-  {
-    
-    final CellProcessor[] processors = new CellProcessor[] { 
-                                                              new NotNull(), // Duplicate file.
-                                                              new NotNull(), // File in database
-                                                            };
-    
-    return processors;
-  }
   
   public void displayTotalFilesToProcess()
   {
