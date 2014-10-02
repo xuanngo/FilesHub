@@ -97,4 +97,19 @@ public class Connection
   {
     this.preparedStatement.setLong(parameterIndex, x);
   }
+  
+  public void closePStatement()
+  {
+    try
+    {
+      if(this.preparedStatement != null)
+      {
+        this.preparedStatement.close();
+      }
+    }
+    catch (SQLException e)
+    {
+      e.printStackTrace();
+    }    
+  }
 }

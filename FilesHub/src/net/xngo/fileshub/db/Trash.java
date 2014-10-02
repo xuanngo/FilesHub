@@ -177,7 +177,7 @@ public class Trash
       
       rowsAffected = Main.connection.executeUpdate();
 
-//      DbUtils.close(this.delete);        
+      Main.connection.closePStatement();     
     }
     catch(SQLException e)
     {
@@ -225,7 +225,7 @@ public class Trash
         docsList.add(doc);
       }
       DbUtils.close(resultSet);
-//      DbUtils.close(this.select);        
+      Main.connection.closePStatement();       
 
     }
     catch(SQLException e)
@@ -298,7 +298,7 @@ public class Trash
         
       }
       DbUtils.close(resultSet);
-//      DbUtils.close(this.select);         
+      Main.connection.closePStatement();        
     }
     catch(SQLException e)
     {
@@ -345,7 +345,7 @@ public class Trash
       }
 
       DbUtils.close(resultSet);
-//      DbUtils.close(this.insert);
+
     }
     catch(SQLException e)
     {
@@ -360,19 +360,7 @@ public class Trash
     }
     finally
     {
-      /* Temporarily comment this due to Conn.java refactoring.
-      try
-      {
-        if(this.insert!=null)
-          this.insert.close();
-      }
-      catch(SQLException ex) 
-      {
-        RuntimeException rException = new RuntimeException();
-        rException.setStackTrace(ex.getStackTrace());
-        throw rException;
-      }
-      */
+      Main.connection.closePStatement();
     }    
   
     return generatedKey;

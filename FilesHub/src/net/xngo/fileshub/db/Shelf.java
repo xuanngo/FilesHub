@@ -164,7 +164,7 @@ public class Shelf
       Main.connection.setInt(1, duid);
       
       rowsAffected = Main.connection.executeUpdate();
-      //DbUtils.close(this.delete);      
+      Main.connection.closePStatement();    
     }
     catch(SQLException e)
     {
@@ -216,7 +216,7 @@ public class Shelf
     }
     finally
     {
-     // DbUtils.close(this.insert);
+      Main.connection.closePStatement();
     }  
     return generatedKey;
   }
@@ -245,8 +245,7 @@ public class Shelf
       
       // update row.
       rowAffected = Main.connection.executeUpdate();
-
-      //DbUtils.close(this.update);         
+         
     }
     catch(SQLException e)
     {
@@ -254,19 +253,7 @@ public class Shelf
     }
     finally
     {
-      /* Temporarily comment out due to Conn.java refactoring.
-      try
-      {
-        if(this.update!=null)
-          this.update.close();
-      }
-      catch(SQLException ex) 
-      {
-        RuntimeException rException = new RuntimeException();
-        rException.setStackTrace(ex.getStackTrace());
-        throw rException;
-      }
-      */
+      Main.connection.closePStatement();
     }
     
     return rowAffected;
@@ -338,7 +325,7 @@ public class Shelf
         docList.add(doc);
       }
       DbUtils.close(resultSet);
-      //DbUtils.close(this.select);      
+      Main.connection.closePStatement();
     }
     catch(SQLException e)
     {
@@ -389,7 +376,7 @@ public class Shelf
         docsList.add(doc);
       }
       DbUtils.close(resultSet);
-      //DbUtils.close(this.select);      
+      Main.connection.closePStatement();      
     }
     catch(SQLException e)
     {
