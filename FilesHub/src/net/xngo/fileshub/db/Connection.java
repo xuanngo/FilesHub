@@ -53,6 +53,21 @@ public class Connection
     
   }
   
+  public void setAutoCommit(boolean autoCommit) throws SQLException
+  {
+    this.connection.setAutoCommit(autoCommit);
+  }
+  public void commit() throws SQLException
+  {
+    this.connection.commit();
+  }
+  
+  public void rollback() throws SQLException
+  {
+    this.connection.rollback();
+  }
+  
+  
   public PreparedStatement prepareStatement(String sql) throws SQLException
   {
     this.preparedStatement = this.connection.prepareStatement(sql);
