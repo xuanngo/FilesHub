@@ -6,8 +6,6 @@ import java.util.Date;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
-import net.xngo.fileshub.Config;
-
 /**
  * Measure time elapsed.
  * @author Xuan Ngo
