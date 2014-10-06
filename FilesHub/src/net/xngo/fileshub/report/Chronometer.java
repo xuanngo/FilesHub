@@ -6,6 +6,8 @@ import java.util.Date;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
+import net.xngo.utils.java.time.CalUtils;
+
 /**
  * Measure time elapsed.
  * @author Xuan Ngo
@@ -137,13 +139,10 @@ public class Chronometer
     return String.format("%02d:%02d:%02d.%d", lRuntimeHrs, lRuntimeMin, lRuntimeSec, lRuntime);
   }
   
-  private final String getDateTimeFormatted(Calendar oCalendar)
+  private final String getDateTimeFormatted(Calendar cal)
   {
     final String dateFormat = "yyyy-MM-dd HH:mm:ss.SSSS";
- 
-    Date currentDate = oCalendar.getTime();
-    SimpleDateFormat oSimpleDateFormat = new SimpleDateFormat(dateFormat);
-    return oSimpleDateFormat.format(currentDate);
+    return CalUtils.toString(cal, dateFormat);
   }
 }
 

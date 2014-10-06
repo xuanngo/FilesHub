@@ -14,6 +14,7 @@ import net.xngo.fileshub.db.Debug;
 import net.xngo.fileshub.db.Manager;
 import net.xngo.fileshub.report.Report;
 import net.xngo.fileshub.struct.Document;
+import net.xngo.utils.java.time.CalUtils;
 import net.xngo.utils.java.time.ElapsedTime;
 import net.xngo.utils.java.io.FileUtils;
 import net.xngo.utils.java.math.Math;
@@ -220,7 +221,7 @@ public class Hub
       }
     }
     
-    String timestamp = System.currentTimeMillis()+"";
+    String timestamp = CalUtils.toString("yyyy-MM-dd_HHmmss"); // Use in filename.
     
     if(directories.toString().isEmpty())
       return timestamp;
