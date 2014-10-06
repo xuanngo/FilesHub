@@ -34,6 +34,7 @@ public class Report
   public void addDuplicate(Document toAddDoc, Document shelfDoc)
   {
     this.duplicates.add(new Duplicate(toAddDoc, shelfDoc));
+    DUPLICATE_FILES_SIZE += new File(toAddDoc.canonical_path).length();
   }
   
   public void sort()
@@ -42,31 +43,14 @@ public class Report
     Collections.sort(this.duplicates);
   }
   
-  public void displayDuplicates()
-  {
-    if(this.duplicates.size()>0)
-    {
-      System.out.println("Duplicate files:");
-      System.out.println("=================");
-      
-      // Get total size.
-      long totalDuplicateSize = 0;
-      for(Duplicate dup: this.duplicates)
-      {
-        File file = new File(dup.toAddDoc.canonical_path);
-        totalDuplicateSize += file.length();
-        System.out.println(dup.toAddDoc.canonical_path);
-      }
-      DUPLICATE_FILES = this.duplicates.size();
-      DUPLICATE_FILES_SIZE = totalDuplicateSize;
-      System.out.println("========================================================");
-    }
-    else
-      System.out.println("No duplicate found.");
-  }
-  
   public void constructSummary()
   {
+    /** Gather info. **/
+    /*******************************/
+    DUPLICATE_FILES = this.duplicates.size();
+    
+    /** Construct summary details **/
+    /*******************************/
     this.summary.append("Summary:\n");
     
     if(!Report.DIRECTORIES.isEmpty()){ this.summary.append(String.format("\tProcessed directories: %s.\n", Report.DIRECTORIES)); }
@@ -90,6 +74,7 @@ public class Report
   
   public void displaySummary()
   {
+    System.out.println("========================================================");
     System.out.println(this.summary.toString());
   }
   

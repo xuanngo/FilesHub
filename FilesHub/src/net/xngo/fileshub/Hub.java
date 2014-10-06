@@ -120,8 +120,6 @@ public class Hub
     
     report.sort();
         Main.chrono.stop("Sort duplicates");
-    report.displayDuplicates();
-        Main.chrono.stop("Display duplicates");
     report.constructSummary();
     report.writeHtml(String.format("./results_%s.html", this.getResultsSuffix(addPaths)));
         Main.chrono.stop("Write HTML file");
