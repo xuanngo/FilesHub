@@ -73,10 +73,10 @@ public class Hub
             else
             {
               String msg = String.format("Warning: Both files should exists. Currently: "
-                                                                            + "\n  %s[exists = %b]"
-                                                                            + "\n  %s[exists = %b]", 
-                                                                            file.getAbsolutePath(), file.exists(),
-                                                                            doc.canonical_path, new File(doc.canonical_path).exists());
+                                                                            + "\n  [exists = %b] %s"
+                                                                            + "\n  [exists = %b] %s", 
+                                                                            file.exists(), file.getAbsolutePath(), 
+                                                                            new File(doc.canonical_path).exists(), doc.canonical_path);
               System.out.println(msg);
             }
           }
