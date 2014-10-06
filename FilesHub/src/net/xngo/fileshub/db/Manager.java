@@ -101,7 +101,7 @@ public class Manager
         else
         {// Shelf file doesn't exist.
           // Move original file info from Shelf to Trash.
-          this.shelf.saveDoc(trashDoc);      // trashDoc is used instead of 'doc' because they both
+          this.shelf.saveDoc(trashDoc); // trashDoc is used instead of 'doc' because they both
                                         //    have exact same path. It will save hash time.
           this.trash.removeDoc(trashDoc);
           this.trash.addDoc(originalDoc);
