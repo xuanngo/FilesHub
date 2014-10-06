@@ -115,6 +115,8 @@ public class Hub
     Report.END_TIME     = Main.chrono.getEndTime();
     Report.ELAPSED_TIME = Main.chrono.getTotalRuntimeString();
     
+    Report.DIRECTORIES = this.getDirectoriesProcessed(addPaths);
+    
     report.sort();
         Main.chrono.stop("Sort duplicates");
     report.displayDuplicates();
@@ -225,5 +227,42 @@ public class Hub
     else
       return directories.toString()+timestamp;
 
+  }
+  
+  private String getDirectoriesProcessed(List<File> addPaths)
+  {
+    StringBuilder directories = new StringBuilder();
+    String dirSeparator = ", ";
+    for(File path: addPaths)
+    {
+      if(path.exists())
+      {
+        File canonicalPath = null;
+        try
+        {
+          canonicalPath = path.getCanonicalFile();
+        }
+        catch(IOException ex) { ex.printStackTrace(); }
+        
+        if(canonicalPath.isDirectory())
+        {
+          if(!canonicalPath.getName().isEmpty())
+          {
+            directories.append(canonicalPath.getName());
+            directories.append(File.separator+dirSeparator);
+          }
+        }
+      }
+    }
+    
+    // Remove the last separator.
+    if(directories.length()>0)
+    {
+      int startpos = directories.lastIndexOf(dirSeparator);
+      int endpos   = startpos + dirSeparator.length();
+      return directories.replace(startpos, endpos, "").toString();
+    }
+    else
+      return directories.toString();
   }
 }

@@ -15,10 +15,11 @@ import net.xngo.utils.java.io.FileUtils;
 
 public class Report
 {
-  public static int  FILES_TO_PROCESS      = 0;
-  public static long FILES_SIZE            = 0; // in bytes.
-  public static int  DUPLICATE_FILES       = 0;
-  public static long DUPLICATE_FILES_SIZE  = 0; // in bytes.
+  public static String  DIRECTORIES           = "";
+  public static int     FILES_TO_PROCESS      = 0;
+  public static long    FILES_SIZE            = 0; // in bytes.
+  public static int     DUPLICATE_FILES       = 0;
+  public static long    DUPLICATE_FILES_SIZE  = 0; // in bytes.
   
   public static String START_TIME   = "";
   public static String END_TIME     = "";
@@ -67,6 +68,8 @@ public class Report
   public void constructSummary()
   {
     this.summary.append("Summary:\n");
+    
+    if(!Report.DIRECTORIES.isEmpty()){ this.summary.append(String.format("\tProcessed directories: %s.\n", Report.DIRECTORIES)); }
     
     this.summary.append(String.format("\t%,d files processed.\n", Report.FILES_TO_PROCESS));
     this.summary.append(String.format("\t%,d duplicate file(s) found totalling %s.\n", DUPLICATE_FILES, FileUtils.readableSize(DUPLICATE_FILES_SIZE)));
