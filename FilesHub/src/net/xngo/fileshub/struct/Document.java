@@ -36,6 +36,9 @@ public class Document
   {
     try
     {
+      if(this.hash == null)
+        throw new NullPointerException(this.getErrorMsg());
+      
       if(this.hash.isEmpty())
         throw new RuntimeException(this.getErrorMsg());
   
@@ -112,7 +115,7 @@ public class Document
                         + "canonical_path = %s // Can't be empty. \n"
                         + "filename       = %s // Can't be empty. \n"
                         + "last_modified  = %d // Warning will display if less than January 1, 1970. \n"
-                        + "hash           = %s // Can't be empty. \n"
+                        + "hash           = %s // Can't be null nor empty. \n"
                         + "comment        = %s"
                           , this.uid, this.canonical_path, this.filename, this.last_modified, this.hash, this.comment);
   }
