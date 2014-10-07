@@ -118,7 +118,18 @@ public class Connection
   
   public void setString(int parameterIndex, String x) throws SQLException
   {
-    if(this.log) { if(x.isEmpty()) this.values.add("<empty>"); else this.values.add(x); }
+    if(this.log)
+    { 
+      if(x == null)
+        this.values.add("<null>");
+      else
+      {
+        if(x.isEmpty()) 
+          this.values.add("<empty>"); 
+        else
+          this.values.add(x);
+      }
+    }
     
     this.preparedStatement.setString(parameterIndex, x);
   }
