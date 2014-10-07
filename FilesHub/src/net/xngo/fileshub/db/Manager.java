@@ -111,44 +111,53 @@ public class Manager
       else
       {
           doc.hash = Utils.getHash(file);
-          shelfDoc = this.shelf.getDocByHash(doc.hash);
-          if(shelfDoc != null)
-          {// Hash found in Shelf.
-            
-            if(new File(shelfDoc.canonical_path).exists())
-            {// Shelf file still exists
-              doc.uid = shelfDoc.uid;
-              this.trash.addDoc(doc);
-              return shelfDoc;
-            }
-            else
-            {// Shelf file doesn't exist anymore.
-              
-              // Move non-existing file to Trash.
-              this.trash.addDoc(shelfDoc);
-              
-              // Update current document in Shelf.
-              doc.uid = shelfDoc.uid;
-              this.shelf.saveDoc(doc);
-              
-              return null;
-            }
+          if(doc.hash==null)
+          {
+            throw new RuntimeException(String.format("FileNotFoundException: %s", file.getAbsolutePath()));
           }
           else
-          {// Hash not found in Shelf.
-            trashDoc = trash.getDocByHash(doc.hash);
-            if(trashDoc != null)
-            {// Hash found in Trash.
-              doc.uid = trashDoc.uid;
-              trash.addDoc(doc);              
-              return this.shelf.getDocByUid(trashDoc.uid);
+          {
+            shelfDoc = this.shelf.getDocByHash(doc.hash);
+            if(shelfDoc != null)
+            {// Hash found in Shelf.
+              
+              if(new File(shelfDoc.canonical_path).exists())
+              {// Shelf file still exists
+                doc.uid = shelfDoc.uid;
+                this.trash.addDoc(doc);
+                return shelfDoc;
+              }
+              else
+              {// Shelf file doesn't exist anymore.
+                
+                // Move non-existing file to Trash.
+                this.trash.addDoc(shelfDoc);
+                
+                // Update current document in Shelf.
+                doc.uid = shelfDoc.uid;
+                this.shelf.saveDoc(doc);
+                
+                return null;
+              }
             }
             else
-            {
-              this.shelf.addDoc(doc);
-              return null; // New file.
+            {// Hash not found in Shelf.
+              trashDoc = trash.getDocByHash(doc.hash);
+              if(trashDoc != null)
+              {// Hash found in Trash.
+                doc.uid = trashDoc.uid;
+                trash.addDoc(doc);              
+                return this.shelf.getDocByUid(trashDoc.uid);
+              }
+              else
+              {
+                this.shelf.addDoc(doc);
+                return null; // New file.
+              }
             }
           }
+          
+          
       }
     }
     // Exact same file in Shelf. Therefore, do nothing.
