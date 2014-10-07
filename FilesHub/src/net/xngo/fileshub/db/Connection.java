@@ -4,6 +4,8 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.ArrayList;
+
 
 import net.xngo.fileshub.Config;
 
@@ -12,6 +14,19 @@ public class Connection
   public java.sql.Connection  connection        = null;
   public PreparedStatement    preparedStatement = null;
   
+  // Logging purposed only.
+  private boolean           log         = false;
+  private String            query       = "";
+  private ArrayList<String> values      = new ArrayList<String>();
+  private LimitedSizeQueue<String> queries = null;
+  
+  
+  public Connection(boolean log, int queryLogSize)
+  {
+    this();
+    this.log      = log;
+    this.queries  = new LimitedSizeQueue<String>(queryLogSize);
+  }
   
   public Connection()
   {
@@ -70,10 +85,7 @@ public class Connection
   
   public PreparedStatement prepareStatement(String sql) throws SQLException
   {
-    if(Debug.activate())
-    {
-      System.out.print("\n"+sql+": ");
-    }
+    if(this.log) { this.query = sql; }
     
     this.preparedStatement = this.connection.prepareStatement(sql);
     return this.preparedStatement;
@@ -81,6 +93,7 @@ public class Connection
   
   public ResultSet executeQuery() throws SQLException
   {
+    if(this.log) { this.queries.add(this.getQueryString()); }
     return this.preparedStatement.executeQuery();    
   }
   
@@ -88,6 +101,7 @@ public class Connection
   {
     try
     {
+      if(this.log) { this.queries.add(this.getQueryString()); }
       return this.preparedStatement.executeUpdate();
     }
     catch(SQLException ex)
@@ -104,29 +118,22 @@ public class Connection
   
   public void setString(int parameterIndex, String x) throws SQLException
   {
-    if(Debug.activate())
-    {
-      System.out.print(x+", ");
-    }
+    if(this.log) { if(x.isEmpty()) this.values.add("<empty>"); else this.values.add(x); }
     
     this.preparedStatement.setString(parameterIndex, x);
   }
   
   public void setInt(int parameterIndex, int x) throws SQLException
   {
-    if(Debug.activate())
-    {
-      System.out.print(x+", ");
-    }    
+    if(this.log) { this.values.add(x+""); }
+    
     this.preparedStatement.setInt(parameterIndex, x);
   }
   
   public void setLong(int parameterIndex, long x) throws SQLException
   {
-    if(Debug.activate())
-    {
-      System.out.print(x+", ");
-    }    
+    if(this.log) { this.values.add(x+""); }
+    
     this.preparedStatement.setLong(parameterIndex, x);
   }
   
@@ -163,4 +170,35 @@ public class Connection
       e.printStackTrace();
     }
   }
+  
+  public String getQueryString()
+  {
+    StringBuilder valuesStr = new StringBuilder();
+    if(values.size()>0)
+    {
+      for(int i=0; i<values.size()-1; i++)
+      {
+        valuesStr.append(values.get(i));
+        valuesStr.append(", ");
+      }
+      valuesStr.append(values.get(values.size()-1));
+    }
+    
+    // Clean up
+    this.values.clear();
+    
+    return String.format("%s : %s ", this.query, valuesStr);
+    
+  }
+  
+  public void displayLoggedQueries()
+  {
+    System.out.println(String.format("============ Last %d queries logged start here ============", this.queries.getMaxSize()));
+    for(String query: this.queries)
+    {
+      System.out.println(query);
+    }
+    System.out.println("============ Logged queries end ============");
+  }
+  
 }
