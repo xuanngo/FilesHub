@@ -29,8 +29,10 @@ import static org.testng.Assert.assertNull;
 // Java Library
 import java.io.File;
 import java.io.UnsupportedEncodingException;
+import java.io.FileNotFoundException;
 import java.util.List;
 import java.util.ArrayList;
+
 
 
 
@@ -305,7 +307,7 @@ public class ManagerTest
     
     Trash trash = new Trash();
     Document trashDoc = trash.getDocByHash(hash);
-    assertNull(trashDoc, String.format("No new row should be created in Trash.", shelfDoc.getInfo("Unexpected Trash document returned")));
+    assertNull(trashDoc, String.format("No new row should be created in Trash.\n%s", shelfDoc.getInfo("Unexpected Trash document returned.")));
     
     // Clean up.
     uniqueFile.delete();
@@ -461,6 +463,63 @@ public class ManagerTest
                                                                     fileA.getName(), fileC.getName(),
                                                                     shelfDoc.getInfo("Shelf: File C"),
                                                                     trashDoc.getInfo("Trash: File A")));        
+    
+  }
+  
+  @Test(description="Add a unique file that is deleted.")
+  public void addFileDelete()
+  {
+    // Add a unique file.
+    File uniqueFile = Data.createTempFile("addFileDelete");
+    uniqueFile.delete();
+    try
+    {
+      this.manager.addFile(uniqueFile);
+    }
+    catch(RuntimeException ex) { System.out.println("Runtime exception thrown is expected. File is not found because it is deleted."); }
+    finally
+    {
+      // Validate: File is deleted. Therefore, no commit in the database.
+      String canonicalPath = Utils.getCanonicalPath(uniqueFile);
+      Shelf shelf = new Shelf();
+      Document shelfDoc = shelf.getDocByCanonicalPath(canonicalPath);
+      Trash trash = new Trash();
+      Document trashDoc = trash.getDocByCanonicalPath(canonicalPath);
+      assertNull(shelfDoc, String.format("'%s' should not be Shelf.", canonicalPath));
+      assertNull(trashDoc, String.format("'%s' should not be Trash.", canonicalPath));
+    }
+    
+  }
+  
+  @Test(description="Add a duplicate file that is deleted.")
+  public void addFileDuplicateDelete()
+  {
+    // Add a unique file.
+    File uniqueFile = Data.createTempFile("addFileDuplicateDelete");
+    String uniqueFilePath = Utils.getCanonicalPath(uniqueFile);
+    this.manager.addFile(uniqueFile);
+    
+    // Copy unique file and then add to database. This file is going to Trash table.
+    File duplicateFile = Data.createTempFile("addFileDuplicateDelete_duplicate");
+    Data.copyFile(uniqueFile, duplicateFile);
+    String duplicateFilePath = Utils.getCanonicalPath(duplicateFile);
+    duplicateFile.delete();
+    
+    try
+    {
+      this.manager.addFile(duplicateFile);
+    }
+    catch(RuntimeException ex) { System.out.println("Runtime exception thrown is expected. File is not found because it is deleted."); }
+    finally
+    {
+      // Validate: Duplicate file is deleted. Therefore, no commit in the database.
+      Shelf shelf = new Shelf();
+      Document shelfDoc = shelf.getDocByCanonicalPath(uniqueFilePath);
+      Trash trash = new Trash();
+      Document trashDoc = trash.getDocByCanonicalPath(duplicateFilePath);
+      assertEquals(shelfDoc.canonical_path, uniqueFilePath);
+      assertNull(trashDoc, String.format("'%s' should not be Trash.", duplicateFilePath));
+    }
     
   }
   
