@@ -70,6 +70,11 @@ public class Connection
   
   public PreparedStatement prepareStatement(String sql) throws SQLException
   {
+    if(Debug.activate())
+    {
+      System.out.print("\n"+sql+": ");
+    }
+    
     this.preparedStatement = this.connection.prepareStatement(sql);
     return this.preparedStatement;
   }
@@ -99,16 +104,29 @@ public class Connection
   
   public void setString(int parameterIndex, String x) throws SQLException
   {
+    if(Debug.activate())
+    {
+      System.out.print(x+", ");
+    }
+    
     this.preparedStatement.setString(parameterIndex, x);
   }
   
   public void setInt(int parameterIndex, int x) throws SQLException
   {
+    if(Debug.activate())
+    {
+      System.out.print(x+", ");
+    }    
     this.preparedStatement.setInt(parameterIndex, x);
   }
   
   public void setLong(int parameterIndex, long x) throws SQLException
   {
+    if(Debug.activate())
+    {
+      System.out.print(x+", ");
+    }    
     this.preparedStatement.setLong(parameterIndex, x);
   }
   
