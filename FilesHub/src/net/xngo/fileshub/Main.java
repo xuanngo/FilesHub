@@ -3,6 +3,7 @@ package net.xngo.fileshub;
 import net.xngo.fileshub.cmd.Cmd;
 import net.xngo.fileshub.report.Chronometer;
 import net.xngo.fileshub.db.Connection;
+import net.xngo.fileshub.db.Debug;
 
 
 /**
@@ -13,7 +14,7 @@ import net.xngo.fileshub.db.Connection;
 public class Main
 {
   public static Chronometer chrono = new Chronometer();
-  public static Connection connection = new Connection();
+  public static Connection connection = new Connection(true, 100);
   
   public static void main(String[] args)
   {
