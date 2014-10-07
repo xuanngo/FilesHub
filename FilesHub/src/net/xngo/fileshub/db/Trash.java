@@ -256,7 +256,6 @@ public class Trash
     }
     else
     {
-      Main.connection.displayLoggedQueries();
       String msg = String.format("'%s' returns %d entries. Expect 0 or 1 entry.", Main.connection.getQueryString(), docs.size());
       throw new RuntimeException(msg);
     }

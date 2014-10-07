@@ -14,7 +14,7 @@ import net.xngo.fileshub.db.Debug;
 public class Main
 {
   public static Chronometer chrono = new Chronometer();
-  public static Connection connection = new Connection(true, 100);
+  public static Connection connection = new Connection();
   
   public static void main(String[] args)
   {

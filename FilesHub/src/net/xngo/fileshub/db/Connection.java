@@ -85,7 +85,8 @@ public class Connection
   
   public PreparedStatement prepareStatement(String sql) throws SQLException
   {
-    if(this.log) { this.query = sql; }
+    this.query = sql; // Log the query string.
+    this.values.clear();
     
     this.preparedStatement = this.connection.prepareStatement(sql);
     return this.preparedStatement;
@@ -118,32 +119,34 @@ public class Connection
   
   public void setString(int parameterIndex, String x) throws SQLException
   {
-    if(this.log)
-    { 
-      if(x == null)
-        this.values.add("<null>");
+    
+    // Log query value.
+    if(x == null)
+      this.values.add("<null>");
+    else
+    {
+      if(x.isEmpty()) 
+        this.values.add("<empty>"); 
       else
-      {
-        if(x.isEmpty()) 
-          this.values.add("<empty>"); 
-        else
-          this.values.add(x);
-      }
+        this.values.add(x);
     }
+
     
     this.preparedStatement.setString(parameterIndex, x);
   }
   
   public void setInt(int parameterIndex, int x) throws SQLException
   {
-    if(this.log) { this.values.add(x+""); }
+    // Log query value.
+    this.values.add(x+"");
     
     this.preparedStatement.setInt(parameterIndex, x);
   }
   
   public void setLong(int parameterIndex, long x) throws SQLException
   {
-    if(this.log) { this.values.add(x+""); }
+    // Log query value.
+    this.values.add(x+"");
     
     this.preparedStatement.setLong(parameterIndex, x);
   }
@@ -198,18 +201,23 @@ public class Connection
     // Clean up
     this.values.clear();
     
-    return String.format("%s : %s ", this.query, valuesStr);
+    return String.format("%s : %s", this.query, valuesStr.toString());
     
   }
   
   public void displayLoggedQueries()
   {
-    System.out.println(String.format("============ Last %d queries logged start here ============", this.queries.getMaxSize()));
-    for(String query: this.queries)
+    if(this.log)
     {
-      System.out.println(query);
+      System.out.println(String.format("============ Last %d queries logged start here ============", this.queries.getMaxSize()));
+      for(String query: this.queries)
+      {
+        System.out.println(query);
+      }
+      System.out.println("============ Logged queries end ============");
     }
-    System.out.println("============ Logged queries end ============");
+    else
+      System.out.println("You are using displayLoggedQueries() but you didn't enable logging. Use Connection(boolean log, int queryLogSize).");
   }
   
 }

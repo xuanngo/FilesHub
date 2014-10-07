@@ -82,13 +82,13 @@ public class Hub
           }
         }
       }
-      catch(RuntimeException e)
+      catch(Exception e)
       {
         if(e.getMessage().indexOf("The process cannot access the file because another process has locked a portion of the file")!=-1)
           System.out.println(String.format("Warning: Ignore locked file(%s).", file.getAbsolutePath()));
         else
         {
-          RuntimeException rException = new RuntimeException(e.getMessage());
+          RuntimeException rException = new RuntimeException(file.getAbsolutePath()+":\n"+e.getMessage());
           rException.setStackTrace(e.getStackTrace());
           throw rException;
         }
