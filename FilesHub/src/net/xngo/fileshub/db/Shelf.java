@@ -278,6 +278,7 @@ public class Shelf
     }
     else
     {
+      Main.connection.displayLoggedQueries();
       String msg = String.format("'SELECT ... FROM %s WHERE %s = %s' returns %d entries. Expect 0 or 1 entry.", this.tablename, column, value, docs.size());      
       throw new RuntimeException(msg);
     }
