@@ -85,9 +85,15 @@ public class Hub
       catch(Exception e)
       {
         if(e.getMessage().indexOf("The process cannot access the file because another process has locked a portion of the file")!=-1)
+        {
           System.out.println(String.format("Warning: Ignore locked file : %s.", file.getAbsolutePath()));
+          e.printStackTrace();
+        }
         else if(e.getMessage().indexOf("FileNotFoundException")!=-1)
+        {
           System.out.println(String.format("Warning: Ignore FileNotFoundException: %s.", file.getAbsolutePath()));
+          e.printStackTrace();
+        }
         else
         {
           RuntimeException rException = new RuntimeException(file.getAbsolutePath()+":\n"+e.getMessage());
