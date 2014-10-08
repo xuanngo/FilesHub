@@ -72,7 +72,7 @@ public class Hub
             }
             else
             {
-              String msg = String.format("Warning: Both files should exists. Currently: "
+              String msg = String.format("Warning: Duplicate pair not added. Both files should exists. Currently: "
                                                                             + "\n  To add: [exists = %b] %s"
                                                                             + "\n   In DB: [exists = %b] %s", 
                                                                             file.exists(), file.getAbsolutePath(), 
