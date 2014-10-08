@@ -85,6 +85,7 @@ public class Connection
   
   public PreparedStatement prepareStatement(String sql) throws SQLException
   {
+    // Reset query info.
     this.query = sql; // Log the query string.
     this.values.clear();
     
@@ -95,6 +96,8 @@ public class Connection
   public ResultSet executeQuery() throws SQLException
   {
     if(this.log) { this.queries.add(this.getQueryString()); }
+    
+    System.out.println(this.getQueryString());
     return this.preparedStatement.executeQuery();    
   }
   
@@ -103,6 +106,7 @@ public class Connection
     try
     {
       if(this.log) { this.queries.add(this.getQueryString()); }
+      System.out.println(this.getQueryString());
       return this.preparedStatement.executeUpdate();
     }
     catch(SQLException ex)
@@ -197,9 +201,6 @@ public class Connection
       }
       valuesStr.append(values.get(values.size()-1));
     }
-    
-    // Clean up
-    this.values.clear();
     
     return String.format("%s : %s", this.query, valuesStr.toString());
     
