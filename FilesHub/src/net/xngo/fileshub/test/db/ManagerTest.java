@@ -523,6 +523,40 @@ public class ManagerTest
     
   }
   
+  @Test(description="Add a deleted duplicate file that is already in the database.")
+  public void addFileDuplicateDeleteInDB()
+  {
+    // Add a unique file.
+    File uniqueFile = Data.createTempFile("addFileDuplicateDelete");
+    String uniqueFilePath = Utils.getCanonicalPath(uniqueFile);
+    this.manager.addFile(uniqueFile);
+    
+    // Copy unique file and then add to database. This file is going to Trash table.
+    File duplicateFile = Data.createTempFile("addFileDuplicateDelete_duplicate");
+    Data.copyFile(uniqueFile, duplicateFile);
+    String duplicateFilePath = Utils.getCanonicalPath(duplicateFile);
+    this.manager.addFile(duplicateFile);
+    
+    duplicateFile.delete();    
+    try
+    {
+
+      this.manager.addFile(duplicateFile);
+    }
+    catch(RuntimeException ex) { System.out.println("Runtime exception thrown is expected. File is not found because it is deleted."); }
+    finally
+    {
+      // Validate: Duplicate file is deleted. Therefore, no commit in the database.
+      Shelf shelf = new Shelf();
+      List<Document> shelfDocs = shelf.searchDocsByFilepath(uniqueFilePath);
+      Trash trash = new Trash();
+      List<Document> trashDocs = trash.searchDocsByFilepath(duplicateFilePath);
+      assertEquals(shelfDocs.size(), 1, String.format("Expected 1 but found %d entries in Shelf table for %s.", shelfDocs.size(), uniqueFilePath));
+      assertEquals(trashDocs.size(), 1, String.format("Expected 1 but found %d entries in Trash table for %s.", trashDocs.size(), duplicateFilePath));
+    }
+    
+  }  
+  
   @Test(description="Update file that has changed since added in database. Note: This is exactly the same as addFileShelfFileChanged(), except that it uses Manager.update() instead of Manager.addFile().")
   public void updateFileChanged()
   {
