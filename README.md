@@ -46,6 +46,4 @@ FilesHub search -p "*\somewhere\fileshub\*"
 
 Output
 ======
-When using '-a' option, FilesHub will also save duplicate file paths in CSV and HTML format automatically in the executing directory. They have the following filename pattern:
-* CSV: results_<directories>_<timestamp>.csv
-* HTML: results_<directories>_<timestamp>.html
+When using '-a' option, FilesHub will save the results in `results_<directories>_<timestamp>.html` from the executing directory.
