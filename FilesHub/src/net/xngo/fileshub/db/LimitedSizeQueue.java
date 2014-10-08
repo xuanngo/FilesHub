@@ -31,16 +31,6 @@ public class LimitedSizeQueue<K> extends ArrayList<K>
     }
     return r;
   }
-
-  public K getYongest() 
-  {
-    return get(size() - 1);
-  }
-
-  public K getOldest() 
-  {
-    return get(0);
-  }
   
   public int getMaxSize()
   {
