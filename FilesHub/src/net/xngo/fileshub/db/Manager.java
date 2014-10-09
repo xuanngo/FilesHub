@@ -1,11 +1,15 @@
 package net.xngo.fileshub.db;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.util.List;
 import java.util.ArrayList;
 
 import net.xngo.fileshub.Utils;
 import net.xngo.fileshub.report.Report;
+import net.xngo.fileshub.report.Difference;
 import net.xngo.fileshub.struct.Document;
 import net.xngo.fileshub.db.Shelf;
 import net.xngo.fileshub.Config;
@@ -435,11 +439,73 @@ public class Manager
     
   }
   
+  public void searchSimilarFilename(int fuzzyRate)
+  {
+    List<Document> docsList = this.cleanFilenames(this.shelf.getDocs());
+    if(docsList.size()>1)
+    {
+      for(int i=0; i<docsList.size()-1; i++)
+      {
+        for(int j=i+1; j<docsList.size(); j++)
+        {
+          Difference diff = new Difference(docsList.get(i).filename, docsList.get(j).filename);
+          if(diff.getSimilarRate()>fuzzyRate)
+          {
+            System.out.println(String.format("[%d] %s ?= %s ", diff.getSimilarRate(), docsList.get(i).filename, docsList.get(j).filename));
+          }
+        }
+      }
+    }
+  }
+  
   /****************************************************************************
    * 
    *                             PRIVATE FUNCTIONS
    * 
-   ****************************************************************************/  
+   ****************************************************************************/
+  private List<Document> cleanFilenames(List<Document> docsList)
+  {
+    ArrayList<String> commonTerms = this.getCommonTerms();
+    ArrayList<Document> resultDocs = new ArrayList<Document>();
+    for(Document doc: docsList)
+    {
+      StringBuilder filename = new StringBuilder(doc.filename.toLowerCase());
+      for(String term: commonTerms)
+      {
+        int start = filename.indexOf(term);
+        if(start!=-1)
+        {
+          int end = start + term.length();
+          filename.replace(start, end, "");
+        }
+      }
+      doc.filename = filename.toString();
+      resultDocs.add(doc);
+    }
+    
+    return resultDocs;
+  }
+  private ArrayList<String> getCommonTerms()
+  {
+    ArrayList<String> strList = new ArrayList<String>();
+    try 
+    {
+      BufferedReader in = new BufferedReader(new FileReader(Config.WORD_LIST));
+      String line;
+      while ((line = in.readLine()) != null)
+      {
+        strList.add(line.toLowerCase());
+      }
+      in.close();
+  
+    }
+    catch (IOException e) 
+    {
+      e.printStackTrace();
+    }
+    
+    return strList;
+  }
   
   /**
    * Display all entries of a document.

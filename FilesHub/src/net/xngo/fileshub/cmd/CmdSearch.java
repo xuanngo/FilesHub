@@ -20,5 +20,9 @@ public class CmdSearch
   public String filename;
   
   @Parameter(names = {"-p", "--path"}, description = "Search by file path. Use * as wildcard.", arity = 1)
-  public String filepath;     
+  public String filepath;
+  
+  @Parameter(names = {"-s", "--similar"}, description = "Search similar filename.")
+  public int fuzzyRate=80;
+  
 }

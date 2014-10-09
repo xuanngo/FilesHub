@@ -194,7 +194,12 @@ public class Hub
   public void searchByFilepath(String filepath)
   {
     this.manager.searchByFilepath(filepath);
-  }  
+  }
+  
+  public void searchSimilarFilename(int fuzzyRate)
+  {
+    this.manager.searchSimilarFilename(fuzzyRate);
+  }
   
   /****************************************************************************
    * 

@@ -12,14 +12,33 @@ public class Difference
   private LinkedList<Diff> deltas = null;
   private String leftSpan="";
   private String rightSpan="";
+  
+  private int similarRate = 0;
 
   public Difference(String left, String right)
   {
     diff_match_patch diffMatchPatch = new diff_match_patch();
     this.deltas = diffMatchPatch.diff_main(left, right);
     diffMatchPatch.diff_cleanupSemantic(this.deltas);
-  }
+    
+    
+    // Calculate the similar rate.
+    int levenshtein = diffMatchPatch.diff_levenshtein(this.deltas);
+    int maxLength = 0;
+    if(left.length()>right.length())
+      maxLength = left.length();
+    else
+      maxLength = right.length();
 
+//System.out.println(String.format("\tl=%d, m=%d", levenshtein, maxLength));
+    this.similarRate = (int)Math.ceil((double)(maxLength-levenshtein)/(double)maxLength*100.0);
+  }
+  
+  public int getSimilarRate()
+  {
+    return this.similarRate;
+  }
+  
   public void computeSpan()
   {
     this.leftSpan = "<span class=\"left\">";

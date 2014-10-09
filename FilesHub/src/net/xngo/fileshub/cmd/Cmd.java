@@ -74,7 +74,11 @@ public class Cmd
             else if(cmdSearch.filepath!=null)
             {
               hub.searchByFilepath(cmdSearch.filepath);
-            }            
+            }
+            else if(cmdSearch.fuzzyRate!=0)
+            {
+              hub.searchSimilarFilename(cmdSearch.fuzzyRate);
+            }              
             else
               this.displayUsage(jc);
 
