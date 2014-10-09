@@ -97,7 +97,7 @@ public class Connection
   {
     if(this.log) { this.queries.add(this.getQueryString()); }
     
-    System.out.println(this.getQueryString());
+    //System.out.println(this.getQueryString());
     return this.preparedStatement.executeQuery();    
   }
   
@@ -106,7 +106,7 @@ public class Connection
     try
     {
       if(this.log) { this.queries.add(this.getQueryString()); }
-      System.out.println(this.getQueryString());
+      //System.out.println(this.getQueryString());
       return this.preparedStatement.executeUpdate();
     }
     catch(SQLException ex)
