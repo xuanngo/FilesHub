@@ -7,6 +7,7 @@ import net.xngo.fileshub.cmd.CmdHash;
 
 
 import net.xngo.fileshub.db.Debug;
+import net.xngo.utils.java.io.FileUtils;
 
 import com.beust.jcommander.JCommander;
 import com.beust.jcommander.ParameterException;
@@ -34,7 +35,7 @@ public class Cmd
       
       if(options.addPaths!=null)
       {
-        hub.addFiles(options.getAllUniqueFiles(), options.addPaths);
+        hub.addFiles(FileUtils.listFiles(options.addPaths), options.addPaths);
       }
       else if(options.update)
       {
