@@ -191,19 +191,22 @@ public class Connection
   
   public String getQueryString()
   {
-    StringBuilder valuesStr = new StringBuilder();
     if(values.size()>0)
     {
+      StringBuilder valuesStr = new StringBuilder();
       for(int i=0; i<values.size()-1; i++)
       {
         valuesStr.append(values.get(i));
         valuesStr.append(", ");
       }
       valuesStr.append(values.get(values.size()-1));
+      
+      return String.format("%s : %s", this.query, valuesStr.toString());
     }
-    
-    return String.format("%s : %s", this.query, valuesStr.toString());
-    
+    else
+    {
+      return this.query;
+    }
   }
   
   public void displayLoggedQueries()
