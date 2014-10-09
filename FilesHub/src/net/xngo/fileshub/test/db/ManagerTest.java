@@ -555,7 +555,50 @@ public class ManagerTest
       assertEquals(trashDocs.size(), 1, String.format("Expected 1 but found %d entries in Trash table for %s.", trashDocs.size(), duplicateFilePath));
     }
     
-  }  
+  }
+  
+  @Test(description="Add file C but File B and C are already duplicate of A and A is deleted.")
+  public void addFileTrailingDuplicateWithMainNotExists()
+  {
+    //*** Prepare data: Make File B, C to be a duplicate of File A ****
+    // Create File A and add to database.
+    File fileA = Data.createTempFile("addFileTrailingDuplicateWithMainNotExists_fileA");
+    this.manager.addFile(fileA);
+    
+    // Copy File A to File B and add to database.
+    File fileB = Data.createTempFile("addFileTrailingDuplicateWithMainNotExists_fileB");
+    Data.copyFile(fileA, fileB);
+    this.manager.addFile(fileB);
+    
+    // Copy File A to File C and add to database.
+    File fileC = Data.createTempFile("addFileTrailingDuplicateWithMainNotExists_fileC");
+    Data.copyFile(fileA, fileC);
+    this.manager.addFile(fileC);
+    
+    //*** Main test ****
+    fileA.delete();
+    this.manager.addFile(fileC);
+    
+    //*** Validations: C should be in Shelf. A and B should be in Trash ****
+    Shelf shelf = new Shelf();
+    Trash trash = new Trash();
+    
+    Document shelfDocA = shelf.getDocByCanonicalPath(fileA.getAbsolutePath());
+    Document trashDocA = trash.getDocByCanonicalPath(fileA.getAbsolutePath());
+    assertNull(shelfDocA, String.format("%s should not be in Shelf because it is deleted. It should be moved to Trash.", fileA.getAbsolutePath()));
+    assertNotNull(trashDocA, String.format("%s should be in Trash.", fileA.getAbsolutePath()));
+    
+    Document shelfDocB = shelf.getDocByCanonicalPath(fileB.getAbsolutePath());
+    Document trashDocB = trash.getDocByCanonicalPath(fileB.getAbsolutePath());
+    assertNull(shelfDocB, String.format("%s should not be in Shelf. It is a duplicate.", fileB.getAbsolutePath()));
+    assertNotNull(trashDocB, String.format("%s should be in Trash. It is a duplicate.", fileB.getAbsolutePath()));
+    
+    Document shelfDocC = shelf.getDocByCanonicalPath(fileC.getAbsolutePath());
+    Document trashDocC = trash.getDocByCanonicalPath(fileC.getAbsolutePath());
+    assertNotNull(shelfDocC, String.format("%s should in Shelf. It was moved from Trash to Shelf.", fileC.getAbsolutePath()));
+    assertNull(trashDocC, String.format("%s should not be in Trash. It was moved from Trash to Shelf.", fileC.getAbsolutePath())); 
+    
+  }
   
   @Test(description="Update file that has changed since added in database. Note: This is exactly the same as addFileShelfFileChanged(), except that it uses Manager.update() instead of Manager.addFile().")
   public void updateFileChanged()
