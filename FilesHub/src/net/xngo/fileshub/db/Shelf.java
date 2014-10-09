@@ -87,7 +87,11 @@ public class Shelf
   
   public int removeDoc(int duid)
   {
-    return this.deleteDoc(duid);
+    int rowsAffected = this.deleteDoc(duid);
+    if (rowsAffected==0)
+      throw new RuntimeException(String.format("No document is removed: %s", Main.connection.getQueryString()));
+    else
+      return rowsAffected;    
   }
   
   public int addDoc(Document doc)

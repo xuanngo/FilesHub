@@ -112,11 +112,12 @@ public class Trash
   
   public int removeDoc(Document doc)
   {
-    return this.deleteDoc(doc);
+    int rowsAffected = this.deleteDoc(doc);
+    if (rowsAffected==0)
+      throw new RuntimeException(String.format("No document is removed: %s", Main.connection.getQueryString()));
+    else
+      return rowsAffected;
   }
-  
-
-  
   
   public int markDuplicate(int duplicate, int of)
   {
@@ -164,7 +165,7 @@ public class Trash
   private int deleteDoc(Document doc)
   {
     // Add conditions that make Document unique.
-    final String query = "DELETE FROM "+this.tablename+" WHERE uid=? AND hash=? and canonical_path=?";
+    final String query = "DELETE FROM "+this.tablename+" WHERE duid=? AND hash=? and canonical_path=?";
     int rowsAffected = 0;
     try
     {
