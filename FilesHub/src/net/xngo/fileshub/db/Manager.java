@@ -103,8 +103,8 @@ public class Manager
           // Move original file info from Shelf to Trash.
           this.shelf.saveDoc(trashDoc); // trashDoc is used instead of 'doc' because they both
                                         //    have exact same path. It will save hash time.
-          this.trash.removeDoc(trashDoc);
-          this.trash.addDoc(originalDoc);
+          this.trash.removeDoc(trashDoc); // Remove from Trash because it is moved to Shelf.
+          this.trash.addDoc(originalDoc); // Move original doc from Shelf to Trash because it doesn't exist anymore.
           return null;
         }
       }
