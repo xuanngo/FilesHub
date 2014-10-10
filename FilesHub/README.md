@@ -11,6 +11,9 @@ Development
   -Add new library:
       --In build.xml, add JAR filename to '<attribute name="Rsrc-Class-Path" .../>'.
 
+TODO
+============
+  -Redo reportings: net.xngo.fileshub.report. It was adhoc coding.
       
 Libraries
 ==========
