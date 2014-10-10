@@ -14,6 +14,7 @@ import net.xngo.fileshub.db.Debug;
 import net.xngo.fileshub.db.Manager;
 import net.xngo.fileshub.report.Report;
 import net.xngo.fileshub.struct.Document;
+import net.xngo.fileshub.struct.PairFile;
 import net.xngo.utils.java.time.CalUtils;
 import net.xngo.utils.java.time.ElapsedTime;
 import net.xngo.utils.java.io.FileUtils;
@@ -198,7 +199,11 @@ public class Hub
   
   public void searchSimilarFilename(int fuzzyRate)
   {
-    this.manager.searchSimilarFilename(fuzzyRate);
+    List<PairFile> pairFileList = this.manager.searchSimilarFilename(fuzzyRate);
+    
+    Collections.sort(pairFileList);
+    Report report = new Report();
+    report.writePotentialDuplicatesInHtml("./potentialDuplicates.html", pairFileList);
   }
   
   /****************************************************************************

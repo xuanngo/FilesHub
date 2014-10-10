@@ -11,6 +11,7 @@ import net.xngo.fileshub.Utils;
 import net.xngo.fileshub.report.Report;
 import net.xngo.fileshub.report.Difference;
 import net.xngo.fileshub.struct.Document;
+import net.xngo.fileshub.struct.PairFile;
 import net.xngo.fileshub.db.Shelf;
 import net.xngo.fileshub.Config;
 
@@ -439,9 +440,10 @@ public class Manager
     
   }
   
-  public void searchSimilarFilename(int fuzzyRate)
+  public ArrayList<PairFile> searchSimilarFilename(int fuzzyRate)
   {
     List<Document> docsList = this.cleanFilenames(this.shelf.getDocs());
+    ArrayList<PairFile> pairFileList = new ArrayList<PairFile>();
     if(docsList.size()>1)
     {
       for(int i=0; i<docsList.size()-1; i++)
@@ -452,10 +454,16 @@ public class Manager
           if(diff.getSimilarRate()>fuzzyRate)
           {
             System.out.println(String.format("[%d] %s ?= %s ", diff.getSimilarRate(), docsList.get(i).filename, docsList.get(j).filename));
+            PairFile pairFile = new PairFile();
+            pairFile.similarRate = diff.getSimilarRate();
+            pairFile.fileA = docsList.get(i).canonical_path;
+            pairFile.fileB = docsList.get(j).canonical_path;
+            pairFileList.add(pairFile);
           }
         }
       }
     }
+    return pairFileList;
   }
   
   /****************************************************************************
