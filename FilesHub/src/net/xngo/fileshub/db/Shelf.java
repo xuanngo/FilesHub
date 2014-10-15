@@ -2,8 +2,8 @@ package net.xngo.fileshub.db;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
 import net.xngo.fileshub.Main;
 import net.xngo.fileshub.struct.Document;

@@ -1,19 +1,18 @@
 package net.xngo.fileshub.db;
 
-import java.io.File;
-import java.io.IOException;
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
-import java.util.List;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
+import net.xngo.fileshub.Config;
 import net.xngo.fileshub.Utils;
-import net.xngo.fileshub.report.Report;
 import net.xngo.fileshub.report.Difference;
+import net.xngo.fileshub.report.Report;
 import net.xngo.fileshub.struct.Document;
 import net.xngo.fileshub.struct.PairFile;
-import net.xngo.fileshub.db.Shelf;
-import net.xngo.fileshub.Config;
 
 /**
  * Manage documents.

@@ -1,11 +1,10 @@
 package net.xngo.fileshub.db;
 
 import java.sql.DriverManager;
-import java.sql.ResultSet;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-
 
 import net.xngo.fileshub.Config;
 

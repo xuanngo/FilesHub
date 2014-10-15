@@ -2,8 +2,6 @@ package net.xngo.fileshub;
 
 import java.io.File;
 
-import net.xngo.fileshub.report.Chronometer;
-
 public class Config
 {
   public static final String NAME               = "FilesHub";

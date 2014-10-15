@@ -1,14 +1,13 @@
 package net.xngo.fileshub.benchmark;
 
-import java.util.Calendar;
-import java.util.Collection;
 import java.io.File;
 import java.io.IOException;
+import java.util.Collection;
+
+import net.xngo.fileshub.Utils;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.TrueFileFilter;
-
-import net.xngo.fileshub.Utils;
 /**
  * Since this a benchmark, avoid any performance speedups from caching. Use different source files and destination files.
  * @author Xuan Ngo

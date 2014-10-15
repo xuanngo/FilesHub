@@ -1,13 +1,12 @@
 package net.xngo.fileshub.report;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Collections;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.BufferedWriter;
-
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import net.xngo.fileshub.Config;
 import net.xngo.fileshub.struct.Document;

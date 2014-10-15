@@ -1,37 +1,29 @@
 package net.xngo.fileshub.test.db;
 
 // FilesHub classes.
-import net.xngo.fileshub.db.Manager;
-import net.xngo.fileshub.db.Trash;
-import net.xngo.fileshub.db.Shelf;
-import net.xngo.fileshub.struct.Document;
-import net.xngo.fileshub.Utils;
-
-// FilesHub test helper classes.
-import net.xngo.fileshub.test.helpers.Data;
-
-
-
-
-// TestNG
-import org.testng.annotations.Test;
-import org.testng.annotations.BeforeClass;
-
 import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertTrue;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertNull;
-
-
-
+import static org.testng.Assert.assertTrue;
 
 // Java Library
 import java.io.File;
 import java.io.UnsupportedEncodingException;
-import java.io.FileNotFoundException;
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
+
+import net.xngo.fileshub.Utils;
+import net.xngo.fileshub.db.Manager;
+import net.xngo.fileshub.db.Shelf;
+import net.xngo.fileshub.db.Trash;
+import net.xngo.fileshub.struct.Document;
+// FilesHub test helper classes.
+import net.xngo.fileshub.test.helpers.Data;
+
+import org.testng.annotations.BeforeClass;
+// TestNG
+import org.testng.annotations.Test;
 
 
 

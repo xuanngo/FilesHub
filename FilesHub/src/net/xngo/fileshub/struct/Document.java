@@ -1,7 +1,6 @@
 package net.xngo.fileshub.struct;
 
 import java.io.File;
-import java.lang.RuntimeException;
 
 import net.xngo.fileshub.Utils;
 

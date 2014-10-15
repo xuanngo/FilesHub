@@ -1,23 +1,20 @@
 package net.xngo.fileshub;
 
 import java.io.File;
-import java.io.IOException;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.RandomAccessFile;
-import java.io.UnsupportedEncodingException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
+import java.io.RandomAccessFile;
+import java.io.UnsupportedEncodingException;
 import java.nio.channels.FileChannel;
 import java.nio.channels.FileLock;
 import java.text.DecimalFormat;
-import java.util.ArrayList;
 
 import net.jpountz.xxhash.StreamingXXHash32;
 import net.jpountz.xxhash.XXHashFactory;
-
-import net.xngo.fileshub.db.Debug;
 import net.xngo.utils.java.math.Hash;
 
 

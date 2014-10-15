@@ -1,8 +1,6 @@
 package net.xngo.fileshub.struct;
 
-import java.lang.Comparable;
-
-import net.xngo.fileshub.struct.Document;
+import net.xngo.fileshub.report.Report;
 
 /**
  * Used by {@link Report} class.

@@ -2,12 +2,9 @@ package net.xngo.fileshub;
 
 import java.io.File;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Set;
 
 import net.xngo.fileshub.db.Debug;
@@ -15,10 +12,9 @@ import net.xngo.fileshub.db.Manager;
 import net.xngo.fileshub.report.Report;
 import net.xngo.fileshub.struct.Document;
 import net.xngo.fileshub.struct.PairFile;
-import net.xngo.utils.java.time.CalUtils;
-import net.xngo.utils.java.time.ElapsedTime;
 import net.xngo.utils.java.io.FileUtils;
 import net.xngo.utils.java.math.Math;
+import net.xngo.utils.java.time.CalUtils;
 
 
 /**

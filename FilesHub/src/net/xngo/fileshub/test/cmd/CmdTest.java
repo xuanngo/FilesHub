@@ -1,6 +1,5 @@
 package net.xngo.fileshub.test.cmd;
 
-import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertNull;
 
@@ -10,17 +9,16 @@ import java.nio.channels.FileChannel;
 import java.nio.channels.FileLock;
 import java.util.Collection;
 
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.filefilter.TrueFileFilter;
-import org.testng.annotations.Test;
-
-
 import net.xngo.fileshub.Utils;
 import net.xngo.fileshub.cmd.Cmd;
 import net.xngo.fileshub.db.Shelf;
 import net.xngo.fileshub.db.Trash;
 import net.xngo.fileshub.struct.Document;
 import net.xngo.fileshub.test.helpers.Data;
+
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.filefilter.TrueFileFilter;
+import org.testng.annotations.Test;
 
 public class CmdTest
 {
