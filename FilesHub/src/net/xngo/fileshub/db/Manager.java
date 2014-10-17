@@ -368,28 +368,39 @@ public class Manager
   
   public void searchByHash(String hash)
   {
-    Document shelfDoc = this.shelf.getDocByHash(hash);
-    if(shelfDoc==null)
+    // Search in Shelf table and display results.
+    List<Document> shelfDocsList = this.shelf.getDocsByHash(hash);
+    if(shelfDocsList.size()==0)
     {
-      Document trashDoc = this.trash.getDocByHash(hash);
-      if(trashDoc==null)
-      {
-        System.out.println(String.format("%s is not found.", hash));
-      }
-      else
-        this.display(trashDoc.uid);
+      System.out.println(String.format("Hash '%s' is not found in Shelf table.\n", hash));
     }
     else
-      this.display(shelfDoc.uid);
+    {
+      this.displayDocument("Shelf:", true, shelfDocsList);
+      System.out.println(String.format("%d found in Shelf table.\n", shelfDocsList.size()));
+    } 
+    
+    // Search in Trash table and display results.
+    List<Document> trashDocsList = this.trash.getDocsByHash(hash);
+    if(trashDocsList.size()==0)
+    {
+      System.out.println(String.format("Hash '%s' is not found in Trash table.", hash));
+    }
+    else
+    {
+      this.displayDocument("Trash:", true, trashDocsList);
+      System.out.println(String.format("%d found in Trash table.", trashDocsList.size()));
+    }    
   }
 
+  
   public void searchByFilename(String filename)
   {
     // Search in Shelf table and display results.
     List<Document> shelfDocsList = this.shelf.searchDocsByFilename(filename);
     if(shelfDocsList.size()==0)
     {
-      System.out.println(String.format("Filename '%s' is not found in Shelf table.", filename));
+      System.out.println(String.format("Filename '%s' is not found in Shelf table.\n", filename));
     }
     else
     {
@@ -417,7 +428,7 @@ public class Manager
     List<Document> shelfDocsList = this.shelf.searchDocsByFilepath(filepath);
     if(shelfDocsList.size()==0)
     {
-      System.out.println(String.format("Filepath '%s' is not found in Shelf table.", filepath));
+      System.out.println(String.format("Filepath '%s' is not found in Shelf table.\n", filepath));
     }
     else
     {
