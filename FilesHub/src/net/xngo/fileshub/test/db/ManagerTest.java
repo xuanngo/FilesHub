@@ -937,30 +937,4 @@ public class ManagerTest
     fileB.delete();
   }
   
-  @Test(description="Search by hash: Multiple hashes in Trash table")
-  public void searchByHashMultipleHashesInTrash()
-  {
-    /** Prepare data: Hash not found in Shelf but hashes(FileA & FileB) found in Trash table. **/
-    // Create duplicate files.
-    File fileA = Data.createTempFile("searchByHashMultipleHashesInTrash_fileA");
-    File fileB = Data.createTempFile("searchByHashMultipleHashesInTrash_fileB");
-    Data.copyFile(fileA, fileB);
-    
-    // Add duplicate files directly in Trash table.
-    final int fakeUid = 33333;
-    Document trashDocA = new Document(fileA);
-      trashDocA.uid = fakeUid;
-      trashDocA.hash = Utils.getHash(fileA);
-    Document trashDocB = new Document(fileB);
-      trashDocB.uid = fakeUid;
-      trashDocB.hash = Utils.getHash(fileB);
-    Trash trash = new Trash();
-    trash.addDoc(trashDocA);
-    trash.addDoc(trashDocB);
-    
-    /** Main test: It should not throw any exception **/
-    this.manager.searchByHash(trashDocA.hash);
-  }
-  
-  
 }
