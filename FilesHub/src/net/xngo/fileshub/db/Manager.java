@@ -146,12 +146,13 @@ public class Manager
             }
             else
             {// Hash not found in Shelf.
-              trashDoc = trash.getDocByHash(doc.hash);
-              if(trashDoc != null)
+
+              List<Document> trashDocsList = this.trash.getDocsByHash(doc.hash);
+              if(trashDocsList.size()>0)
               {// Hash found in Trash.
-                doc.uid = trashDoc.uid;
+                doc.uid = trashDocsList.get(0).uid;
                 trash.addDoc(doc);              
-                return this.shelf.getDocByUid(trashDoc.uid);
+                return this.shelf.getDocByUid(trashDocsList.get(0).uid);
               }
               else
               {

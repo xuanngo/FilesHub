@@ -592,6 +592,43 @@ public class ManagerTest
     
   }
   
+  
+  @Test(description="Add file D. A, B, C are duplicates but B & C have the same hash but different from A. D has same hash as B & C")
+  public void addFileOrphanHashInTrash()
+  {
+    //*** Prepare data: Make File B, C to be a duplicate of File A ****
+    // Create File A and add to database.
+    File fileA = Data.createTempFile("addFileOrphanHashInTrash_fileA");
+    this.manager.addFile(fileA);
+    
+    // Copy File A to File B and add to database.
+    File fileB = Data.createTempFile("addFileOrphanHashInTrash_fileB");
+    this.manager.addFile(fileB);
+    
+    // Copy File B to File C and add to database.
+    File fileC = Data.createTempFile("addFileOrphanHashInTrash_fileC");
+    Data.copyFile(fileB, fileC);
+    this.manager.addFile(fileC);
+    
+    // Mark B & C to be duplicates of A.
+    this.manager.markDuplicate(fileB, fileA); // File A and File B have different hashes.
+    
+    //*** Main test ****
+    // Copy File B to File D and add to database.
+    File fileD = Data.createTempFile("addFileOrphanHashInTrash_fileD");
+    Data.copyFile(fileB, fileD);
+    this.manager.addFile(fileD);
+
+    // Validations: Check D is in Trash and has A's uid.
+    Shelf shelf = new Shelf();
+    Document shelfDocA = shelf.getDocByFilename(fileA.getName());
+    Trash trash = new Trash();
+    Document trashDocD = trash.getDocByFilename(fileD.getName());
+    assertEquals(shelfDocA.uid, trashDocD.uid);
+    
+  }
+  
+  
   @Test(description="Update file that has changed since added in database. Note: This is exactly the same as addFileShelfFileChanged(), except that it uses Manager.update() instead of Manager.addFile().")
   public void updateFileChanged()
   {
