@@ -31,6 +31,9 @@ sqlite3 FilesHub.db -cmd ".width 6 125" -column -header "SELECT Shelf.uid, Shelf
 sqlite3 FilesHub.db -cmd ".width 6 125" -column -header "DELETE FROM Trash WHERE canonical_path IN (SELECT Shelf.canonical_path FROM Shelf LEFT JOIN Trash ON Shelf.canonical_path=Trash.canonical_path WHERE Trash.canonical_path IS NOT NULL)"
 sqlite3 FilesHub.db -cmd ".width 6 125" -column -header "SELECT Shelf.uid, Shelf.canonical_path, Trash.canonical_path FROM Shelf LEFT JOIN Trash ON Shelf.canonical_path=Trash.canonical_path WHERE Trash.canonical_path IS NOT NULL"
 
+# Delete orphan documents: duid in Trash but not Shelf
+sqlite3 FilesHub.db -cmd ".width 6 125" -column -header "SELECT Trash.duid, Trash.canonical_path, Trash.canonical_path FROM Trash LEFT JOIN Shelf ON Trash.duid=Shelf.uid WHERE Shelf.uid IS NULL"
+
 # Dump
 select duid, count(hash) from Trash group by hash having count(hash)>10 ;
 
