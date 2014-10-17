@@ -75,6 +75,11 @@ public class Shelf
     return this.getDocBy("hash", hash);
   }
 
+  public List<Document> getDocsByHash(String hash)
+  {
+    return this.getDocsBy("hash", hash);
+  } 
+  
   /**
    * 
    * @param filename
