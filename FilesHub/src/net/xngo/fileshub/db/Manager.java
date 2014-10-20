@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -556,9 +557,13 @@ public class Manager
       in.close();
   
     }
-    catch (IOException e) 
+    catch (FileNotFoundException ex)
     {
-      e.printStackTrace();
+      System.out.println(String.format("Warning: %s is missing!", Config.WORD_LIST));
+    }
+    catch (IOException ex) 
+    {
+      ex.printStackTrace();
     }
     
     return strList;

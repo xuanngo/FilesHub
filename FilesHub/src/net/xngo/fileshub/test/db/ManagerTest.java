@@ -1080,7 +1080,7 @@ public class ManagerTest
     //*** Main test: Do simple search by filename without word list *** 
     File wordsFile = new File(Config.WORD_LIST);
     wordsFile.delete();
-    this.manager.searchByFilename(fileA.getName());
+    this.manager.searchSimilarFilename(80);
     
     //*** Validation: No exception is thrown even the word list file is not found.
   }
