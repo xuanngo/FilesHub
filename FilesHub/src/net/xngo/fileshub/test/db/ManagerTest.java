@@ -6,8 +6,10 @@ import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertNull;
 import static org.testng.Assert.assertTrue;
+
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
+
 
 // Java Library
 import java.io.File;
@@ -16,12 +18,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import net.xngo.fileshub.Config;
 import net.xngo.fileshub.Utils;
 import net.xngo.fileshub.db.Manager;
 import net.xngo.fileshub.db.Shelf;
 import net.xngo.fileshub.db.Trash;
 import net.xngo.fileshub.struct.Document;
-
 import net.xngo.utils.java.math.Random;
 
 // FilesHub test helper classes.
@@ -1066,5 +1068,47 @@ public class ManagerTest
     fileA.delete();
     fileB.delete();
   }
+
+  @Test(description="Search similar filename without words filtering file.")
+  public void searchSimilarFilenameNoWordFile()
+  {
+    //*** Prepare data ****
+    // Create File A and add to database.
+    File fileA = Data.createTempFile("searchSimilarFilenameNoWordFile_fileA");
+    this.manager.addFile(fileA);
+    
+    //*** Main test: Do simple search by filename without word list *** 
+    File wordsFile = new File(Config.WORD_LIST);
+    wordsFile.delete();
+    this.manager.searchByFilename(fileA.getName());
+    
+    //*** Validation: No exception is thrown even the word list file is not found.
+  }
+  
+  @Test(description="Search by hash: Multiple hashes in Trash table")
+  public void searchByHashMultipleHashesInTrash()
+  {
+    /** Prepare data: Hash not found in Shelf but hashes(FileA & FileB) found in Trash table. **/
+    // Create duplicate files.
+    File fileA = Data.createTempFile("searchByHashMultipleHashesInTrash_fileA");
+    File fileB = Data.createTempFile("searchByHashMultipleHashesInTrash_fileB");
+    Data.copyFile(fileA, fileB);
+    
+    // Add duplicate files directly in Trash table.
+    final int fakeUid = atomicInt.get();
+    Document trashDocA = new Document(fileA);
+      trashDocA.uid = fakeUid;
+      trashDocA.hash = Utils.getHash(fileA);
+    Document trashDocB = new Document(fileB);
+      trashDocB.uid = fakeUid;
+      trashDocB.hash = Utils.getHash(fileB);
+    Trash trash = new Trash();
+    trash.addDoc(trashDocA);
+    trash.addDoc(trashDocB);
+    
+    /** Main test: It should not throw any exception **/
+    this.manager.searchByHash(trashDocA.hash);
+  }
+  
   
 }
