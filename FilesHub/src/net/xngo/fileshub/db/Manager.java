@@ -373,7 +373,8 @@ public class Manager
     List<Document> shelfDocsList = this.shelf.getDocsByHash(hash);
     if(shelfDocsList.size()==0)
     {
-      System.out.println(String.format("Hash '%s' is not found in Shelf table.\n", hash));
+      System.out.println("Shelf:");
+      System.out.println(String.format("  Hash '%s' is not found in Shelf table.\n", hash));
     }
     else
     {
@@ -385,7 +386,8 @@ public class Manager
     List<Document> trashDocsList = this.trash.getDocsByHash(hash);
     if(trashDocsList.size()==0)
     {
-      System.out.println(String.format("Hash '%s' is not found in Trash table.", hash));
+      System.out.println("Trash:");
+      System.out.println(String.format("  Hash '%s' is not found in Trash table.", hash));
     }
     else
     {
@@ -401,7 +403,8 @@ public class Manager
     List<Document> shelfDocsList = this.shelf.searchDocsByFilename(filename);
     if(shelfDocsList.size()==0)
     {
-      System.out.println(String.format("Filename '%s' is not found in Shelf table.\n", filename));
+      System.out.println("Shelf:");
+      System.out.println(String.format("  Filename '%s' is not found in Shelf table.\n", filename));
     }
     else
     {
@@ -413,7 +416,8 @@ public class Manager
     List<Document> trashDocsList = this.trash.searchDocsByFilename(filename);
     if(trashDocsList.size()==0)
     {
-      System.out.println(String.format("Filename '%s' is not found in Trash table.", filename));
+      System.out.println("Trash:");
+      System.out.println(String.format("  Filename '%s' is not found in Trash table.", filename));
     }
     else
     {
@@ -429,7 +433,8 @@ public class Manager
     List<Document> shelfDocsList = this.shelf.searchDocsByFilepath(filepath);
     if(shelfDocsList.size()==0)
     {
-      System.out.println(String.format("Filepath '%s' is not found in Shelf table.\n", filepath));
+      System.out.println("Shelf:");
+      System.out.println(String.format("  Filepath '%s' is not found in Shelf table.\n", filepath));
     }
     else
     {
@@ -441,7 +446,8 @@ public class Manager
     List<Document> trashDocsList = this.trash.searchDocsByFilepath(filepath);
     if(trashDocsList.size()==0)
     {
-      System.out.println(String.format("Filepath '%s' is not found in Trash table.", filepath));
+      System.out.println("Trash:");
+      System.out.println(String.format("  Filepath '%s' is not found in Trash table.", filepath));
     }
     else
     {
