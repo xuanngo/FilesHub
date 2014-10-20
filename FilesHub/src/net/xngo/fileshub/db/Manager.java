@@ -152,9 +152,12 @@ public class Manager
               {// Hash found in Trash.
                 shelfDoc = this.shelf.getDocByUid(trashDocsList.get(0).uid);
                 if(shelfDoc==null)
-                {
-                  doc.uid = trashDocsList.get(0).uid; // Use trash.duid because document is missing from Shelf.
-                  this.shelf.addDoc(doc);
+                {// No document exists in Shelf.
+                  
+                  final int fromUid = this.shelf.addDoc(doc); // Simply add to Shelf with auto-generated Uid.
+                  // Link the newly created document in Shelf back to the existing duplicated in Trash table.
+                  this.shelf.changeUid(fromUid, trashDocsList.get(0).uid); 
+                  
                   return null; // Because added file become the main file in Shelf table.
                 }
                 else
@@ -163,7 +166,7 @@ public class Manager
                   if(new File(shelfDoc.canonical_path).exists())
                   {
                     doc.uid = shelfDoc.uid;
-                    trash.addDoc(doc);              
+                    trash.addDoc(doc);
                     return shelfDoc;                    
                   }
                   else

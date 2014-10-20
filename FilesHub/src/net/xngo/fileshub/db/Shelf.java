@@ -114,6 +114,16 @@ public class Shelf
       return rowsAffected;    
   }
   
+  public int changeUid(int fromUid, int toUid)
+  {
+    final int rowsAffected = this.updateInteger("uid", toUid, "uid", fromUid);
+    
+    if (rowsAffected==0)
+      throw new RuntimeException(String.format("No uid has been changed: %s", Main.connection.getQueryString()));
+    else
+      return rowsAffected;     
+  }
+  
   /**
    * Return all documents from Shelf table.
    * @return all documents from Shelf table.
@@ -272,7 +282,69 @@ public class Shelf
     
     return rowAffected;
   }
+  
+  private int updateString(String replaceColumn, String replaceValue, String keyColumn, String keyValue)
+  {
+    final String query = String.format("UPDATE %s SET %s=? WHERE %s=?", this.tablename, replaceColumn, keyColumn);
+    
+    int rowAffected = 0;
+    try
+    {
+      // Prepare the query.
+      Main.connection.prepareStatement(query);
+      
+      // Set the data.
+      int i=1;
+      Main.connection.setString(i++, replaceValue );
+      Main.connection.setString(i++, keyValue     );
+      
+      // update row.
+      rowAffected = Main.connection.executeUpdate();
+         
+    }
+    catch(SQLException e)
+    {
+      e.printStackTrace();
+    }
+    finally
+    {
+      Main.connection.closePStatement();
+    }
+    
+    return rowAffected;    
+  }
 
+  private int updateInteger(String replaceColumn, int replaceValue, String keyColumn, int keyValue)
+  {
+    final String query = String.format("UPDATE %s SET %s=? WHERE %s=?", this.tablename, replaceColumn, keyColumn);
+    
+    int rowAffected = 0;
+    try
+    {
+      // Prepare the query.
+      Main.connection.prepareStatement(query);
+      
+      // Set the data.
+      int i=1;
+      Main.connection.setInt(i++, replaceValue );
+      Main.connection.setInt(i++, keyValue     );
+      
+      // update row.
+      rowAffected = Main.connection.executeUpdate();
+         
+    }
+    catch(SQLException e)
+    {
+      e.printStackTrace();
+    }
+    finally
+    {
+      Main.connection.closePStatement();
+    }
+    
+    return rowAffected;    
+  }
+  
   /**
    * 
    * @param column

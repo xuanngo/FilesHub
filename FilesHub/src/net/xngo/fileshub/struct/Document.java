@@ -60,7 +60,7 @@ public class Document
   
   public void checkUid()
   {
-    String uidErrorMsg = String.format("[uid = %d] // Can't be zero.\nMore Info:\n%s", this.uid, this.getErrorMsg());
+    String uidErrorMsg = String.format("[uid = %d] // Can't be zero or less.\nMore Info:\n%s", this.uid, this.getErrorMsg());
     if(this.uid<1)
       throw new RuntimeException(uidErrorMsg);
   }

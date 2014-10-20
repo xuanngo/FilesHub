@@ -37,9 +37,11 @@ import net.xngo.fileshub.test.helpers.Data;
  */
 public class ManagerTest
 {
-  private Manager manager = new Manager();
-  private AtomicInteger atomicInt = new AtomicInteger(Random.Int()+1); // Must set initial value to more than 0. Duid can't be 0.
+  private final int randomInt = java.lang.Math.abs(Random.Int())+1;
+  private AtomicInteger atomicInt = new AtomicInteger(randomInt); // Must set initial value to more than 0. Duid can't be 0.
   
+  private Manager manager = new Manager();
+
   @BeforeClass
   public void DatabaseCreation()
   {
