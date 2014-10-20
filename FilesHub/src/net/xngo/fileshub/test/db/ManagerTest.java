@@ -6,25 +6,26 @@ import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertNull;
 import static org.testng.Assert.assertTrue;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Test;
 
 // Java Library
 import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import net.xngo.fileshub.Utils;
 import net.xngo.fileshub.db.Manager;
 import net.xngo.fileshub.db.Shelf;
 import net.xngo.fileshub.db.Trash;
 import net.xngo.fileshub.struct.Document;
+
+import net.xngo.utils.java.math.Random;
+
 // FilesHub test helper classes.
 import net.xngo.fileshub.test.helpers.Data;
-
-import org.testng.annotations.BeforeClass;
-// TestNG
-import org.testng.annotations.Test;
-
 
 
 
@@ -37,6 +38,7 @@ import org.testng.annotations.Test;
 public class ManagerTest
 {
   private Manager manager = new Manager();
+  private AtomicInteger atomicInt = new AtomicInteger(Random.Int()+1); // Must set initial value to more than 0. Duid can't be 0.
   
   @BeforeClass
   public void DatabaseCreation()
@@ -594,19 +596,19 @@ public class ManagerTest
   
   
   @Test(description="Add file D. A, B, C are duplicates but B & C have the same hash but different from A. D has same hash as B & C")
-  public void addFileOrphanHashInTrash()
+  public void addFileHashOnlyInTrash()
   {
     //*** Prepare data: Make File B, C to be a duplicate of File A ****
     // Create File A and add to database.
-    File fileA = Data.createTempFile("addFileOrphanHashInTrash_fileA");
+    File fileA = Data.createTempFile("addFileHashOnlyInTrash_fileA");
     this.manager.addFile(fileA);
     
-    // Copy File A to File B and add to database.
-    File fileB = Data.createTempFile("addFileOrphanHashInTrash_fileB");
+    // Create File B and add to database.
+    File fileB = Data.createTempFile("addFileHashOnlyInTrash_fileB");
     this.manager.addFile(fileB);
     
     // Copy File B to File C and add to database.
-    File fileC = Data.createTempFile("addFileOrphanHashInTrash_fileC");
+    File fileC = Data.createTempFile("addFileHashOnlyInTrash_fileC");
     Data.copyFile(fileB, fileC);
     this.manager.addFile(fileC);
     
@@ -615,7 +617,7 @@ public class ManagerTest
     
     //*** Main test ****
     // Copy File B to File D and add to database.
-    File fileD = Data.createTempFile("addFileOrphanHashInTrash_fileD");
+    File fileD = Data.createTempFile("addFileHashOnlyInTrash_fileD");
     Data.copyFile(fileB, fileD);
     this.manager.addFile(fileD);
 
@@ -628,6 +630,72 @@ public class ManagerTest
     
   }
   
+  @Test(description="Add file C. B is marked as duplicate of A but they don't have the same hash but A doesn't exist anymore. C has the same hash as B.")
+  public void addFileDupInTrashMainDelete()
+  {
+    //*** Prepare data: Make File B to be duplicate of File A. ****
+    // Create File A and add to database.
+    File fileA = Data.createTempFile("addFileDupInTrashMainDelete_fileA");
+    this.manager.addFile(fileA);
+    
+    // Create File B and mark it as duplicate of A.
+    File fileB = Data.createTempFile("addFileDupInTrashMainDelete_fileB");
+    this.manager.markDuplicate(fileB, fileA);
+    
+    //*** Main test: Delete fileA and add File C. ***
+    fileA.delete();
+    
+    // Copy File B to File C and add to database.
+    File fileC = Data.createTempFile("addFileDupInTrashMainDelete_fileC");
+    Data.copyFile(fileB, fileC);
+    this.manager.addFile(fileC);
+    
+    // Validations: File C should be in Shelf whereas File A is moved to Trash.
+    Shelf shelf = new Shelf();
+      Document shelfDocC = shelf.getDocByFilename(fileC.getName());
+    Trash trash = new Trash();
+      Document trashDocA = trash.getDocByFilename(fileA.getName());
+    assertNotNull(shelfDocC, String.format("%s is not found in Shelf table. It should.", fileC.getName()));
+    assertNotNull(trashDocA, String.format("%s is not found in Trash table. It should.", fileA.getName()));
+    assertEquals(shelfDocC.uid, trashDocA.uid, String.format("%s.uid=%d should be the same as %s.uid=%d", 
+                                                                fileC.getName(), shelfDocC.uid, fileA.getName(), trashDocA.uid));
+    
+  }
+  
+  @Test(groups={ "Extreme" }, description="Add file C having same hash as A & B but A & B are orphan duplicates in Trash table only.")
+  public void addFileToOrphansTrash()
+  {
+    //*** Prepare data: Add duplicate files A & B directly to Trash table. ****
+    // Add duplicate files A & B directly to Trash table.
+    File fileA = Data.createTempFile("addFileToOrphansTrash_fileA");
+    File fileB = Data.createTempFile("addFileToOrphansTrash_fileB");
+    Data.copyFile(fileA, fileB);
+    
+    final int fakeDuid = atomicInt.get();
+    Document trashDocA = new Document(fileA);
+    Document trashDocB = new Document(fileB);
+      trashDocA.uid = fakeDuid;
+      trashDocB.uid = fakeDuid;
+      trashDocA.hash = Utils.getHash(fileA);
+      trashDocB.hash = Utils.getHash(fileB);
+    Trash trash = new Trash();
+    trash.addDoc(trashDocA);
+    trash.addDoc(trashDocB);
+    
+    //*** Main test ***
+    File fileC = Data.createTempFile("addFileToOrphansTrash_fileC");
+    Data.copyFile(fileA, fileC);
+    this.manager.addFile(fileC);
+
+    // Validations: Check file C is in Shelf table and shouldn't be in Trash.
+    Shelf shelf = new Shelf();
+    Document shelfDocC = shelf.getDocByFilename(fileC.getName());
+    Document trashDocC = trash.getDocByFilename(fileC.getName());
+    assertNotNull(shelfDocC, String.format("%s not found in Shelf table. It should be added in Shelf table.", fileC.getAbsolutePath()));
+    assertEquals(shelfDocC.uid, fakeDuid, String.format("%s should be added in Shelf table.", fileC.getAbsolutePath()));
+    assertNull(trashDocC, String.format("%s should not be added in Trash table.", fileC.getAbsolutePath()));
+    
+  }  
   
   @Test(description="Update file that has changed since added in database. Note: This is exactly the same as addFileShelfFileChanged(), except that it uses Manager.update() instead of Manager.addFile().")
   public void updateFileChanged()
