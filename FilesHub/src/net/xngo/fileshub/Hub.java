@@ -131,6 +131,7 @@ public class Hub
     report.displaySummary();
         Main.chrono.display();
     
+    System.out.println("Done!");
   }
   
   public void update()
