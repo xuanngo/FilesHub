@@ -150,9 +150,35 @@ public class Manager
               List<Document> trashDocsList = this.trash.getDocsByHash(doc.hash);
               if(trashDocsList.size()>0)
               {// Hash found in Trash.
-                doc.uid = trashDocsList.get(0).uid;
-                trash.addDoc(doc);              
-                return this.shelf.getDocByUid(trashDocsList.get(0).uid);
+                shelfDoc = this.shelf.getDocByUid(trashDocsList.get(0).uid);
+                if(shelfDoc==null)
+                {
+                  doc.uid = trashDocsList.get(0).uid; // Use trash.duid because document is missing from Shelf.
+                  this.shelf.addDoc(doc);
+                  return null; // Because added file become the main file in Shelf table.
+                }
+                else
+                {// Hash found in Shelf
+                  
+                  if(new File(shelfDoc.canonical_path).exists())
+                  {
+                    doc.uid = shelfDoc.uid;
+                    trash.addDoc(doc);              
+                    return shelfDoc;                    
+                  }
+                  else
+                  {// File from Shelf doesn't exist in filesystem.
+                    
+                    // Overwrite Shelf document with 'to add file'.
+                    doc.uid = shelfDoc.uid;
+                    this.shelf.saveDoc(doc);
+                    
+                    // Move Shelf document to trash.
+                    this.trash.addDoc(shelfDoc);        // Add non-existing file to Trash.
+                    
+                    return null;// No duplicate. 'to add file' becomes main file.                    
+                  }
+                }
               }
               else
               {
