@@ -106,7 +106,12 @@ public class Shelf
   
   public int saveDoc(Document doc)
   {
-    return this.updateDoc(doc);
+    final int rowsAffected = this.updateDoc(doc);
+    
+    if (rowsAffected==0)
+      throw new RuntimeException(String.format("No document is saved: %s", Main.connection.getQueryString()));
+    else
+      return rowsAffected;    
   }
   
   /**
