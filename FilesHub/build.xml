@@ -51,11 +51,14 @@
 		<delete file="./test/fileshub.db"/>
 		<delete dir="./test/test-output"/>
 	  
-    	<!-- Delete all results*.csv & results*.html -->
+    <!-- Delete all results*.csv & results*.html -->
     <delete>
       <fileset dir="./" includes="**/results_*.csv"/>
       <fileset dir="./" includes="**/results_*.html"/>
-    </delete>   
+    </delete>
+		
+		<!-- Delete javadoc directory -->
+		<delete dir="javadoc"/>
 
 	</target>
 	
