@@ -54,6 +54,9 @@ public class Manager
    *  be generic and have different content, e.g. ../something/Track 1.
    * <pre>
    * {@code
+   * The pseudo-code below serves as a general idea of what addFiles() does.
+   *  It has since modified to add more edge cases.
+   * ===============================================================
    * If path found in Shelf
    *   -Exact file path. Do nothing
    * else
