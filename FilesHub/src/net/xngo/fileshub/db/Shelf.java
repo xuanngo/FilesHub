@@ -10,7 +10,7 @@ import net.xngo.fileshub.struct.Document;
 import net.xngo.utils.java.db.DbUtils;
 
 /**
- * Class that manipulate documents.
+ * Class that manipulate documents in Shelf table.
  * @author Xuan Ngo
  *
  */
@@ -197,6 +197,13 @@ public class Shelf
     return rowsAffected;    
   }
   
+  /**
+   * Insert document in Shelf table.
+   * Note: Never add uid. Let's the database engine generated a new ID.
+   *        If you need to change uid, use {@link changeUid}.
+   * @param doc
+   * @return
+   */
   private final int insertDoc(final Document doc)
   {
     doc.sanityCheck();
