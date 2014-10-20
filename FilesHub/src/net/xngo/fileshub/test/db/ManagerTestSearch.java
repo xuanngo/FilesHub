@@ -15,8 +15,6 @@ import static org.testng.Assert.assertTrue;
 
 
 
-
-
 import java.io.ByteArrayOutputStream;
 // Java Library
 import java.io.File;
@@ -26,8 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-
-
+import java.util.concurrent.atomic.AtomicInteger;
 
 //FilesHub classes.
 import net.xngo.fileshub.Utils;
@@ -38,10 +35,7 @@ import net.xngo.fileshub.struct.Document;
 
 // FilesHub test helper classes.
 import net.xngo.fileshub.test.helpers.Data;
-
-
-
-
+import net.xngo.utils.java.math.Random;
 
 
 /**
@@ -49,9 +43,11 @@ import net.xngo.fileshub.test.helpers.Data;
  * @author Xuan Ngo
  *
  */
+@Test(singleThreaded=false)
 public class ManagerTestSearch
 {
   private Manager manager = new Manager();
+  private AtomicInteger atomicInt = new AtomicInteger(Random.Int()+1); // Must set initial value to more than 0. Duid can't be 0.
   
   // Get the original standard out before changing it.
   private final PrintStream originalStdOut = System.out;
@@ -87,7 +83,7 @@ public class ManagerTestSearch
     Data.copyFile(fileA, fileB);
     
     // Add duplicate files directly in Trash table.
-    final int fakeUid = 33333;
+    final int fakeUid = atomicInt.get();
     Document trashDocA = new Document(fileA);
       trashDocA.uid = fakeUid;
       trashDocA.hash = Utils.getHash(fileA);
