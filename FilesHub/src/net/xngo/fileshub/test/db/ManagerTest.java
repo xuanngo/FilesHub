@@ -517,6 +517,9 @@ public class ManagerTest
       assertNull(trashDoc, String.format("'%s' should not be Trash.", duplicateFilePath));
     }
     
+    // Clean up.
+    uniqueFile.delete();
+    
   }
   
   @Test(description="Add a deleted duplicate file that is already in the database.")
@@ -551,6 +554,8 @@ public class ManagerTest
       assertEquals(trashDocs.size(), 1, String.format("Expected 1 but found %d entries in Trash table for %s.", trashDocs.size(), duplicateFilePath));
     }
     
+    // Clean up.
+    uniqueFile.delete();    
   }
   
   @Test(description="Add file C but File B and C are already duplicate of A and A is deleted.")
@@ -592,7 +597,11 @@ public class ManagerTest
     Document shelfDocC = shelf.getDocByCanonicalPath(fileC.getAbsolutePath());
     Document trashDocC = trash.getDocByCanonicalPath(fileC.getAbsolutePath());
     assertNotNull(shelfDocC, String.format("%s should in Shelf. It was moved from Trash to Shelf.", fileC.getAbsolutePath()));
-    assertNull(trashDocC, String.format("%s should not be in Trash. It was moved from Trash to Shelf.", fileC.getAbsolutePath())); 
+    assertNull(trashDocC, String.format("%s should not be in Trash. It was moved from Trash to Shelf.", fileC.getAbsolutePath()));
+    
+    // Clean up.
+    fileB.delete();
+    fileC.delete();
     
   }
   
@@ -630,6 +639,12 @@ public class ManagerTest
     Document trashDocD = trash.getDocByFilename(fileD.getName());
     assertEquals(shelfDocA.uid, trashDocD.uid);
     
+    // Clean up.
+    fileA.delete();
+    fileB.delete();
+    fileC.delete();
+    fileD.delete();
+    
   }
   
   @Test(description="Add file C. B is marked as duplicate of A but they don't have the same hash but A doesn't exist anymore. C has the same hash as B.")
@@ -662,6 +677,9 @@ public class ManagerTest
     assertEquals(shelfDocC.uid, trashDocA.uid, String.format("%s.uid=%d should be the same as %s.uid=%d", 
                                                                 fileC.getName(), shelfDocC.uid, fileA.getName(), trashDocA.uid));
     
+    // Clean up.
+    fileB.delete();
+    fileC.delete();
   }
   
   @Test(groups={ "Extreme" }, description="Add file C having same hash as A & B but A & B are orphan duplicates in Trash table only.")
@@ -696,6 +714,11 @@ public class ManagerTest
     assertNotNull(shelfDocC, String.format("%s not found in Shelf table. It should be added in Shelf table.", fileC.getAbsolutePath()));
     assertEquals(shelfDocC.uid, fakeDuid, String.format("%s should be added in Shelf table.", fileC.getAbsolutePath()));
     assertNull(trashDocC, String.format("%s should not be added in Trash table.", fileC.getAbsolutePath()));
+    
+    // Clean up.
+    fileA.delete();
+    fileB.delete();
+    fileC.delete();
     
   }  
   
