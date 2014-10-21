@@ -597,9 +597,9 @@ public class Manager
   
   private void displayDocument(String title, boolean header, List<Document> docsList)
   {
-    int uidLength      = this.maxLengthOfUid(docsList);
-    int hashLength     = this.maxLengthOfHash(docsList);
-    int filenameLength = this.maxLengthOfFilename(docsList);
+    int uidLength      = this.maxUidLength(docsList);
+    int hashLength     = this.maxHashLength(docsList);
+    int filenameLength = this.maxFilenameLength(docsList);
     
     System.out.println(title);
     if(header)
@@ -619,7 +619,7 @@ public class Manager
                                       doc.uid, doc.hash, doc.filename, doc.canonical_path));
     }
   }
-  private int maxLengthOfUid(List<Document> docsList)
+  private int maxUidLength(List<Document> docsList)
   {
     int maxLength="<UID>".length(); // default value.
     
@@ -631,7 +631,7 @@ public class Manager
     }
     return maxLength;
   }
-  private int maxLengthOfHash(List<Document> docsList)
+  private int maxHashLength(List<Document> docsList)
   {
     int maxLength="<HASH>".length(); // default value.
     for(Document doc: docsList)
@@ -642,7 +642,7 @@ public class Manager
     return maxLength;
   }
   
-  private int maxLengthOfFilename(List<Document> docsList)
+  private int maxFilenameLength(List<Document> docsList)
   {
     int maxLength="<FILENAME>".length(); // default value.
     for(Document doc: docsList)
