@@ -12,6 +12,7 @@ import net.xngo.fileshub.Config;
 import net.xngo.fileshub.struct.Document;
 import net.xngo.fileshub.struct.Duplicate;
 import net.xngo.fileshub.struct.PairFile;
+import net.xngo.utils.java.io.Console;
 import net.xngo.utils.java.io.FileUtils;
 
 public class Report
