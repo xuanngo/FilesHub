@@ -188,7 +188,7 @@ public class Shelf
       Main.connection.setInt(1, duid);
       
       rowsAffected = Main.connection.executeUpdate();
-      Main.connection.closePStatement();    
+      Main.connection.closePreparedStatement();    
     }
     catch(SQLException e)
     {
@@ -247,7 +247,7 @@ public class Shelf
     }
     finally
     {
-      Main.connection.closePStatement();
+      Main.connection.closePreparedStatement();
     }  
     return generatedKey;
   }
@@ -284,7 +284,7 @@ public class Shelf
     }
     finally
     {
-      Main.connection.closePStatement();
+      Main.connection.closePreparedStatement();
     }
     
     return rowAffected;
@@ -315,7 +315,7 @@ public class Shelf
     }
     finally
     {
-      Main.connection.closePStatement();
+      Main.connection.closePreparedStatement();
     }
     
     return rowAffected;    
@@ -346,7 +346,7 @@ public class Shelf
     }
     finally
     {
-      Main.connection.closePStatement();
+      Main.connection.closePreparedStatement();
     }
     
     return rowAffected;    
@@ -371,7 +371,6 @@ public class Shelf
     }
     else
     {
-      Main.connection.displayLoggedQueries();
       String msg = String.format("'%s' returns %d entries. Expect 0 or 1 entry.", Main.connection.getQueryString(), docs.size());
       throw new RuntimeException(msg);
     }
@@ -419,7 +418,7 @@ public class Shelf
         docList.add(doc);
       }
       DbUtils.close(resultSet);
-      Main.connection.closePStatement();
+      Main.connection.closePreparedStatement();
     }
     catch(SQLException e)
     {
@@ -470,7 +469,7 @@ public class Shelf
         docsList.add(doc);
       }
       DbUtils.close(resultSet);
-      Main.connection.closePStatement();      
+      Main.connection.closePreparedStatement();      
     }
     catch(SQLException e)
     {

@@ -183,7 +183,7 @@ public class Trash
       
       rowsAffected = Main.connection.executeUpdate();
 
-      Main.connection.closePStatement();     
+      Main.connection.closePreparedStatement();     
     }
     catch(SQLException e)
     {
@@ -231,7 +231,7 @@ public class Trash
         docsList.add(doc);
       }
       DbUtils.close(resultSet);
-      Main.connection.closePStatement();       
+      Main.connection.closePreparedStatement();       
 
     }
     catch(SQLException e)
@@ -304,7 +304,7 @@ public class Trash
         
       }
       DbUtils.close(resultSet);
-      Main.connection.closePStatement();        
+      Main.connection.closePreparedStatement();        
     }
     catch(SQLException e)
     {
@@ -366,7 +366,7 @@ public class Trash
     }
     finally
     {
-      Main.connection.closePStatement();
+      Main.connection.closePreparedStatement();
     }    
   
     return generatedKey;
