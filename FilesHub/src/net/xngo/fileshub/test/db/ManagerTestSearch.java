@@ -46,7 +46,7 @@ import net.xngo.utils.java.math.Random;
 @Test(singleThreaded=false)
 public class ManagerTestSearch
 {
-  
+  /*
   private final int randomInt = java.lang.Math.abs(Random.Int())+1;
   private AtomicInteger atomicInt = new AtomicInteger(randomInt); // Must set initial value to more than 0. Duid can't be 0.
   
@@ -63,20 +63,20 @@ public class ManagerTestSearch
     this.manager.createDbStructure();
   }
   
-//  @BeforeTest
+  @BeforeTest
   public void beforeTest()
   {
     this.consoleContent = new ByteArrayOutputStream();
     System.setOut(new PrintStream(this.consoleContent));
   }
   
-//  @AfterTest
+  @AfterTest
   public void afterTest()
   {
     System.setOut(this.originalStdOut);
   }
   
 
-  
+  */
   
 }
