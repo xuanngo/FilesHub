@@ -15,6 +15,7 @@ public class Console
     for(int i=0; i<spaces; i++)
       this.progressLine.append(' ');
     
+    // Print the progress line.
     System.out.print(this.progressLine.toString());
     this.progressLine.setLength(0); // Reset the progress line.
     
