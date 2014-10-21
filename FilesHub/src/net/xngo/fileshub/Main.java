@@ -30,7 +30,6 @@ public class Main
     Cmd cmd = new Cmd(args);
     Main.connection.close();
     
-    //try { Thread.sleep(3*1000*60); } catch(InterruptedException ex) { ex.printStackTrace(); }
   }
  
 }
