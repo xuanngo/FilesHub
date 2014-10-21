@@ -4,15 +4,18 @@ public class Console
 {
   private int lastLineLength = 0;
   
-  public void printProgress(String dline)
+  public void printProgress(String line)
   {
-    String line = String.format("[%d] %s", this.lastLineLength, dline); // For debugging purposes.
+    // Print to console.
+    System.out.print('\r');
+    System.out.print(line);
     
-    for(int i=0; i<lastLineLength; i++)
-    {
-      System.out.print('\b');
-    }
-    System.out.print(line); 
+    // If last line is longer, then mask with space.
+    final int spaces = lastLineLength-line.length();
+    for(int i=0; i<spaces; i++)
+      System.out.print(' ');
+    
+    // Update previous line length.
     this.lastLineLength = line.length();
   }
   
