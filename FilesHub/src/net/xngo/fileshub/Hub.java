@@ -103,7 +103,7 @@ public class Hub
       // Print progress to console.      
       size += file.length();
       i++;
-      if( (i%whenToDisplay)==0)
+      if( (i%whenToDisplay)==0 )
       {
         report.console.printProgress(String.format("%s [%s] [%d/%d] %s", Math.getReadablePercentage(size, Report.FILES_SIZE), 
                                                                           totalReadableSize, 
