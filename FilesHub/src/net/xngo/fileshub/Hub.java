@@ -2,6 +2,7 @@ package net.xngo.fileshub;
 
 import java.io.File;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -55,6 +56,8 @@ public class Hub
       
       try
       {
+        Main.connection.commit(); // Commit every if successful.
+        
         // Add file to database.
         Document doc = this.manager.addFile(file);
         
@@ -136,7 +139,16 @@ public class Hub
   
   public void update()
   {
-    List<Document> missingFileList = this.manager.update();
+    List<Document> missingFileList = null;
+    try
+    {
+      missingFileList = this.manager.update();
+      Main.connection.commit();
+    }
+    catch(SQLException ex) 
+    { 
+      ex.printStackTrace(); 
+    }
     
     if(missingFileList.size()>0)
     {
@@ -152,7 +164,15 @@ public class Hub
   
   public void markDuplicate(File duplicate, File of)
   {
-    this.manager.markDuplicate(duplicate, of);
+    try
+    {
+      this.manager.markDuplicate(duplicate, of);
+      Main.connection.commit();
+    }
+    catch(SQLException ex) 
+    { 
+      ex.printStackTrace(); 
+    }    
   }
   
   public void hash(Set<File> files)
