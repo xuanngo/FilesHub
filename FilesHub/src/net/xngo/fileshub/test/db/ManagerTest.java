@@ -1068,7 +1068,7 @@ public class ManagerTest
     fileA.delete();
     fileB.delete();
   }
-
+  
   @Test(description="Search similar filename without words filtering file.")
   public void searchSimilarFilenameNoWordFile()
   {
