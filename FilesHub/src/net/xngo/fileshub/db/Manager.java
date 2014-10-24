@@ -653,30 +653,42 @@ public class Manager
     return maxLength;
   }
   
-  private boolean validateMarkDuplicate(File duplicate, File of)
+  /**
+   * Note: File A is a duplicate of File B.
+   * @param fileA
+   * @param fileB
+   * @return
+   */
+  private boolean validateMarkDuplicate(File fileA, File fileB)
   {
-    if(!duplicate.exists())
+    if(!fileA.exists())
     {
-      System.out.println(String.format("Error: [%s] doesn't exist.", duplicate.getAbsolutePath()));
+      System.out.println(String.format("Error: [%s] doesn't exist.", fileA.getAbsolutePath()));
       return false;
     }
     
-    if(!of.exists())
+    if(!fileB.exists())
     {
-      System.out.println(String.format("Error: [%s] doesn't exist.", of.getAbsolutePath()));
+      System.out.println(String.format("Error: [%s] doesn't exist.\n"
+          + "Do the followings:\n"
+          + "  FilesHub -a %s\n"
+          + "  FilesHub -d %s %s", 
+          fileB.getAbsolutePath(), 
+          fileA.getAbsolutePath(), 
+          fileA.getAbsolutePath(), fileB.getAbsolutePath() ));
       return false;
     }
     
     
-    if(!duplicate.isFile())
+    if(!fileA.isFile())
     {
-      System.out.println(String.format("Error: [%s] is not a file.", duplicate.getAbsolutePath()));
+      System.out.println(String.format("Error: [%s] is not a file.", fileA.getAbsolutePath()));
       return false;
     }
     
-    if(!of.isFile())
+    if(!fileB.isFile())
     {
-      System.out.println(String.format("Error: [%s] is not a file.", of.getAbsolutePath()));
+      System.out.println(String.format("Error: [%s] is not a file.", fileB.getAbsolutePath()));
       return false;
     }
     
