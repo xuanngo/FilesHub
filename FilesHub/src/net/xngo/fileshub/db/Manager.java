@@ -34,17 +34,14 @@ public class Manager
       this.shelf.createTable();
       this.trash.createTable();
     }
-    else if(DbFile.length()<1)
-    {// Database file already exist but it is empty.
-      
-      this.shelf.createTable();
-      this.trash.createTable();      
-    }
     else
     {
-      // Do nothing. Database file already exists.
+      if(DbFile.length()<1)
+      {// Database file already exist but it is empty.
+        this.shelf.createTable();
+        this.trash.createTable();
+      }
     }
-  
   }
   
 
@@ -675,7 +672,7 @@ public class Manager
           + "  FilesHub -d %s %s", 
           fileB.getAbsolutePath(), 
           fileA.getAbsolutePath(), 
-          fileA.getAbsolutePath(), fileB.getAbsolutePath() ));
+          fileB.getAbsolutePath(), fileA.getAbsolutePath() ));
       return false;
     }
     
