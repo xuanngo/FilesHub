@@ -116,7 +116,7 @@ public class Shelf
   
   public int changeUid(int fromUid, int toUid)
   {
-    final int rowsAffected = this.updateInteger("uid", toUid, "uid", fromUid);
+    final int rowsAffected = this.updateInteger("uid", fromUid, "uid", toUid);
     
     if (rowsAffected==0)
       throw new RuntimeException(String.format("No uid has been changed: %s", Main.connection.getQueryString()));
@@ -168,7 +168,8 @@ public class Shelf
   public List<Document> searchDocsByFilepath(String filepath)
   {
     return this.searchLikeDocsBy("canonical_path", filepath);
-  }  
+  }
+  
   
  
   /****************************************************************************
@@ -321,7 +322,7 @@ public class Shelf
     return rowAffected;    
   }
 
-  private int updateInteger(String replaceColumn, int replaceValue, String keyColumn, int keyValue)
+  private int updateInteger(String keyColumn, int keyValue, String replaceColumn, int replaceValue)
   {
     final String query = String.format("UPDATE %s SET %s=? WHERE %s=?", this.tablename, replaceColumn, keyColumn);
     
@@ -338,7 +339,7 @@ public class Shelf
       
       // update row.
       rowAffected = Main.connection.executeUpdate();
-         
+
     }
     catch(SQLException e)
     {
