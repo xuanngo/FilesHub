@@ -10,6 +10,7 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertNull;
+import org.testng.annotations.DataProvider;
 
 import net.xngo.fileshub.Hub;
 import net.xngo.fileshub.db.Manager;
@@ -167,5 +168,91 @@ public class HubTest
     
     //*** Clean up ***
     fileA.delete();
-  }   
+  }
+  
+  @Test(description="File A is mark as duplicate to File A.")
+  public void markDuplicateExactSameFile()
+  {
+    //*** Prepare data: Create File A.****
+    File fileA = Data.createTempFile("markDuplicateExactSameFile");
+    
+    //*** Main test: Mark File A is a duplicate of File A. ****
+    final boolean commit = this.hub.markDuplicate(fileA, fileA);
+    
+    //*** Validation: File A should be moved to Shelf whereas File B is moved to Trash.
+    assertFalse(commit, "No commit because we are marking the exact same file.");
+    
+    //*** Clean up ***
+    fileA.delete();
+  }
+  
+  @DataProvider(name = "fileABExistences")
+  public static Object[][] fileABExistences()
+  {
+    return new Object[][] { 
+                            // By default, B is in Shelf. A is in Trash.
+                            // Fa , Fb   , DocA , DocB , Switch?
+                            { true, true , false, false, false }, 
+                            { true, false, false, true , true },
+                            { true, false, false, false, true },
+                            { false, true, true, false, false },
+                            { false, false, true, true, false },
+                          };
+  }
+  
+  @Test(dataProvider = "fileABExistences")
+  public void markDuplicateFileABExistences(boolean bFileA, boolean bFileB, boolean bDocA, boolean bDocB, boolean switched)
+  {
+    //*** Prepare data.****
+    // Create File A & B
+    File fileA = Data.createTempFile("markDuplicateFileABExistences_A");
+    File fileB = Data.createTempFile("markDuplicateFileABExistences_B");
+    
+    // Add File A or B in Shelf table.
+    Shelf shelf = new Shelf();
+    if(bDocA)
+    {
+      Document shelfDocA = new Document(fileA);
+      shelfDocA.hash = Utils.getHash(fileA);
+      shelf.addDoc(shelfDocA);
+    }
+    
+    if(bDocB)
+    {
+      Document shelfDocB = new Document(fileB);
+      shelfDocB.hash = Utils.getHash(fileB);
+      shelf.addDoc(shelfDocB);
+    }
+    
+    // Delete File A or B.
+    if(!bFileA)
+      fileA.delete();
+    
+    if(!bFileB)
+      fileB.delete();
+    
+    
+    //*** Main test: Mark File A is a duplicate of File B. ***
+    this.hub.markDuplicate(fileA, fileB);
+    
+    //*** Validation: Check File A & File B are in correct table
+    Trash trash = new Trash();
+    if(switched)
+    {// A is moved to Shelf.
+      Document shelfDoc = shelf.getDocByFilename(fileA.getName());
+      Document trashDoc = trash.getDocByFilename(fileB.getName());
+      assertNotNull(shelfDoc, String.format("%s should be in Shelf table.", fileA.getName()));
+      assertNotNull(trashDoc, String.format("%s should be in Trash table.", fileB.getName()));
+    }
+    else
+    {
+      Document shelfDoc = shelf.getDocByFilename(fileB.getName());
+      Document trashDoc = trash.getDocByFilename(fileA.getName());
+      assertNotNull(shelfDoc, String.format("%s should be in Shelf table.", fileB.getName()));
+      assertNotNull(trashDoc, String.format("%s should be in Trash table.", fileA.getName()));
+    }
+    
+    
+  }
+  
 }

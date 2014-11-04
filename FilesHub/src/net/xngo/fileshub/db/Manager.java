@@ -278,7 +278,7 @@ public class Manager
    * @param fileB
    * @return
    */
-  public boolean markDuplicate(File fileA, File fileB)
+  public boolean markDuplicate_old(File fileA, File fileB)
   {
     // Validations
     if(!this.validateMarkDuplicate(fileA, fileB))
@@ -390,6 +390,145 @@ public class Manager
       trashDoc.uid = uidB;
       this.trash.addDoc(trashDoc);
     }
+  }
+  
+  /**
+   * FROM  to   TO
+   * Shelf to Shelf:
+   *    -Fshelf.uid moves to Trash with To.uid.
+   *    -Fduplicates(trash.duid) move to Trash with To.uid.
+   *    
+   * Trash to Shelf:
+   *    -Ftrash.canonical_paths move to Trash with To.uid.
+   *    
+   * Shelf to Trash:
+   *    -Fshelf.uid moves to Trash with To.uid
+   *    -Fduplicates(trash.duid) move to Trash with To.uid.
+   *    
+   * Trash to Trash:
+   *    -Ftrash.canonical_paths move to Trash with To.uid.
+   * @param fileFrom
+   * @param fileTo
+   */
+  public boolean markDuplicate(File fileFrom, File fileTo)
+  {
+    String fileFromPath = Utils.getCanonicalPath(fileFrom);
+    String fileToPath   = Utils.getCanonicalPath(fileTo);
+    if(fileFromPath.compareTo(fileToPath)==0)
+    {
+      System.out.println("Error: Both files are exactly the same.");
+      return false;
+    }    
+    
+    Document shelfDocFrom = this.shelf.getDocByCanonicalPath(fileFromPath);
+    if(shelfDocFrom!=null)
+    {// FROM is in Shelf.
+      
+      Document shelfDocTo = this.shelf.getDocByCanonicalPath(fileToPath);
+      if(shelfDocTo!=null)
+      {// TO is in Shelf.
+        this.moveShelfDocToTrash(shelfDocFrom, shelfDocTo.uid);
+        this.trash.changeDuid(shelfDocFrom.uid, shelfDocTo.uid);
+      }
+      else
+      {// TO is NOT in Shelf.
+        
+        Document trashDocTo = this.trash.getDocByCanonicalPath(fileToPath);
+        if(trashDocTo!=null)
+        {// TO is in Trash.
+          
+          // Are we manipulating entries from the same document?
+          if(trashDocTo.uid==shelfDocFrom.uid)
+          {// YES
+            this.moveShelfDocToTrash(shelfDocFrom, trashDocTo.uid);
+            this.moveTrashDocToShelf(trashDocTo, trashDocTo.uid);
+          }
+          else
+          {// NO
+            this.moveShelfDocToTrash(shelfDocFrom, trashDocTo.uid);
+            this.trash.changeDuid(shelfDocFrom.uid, trashDocTo.uid);
+          }
+        }
+        else
+        {// TO is NOT in Shelf nor Trash
+          this.addFile(fileTo);
+          this.markDuplicate(fileFrom, fileTo);
+        }
+      }
+    }
+    else
+    {// FROM is NOT in Shelf.
+      
+      Document trashDocFrom = this.trash.getDocByCanonicalPath(fileFromPath);
+      if(trashDocFrom!=null)
+      {// FROM is in Trash.
+        
+        Document shelfDocTo = this.shelf.getDocByCanonicalPath(fileToPath);
+        if(shelfDocTo!=null)
+        {// TO is in Shelf.
+          this.trash.changeDuid(fileFromPath, shelfDocTo.uid);
+        }
+        else
+        {// TO is NOT in Shelf.
+          
+          Document trashDocTo = this.trash.getDocByCanonicalPath(fileToPath);
+          if(trashDocTo!=null)
+          {// TO is in Trash
+            this.trash.changeDuid(fileFromPath, trashDocTo.uid);
+          }
+          else
+          {// TO is not in Shelf nor in Trash.
+            
+            this.addFile(fileTo);
+            this.markDuplicate(fileFrom, fileTo);
+          }
+        }
+      }
+      else
+      {// FROM is not in Shelf nor in Trash.
+        if(fileFrom.exists())
+        {
+          this.addFile(fileFrom);
+          this.markDuplicate(fileFrom, fileTo);
+        }
+        else
+        {
+          System.out.println(String.format("ERROR: %s doesn't exist.", fileFrom.getAbsolutePath()));
+          return false;
+        }
+      }
+    }
+    
+    return true;
+  }
+  
+  /**
+   * Move shelf document to Trash with to uid.
+   * @param shelfDocFrom
+   * @param toUid
+   */
+  private void moveShelfDocToTrash(final Document shelfDocFrom, int toUid)
+  {
+    // Remove shelf doc from Shelf.
+    this.shelf.removeDoc(shelfDocFrom.uid);
+    
+    // Move shelf doc info to Trash.
+    Document trashDoc = new Document(shelfDocFrom);
+    trashDoc.uid = toUid;
+    this.trash.addDoc(trashDoc);
+  }
+  
+  private void moveTrashDocToShelf(final Document trashDocFrom, int toUid)
+  {
+    // Add document in Shelf table.
+    Document shelfDoc = new Document(trashDocFrom);
+    final int newUid = this.shelf.addDoc(shelfDoc);
+    
+    // Change the added document with the specified uid(i.e. toUid)
+    this.shelf.changeUid(newUid, toUid);
+    
+    // Remove the document entry from Trash.
+    this.trash.removeDoc(trashDocFrom);
   }
   
   public void searchByUid(int uid)

@@ -169,17 +169,20 @@ public class Hub
     }
   }
   
-  public void markDuplicate(File duplicate, File of)
+  public boolean markDuplicate(File duplicate, File of)
   {
     try
     {
-      this.manager.markDuplicate(duplicate, of);
+      boolean commit = this.manager.markDuplicate(duplicate, of);
       Main.connection.commit();
+      
+      return commit;
     }
     catch(SQLException ex) 
     { 
       ex.printStackTrace(); 
-    }    
+    }
+    return false;
   }
   
   public void hash(Set<File> files)

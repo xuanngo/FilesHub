@@ -28,6 +28,16 @@ public class Document
     this.last_modified = file.lastModified();
   }
   
+  public Document(Document doc)
+  {
+    this.uid            = doc.uid;
+    this.canonical_path = doc.canonical_path;
+    this.filename       = doc.filename;
+    this.last_modified  = doc.last_modified;
+    this.hash           = doc.hash;
+    this.comment        = doc.comment;
+  }
+  
   /**
    * Throw RuntimeException if Document data is not consistent and expected.
    */

@@ -11,14 +11,18 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 
+
+
 // Java Library
 import java.io.File;
 import java.io.UnsupportedEncodingException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import net.xngo.fileshub.Config;
+import net.xngo.fileshub.Main;
 import net.xngo.fileshub.Utils;
 import net.xngo.fileshub.db.Manager;
 import net.xngo.fileshub.db.Shelf;
@@ -183,15 +187,15 @@ public class ManagerTest
     final int expected_totalDocsTrash = trash.getTotalDocs();    
 
     
-    // Add the exact same file again with new content.
+    //*** Main test: Add the exact same file again with new content.
     Data.writeStringToFile(uniqueFile, "new content");
     this.manager.addFile(uniqueFile);
-    
+
+    //*** Validations: By design, hash in database will not be updated even if hash of file has changed.
     // Actual values.
     final int actual_totalDocsShelf = shelf.getTotalDocs();
     final int actual_totalDocsTrash = trash.getTotalDocs();
     
-    // Validations
     assertEquals(actual_totalDocsShelf, expected_totalDocsShelf, "No new row should be created in Shelf table.");
     assertEquals(actual_totalDocsTrash, expected_totalDocsTrash, "No new row should be created in Trash table.");
        
@@ -652,6 +656,14 @@ public class ManagerTest
   @Test(description="Add file C. B is marked as duplicate of A but they don't have the same hash but A doesn't exist anymore. C has the same hash as B.")
   public void addFileDupInTrashMainDelete()
   {
+    // DEBUG
+    try
+    {
+      Main.connection.setAutoCommit(true);
+    }
+    catch(SQLException ex) { ex.printStackTrace(); }
+
+    
     //*** Prepare data: Make File B to be duplicate of File A. ****
     // Create File A and add to database.
     File fileA = Data.createTempFile("addFileDupInTrashMainDelete_fileA");
@@ -724,7 +736,9 @@ public class ManagerTest
     
   }  
   
-  @Test(description="Update file that has changed since added in database. Note: This is exactly the same as addFileShelfFileChanged(), except that it uses Manager.update() instead of Manager.addFile().")
+  @Test(description="Update file that has changed since added in database. "
+      + "Note: This is exactly the same as addFileShelfFileChanged(), "
+      + "except that it uses Manager.update() instead of Manager.addFile().")
   public void updateFileChanged()
   {
     // Add unique file in Shelf.
@@ -1027,6 +1041,14 @@ public class ManagerTest
   @Test(description="File A is a duplicate of File B in the database but now you want to mark File B to be the duplicate of File A")
   public void markDuplicateMainBecomeDuplicate()
   {
+    // DEBUG
+    try
+    {
+      Main.connection.setAutoCommit(true);
+    }
+    catch(SQLException ex) { ex.printStackTrace(); }
+    
+    
     //*** Prepare data: Make File A to be a duplicate of File B ****
     // Create File B and add to database.
     File fileB = Data.createTempFile("markDuplicateMainBecomeDuplicate_fileB");

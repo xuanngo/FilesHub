@@ -99,6 +99,11 @@ public class Shelf
       return rowsAffected;    
   }
   
+  /**
+   * Add a document in Shelf table.
+   * @param doc
+   * @return generated key.
+   */
   public int addDoc(Document doc)
   {
     return this.insertDoc(doc);
@@ -203,7 +208,7 @@ public class Shelf
    * Note: Never add uid. Let's the database engine generated a new ID.
    *        If you need to change uid, use {@link changeUid}.
    * @param doc
-   * @return
+   * @return generated key
    */
   private final int insertDoc(final Document doc)
   {

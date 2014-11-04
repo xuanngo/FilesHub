@@ -160,13 +160,97 @@ public class Trash
     return this.searchLikeDocsBy("canonical_path", filepath);
   }  
   
+  public int changeDuid(int fromDuid, int toDuid)
+  {
+    return this.updateInteger("duid", fromDuid, "duid", toDuid);
+  }
+  
+  public int changeDuid(String fromCanonicalPath, int toDuid)
+  {
+    final int rowsAffected = this.update("canonical_path", fromCanonicalPath, "duid", toDuid);
+    
+    if (rowsAffected==0)
+      throw new RuntimeException(String.format("No duid has been changed: %s", Main.connection.getQueryString()));
+    else
+      return rowsAffected;    
+  }
   
   /****************************************************************************
    * 
    *                             PRIVATE FUNCTIONS
    * 
    ****************************************************************************/
- 
+
+  /**
+   * Update key* with replace*
+   * @param keyColumn
+   * @param keyValue
+   * @param replaceColumn
+   * @param replaceValue
+   * @return
+   */
+  private int updateInteger(String keyColumn, int keyValue, String replaceColumn, int replaceValue)
+  {
+    final String query = String.format("UPDATE %s SET %s=? WHERE %s=?", this.tablename, replaceColumn, keyColumn);
+    
+    int rowAffected = 0;
+    try
+    {
+      // Prepare the query.
+      Main.connection.prepareStatement(query);
+      
+      // Set the data.
+      int i=1;
+      Main.connection.setInt(i++, replaceValue );
+      Main.connection.setInt(i++, keyValue     );
+      
+      // update row.
+      rowAffected = Main.connection.executeUpdate();
+
+    }
+    catch(SQLException e)
+    {
+      e.printStackTrace();
+    }
+    finally
+    {
+      Main.connection.closePreparedStatement();
+    }
+    
+    return rowAffected;    
+  }
+  
+  private int update(String keyColumn, Object keyValue, String replaceColumn, Object replaceValue)
+  {
+    final String query = String.format("UPDATE %s SET %s=? WHERE %s=?", this.tablename, replaceColumn, keyColumn);
+    
+    int rowAffected = 0;
+    try
+    {
+      // Prepare the query.
+      Main.connection.prepareStatement(query);
+      
+      // Set the data.
+      int i=1;
+      Main.connection.setObject(i++, replaceValue );
+      Main.connection.setObject(i++, keyValue     );
+      
+      // update row.
+      rowAffected = Main.connection.executeUpdate();
+
+    }
+    catch(SQLException e)
+    {
+      e.printStackTrace();
+    }
+    finally
+    {
+      Main.connection.closePreparedStatement();
+    }
+    
+    return rowAffected;    
+  }
+  
   private int deleteDoc(Document doc)
   {
     // Add conditions that make Document unique.
