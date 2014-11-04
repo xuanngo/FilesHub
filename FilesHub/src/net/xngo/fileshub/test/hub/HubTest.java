@@ -1,6 +1,7 @@
 package net.xngo.fileshub.test.hub;
 
 import java.io.File;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashSet;
 
@@ -10,10 +11,10 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertNull;
+
 import org.testng.annotations.DataProvider;
 
 import net.xngo.fileshub.Hub;
-import net.xngo.fileshub.db.Manager;
 import net.xngo.fileshub.Main;
 import net.xngo.fileshub.Utils;
 import net.xngo.fileshub.db.Shelf;
@@ -24,6 +25,8 @@ import net.xngo.fileshub.test.helpers.Data;
 
 public class HubTest
 {
+  private static final boolean DEBUG = true;
+  
   private Hub hub = new Hub();
   
   @Test(description="Add deleted file.", invocationCount=3)
@@ -121,6 +124,13 @@ public class HubTest
   @Test(description="File A is mark as duplicate to File B but File B is deleted.")
   public void markDuplicateABFileBDeleted()
   {
+    // DEBUG
+    if(DEBUG)
+    {
+      try { Main.connection.setAutoCommit(true); }
+      catch(SQLException ex) { ex.printStackTrace(); }
+    }
+    
     //*** Prepare data: Make File A to be a duplicate of File B ****
     File fileA = Data.createTempFile("markDuplicateFileBDeleted_A");
     File fileB = Data.createTempFile("markDuplicateFileBDeleted_B");

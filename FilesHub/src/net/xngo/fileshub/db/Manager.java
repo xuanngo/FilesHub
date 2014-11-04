@@ -437,9 +437,46 @@ public class Manager
         if(trashDocTo!=null)
         {// TO is in Trash.
           
+
           // Are we manipulating entries from the same document?
           if(trashDocTo.uid==shelfDocFrom.uid)
           {// YES
+            
+            // Move trashDoc to Shelf table only if trashDoc file exists. 
+            if(new File(trashDocTo.canonical_path).exists())
+            {
+              this.moveShelfDocToTrash(shelfDocFrom, trashDocTo.uid);
+              this.moveTrashDocToShelf(trashDocTo, trashDocTo.uid);
+            }
+          }
+          else
+          {// NO
+            
+            Document shelfDoc = this.shelf.getDocByUid(trashDocTo.uid);
+            if(new File(shelfDoc.canonical_path).exists())
+            {// TO file does exist.
+              this.moveShelfDocToTrash(shelfDocFrom, trashDocTo.uid);
+              this.trash.changeDuid(shelfDocFrom.uid, trashDocTo.uid); // Change FROM duplicates to new uid.
+            }
+            else
+            {// TO file doesn't exist.
+              if(new File(shelfDocFrom.canonical_path).exists())
+              {// FROM file exists.
+                this.shelf.changeUid(shelfDocFrom.uid, trashDocTo.uid);
+              }
+              else
+              {// FROM and TO files don't exist.
+                this.moveShelfDocToTrash(shelfDocFrom, trashDocTo.uid);
+                this.trash.changeDuid(shelfDocFrom.uid, trashDocTo.uid); // Change FROM duplicates to new uid.                
+              }
+            }
+          }            
+
+          /*
+          // Are we manipulating entries from the same document?
+          if(trashDocTo.uid==shelfDocFrom.uid)
+          {// YES
+            
             this.moveShelfDocToTrash(shelfDocFrom, trashDocTo.uid);
             this.moveTrashDocToShelf(trashDocTo, trashDocTo.uid);
           }
@@ -448,6 +485,8 @@ public class Manager
             this.moveShelfDocToTrash(shelfDocFrom, trashDocTo.uid);
             this.trash.changeDuid(shelfDocFrom.uid, trashDocTo.uid);
           }
+          
+          */
         }
         else
         {// TO is NOT in Shelf nor Trash
@@ -466,7 +505,27 @@ public class Manager
         Document shelfDocTo = this.shelf.getDocByCanonicalPath(fileToPath);
         if(shelfDocTo!=null)
         {// TO is in Shelf.
-          this.trash.changeDuid(fileFromPath, shelfDocTo.uid);
+          if(new File(shelfDocTo.canonical_path).exists())
+          {// TO file exists
+            this.trash.changeDuid(fileFromPath, shelfDocTo.uid);
+          }
+          else
+          {// TO file doesn't exist.
+            if(new File(fileFromPath).exists())
+            {// FROM file exists.
+              
+              // Order of methods below are important. Otherwise, there will be 2 entries with the same
+              //  Uid in Shelf table.
+              //  You have to moveShelfDocToTrash()
+              //    then moveTrashDocToShelf().
+              this.moveShelfDocToTrash(shelfDocTo, shelfDocTo.uid);
+              this.moveTrashDocToShelf(trashDocFrom, shelfDocTo.uid);
+            }
+            else
+            {// FROM and TO files don't exist.
+              this.trash.changeDuid(fileFromPath, shelfDocTo.uid);
+            }
+          }
         }
         else
         {// TO is NOT in Shelf.
