@@ -43,6 +43,8 @@ import net.xngo.fileshub.test.helpers.Data;
  */
 public class ManagerTest
 {
+  private static final boolean DEBUG = false;
+  
   private final int randomInt = java.lang.Math.abs(Random.Int())+1;
   private AtomicInteger atomicInt = new AtomicInteger(randomInt); // Must set initial value to more than 0. Duid can't be 0.
   
@@ -657,12 +659,11 @@ public class ManagerTest
   public void addFileDupInTrashMainDelete()
   {
     // DEBUG
-    try
+    if(DEBUG)
     {
-      Main.connection.setAutoCommit(true);
-    }
-    catch(SQLException ex) { ex.printStackTrace(); }
-
+      try { Main.connection.setAutoCommit(true); }
+      catch(SQLException ex) { ex.printStackTrace(); }
+    }    
     
     //*** Prepare data: Make File B to be duplicate of File A. ****
     // Create File A and add to database.
@@ -1042,11 +1043,11 @@ public class ManagerTest
   public void markDuplicateMainBecomeDuplicate()
   {
     // DEBUG
-    try
+    if(DEBUG)
     {
-      Main.connection.setAutoCommit(true);
+      try { Main.connection.setAutoCommit(true); }
+      catch(SQLException ex) { ex.printStackTrace(); }
     }
-    catch(SQLException ex) { ex.printStackTrace(); }
     
     
     //*** Prepare data: Make File A to be a duplicate of File B ****
