@@ -749,6 +749,7 @@ public class ManagerTest
     Document oldShelfDoc = shelf.getDocByHash(Utils.getHash(uniqueFile));       
     
     // Update the unique file.
+    try{ Thread.sleep(10); } catch(InterruptedException ex) { ex.printStackTrace(); } // Guarantee an elapsed time has passed before updating content.
     Data.writeStringToFile(uniqueFile, "new content");
     
     // Update database
@@ -757,6 +758,8 @@ public class ManagerTest
     // Validations: Check that Shelf document info is moved to Trash table and the new document is updated in Shelf table.
     Trash trash = new Trash();
     Document trashDoc = trash.getDocByCanonicalPath(Utils.getCanonicalPath(uniqueFile));
+
+    assertNotNull(trashDoc, String.format("trashDoc can't be null. %s is not found in Trash table.", Utils.getCanonicalPath(uniqueFile)));
     assertEquals(trashDoc, oldShelfDoc,
                                   String.format("Document information should be moved from Shelf to Trash.\n"
                                                       + "%s"
