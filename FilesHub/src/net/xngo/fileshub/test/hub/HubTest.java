@@ -224,64 +224,87 @@ public class HubTest
   }
   
   @Test(dataProvider = "fileABExistences")
-  public void markDuplicateFileShelfToShelfABExistences(int index, boolean bFileA, boolean bFileB, boolean bDocA, boolean bDocB, boolean switched)
+  public void markDuplicateFileShelfToShelfABExistences(int index, boolean bFromFile, boolean bToFile, boolean bFromDoc, boolean bToDoc, boolean bSwitched)
+  {
+    this.markDuplicateFileFromToExistences(index, bFromFile, true, bToFile, true, bFromDoc, bToDoc, bSwitched);
+  }
+  
+  private void markDuplicateFileFromToExistences(int index, boolean bFromFile, boolean bFromShelf, boolean bToFile, boolean bToShelf, boolean bFromDoc, boolean bToDoc, boolean bSwitched)
   {
     // To debug: Set the IF statement to satisfy your conditions and then put
     //    the breakpoint at the System.out.println().
-    if(bFileA && !bFileB && !bDocA && !bDocB && switched)
+    if(bFromFile && !bToFile && !bFromDoc && !bToDoc && bSwitched)
     {
       System.out.println("Case to debug");
     }
     //*** Prepare data.****
-    // Create File A & B
-    File fileA = Data.createTempFile("markDuplicateFileABExistences_A_"+index);
-    File fileB = Data.createTempFile("markDuplicateFileABExistences_B_"+index);
+    // Create File FROM & TO
+    File fileFrom = Data.createTempFile("markDuplicateFileFromToExistences_FROM_"+index);
+    File fileTo = Data.createTempFile("markDuplicateFileFromToExistences_TO_"+index);
     
-    // Add File A or B in Shelf table.
+    // Add FROM & TO to Shelf or Trash table according to parameters.
     Shelf shelf = new Shelf();
-    if(bDocA)
+    Trash trash = new Trash();
+    if(bFromDoc)
     {
-      Document shelfDocA = new Document(fileA);
-      shelfDocA.hash = Utils.getHash(fileA);
-      shelf.addDoc(shelfDocA);
+      if(bFromShelf)
+      {
+        Document shelfDocFrom = new Document(fileFrom);
+        shelfDocFrom.hash = Utils.getHash(fileFrom);
+        shelf.addDoc(shelfDocFrom);
+      }
+      else
+      {
+        Document trashDocFrom = new Document();
+        trashDocFrom.hash = Utils.getHash(fileFrom);
+        trash.addDoc(trashDocFrom);
+      }
     }
     
-    if(bDocB)
+    if(bToDoc)
     {
-      Document shelfDocB = new Document(fileB);
-      shelfDocB.hash = Utils.getHash(fileB);
-      shelf.addDoc(shelfDocB);
+      if(bToShelf)
+      {
+        Document shelfDocTo = new Document(fileTo);
+        shelfDocTo.hash = Utils.getHash(fileTo);
+        shelf.addDoc(shelfDocTo);
+      }
+      else
+      {
+        Document trashDocTo = new Document(fileTo);
+        trashDocTo.hash = Utils.getHash(fileTo);
+        trash.addDoc(trashDocTo);
+      }
     }
     
     // Delete File A or B.
-    if(!bFileA)
-      fileA.delete();
+    if(!bFromFile)
+      fileFrom.delete();
     
-    if(!bFileB)
-      fileB.delete();
+    if(!bToFile)
+      fileTo.delete();
     
     
-    //*** Main test: Mark File A is a duplicate of File B. ***
-    this.hub.markDuplicate(fileA, fileB);
+    //*** Main test: Mark FROM file is a duplicate of TO file. ***
+    this.hub.markDuplicate(fileFrom, fileTo);
     
-    //*** Validation: Check File A & File B are in correct table
-    Trash trash = new Trash();
-    if(switched)
-    {// A is moved to Shelf.
-      Document shelfDoc = shelf.getDocByFilename(fileA.getName());
-      Document trashDoc = trash.getDocByFilename(fileB.getName());
-      assertNotNull(shelfDoc, String.format("%s should be in Shelf table.", fileA.getName()));
-      assertNotNull(trashDoc, String.format("%s should be in Trash table.", fileB.getName()));
+    //*** Validation: Check FROM & TO files are in correct table
+    if(bSwitched)
+    {// FROM is moved to Shelf.
+      Document shelfDoc = shelf.getDocByFilename(fileFrom.getName());
+      Document trashDoc = trash.getDocByFilename(fileTo.getName());
+      assertNotNull(shelfDoc, String.format("%s should be in Shelf table.", fileFrom.getName()));
+      assertNotNull(trashDoc, String.format("%s should be in Trash table.", fileTo.getName()));
     }
     else
     {
-      Document shelfDoc = shelf.getDocByFilename(fileB.getName());
-      Document trashDoc = trash.getDocByFilename(fileA.getName());
-      assertNotNull(shelfDoc, String.format("%s should be in Shelf table.", fileB.getName()));
-      assertNotNull(trashDoc, String.format("%s should be in Trash table.", fileA.getName()));
+      Document shelfDoc = shelf.getDocByFilename(fileTo.getName());
+      Document trashDoc = trash.getDocByFilename(fileFrom.getName());
+      assertNotNull(shelfDoc, String.format("%s should be in Shelf table.", fileTo.getName()));
+      assertNotNull(trashDoc, String.format("%s should be in Trash table.", fileFrom.getName()));
     }
     
     
-  }
+  }  
   
 }
