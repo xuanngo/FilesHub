@@ -286,8 +286,29 @@ public class Manager
       Document shelfDocTo = this.shelf.getDocByCanonicalPath(fileToPath);
       if(shelfDocTo!=null)
       {// TO is in Shelf.
+        
+        if(new File(shelfDocTo.canonical_path).exists())
+        {// TO file does exist.
+          this.moveShelfDocToTrash(shelfDocFrom, shelfDocTo.uid);
+          this.trash.changeDuid(shelfDocFrom.uid, shelfDocTo.uid);          
+        }
+        else
+        {// TO file doesn't exist.
+          if(new File(shelfDocFrom.canonical_path).exists())
+          {// FROM file does exist.
+            this.moveShelfDocToTrash(shelfDocTo, shelfDocTo.uid);
+            this.shelf.changeUid(shelfDocFrom.uid, shelfDocTo.uid);
+          }
+          else
+          {// FROM and TO files don't exist.
+            this.moveShelfDocToTrash(shelfDocFrom, shelfDocTo.uid);
+            this.trash.changeDuid(shelfDocFrom.uid, shelfDocTo.uid);                 
+          }
+        }
+        /*
         this.moveShelfDocToTrash(shelfDocFrom, shelfDocTo.uid);
         this.trash.changeDuid(shelfDocFrom.uid, shelfDocTo.uid);
+        */
       }
       else
       {// TO is NOT in Shelf.
@@ -296,7 +317,7 @@ public class Manager
         if(trashDocTo!=null)
         {// TO is in Trash.
           
-
+/*
           // Are we manipulating entries from the same document?
           if(trashDocTo.uid==shelfDocFrom.uid)
           {// YES
@@ -330,8 +351,8 @@ public class Manager
               }
             }
           }            
-
-          /*
+*/
+          
           // Are we manipulating entries from the same document?
           if(trashDocTo.uid==shelfDocFrom.uid)
           {// YES
@@ -345,12 +366,21 @@ public class Manager
             this.trash.changeDuid(shelfDocFrom.uid, trashDocTo.uid);
           }
           
-          */
+          
         }
         else
         {// TO is NOT in Shelf nor Trash
-          this.addFile(fileTo);
-          this.markDuplicate(fileFrom, fileTo);
+          
+          if(fileTo.exists())
+          {// TO file exists.
+            this.addFile(fileTo);
+            this.markDuplicate(fileFrom, fileTo);
+          }
+          else
+          {// TO file doesn't physically exist and it is not in the database.
+            System.out.println(String.format("ERROR: %s doesn't exist.", fileTo.getAbsolutePath()));
+            return false;
+          }
         }
       }
     }
@@ -406,11 +436,12 @@ public class Manager
       {// FROM is not in Shelf nor in Trash.
         if(fileFrom.exists())
         {
+          // Add FROM file only if it exists.
           this.addFile(fileFrom);
           this.markDuplicate(fileFrom, fileTo);
         }
         else
-        {
+        {// FROM file doesn't exist.
           System.out.println(String.format("ERROR: %s doesn't exist.", fileFrom.getAbsolutePath()));
           return false;
         }
