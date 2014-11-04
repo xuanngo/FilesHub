@@ -199,24 +199,43 @@ public class HubTest
   @DataProvider(name = "fileABExistences")
   public static Object[][] fileABExistences()
   {
+    int i=0;
     return new Object[][] { 
-                            // By default, B is in Shelf. A is in Trash.
+                            // Initially, A & B are in Shelf table.
+                            // By default, B is in Shelf. A is in true, rash.
                             // Fa , Fb   , DocA , DocB , Switch?
-                            { true, true , false, false, false }, 
-                            { true, false, false, true , true },
-                            { true, false, false, false, true },
-                            { false, true, true, false, false },
-                            { false, false, true, true, false },
-                          };
+                          {i++, true,  true,  true,  true , false },    
+                          {i++, true,  true,  true,  false, false },    
+                          {i++, true,  true,  false, true , false },    
+                          {i++, true,  true,  false, false, false },    
+                          {i++, true,  false, true,  true , true },    
+                          //{i++, true,  false, true,  false, true }, //Unhandled case because TO file physically doesn't exist and it doesn't exist in database.  
+                          {i++, true,  false, false, true , true },    
+                          //{i++, true,  false, false, false, true }, //Unhandled case because TO file physically doesn't exist and it doesn't exist in database.   
+                          {i++, false, true,  true,  true , false },    
+                          {i++, false, true,  true,  false, false },    
+                          //{i++, false, true,  false, true , false }, //Unhandled case because FROM file physically doesn't exist and it doesn't exist in database.    
+                          //{i++, false, true,  false, false, false }, //Unhandled case because FROM file physically doesn't exist and it doesn't exist in database.
+                          {i++, false, false, true,  true , false },    
+                          //{i++, false, false, true,  false, false }, //Unhandled case because TO file physically doesn't exist and it doesn't exist in database.    
+                          //{i++, false, false, false, true , false }, //Unhandled case because FROM file physically doesn't exist and it doesn't exist in database.    
+                          //{i++, false, false, false, false, false }, //Unhandled case because FROM & TO files physically don't exist and they don't exist in database.
+                        };
   }
   
   @Test(dataProvider = "fileABExistences")
-  public void markDuplicateFileABExistences(boolean bFileA, boolean bFileB, boolean bDocA, boolean bDocB, boolean switched)
+  public void markDuplicateFileShelfToShelfABExistences(int index, boolean bFileA, boolean bFileB, boolean bDocA, boolean bDocB, boolean switched)
   {
+    // To debug: Set the IF statement to satisfy your conditions and then put
+    //    the breakpoint at the System.out.println().
+    if(bFileA && !bFileB && !bDocA && !bDocB && switched)
+    {
+      System.out.println("Case to debug");
+    }
     //*** Prepare data.****
     // Create File A & B
-    File fileA = Data.createTempFile("markDuplicateFileABExistences_A");
-    File fileB = Data.createTempFile("markDuplicateFileABExistences_B");
+    File fileA = Data.createTempFile("markDuplicateFileABExistences_A_"+index);
+    File fileB = Data.createTempFile("markDuplicateFileABExistences_B_"+index);
     
     // Add File A or B in Shelf table.
     Shelf shelf = new Shelf();
