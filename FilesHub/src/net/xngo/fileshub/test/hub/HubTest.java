@@ -196,88 +196,161 @@ public class HubTest
     fileA.delete();
   }
   
-  @DataProvider(name = "fileABExistences")
-  public static Object[][] fileABExistences()
+  @DataProvider(name = "ShelfToShelf")
+  public static Object[][] shelfToShelf()
   {
     int i=0;
     return new Object[][] { 
-                            // Initially, A & B are in Shelf table.
-                            // By default, B is in Shelf. A is in true, rash.
-                            // Fa , Fb   , DocA , DocB , Switch?
-                          {i++, true,  true,  true,  true , false },    
-                          {i++, true,  true,  true,  false, false },    
-                          {i++, true,  true,  false, true , false },    
-                          {i++, true,  true,  false, false, false },    
-                          {i++, true,  false, true,  true , true },    
-                          //{i++, true,  false, true,  false, true }, //Unhandled case because TO file physically doesn't exist and it doesn't exist in database.  
-                          {i++, true,  false, false, true , true },    
-                          //{i++, true,  false, false, false, true }, //Unhandled case because TO file physically doesn't exist and it doesn't exist in database.   
-                          {i++, false, true,  true,  true , false },    
-                          {i++, false, true,  true,  false, false },    
-                          //{i++, false, true,  false, true , false }, //Unhandled case because FROM file physically doesn't exist and it doesn't exist in database.    
-                          //{i++, false, true,  false, false, false }, //Unhandled case because FROM file physically doesn't exist and it doesn't exist in database.
-                          {i++, false, false, true,  true , false },    
-                          //{i++, false, false, true,  false, false }, //Unhandled case because TO file physically doesn't exist and it doesn't exist in database.    
-                          //{i++, false, false, false, true , false }, //Unhandled case because FROM file physically doesn't exist and it doesn't exist in database.    
-                          //{i++, false, false, false, false, false }, //Unhandled case because FROM & TO files physically don't exist and they don't exist in database.
+                // Initially, FROM & TO are in Shelf table.
+                // By default, TO is in Shelf. FROM is in Trash.
+                // Fa , Fb   , DocA , DocB , Switch?
+              {i++, true,  true,  true,  true , false, true},     
+              {i++, true,  true,  true,  false, false, true},     
+              {i++, true,  true,  false, true , false, true},     
+              {i++, true,  true,  false, false, false, true},     
+              {i++, true,  false, true,  true , true, false},     
+              //{i++, true,  false, true,  false, true, false},  //Unhandled case because TO file physically doesn't exist and it doesn't exist in database.  
+              {i++, true,  false, false, true , true, false},     
+              //{i++, true,  false, false, false, true, false},  //Unhandled case because TO file physically doesn't exist and it doesn't exist in database.   
+              {i++, false, true,  true,  true , false, true},     
+              {i++, false, true,  true,  false, false, true},     
+              //{i++, false, true,  false, true , false, true},  //Unhandled case because FROM file physically doesn't exist and it doesn't exist in database.    
+              //{i++, false, true,  false, false, false, true},  //Unhandled case because FROM file physically doesn't exist and it doesn't exist in database.
+              {i++, false, false, true,  true , false, true},     
+              //{i++, false, false, true,  false, false, true},  //Unhandled case because TO file physically doesn't exist and it doesn't exist in database.    
+              //{i++, false, false, false, true , false, true},  //Unhandled case because FROM file physically doesn't exist and it doesn't exist in database.    
+              //{i++, false, false, false, false, false, true},  //Unhandled case because FROM & TO files physically don't exist and they don't exist in database.
+      
                         };
   }
-  
-  @Test(dataProvider = "fileABExistences")
-  public void markDuplicateFileShelfToShelfABExistences(int index, boolean bFromFile, boolean bToFile, boolean bFromDoc, boolean bToDoc, boolean bSwitched)
+  @Test(dataProvider = "ShelfToShelf")
+  public void markDuplicateShelfToShelf(int index, boolean bFromFile, boolean bToFile, boolean bFromDoc, boolean bToDoc, boolean bFromInShelf, boolean bToInShelf)
   {
-    this.markDuplicateFileFromToExistences(index, bFromFile, true, bToFile, true, bFromDoc, bToDoc, bSwitched);
+    this.markDuplicateFromToGenericCheck(index, bFromFile, true, bToFile, true, bFromDoc, bToDoc, bFromInShelf, bToInShelf);
   }
   
-  private void markDuplicateFileFromToExistences(int index, boolean bFromFile, boolean bFromShelf, boolean bToFile, boolean bToShelf, boolean bFromDoc, boolean bToDoc, boolean bSwitched)
+  
+  @DataProvider(name = "ShelfToTrash")
+  public static Object[][] shelfToTrash()
+  {
+    int i=0;
+    return new Object[][] { 
+                // Initially, FROM & TO are in Shelf table.
+                // By default, TO is in Shelf. FROM is in Trash.
+                // FFROM , FTO, DocFROM , DocTO , FROMShelf, TOShelf
+              {i++, true,  true,  true,  true , false, false},     
+              {i++, true,  true,  true,  false, false, true}, // Special case: TO doesn't exist in DB. Thus, using addFile(). TO is added in Shelf.     
+              {i++, true,  true,  false, true , false, false},     
+              {i++, true,  true,  false, false, false, true}, // Special case: TO doesn't exist in DB. Thus, using addFile(). TO is added in Shelf.    
+              {i++, true,  false, true,  true , true, false},     
+              //{i++, true,  false, true,  false, true, false},  //Unhandled case because TO file physically doesn't exist and it doesn't exist in database.  
+              {i++, true,  false, false, true , true, false},     
+              //{i++, true,  false, false, false, true, false},  //Unhandled case because TO file physically doesn't exist and it doesn't exist in database.   
+              {i++, false, true,  true,  true , false, false},     
+              {i++, false, true,  true,  false, false, true}, // Special case: TO doesn't exist in DB. Thus, using addFile(). TO is added in Shelf.     
+              //{i++, false, true,  false, true , false, true},  //Unhandled case because FROM file physically doesn't exist and it doesn't exist in database.    
+              //{i++, false, true,  false, false, false, true},  //Unhandled case because FROM file physically doesn't exist and it doesn't exist in database.
+              {i++, false, false, true,  true , false, false},     
+              //{i++, false, false, true,  false, false, true},  //Unhandled case because TO file physically doesn't exist and it doesn't exist in database.    
+              //{i++, false, false, false, true , false, true},  //Unhandled case because FROM file physically doesn't exist and it doesn't exist in database.    
+              //{i++, false, false, false, false, false, true},  //Unhandled case because FROM & TO files physically don't exist and they don't exist in database.
+      
+                        };
+  }  
+  @Test(dataProvider = "ShelfToTrash")
+  public void markDuplicateShelfToTrash(int index, boolean bFromFile, boolean bToFile, boolean bFromDoc, boolean bToDoc, boolean bFromInShelf, boolean bToInShelf)
+  {
+    this.markDuplicateFromToGenericCheck(index, bFromFile, true, bToFile, false, bFromDoc, bToDoc, bFromInShelf, bToInShelf);
+  }
+  
+  private void markDuplicateFromToGenericCheck(int index, 
+                                    boolean bFromFile, boolean bFromShelf,
+                                    boolean bToFile, boolean bToShelf, 
+                                    boolean bFromDoc, boolean bToDoc, 
+                                    boolean bFromInShelf, boolean bToInShelf)
   {
     // To debug: Set the IF statement to satisfy your conditions and then put
     //    the breakpoint at the System.out.println().
-    if(bFromFile && !bToFile && !bFromDoc && !bToDoc && bSwitched)
+    if(bFromFile && bToFile && bFromDoc && !bToDoc && !bFromInShelf && !bToInShelf)
     {
       System.out.println("Case to debug");
+      
+      // DEBUG
+      if(DEBUG)
+      {
+        try { Main.connection.setAutoCommit(true); }
+        catch(SQLException ex) { ex.printStackTrace(); }
+      }      
     }
+    
     //*** Prepare data.****
     // Create File FROM & TO
-    File fileFrom = Data.createTempFile("markDuplicateFileFromToExistences_FROM_"+index);
-    File fileTo = Data.createTempFile("markDuplicateFileFromToExistences_TO_"+index);
+    File fileFrom = Data.createTempFile("markDuplicateFromToGenericCheck_FROM_"+index);
+    File fileTo = Data.createTempFile("markDuplicateFromToGenericCheck_TO_"+index);
     
     // Add FROM & TO to Shelf or Trash table according to parameters.
     Shelf shelf = new Shelf();
     Trash trash = new Trash();
+    // FROM
     if(bFromDoc)
     {
       if(bFromShelf)
       {
+        // Create a FROM entry in Shelf.
         Document shelfDocFrom = new Document(fileFrom);
         shelfDocFrom.hash = Utils.getHash(fileFrom);
         shelf.addDoc(shelfDocFrom);
       }
       else
       {
+        File dummy = Data.createTempFile("markDuplicateFromToGenericCheck_FROM_DUMMY_"+index);
+        Document shelfDoc = new Document(dummy);
+        shelfDoc.hash = Utils.getHash(dummy);
+        int uid = shelf.addDoc(shelfDoc);
+        
+        // Create a FROM entry in Trash.
         Document trashDocFrom = new Document();
         trashDocFrom.hash = Utils.getHash(fileFrom);
+        trashDocFrom.uid = uid;
         trash.addDoc(trashDocFrom);
+        
+        // Delete dummy.
+        if(!bFromFile)
+          dummy.delete();        
       }
     }
     
+    // TO
     if(bToDoc)
     {
       if(bToShelf)
       {
+        // Create a TO entry in Shelf.
         Document shelfDocTo = new Document(fileTo);
         shelfDocTo.hash = Utils.getHash(fileTo);
         shelf.addDoc(shelfDocTo);
       }
       else
       {
+        File dummy = Data.createTempFile("markDuplicateFromToGenericCheck_TO_DUMMY_"+index);
+        Document shelfDoc = new Document(dummy);
+        shelfDoc.hash = Utils.getHash(dummy);
+        int uid = shelf.addDoc(shelfDoc);
+        
+        // Create a TO entry in Trash.        
         Document trashDocTo = new Document(fileTo);
         trashDocTo.hash = Utils.getHash(fileTo);
+        trashDocTo.uid = uid;
         trash.addDoc(trashDocTo);
+        
+        // Delete dummy.
+        if(!bToFile)
+          dummy.delete();
+        
       }
     }
     
-    // Delete File A or B.
+    // Delete physically FROM or TO file.
     if(!bFromFile)
       fileFrom.delete();
     
@@ -289,22 +362,32 @@ public class HubTest
     this.hub.markDuplicate(fileFrom, fileTo);
     
     //*** Validation: Check FROM & TO files are in correct table
-    if(bSwitched)
-    {// FROM is moved to Shelf.
+    
+    // Check FROM file.
+    if(bFromInShelf)
+    {
       Document shelfDoc = shelf.getDocByFilename(fileFrom.getName());
-      Document trashDoc = trash.getDocByFilename(fileTo.getName());
       assertNotNull(shelfDoc, String.format("%s should be in Shelf table.", fileFrom.getName()));
-      assertNotNull(trashDoc, String.format("%s should be in Trash table.", fileTo.getName()));
     }
     else
     {
-      Document shelfDoc = shelf.getDocByFilename(fileTo.getName());
       Document trashDoc = trash.getDocByFilename(fileFrom.getName());
-      assertNotNull(shelfDoc, String.format("%s should be in Shelf table.", fileTo.getName()));
       assertNotNull(trashDoc, String.format("%s should be in Trash table.", fileFrom.getName()));
     }
     
-    
+    // Check TO file.    
+    if(bToInShelf)
+    {
+      Document shelfDoc = shelf.getDocByFilename(fileTo.getName());
+      assertNotNull(shelfDoc, String.format("%s should be in Shelf table.", fileTo.getName()));
+    }
+    else
+    {
+      Document trashDoc = trash.getDocByFilename(fileTo.getName());
+      assertNotNull(trashDoc, String.format("%s should be in Trash table.", fileTo.getName()));
+    }    
+
   }  
+  
   
 }
