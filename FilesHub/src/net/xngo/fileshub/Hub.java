@@ -92,6 +92,10 @@ public class Hub
         {
           System.out.println(String.format("Warning: Ignore FileNotFoundException: %s.", file.getAbsolutePath()));
         }
+        else if(e.getMessage().indexOf("The system cannot find the file specified")!=-1)
+        {// For case where filename=..\est.
+          System.out.println(String.format("Warning: Ignore FileNotFoundException: %s.", file.getAbsolutePath()));
+        }
         else
         {
           RuntimeException rException = new RuntimeException(file.getAbsolutePath()+":\n"+e.getMessage());

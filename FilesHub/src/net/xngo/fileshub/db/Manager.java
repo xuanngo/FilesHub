@@ -252,6 +252,9 @@ public class Manager
   
   
   /**
+   * Mark a file is a duplicate of another. However, always 
+   *  put the physically existing file in Shelf table.
+   * ======================================================
    * FROM  to   TO
    * Shelf to Shelf:
    *    -Fshelf.uid moves to Trash with To.uid.
