@@ -429,8 +429,17 @@ public class Manager
           else
           {// TO is not in Shelf nor in Trash.
             
-            this.addFile(fileTo);
-            this.markDuplicate(fileFrom, fileTo);
+            if(fileTo.exists())
+            {
+              // Add TO file only if it exists.
+              this.addFile(fileTo);
+              this.markDuplicate(fileFrom, fileTo);
+            }
+            else
+            {
+              System.out.println(String.format("ERROR: %s doesn't exist.", fileTo.getAbsolutePath()));
+              return false;              
+            }
           }
         }
       }
@@ -740,47 +749,5 @@ public class Manager
     return maxLength;
   }
   
-  /**
-   * Note: File A is a duplicate of File B.
-   * @param fileA
-   * @param fileB
-   * @return
-   */
-  private boolean validateMarkDuplicate(File fileA, File fileB)
-  {
-    if(!fileA.exists())
-    {
-      System.out.println(String.format("Error: [%s] doesn't exist.", fileA.getAbsolutePath()));
-      return false;
-    }
-    
-    if(!fileB.exists())
-    {
-      System.out.println(String.format("Error: [%s] doesn't exist.\n"
-          + "Do the followings:\n"
-          + "  FilesHub -a %s\n"
-          + "  FilesHub -d %s %s", 
-          fileB.getAbsolutePath(), 
-          fileA.getAbsolutePath(), 
-          fileB.getAbsolutePath(), fileA.getAbsolutePath() ));
-      return false;
-    }
-    
-    
-    if(!fileA.isFile())
-    {
-      System.out.println(String.format("Error: [%s] is not a file.", fileA.getAbsolutePath()));
-      return false;
-    }
-    
-    if(!fileB.isFile())
-    {
-      System.out.println(String.format("Error: [%s] is not a file.", fileB.getAbsolutePath()));
-      return false;
-    }
-    
-    return true;
-    
-  }
-  
+ 
 }

@@ -299,20 +299,55 @@ public class HubTest
   }
   
   
+  @DataProvider(name = "TrashToShelf")
+  public static Object[][] trashToShelf()
+  {
+    int i=0;
+    return new Object[][] { 
+                // Initially, FROM & TO are in Shelf table.
+                // By default, TO is in Shelf. FROM is in Trash.
+                // FFROM , FTO, DocFROM , DocTO , FROMShelf, TOShelf
+              {i++, true,  true,  true,  true , false, true},     
+              {i++, true,  true,  true,  false, false, true},     
+              {i++, true,  true,  false, true , false, true},     
+              {i++, true,  true,  false, false, false, true},     
+              {i++, true,  false, true,  true , true, false},     
+              //{i++, true,  false, true,  false, true, false},  //Unhandled case because TO file physically doesn't exist and it doesn't exist in database.  
+              {i++, true,  false, false, true , true, false},     
+              //{i++, true,  false, false, false, true, false},  //Unhandled case because TO file physically doesn't exist and it doesn't exist in database.   
+              {i++, false, true,  true,  true , false, true},     
+              {i++, false, true,  true,  false, false, true},     
+              //{i++, false, true,  false, true , false, true},  //Unhandled case because FROM file physically doesn't exist and it doesn't exist in database.    
+              //{i++, false, true,  false, false, false, true},  //Unhandled case because FROM file physically doesn't exist and it doesn't exist in database.
+              {i++, false, false, true,  true , false, true},     
+              //{i++, false, false, true,  false, false, true},  //Unhandled case because TO file physically doesn't exist and it doesn't exist in database.    
+              //{i++, false, false, false, true , false, true},  //Unhandled case because FROM file physically doesn't exist and it doesn't exist in database.    
+              //{i++, false, false, false, false, false, true},  //Unhandled case because FROM & TO files physically don't exist and they don't exist in database.
+      
+                        };
+  }  
+  @Test(dataProvider = "TrashToShelf")
+  public void markDuplicateTrashToShelf(int index, boolean bFromFile, boolean bToFile, boolean bFromDoc, boolean bToDoc, boolean bFromInShelf, boolean bToInShelf)
+  {
+    this.markDuplicateFromToGenericCheck(index, bFromFile, false, bToFile, true, bFromDoc, bToDoc, bFromInShelf, bToInShelf);
+  }  
   
+  
+  /************************************************************************************************************************
+   *                                                          Helpers
+   ************************************************************************************************************************/
   
   
   /**
-   * Helpers
-   * @param index
-   * @param bFromFile
-   * @param bFromShelf
-   * @param bToFile
-   * @param bToShelf
-   * @param bFromDoc
-   * @param bToDoc
-   * @param bFromInShelf
-   * @param bToInShelf
+   * @param index         Index set of dataprovider.
+   * @param bFromFile     True if FROM file should physically exist.
+   * @param bFromShelf    True if FROM will exist in database.
+   * @param bToFile       True if TO file should physically exist.
+   * @param bToShelf      True if TO will exist in database.
+   * @param bFromDoc      True if FROM file will be added in Shelf table. Otherwise, it will be added in Trash table.
+   * @param bToDoc        True if TO   file will be added in Shelf table. Otherwise, it will be added in Trash table.
+   * @param bFromInShelf  True if FROM will end in Shelf table. Otherwise, in Trash table.
+   * @param bToInShelf    True if TO will end in Shelf table. Otherwise, in Trash table.
    */
   private void markDuplicateFromToGenericCheck(int index, 
                                     boolean bFromFile, boolean bFromShelf,
