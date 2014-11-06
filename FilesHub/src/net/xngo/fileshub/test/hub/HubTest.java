@@ -263,6 +263,57 @@ public class HubTest
     this.markDuplicateFromToGenericCheck(index, bFromFile, true, bToFile, false, bFromDoc, bToDoc, bFromInShelf, bToInShelf);
   }
   
+  
+  
+  @DataProvider(name = "TrashToTrash")
+  public static Object[][] trashToTrash()
+  {
+    int i=0;
+    return new Object[][] { 
+                // Initially, FROM & TO are in Shelf table.
+                // By default, TO is in Shelf. FROM is in Trash.
+                // FFROM , FTO, DocFROM , DocTO , FROMShelf, TOShelf
+              {i++, true,  true,  true,  true , false, false},     
+              {i++, true,  true,  true,  false, false, true}, // Special case: TO doesn't exist in DB. Thus, using addFile(). TO is added in Shelf.     
+              {i++, true,  true,  false, true , false, false},     
+              {i++, true,  true,  false, false, false, true}, // Special case: TO doesn't exist in DB. Thus, using addFile(). TO is added in Shelf.    
+              {i++, true,  false, true,  true , true, false},     
+              //{i++, true,  false, true,  false, true, false},  //Unhandled case because TO file physically doesn't exist and it doesn't exist in database.  
+              {i++, true,  false, false, true , true, false},     
+              //{i++, true,  false, false, false, true, false},  //Unhandled case because TO file physically doesn't exist and it doesn't exist in database.   
+              {i++, false, true,  true,  true , false, false},     
+              {i++, false, true,  true,  false, false, true}, // Special case: TO doesn't exist in DB. Thus, using addFile(). TO is added in Shelf.     
+              //{i++, false, true,  false, true , false, true},  //Unhandled case because FROM file physically doesn't exist and it doesn't exist in database.    
+              //{i++, false, true,  false, false, false, true},  //Unhandled case because FROM file physically doesn't exist and it doesn't exist in database.
+              {i++, false, false, true,  true , false, false},     
+              //{i++, false, false, true,  false, false, true},  //Unhandled case because TO file physically doesn't exist and it doesn't exist in database.    
+              //{i++, false, false, false, true , false, true},  //Unhandled case because FROM file physically doesn't exist and it doesn't exist in database.    
+              //{i++, false, false, false, false, false, true},  //Unhandled case because FROM & TO files physically don't exist and they don't exist in database.
+      
+                        };
+  }  
+  @Test(dataProvider = "TrashToTrash")
+  public void markDuplicateTrashToTrash(int index, boolean bFromFile, boolean bToFile, boolean bFromDoc, boolean bToDoc, boolean bFromInShelf, boolean bToInShelf)
+  {
+    this.markDuplicateFromToGenericCheck(index, bFromFile, false, bToFile, false, bFromDoc, bToDoc, bFromInShelf, bToInShelf);
+  }
+  
+  
+  
+  
+  
+  /**
+   * Helpers
+   * @param index
+   * @param bFromFile
+   * @param bFromShelf
+   * @param bToFile
+   * @param bToShelf
+   * @param bFromDoc
+   * @param bToDoc
+   * @param bFromInShelf
+   * @param bToInShelf
+   */
   private void markDuplicateFromToGenericCheck(int index, 
                                     boolean bFromFile, boolean bFromShelf,
                                     boolean bToFile, boolean bToShelf, 
@@ -271,7 +322,7 @@ public class HubTest
   {
     // To debug: Set the IF statement to satisfy your conditions and then put
     //    the breakpoint at the System.out.println().
-    if(bFromFile && bToFile && bFromDoc && !bToDoc && !bFromInShelf && !bToInShelf)
+    if(bFromFile && !bToFile && bFromDoc && bToDoc && bFromInShelf && !bToInShelf)
     {
       System.out.println("Case to debug");
       
@@ -309,7 +360,7 @@ public class HubTest
         int uid = shelf.addDoc(shelfDoc);
         
         // Create a FROM entry in Trash.
-        Document trashDocFrom = new Document();
+        Document trashDocFrom = new Document(fileFrom);
         trashDocFrom.hash = Utils.getHash(fileFrom);
         trashDocFrom.uid = uid;
         trash.addDoc(trashDocFrom);

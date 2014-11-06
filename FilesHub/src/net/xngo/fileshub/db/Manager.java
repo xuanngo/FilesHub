@@ -305,10 +305,7 @@ public class Manager
             this.trash.changeDuid(shelfDocFrom.uid, shelfDocTo.uid);                 
           }
         }
-        /*
-        this.moveShelfDocToTrash(shelfDocFrom, shelfDocTo.uid);
-        this.trash.changeDuid(shelfDocFrom.uid, shelfDocTo.uid);
-        */
+
       }
       else
       {// TO is NOT in Shelf.
@@ -353,22 +350,6 @@ public class Manager
             }
           }            
 
-          
-          /*
-          // Are we manipulating entries from the same document?
-          if(trashDocTo.uid==shelfDocFrom.uid)
-          {// YES
-            
-            this.moveShelfDocToTrash(shelfDocFrom, trashDocTo.uid);
-            this.moveTrashDocToShelf(trashDocTo, trashDocTo.uid);
-          }
-          else
-          {// NO
-            this.moveShelfDocToTrash(shelfDocFrom, trashDocTo.uid);
-            this.trash.changeDuid(shelfDocFrom.uid, trashDocTo.uid);
-          }
-          
-          */
         }
         else
         {// TO is NOT in Shelf nor Trash
@@ -424,7 +405,26 @@ public class Manager
           Document trashDocTo = this.trash.getDocByCanonicalPath(fileToPath);
           if(trashDocTo!=null)
           {// TO is in Trash
-            this.trash.changeDuid(fileFromPath, trashDocTo.uid);
+            
+            Document shelfDocMainTo = this.shelf.getDocByUid(trashDocTo.uid);
+            if(new File(shelfDocMainTo.canonical_path).exists())
+            {// Main file of TO exists.
+              this.trash.changeDuid(fileFromPath, trashDocTo.uid);
+            }
+            else
+            {// Main file of TO doesn't exist.
+              if(new File(trashDocFrom.canonical_path).exists())
+              {// FROM file physically exists.
+                // Make FROM file the main file of TO.
+                this.moveShelfDocToTrash(shelfDocMainTo, trashDocTo.uid);
+                this.moveTrashDocToShelf(trashDocFrom, trashDocTo.uid);
+              }
+              else
+              {// FROM & TO physically don't exist.
+                this.trash.changeDuid(fileFromPath, trashDocTo.uid);
+              }
+            }
+
           }
           else
           {// TO is not in Shelf nor in Trash.
