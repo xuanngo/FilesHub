@@ -451,7 +451,7 @@ public class Shelf
     }
     
     // Convert wildcard(*) to %.
-    String likeValue = value.replaceAll("[\\*\\*]+", "*");
+    String likeValue = value.replaceAll("[\\*\\*]+", "*"); // Clean duplicate adjacent wildcard.
     likeValue = likeValue.replace('*', '%');
     
     // Construct the query.
