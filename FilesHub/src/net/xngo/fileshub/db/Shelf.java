@@ -443,13 +443,21 @@ public class Shelf
       throw new RuntimeException(column+" is an integer field. It is not allowed to be used in LIKE statement."); 
     }
     
+    // Optimization: If no wildcard, then use equal(=). Otherwise, user LIKE.
+    String likeOrEqual = "=";
+    if(value.indexOf('*')!=-1)
+    {// Wildcard found.
+      likeOrEqual = "like";
+    }
+    
     // Convert wildcard(*) to %.
-    String likeValue = value.replace('*', '%');
+    String likeValue = value.replaceAll("[\\*\\*]+", "*");
+    likeValue = likeValue.replace('*', '%');
     
     // Construct the query.
-    final String query = String.format("SELECT uid, canonical_path, filename, last_modified, hash, comment "
+    final String query = String.format("SELECT uid, canonical_path, filename, last_modified, hash, comment"
                                         + " FROM %s"
-                                        + " WHERE %s like ?", this.tablename, column, likeValue);
+                                        + " WHERE %s %s ?", this.tablename, column, likeOrEqual, likeValue);
     
     
     List<Document> docsList = new ArrayList<Document>();
@@ -485,6 +493,7 @@ public class Shelf
     return docsList;
   }  
   
+
   /**
    * Don't put too much constraint on the column. Do validations on the application side.
    *   For example, it is tempted to set "hash" column to be UNIQUE or NOT NULL. Don't.
