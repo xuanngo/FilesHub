@@ -109,10 +109,10 @@ public class ShelfTest
   
   
   @Test(description="Search by exact filename.")
-  public void searchDocsByExactFilename()
+  public void searchDocsByFilenameExact()
   {
     //*** Prepare data: Add unique file in Shelf table.
-    File uniqueFile = Data.createTempFile("searchDocsByExactFilename");
+    File uniqueFile = Data.createTempFile("searchDocsByFilenameExact");
     Document shelfDoc = new Document(uniqueFile);
     shelfDoc.hash = Utils.getHash(uniqueFile);
     this.shelf.addDoc(shelfDoc);
