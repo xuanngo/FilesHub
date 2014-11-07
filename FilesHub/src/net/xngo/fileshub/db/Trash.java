@@ -285,12 +285,20 @@ public class Trash
       throw new RuntimeException(column+" is an integer field. It is not allowed to be used in LIKE statement."); 
     }
     
-    // Convert wildcard(*) to %.
-    String likeValue = value.replace('*', '%');
+    // Optimization: If no wildcard, then use equal(=). Otherwise, user LIKE.
+    String likeOrEqual = "=";
+    if(value.indexOf('*')!=-1)
+    {// Wildcard found.
+      likeOrEqual = "like";
+    }
     
-    final String query = String.format("SELECT duid, canonical_path, filename, last_modified, hash, comment "
-                                        + " FROM %s "
-                                        + " WHERE %s like ?", this.tablename, column, likeValue);
+    // Convert wildcard(*) to %.
+    String likeValue = value.replaceAll("[\\*\\*]+", "*"); // Clean duplicate adjacent wildcard.
+    likeValue = likeValue.replace('*', '%');
+    
+    final String query = String.format("SELECT duid, canonical_path, filename, last_modified, hash, comment"
+                                        + " FROM %s"
+                                        + " WHERE %s %s ?", this.tablename, column, likeOrEqual, likeValue);
     
     List<Document> docsList = new ArrayList<Document>();
     try
