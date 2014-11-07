@@ -125,7 +125,7 @@ public class HubTest
   public void markDuplicateABFileBDeleted()
   {
     // DEBUG
-    if(DEBUG)
+    if(this.DEBUG)
     {
       try { Main.connection.setAutoCommit(true); }
       catch(SQLException ex) { ex.printStackTrace(); }
@@ -362,7 +362,7 @@ public class HubTest
       System.out.println("Case to debug");
       
       // DEBUG
-      if(DEBUG)
+      if(this.DEBUG)
       {
         try { Main.connection.setAutoCommit(true); }
         catch(SQLException ex) { ex.printStackTrace(); }

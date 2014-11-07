@@ -659,7 +659,7 @@ public class ManagerTest
   public void addFileDupInTrashMainDelete()
   {
     // DEBUG
-    if(DEBUG)
+    if(this.DEBUG)
     {
       try { Main.connection.setAutoCommit(true); }
       catch(SQLException ex) { ex.printStackTrace(); }
@@ -1046,7 +1046,7 @@ public class ManagerTest
   public void markDuplicateMainBecomeDuplicate()
   {
     // DEBUG
-    if(DEBUG)
+    if(this.DEBUG)
     {
       try { Main.connection.setAutoCommit(true); }
       catch(SQLException ex) { ex.printStackTrace(); }
