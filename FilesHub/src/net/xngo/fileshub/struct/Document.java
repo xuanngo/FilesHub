@@ -46,31 +46,43 @@ public class Document
    */
   public void sanityCheck()
   {
+    /*
+  
     try
     {
+    */
       if(this.hash == null)
         throw new NullPointerException(this.getErrorMsg());
       
-      if(this.hash.isEmpty())
-        throw new RuntimeException(this.getErrorMsg());
+          if(this.hash.isEmpty())
+            throw new RuntimeException(this.getErrorMsg());
   
-      if(this.canonical_path.isEmpty())
-        throw new RuntimeException(this.getErrorMsg());
-  
-      if(this.filename.isEmpty())
-        throw new RuntimeException(this.getErrorMsg());
+      if(this.canonical_path == null)
+        throw new NullPointerException(this.getErrorMsg());
+      
+          if(this.canonical_path.isEmpty())
+            throw new RuntimeException(this.getErrorMsg());
+
+      if(this.filename == null)
+        throw new NullPointerException(this.getErrorMsg());
+          
+          if(this.filename.isEmpty())
+            throw new RuntimeException(this.getErrorMsg());
       
       if(this.last_modified<1)
         System.out.println(String.format("Warning: [%s] is older than January 1, 1970. Last modified = %d.", this.canonical_path, this.last_modified));
       
       if(this.size<1)
         throw new RuntimeException(this.getErrorMsg());
+      
+      /*
     }
     catch(Exception ex)
     {
       System.out.println(String.format("Data sanity check failed on [%s].", this.canonical_path));
       ex.printStackTrace();
     }
+    */
 
   }
   
