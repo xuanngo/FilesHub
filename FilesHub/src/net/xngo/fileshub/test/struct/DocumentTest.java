@@ -210,13 +210,6 @@ public class DocumentTest
     if(bCanonicalPathNull && bFilenameNull && bHashNull)
     {
       System.out.println("Case to debug");
-      
-      // DEBUG
-      if(this.DEBUG)
-      {
-        try { Main.connection.setAutoCommit(true); }
-        catch(SQLException ex) { ex.printStackTrace(); }
-      }      
     }
     
     //*** Prepare data: Create a unique file and a document.
@@ -244,5 +237,59 @@ public class DocumentTest
       assertTrue(true);
     }
   }  
+  
+
+  @DataProvider(name = "sanityCheckEmpty")
+  public static Object[][] sanityCheckEmpty()
+  {
+    int i=0;
+    return new Object[][] { 
+              // Path, filename, hash
+              { true,  false,  false  },     
+              { false,  true,  false  },     
+              { false,  false,  true  },     
+     
+                        };
+  }  
+
+  
+  @Test(description="Test sanityCheck() with empty values.", dataProvider = "sanityCheckEmpty")
+  public void sanityCheckEmpty(boolean bCanonicalPathEmpty, boolean bFilenameEmpty, boolean bHashEmpty)
+  {
+    
+    // To debug: Set the IF statement to satisfy your conditions and then put
+    //    the breakpoint at the System.out.println().
+    if(bCanonicalPathEmpty && bFilenameEmpty && bHashEmpty)
+    {
+      System.out.println("Case to debug");
+    }
+    
+    //*** Prepare data: Create a unique file and a document.
+    File uniqueFile = Data.createTempFile("sanityCheckEmpty");
+    Document doc = new Document(uniqueFile);
+    doc.hash = Utils.getHash(uniqueFile);
+    
+    //*** Main test: Set to null.
+    if(bCanonicalPathEmpty)
+      doc.canonical_path = null;
+    
+    if(bFilenameEmpty)
+      doc.filename = null;
+    
+    if(bHashEmpty)
+      doc.hash = null;
+    
+    try
+    {
+     doc.sanityCheck();
+     assertTrue(false);// Fail the unit. Expected RuntimeException to be thrown.
+    }
+    catch(RuntimeException runtimeEx)
+    {
+      assertTrue(true);
+    }
+  }  
+  
+  
   
 }
