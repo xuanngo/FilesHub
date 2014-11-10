@@ -58,7 +58,7 @@ public class TrashTest
     
     //*** Validations: Check the sql query has equal sign.
     Connection connection = Main.connection;
-    String expectedSQLquery = String.format("SELECT duid, canonical_path, filename, last_modified, hash, comment FROM Trash WHERE filename = ? : %s", uniqueFile.getName());
+    String expectedSQLquery = String.format("SELECT duid, canonical_path, filename, last_modified, size, hash, comment FROM Trash WHERE filename = ? : %s", uniqueFile.getName());
     assertEquals(connection.getQueryString(), expectedSQLquery);
     
     //*** Clean up.
@@ -83,7 +83,7 @@ public class TrashTest
     
     //*** Validations: Check the sql query has the LIKE
     Connection connection = Main.connection;
-    String expectedSQLquery = String.format("SELECT uid, canonical_path, filename, last_modified, hash, comment FROM Trash WHERE filename like ? : %s", expectedFilenameWildcard);
+    String expectedSQLquery = String.format("SELECT duid, canonical_path, filename, last_modified, size, hash, comment FROM Trash WHERE filename like ? : %s", expectedFilenameWildcard);
     assertEquals(connection.getQueryString(), expectedSQLquery);
     
     //*** Clean up.
@@ -108,7 +108,7 @@ public class TrashTest
     
     //*** Validations: Check the sql query has not adjacent %.
     Connection connection = Main.connection;
-    String expectedSQLquery = String.format("SELECT duid, canonical_path, filename, last_modified, hash, comment FROM Trash WHERE filename like ? : %s", expectedFilenameWildcard);
+    String expectedSQLquery = String.format("SELECT duid, canonical_path, filename, last_modified, size, hash, comment FROM Trash WHERE filename like ? : %s", expectedFilenameWildcard);
     assertEquals(connection.getQueryString(), expectedSQLquery);
 
     //*** Clean up.

@@ -15,6 +15,7 @@ public class Document
   public String canonical_path  = "";
   public String filename        = "";
   public long   last_modified   = 0;
+  public long   size            = 0;
   public String hash            = "";
   public String comment         = "";
   
@@ -24,8 +25,9 @@ public class Document
   public Document(final File file)
   {
     this.canonical_path = Utils.getCanonicalPath(file);
-    this.filename = file.getName();
-    this.last_modified = file.lastModified();
+    this.filename       = file.getName();
+    this.last_modified  = file.lastModified();
+    this.size           = file.length();
   }
   
   public Document(Document doc)
@@ -34,6 +36,7 @@ public class Document
     this.canonical_path = doc.canonical_path;
     this.filename       = doc.filename;
     this.last_modified  = doc.last_modified;
+    this.size           = doc.size;
     this.hash           = doc.hash;
     this.comment        = doc.comment;
   }
@@ -59,10 +62,13 @@ public class Document
       
       if(this.last_modified<1)
         System.out.println(String.format("Warning: [%s] is older than January 1, 1970. Last modified = %d.", this.canonical_path, this.last_modified));
+      
+      if(this.size<1)
+        throw new RuntimeException(this.getErrorMsg());
     }
     catch(Exception ex)
     {
-      System.out.println(String.format("Failed on [%s].", this.canonical_path));
+      System.out.println(String.format("Data sanity check failed on [%s].", this.canonical_path));
       ex.printStackTrace();
     }
 
@@ -84,16 +90,17 @@ public class Document
     return String.format( "%s:\n"
         + "\tuid            = %d\n"
         + "\tlast_modified  = %d\n"
+        + "\tsize           = %d\n"
         + "\thash           = %s\n"
         + "\tfilename       = %s\n"
         + "\tcanonical_path = %s\n"
         + "\tcomment        = %s\n"
           , title, 
-          this.uid, this.last_modified, this.hash, this.filename, this.canonical_path, this.comment);    
+          this.uid, this.last_modified, this.size, this.hash, this.filename, this.canonical_path, this.comment);    
   }
   
   /**
-   * Define equality of state.
+   * Define equality of document.
    */
    @Override public boolean equals(Object obj) 
    {
@@ -104,6 +111,7 @@ public class Document
      return
        ( this.uid           == doc.uid                 ) &&
        ( this.last_modified == doc.last_modified       ) &&
+       ( this.size          == doc.size                ) &&
        ( this.hash          .equals(doc.hash          )) &&
        ( this.filename      .equals(doc.filename      )) &&
        ( this.canonical_path.equals(doc.canonical_path)) &&
@@ -124,8 +132,9 @@ public class Document
                         + "canonical_path = %s // Can't be empty. \n"
                         + "filename       = %s // Can't be empty. \n"
                         + "last_modified  = %d // Warning will display if less than January 1, 1970. \n"
+                        + "size           = %d // Can't be negative. \n"
                         + "hash           = %s // Can't be null nor empty. \n"
                         + "comment        = %s"
-                          , this.uid, this.canonical_path, this.filename, this.last_modified, this.hash, this.comment);
+                          , this.uid, this.canonical_path, this.filename, this.last_modified, this.size, this.hash, this.comment);
   }
 }

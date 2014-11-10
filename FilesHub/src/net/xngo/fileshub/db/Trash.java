@@ -296,7 +296,7 @@ public class Trash
     String likeValue = value.replaceAll("[\\*\\*]+", "*"); // Clean duplicate adjacent wildcard.
     likeValue = likeValue.replace('*', '%');
     
-    final String query = String.format("SELECT duid, canonical_path, filename, last_modified, hash, comment"
+    final String query = String.format("SELECT duid, canonical_path, filename, last_modified, size, hash, comment"
                                         + " FROM %s"
                                         + " WHERE %s %s ?", this.tablename, column, likeOrEqual, likeValue);
     
@@ -317,6 +317,7 @@ public class Trash
         doc.canonical_path  = resultSet.getString(j++);
         doc.filename        = resultSet.getString(j++);
         doc.last_modified   = resultSet.getLong(j++);
+        doc.size            = resultSet.getLong(j++);
         doc.hash            = resultSet.getString(j++);
         doc.comment         = resultSet.getString(j++);
         
@@ -369,7 +370,7 @@ public class Trash
         where = String.format("WHERE %s = ?", column);
     }    
     
-    final String query = String.format("SELECT duid, canonical_path, filename, last_modified, hash, comment "
+    final String query = String.format("SELECT duid, canonical_path, filename, last_modified, size, hash, comment "
                                       + " FROM %s"
                                       + " %s", this.tablename, where);
     
@@ -389,6 +390,7 @@ public class Trash
         doc.canonical_path  = resultSet.getString(j++);
         doc.filename        = resultSet.getString(j++);
         doc.last_modified   = resultSet.getLong(j++);
+        doc.size            = resultSet.getLong(j++);
         doc.hash            = resultSet.getString(j++);
         doc.comment         = resultSet.getString(j++);
         
@@ -416,7 +418,7 @@ public class Trash
     doc.checkUid();
     doc.sanityCheck();
     
-    final String query = "INSERT INTO "+this.tablename+  "(duid, canonical_path, filename, last_modified, hash, comment) VALUES(?, ?, ?, ?, ?, ?)";
+    final String query = "INSERT INTO "+this.tablename+  "(duid, canonical_path, filename, last_modified, size, hash, comment) VALUES(?, ?, ?, ?, ?, ?, ?)";
     
     int generatedKey = 0;
     try
@@ -430,6 +432,7 @@ public class Trash
       Main.connection.setString(i++, doc.canonical_path);
       Main.connection.setString(i++, doc.filename);
       Main.connection.setLong  (i++, doc.last_modified);
+      Main.connection.setLong  (i++, doc.size);
       Main.connection.setString(i++, doc.hash);
       Main.connection.setString(i++, doc.comment);
 

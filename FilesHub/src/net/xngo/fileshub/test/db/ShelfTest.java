@@ -52,7 +52,7 @@ public class ShelfTest
     
     //*** Validations: Check the sql query has equal sign.
     Connection connection = Main.connection;
-    String expectedSQLquery = String.format("SELECT uid, canonical_path, filename, last_modified, hash, comment FROM Shelf WHERE filename = ? : %s", uniqueFile.getName());
+    String expectedSQLquery = String.format("SELECT uid, canonical_path, filename, last_modified, size, hash, comment FROM Shelf WHERE filename = ? : %s", uniqueFile.getName());
     assertEquals(connection.getQueryString(), expectedSQLquery);
     
     //*** Clean up.
@@ -76,7 +76,7 @@ public class ShelfTest
     
     //*** Validations: Check the sql query has the LIKE
     Connection connection = Main.connection;
-    String expectedSQLquery = String.format("SELECT uid, canonical_path, filename, last_modified, hash, comment FROM Shelf WHERE filename like ? : %s", expectedFilenameWildcard);
+    String expectedSQLquery = String.format("SELECT uid, canonical_path, filename, last_modified, size, hash, comment FROM Shelf WHERE filename like ? : %s", expectedFilenameWildcard);
     assertEquals(connection.getQueryString(), expectedSQLquery);
     
     //*** Clean up.
@@ -100,7 +100,7 @@ public class ShelfTest
     
     //*** Validations: Check the sql query has not adjacent %.
     Connection connection = Main.connection;
-    String expectedSQLquery = String.format("SELECT uid, canonical_path, filename, last_modified, hash, comment FROM Shelf WHERE filename like ? : %s", expectedFilenameWildcard);
+    String expectedSQLquery = String.format("SELECT uid, canonical_path, filename, last_modified, size, hash, comment FROM Shelf WHERE filename like ? : %s", expectedFilenameWildcard);
     assertEquals(connection.getQueryString(), expectedSQLquery);
 
     //*** Clean up.

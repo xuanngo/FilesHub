@@ -214,7 +214,7 @@ public class Shelf
   {
     doc.sanityCheck();
 
-    final String query = "INSERT INTO "+this.tablename+  "(canonical_path, filename, last_modified, hash, comment) VALUES(?, ?, ?, ?, ?)";
+    final String query = "INSERT INTO "+this.tablename+  "(canonical_path, filename, last_modified, size, hash, comment) VALUES(?, ?, ?, ?, ?, ?)";
     
     int generatedKey = 0;
     try
@@ -227,6 +227,7 @@ public class Shelf
       Main.connection.setString (i++, doc.canonical_path);
       Main.connection.setString (i++, doc.filename);
       Main.connection.setLong   (i++, doc.last_modified);
+      Main.connection.setLong   (i++, doc.size);
       Main.connection.setString (i++, doc.hash);
       Main.connection.setString (i++, doc.comment);
       
@@ -263,7 +264,7 @@ public class Shelf
     doc.sanityCheck();
     doc.checkUid();
     
-    final String query = "UPDATE "+this.tablename+  " SET canonical_path = ?, filename = ?, last_modified = ?, hash = ?, comment = ? WHERE uid = ?";
+    final String query = "UPDATE "+this.tablename+  " SET canonical_path = ?, filename = ?, last_modified = ?, size = ?, hash = ?, comment = ? WHERE uid = ?";
     
     int rowAffected = 0;
     try
@@ -276,6 +277,7 @@ public class Shelf
       Main.connection.setString(i++, doc.canonical_path  );
       Main.connection.setString(i++, doc.filename        );
       Main.connection.setLong  (i++, doc.last_modified   );
+      Main.connection.setLong  (i++, doc.size            );
       Main.connection.setString(i++, doc.hash            );
       Main.connection.setString(i++, doc.comment         );      
       Main.connection.setInt   (i++, doc.uid             );
@@ -392,7 +394,7 @@ public class Shelf
         where = String.format("WHERE %s = ?", column);
     }
     
-    final String query = String.format("SELECT uid, canonical_path, filename, last_modified, hash, comment "
+    final String query = String.format("SELECT uid, canonical_path, filename, last_modified, size, hash, comment "
                                         + " FROM %s"
                                         + " %s", this.tablename, where);
     
@@ -418,6 +420,7 @@ public class Shelf
         doc.canonical_path  = resultSet.getString(j++);
         doc.filename        = resultSet.getString(j++);
         doc.last_modified   = resultSet.getLong(j++);
+        doc.size            = resultSet.getLong(j++);
         doc.hash            = resultSet.getString(j++);
         doc.comment         = resultSet.getString(j++);
         
@@ -455,7 +458,7 @@ public class Shelf
     likeValue = likeValue.replace('*', '%');
     
     // Construct the query.
-    final String query = String.format("SELECT uid, canonical_path, filename, last_modified, hash, comment"
+    final String query = String.format("SELECT uid, canonical_path, filename, last_modified, size, hash, comment"
                                         + " FROM %s"
                                         + " WHERE %s %s ?", this.tablename, column, likeOrEqual, likeValue);
     
@@ -477,6 +480,7 @@ public class Shelf
         doc.canonical_path  = resultSet.getString(j++);
         doc.filename        = resultSet.getString(j++);
         doc.last_modified   = resultSet.getLong(j++);
+        doc.size            = resultSet.getLong(j++);
         doc.hash            = resultSet.getString(j++);
         doc.comment         = resultSet.getString(j++);
         
