@@ -135,6 +135,23 @@ public class Document
                         + "size           = %d // Can't be negative. \n"
                         + "hash           = %s // Can't be null nor empty. \n"
                         + "comment        = %s"
-                          , this.uid, this.canonical_path, this.filename, this.last_modified, this.size, this.hash, this.comment);
+                          , this.uid, this.nullOrEmpty(this.canonical_path)
+                          , this.nullOrEmpty(this.filename), this.last_modified
+                          , this.size, this.nullOrEmpty(this.hash)
+                          , this.nullOrEmpty(this.comment));
+  }
+  
+  private String nullOrEmpty(String str)
+  {
+    String s = str;
+    if(str==null)
+      s = "<null>";
+    else
+    {
+      if(str.isEmpty())
+        s = "<empty>";
+    }
+    
+    return s;
   }
 }
