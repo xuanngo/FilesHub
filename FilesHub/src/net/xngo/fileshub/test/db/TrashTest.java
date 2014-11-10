@@ -179,6 +179,24 @@ public class TrashTest
 
   } 
   
-  
+  @Test(description="Add simple document in Trash table.")
+  public void addDocSimple()
+  {
+    //*** Prepare data: Add unique file in Trash table.
+    File uniqueFile = Data.createTempFile("addDocSimple");
+    
+    //*** Main test: Add simple doc in Trash table.
+    Document trashDoc = new Document(uniqueFile);
+    trashDoc.hash = Utils.getHash(uniqueFile);
+    trashDoc.uid = atomicInt.get(); // Fake duid.
+    this.trash.addDoc(trashDoc);
+    
+    //*** Validation: Check all fields of document are correct.
+    Document actualTrashDoc = this.trash.getDocByFilename(uniqueFile.getName());
+    assertEquals(actualTrashDoc, trashDoc, String.format("\n%s\n"
+                                                         + "%s", actualTrashDoc.getInfo("Actual"), trashDoc.getInfo("Expected")));
+    //*** Clean up
+    uniqueFile.delete();
+  }
   
 }

@@ -170,5 +170,23 @@ public class ShelfTest
   } 
   
   
+  @Test(description="Add simple document in Shelf table.")
+  public void addDocSimple()
+  {
+    //*** Prepare data: Add unique file in Trash table.
+    File uniqueFile = Data.createTempFile("addDocSimple");
+    
+    //*** Main test: Add simple doc in Trash table.
+    Document shelfDoc = new Document(uniqueFile);
+    shelfDoc.hash = Utils.getHash(uniqueFile);
+    shelfDoc.uid = this.shelf.addDoc(shelfDoc);
+    
+    //*** Validation: Check all fields of document are correct.
+    Document actualTrashDoc = this.shelf.getDocByFilename(uniqueFile.getName());
+    assertEquals(actualTrashDoc, shelfDoc, String.format("\n%s\n"
+                                                         + "%s", actualTrashDoc.getInfo("Actual"), shelfDoc.getInfo("Expected")));
+    //*** Clean up
+    uniqueFile.delete();
+  }  
   
 }
