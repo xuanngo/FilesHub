@@ -507,7 +507,8 @@ public class Shelf
                 + "uid            INTEGER PRIMARY KEY AUTOINCREMENT, "
                 + "canonical_path TEXT NOT NULL, "
                 + "filename       TEXT NOT NULL, "
-                + "last_modified  INTEGER NOT NULL, " // Optimization: Rerun same directories but files have changed since last run.                
+                + "last_modified  INTEGER NOT NULL, " // Optimization: Rerun same directories but files have changed since last run.
+                + "size           INTEGER NOT NULL, " // Document size in bytes.                
                 + "hash           TEXT, "              
                 + "comment        TEXT "
                 + ")";
