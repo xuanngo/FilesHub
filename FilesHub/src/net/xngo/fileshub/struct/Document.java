@@ -95,8 +95,11 @@ public class Document
         + "\tfilename       = %s\n"
         + "\tcanonical_path = %s\n"
         + "\tcomment        = %s\n"
-          , title, 
-          this.uid, this.last_modified, this.size, this.hash, this.filename, this.canonical_path, this.comment);    
+          , title 
+          , this.uid, this.last_modified
+          , this.size, this.nullOrEmpty(this.hash)
+          , this.nullOrEmpty(this.filename), this.nullOrEmpty(this.canonical_path)
+          , this.nullOrEmpty(this.comment));    
   }
   
   /**
@@ -151,7 +154,7 @@ public class Document
       if(str.isEmpty())
         s = "<empty>";
     }
-    
+  
     return s;
   }
 }
