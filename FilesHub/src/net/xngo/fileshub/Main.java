@@ -1,8 +1,8 @@
 package net.xngo.fileshub;
 
 import net.xngo.fileshub.cmd.Cmd;
-import net.xngo.fileshub.report.Chronometer;
 import net.xngo.fileshub.db.Connection;
+import net.xngo.utils.java.time.Chronometer;
 
 
 /**
