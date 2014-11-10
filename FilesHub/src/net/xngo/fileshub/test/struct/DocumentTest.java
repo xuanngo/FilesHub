@@ -56,9 +56,9 @@ public class DocumentTest
     //*** Validations: Documents should be equals.
     assertNotEquals(actualDoc, expectedDoc, String.format("\n%s\n"
                                                 + "%s", actualDoc.getInfo("Actual"), expectedDoc.getInfo("Expected")));
-    
+
   }
-  
+
   @Test(description="Test equals() with filename = null.")
   public void equalsFilenameNull()
   {
@@ -74,7 +74,6 @@ public class DocumentTest
     //*** Validations: Documents should be equals.
     assertNotEquals(actualDoc, expectedDoc, String.format("\n%s\n"
                                                 + "%s", actualDoc.getInfo("Actual"), expectedDoc.getInfo("Expected")));
-    
   }
   
   
@@ -271,13 +270,13 @@ public class DocumentTest
     
     //*** Main test: Set to null.
     if(bCanonicalPathEmpty)
-      doc.canonical_path = null;
+      doc.canonical_path = "";
     
     if(bFilenameEmpty)
-      doc.filename = null;
+      doc.filename = "";
     
     if(bHashEmpty)
-      doc.hash = null;
+      doc.hash = "";
     
     try
     {
