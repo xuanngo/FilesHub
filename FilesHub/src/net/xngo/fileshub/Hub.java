@@ -13,6 +13,8 @@ import net.xngo.fileshub.db.Manager;
 import net.xngo.fileshub.report.Report;
 import net.xngo.fileshub.struct.Document;
 import net.xngo.fileshub.struct.PairFile;
+import net.xngo.fileshub.upgrade.Upgrade;
+
 import net.xngo.utils.java.io.FileUtils;
 import net.xngo.utils.java.math.Math;
 import net.xngo.utils.java.time.CalUtils;
@@ -173,6 +175,7 @@ public class Hub
     }
   }
   
+  
   public boolean markDuplicate(File duplicate, File of)
   {
     try
@@ -235,6 +238,12 @@ public class Hub
     Collections.sort(pairFileList);
     Report report = new Report();
     report.writePotentialDuplicatesInHtml("./potentialDuplicates.html", pairFileList);
+  }
+  
+  public void upgrade()
+  {
+    Upgrade upgrade = new Upgrade();
+    upgrade.run();
   }
   
   /****************************************************************************

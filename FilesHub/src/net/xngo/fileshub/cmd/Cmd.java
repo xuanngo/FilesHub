@@ -41,6 +41,10 @@ public class Cmd
       {
         hub.markDuplicate(options.duplicateFiles.get(0), options.duplicateFiles.get(1));
       }
+      else if(options.upgrade)
+      {
+        hub.upgrade();
+      }
       else
       { // Check if there is a command passed.
         String parsedCmd = jc.getParsedCommand();

@@ -175,6 +175,27 @@ public class Trash
       return rowsAffected;    
   }
   
+  /**
+   * Save size.
+   * Use in upgrade version 2.
+   * @param hash
+   * @param size
+   * @return
+   */
+  public int saveSize(String hash, long size)
+  {
+    final int rowsAffected = this.update("hash", hash, "size", size);
+    
+    if (rowsAffected==0)
+      throw new RuntimeException(String.format("Size is not updated: %s", Main.connection.getQueryString()));
+    else
+      return rowsAffected;        
+  }
+  
+  public List<Document> getDocsWithMissingFileSize()
+  {
+    return this.getDocsBy("size", "<", "1");
+  }
   /****************************************************************************
    * 
    *                             PRIVATE FUNCTIONS
@@ -359,9 +380,50 @@ public class Trash
       throw new RuntimeException(msg);
     }
   }
+  
+  private List<Document> getDocsBy(String column, String operator, Object value)
+  {
+    
+    final String query = String.format("SELECT duid, canonical_path, filename, last_modified, size, hash, comment "
+                                      + " FROM %s"
+                                      + " WHERE %s %s ?", this.tablename, column, operator, value);
+    
+    // Get the documents.
+    ArrayList<Document> docsList = new ArrayList<Document>();
+    try
+    {
+      Main.connection.prepareStatement(query);
+      Main.connection.setObject(1, value);
+      ResultSet resultSet =  Main.connection.executeQuery();
+
+      while(resultSet.next())
+      {
+        Document doc = new Document();
+        int j=1;
+        doc.uid             = resultSet.getInt(j++); // Shelf.uid is equal to Trash.duid.
+        doc.canonical_path  = resultSet.getString(j++);
+        doc.filename        = resultSet.getString(j++);
+        doc.last_modified   = resultSet.getLong(j++);
+        doc.size            = resultSet.getLong(j++);
+        doc.hash            = resultSet.getString(j++);
+        doc.comment         = resultSet.getString(j++);
+        
+        docsList.add(doc);
+        
+      }
+      DbUtils.close(resultSet);
+      Main.connection.closePreparedStatement();        
+    }
+    catch(SQLException e)
+    {
+      e.printStackTrace();
+    }
+    
+    return docsList;
+  }  
+  
   private List<Document> getDocsBy(String column, String value)
   {
-
     // Construct sql query.
     String where = "";
     if(column!=null)

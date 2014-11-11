@@ -17,4 +17,6 @@ public class Options
   @Parameter(names = {"-d", "--duplicate"}, description = "Mark 2 files as duplicate.", arity = 2) // Use case: Mark 2 files as duplicate regardless of their content.
   public List<File> duplicateFiles;
   
+  @Parameter(names = {"-g", "--upgrade"}, description = "Upgrade the database.")
+  public boolean upgrade;    
 }

@@ -119,6 +119,23 @@ public class Shelf
       return rowsAffected;    
   }
   
+  /**
+   * Save size.
+   * Use in upgrade version 2.
+   * @param uid
+   * @param size
+   * @return
+   */
+  public int saveSize(int uid, long size)
+  {
+    final int rowsAffected = this.update("uid", uid, "size", size);
+    
+    if (rowsAffected==0)
+      throw new RuntimeException(String.format("Size is not updated: %s", Main.connection.getQueryString()));
+    else
+      return rowsAffected;        
+  }
+  
   public int changeUid(int fromUid, int toUid)
   {
     final int rowsAffected = this.updateInteger("uid", fromUid, "uid", toUid);
@@ -329,6 +346,37 @@ public class Shelf
     return rowAffected;    
   }
 
+  private int update(String keyColumn, Object keyValue, String replaceColumn, Object replaceValue)
+  {
+    final String query = String.format("UPDATE %s SET %s=? WHERE %s=?", this.tablename, replaceColumn, keyColumn);
+    
+    int rowAffected = 0;
+    try
+    {
+      // Prepare the query.
+      Main.connection.prepareStatement(query);
+      
+      // Set the data.
+      int i=1;
+      Main.connection.setObject(i++, replaceValue );
+      Main.connection.setObject(i++, keyValue     );
+      
+      // update row.
+      rowAffected = Main.connection.executeUpdate();
+
+    }
+    catch(SQLException e)
+    {
+      e.printStackTrace();
+    }
+    finally
+    {
+      Main.connection.closePreparedStatement();
+    }
+    
+    return rowAffected;    
+  }
+  
   private int updateInteger(String keyColumn, int keyValue, String replaceColumn, int replaceValue)
   {
     final String query = String.format("UPDATE %s SET %s=? WHERE %s=?", this.tablename, replaceColumn, keyColumn);

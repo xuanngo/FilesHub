@@ -60,7 +60,7 @@ public class Utils
   /**
    * Source: http://examples.javacodegeeks.com/core-java/io/file/4-ways-to-copy-file-in-java/
    */
-  public void copyFileUsingFileStreams(File source, File dest)
+  public static void copyFileUsingFileStreams(File source, File dest)
   {
     try 
     {
@@ -90,7 +90,7 @@ public class Utils
   /**
    * Source: http://examples.javacodegeeks.com/core-java/io/file/4-ways-to-copy-file-in-java/
    */
-  public void copyFileUsingFileChannels(File source, File dest)
+  public static void copyFileUsingFileChannels(File source, File dest)
   {
     FileChannel inputChannel = null;
     FileChannel outputChannel = null;
