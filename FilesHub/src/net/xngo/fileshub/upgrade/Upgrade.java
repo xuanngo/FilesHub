@@ -44,6 +44,8 @@ public class Upgrade
     // Set the location of all your SQL files: V?__*.sql
     this.flyway.setLocations("filesystem:"+this.sqlDir);
     
+    this.flyway.setInitDescription("FilesHub");
+    
     // Force the creation of 'schema_version' table on existing database.
     this.flyway.setInitOnMigrate(true);  
   }
@@ -109,10 +111,11 @@ public class Upgrade
       File backupDir = new File(Config.HOME_DIR+File.separator+"backupdb");
       backupDir.mkdir();
       
-      // Compress db file and put in backup directory.
+      // Compress db file and put it in backup directory.
       String source = this.dbFilePath;
       String destination = backupDir.getAbsolutePath()+File.separator+dbFile.getName()+"_"+CalUtils.toString("yyyy-MM-dd_HH.mm.ss")+".zip";
 
+      System.out.println(String.format("Backup your database file to %s ....", destination));
       FileUtils.zip(source, destination);
     }
     
