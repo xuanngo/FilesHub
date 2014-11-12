@@ -12,3 +12,5 @@ cls
 sqlite3 FilesHub.db -cmd ".width 11 15 15 125" -column -header "SELECT uid, hash, last_modified, canonical_path FROM Shelf;"
 
 sqlite3 FilesHub.db -cmd ".width 11 15 15 4 125" -column -header "SELECT duid, hash, last_modified, uid, canonical_path FROM Trash;"
+
+sqlite3 FilesHub.db -cmd ".width 13 15 11 20 11 20 11 13 24 15 11" -column -header "SELECT * from schema_version;"
