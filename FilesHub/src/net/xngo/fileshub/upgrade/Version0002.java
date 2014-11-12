@@ -5,6 +5,7 @@ import java.util.List;
 import java.io.File;
 
 import net.xngo.fileshub.Main;
+import net.xngo.fileshub.db.Connection;
 import net.xngo.fileshub.db.Trash;
 import net.xngo.fileshub.db.Shelf;
 import net.xngo.fileshub.struct.Document;
@@ -21,8 +22,10 @@ public class Version0002
   
   public void run()
   {
+    Main.connection = new Connection();
     this.updateShelfFileSize();
     this.updateTrashFileSize();
+    Main.connection.close();
   }
   
   private void updateShelfFileSize()
@@ -63,6 +66,12 @@ public class Version0002
       {
         long size = file.length();
         this.trash.saveSize(trashDoc.hash, size);
+        try
+        {
+          Main.connection.commit();  
+        }
+        catch(SQLException ex){ ex.printStackTrace(); }
+        
       }
     }
   }
