@@ -11,6 +11,7 @@ import net.xngo.fileshub.db.Shelf;
 import net.xngo.fileshub.struct.Document;
 import net.xngo.fileshub.report.Report;
 import net.xngo.utils.java.math.Math;
+import net.xngo.utils.java.io.Console;
 
 /**
  * Assuming size column is created in Shelf and Trash table.
@@ -28,8 +29,6 @@ public class Version0002
   private Shelf shelf = new Shelf();
   private Trash trash = new Trash();
   
-  private int totalDocs = 0;
-  private int docsProcessed = 0;
   private final int whenToDisplay = 101;
   private Report report = new Report();
   
@@ -37,24 +36,17 @@ public class Version0002
   {
     Main.connection = new Connection();
     
-    List<Document> shelfDocs = this.shelf.getDocs();
-    List<Document> trashDocs = this.trash.getDocsWithMissingFileSize();
-    this.totalDocs = shelfDocs.size() + trashDocs.size();
-    
-    this.updateShelfFileSize(shelfDocs);
-    this.updateTrashFileSize(trashDocs);
-    
-    this.report.console.printProgress(String.format("%s [%d/%d] %s", 
-                                            "100.00%", 
-                                            this.totalDocs, 
-                                            this.totalDocs,
-                                            report.getRAMUsage()));    
+    this.updateShelfFileSize();
+    this.updateTrashFileSize();
     
     Main.connection.close();
   }
   
-  private void updateShelfFileSize(List<Document> shelfDocs)
+  private void updateShelfFileSize()
   {
+    List<Document> shelfDocs = this.shelf.getDocs();
+    final int total = shelfDocs.size();
+    int i = 0;
     for(Document shelfDoc: shelfDocs)
     {
       File file = new File(shelfDoc.canonical_path);
@@ -64,20 +56,18 @@ public class Version0002
         
         try
         {
-if(size==0)
-  System.out.println(file.getAbsolutePath());
 
           this.shelf.saveSize(shelfDoc.uid, size);
           this.trash.saveSize(shelfDoc.hash, size); // Update file size in Trash where hash is the same as Shelf.
           Main.connection.commit();
           
           // Display progress.
-          this.docsProcessed++;
-          if( (this.docsProcessed%this.whenToDisplay)==0 )
+          i++;
+          if( (i%this.whenToDisplay)==0 )
           {
-            this.report.console.printProgress(String.format("%s [%d/%d] %s", Math.getReadablePercentage(this.docsProcessed, this.totalDocs), 
-                                                                              this.docsProcessed, 
-                                                                              this.totalDocs,
+            this.report.console.printProgress(String.format("Migrating Shelf table: %s [%d/%d] %s", Math.getReadablePercentage(i, total), 
+                                                                              i, 
+                                                                              total,
                                                                               report.getRAMUsage()));
           }          
         }
@@ -93,11 +83,19 @@ if(size==0)
           catch(SQLException sqlEx) { sqlEx.printStackTrace(); }
         }
       }
-    }    
+    }
+    this.report.console.printProgress(String.format("Migrating Shelf table: %s [%d/%d] %s", 
+                                                                            "100.00%", 
+                                                                            total, 
+                                                                            total,
+                                                                            report.getRAMUsage()));      
   }
   
-  private void updateTrashFileSize(List<Document> trashDocs)
+  private void updateTrashFileSize()
   {
+    List<Document> trashDocs = this.trash.getDocsWithMissingFileSize();
+    final int total = trashDocs.size();
+    int i = 0;    
     for(Document trashDoc: trashDocs)
     {
       File file = new File(trashDoc.canonical_path);
@@ -111,12 +109,12 @@ if(size==0)
           Main.connection.commit();
           
           // Display progress.
-          this.docsProcessed++;
-          if( (this.docsProcessed%this.whenToDisplay)==0 )
+          i++;
+          if( (i%this.whenToDisplay)==0 )
           {
-            this.report.console.printProgress(String.format("%s [%d/%d] %s", Math.getReadablePercentage(this.docsProcessed, this.totalDocs), 
-                                                                              this.docsProcessed, 
-                                                                              this.totalDocs,
+            this.report.console.printProgress(String.format("Migrating Trash table: %s [%d/%d] %s", Math.getReadablePercentage(i, total), 
+                                                                              i, 
+                                                                              total,
                                                                               report.getRAMUsage()));
           }          
         }
@@ -134,6 +132,11 @@ if(size==0)
         
       }
     }
+    this.report.console.printProgress(String.format("Migrating Trash table: %s [%d/%d] %s", 
+                                                                              "100.00%", 
+                                                                              total, 
+                                                                              total,
+                                                                              report.getRAMUsage()));      
   }
   
 }
