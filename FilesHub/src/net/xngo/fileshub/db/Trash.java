@@ -184,12 +184,10 @@ public class Trash
    */
   public int saveSize(String hash, long size)
   {
-    final int rowsAffected = this.update("hash", hash, "size", size);
+    if(size<0)
+      throw new RuntimeException(String.format("Size can't be negative: hash=%s, size=%d", hash, size));
     
-    if (rowsAffected==0)
-      throw new RuntimeException(String.format("Size is not updated: %s", Main.connection.getQueryString()));
-    else
-      return rowsAffected;        
+    return this.update("hash", hash, "size", size);
   }
   
   public List<Document> getDocsWithMissingFileSize()

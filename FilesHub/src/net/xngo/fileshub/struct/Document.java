@@ -52,28 +52,28 @@ public class Document
     {
     */
       if(this.hash == null)
-        throw new NullPointerException(this.getErrorMsg());
+        throw new NullPointerException(this.getErrorMsg("Error: Hash can't be null."));
       
           if(this.hash.isEmpty())
-            throw new RuntimeException(this.getErrorMsg());
+            throw new RuntimeException(this.getErrorMsg("Error: Hash can't be empty."));
   
       if(this.canonical_path == null)
-        throw new NullPointerException(this.getErrorMsg());
+        throw new NullPointerException(this.getErrorMsg("Error: Canonical path can't be null."));
       
           if(this.canonical_path.isEmpty())
-            throw new RuntimeException(this.getErrorMsg());
+            throw new RuntimeException(this.getErrorMsg("Error: Canonical path can't be empty."));
 
       if(this.filename == null)
-        throw new NullPointerException(this.getErrorMsg());
+        throw new NullPointerException(this.getErrorMsg("Error: Filename can't be null."));
           
           if(this.filename.isEmpty())
-            throw new RuntimeException(this.getErrorMsg());
+            throw new RuntimeException(this.getErrorMsg("Error: Filename can't be empty."));
       
       if(this.last_modified<1)
         System.out.println(String.format("Warning: [%s] is older than January 1, 1970. Last modified = %d.", this.canonical_path, this.last_modified));
       
-      if(this.size<1)
-        throw new RuntimeException(this.getErrorMsg());
+      if(this.size<0)
+        throw new RuntimeException(this.getErrorMsg(String.format("Error: Size=%d can't be negative.", this.size)));
       
       /*
     }
@@ -88,9 +88,11 @@ public class Document
   
   public void checkUid()
   {
-    String uidErrorMsg = String.format("[uid = %d] // Can't be zero or less.\nMore Info:\n%s", this.uid, this.getErrorMsg());
     if(this.uid<1)
-      throw new RuntimeException(uidErrorMsg);
+    {
+      String uidErrorMsg = String.format("Error: uid = %d can't be zero or less.", this.uid);      
+      throw new RuntimeException(this.getErrorMsg(uidErrorMsg));
+    }
   }
   /**
    * Return information of the document with user define title.
@@ -140,16 +142,17 @@ public class Document
    * 
    ****************************************************************************/
   
-  private final String getErrorMsg()
+  private final String getErrorMsg(String errorMsg)
   {
-    return String.format( "\n"
-                        + "uid            = %d // Can be zero if document is not created in the database. \n"
-                        + "canonical_path = %s // Can't be empty. \n"
-                        + "filename       = %s // Can't be empty. \n"
-                        + "last_modified  = %d // Warning will display if less than January 1, 1970. \n"
-                        + "size           = %d // Can't be negative. \n"
-                        + "hash           = %s // Can't be null nor empty. \n"
-                        + "comment        = %s"
+    return String.format( "%s\n"
+                        + "\tuid            = %d // Can be zero if document is not created in the database. \n"
+                        + "\tcanonical_path = %s // Can't be null nor empty. \n"
+                        + "\tfilename       = %s // Can't be null nor empty. \n"
+                        + "\tlast_modified  = %d // Warning will display if less than January 1, 1970. \n"
+                        + "\tsize           = %d // Can't be negative. \n"
+                        + "\thash           = %s // Can't be null nor empty. \n"
+                        + "\tcomment        = %s"
+                          , errorMsg
                           , this.uid, this.nullOrEmpty(this.canonical_path)
                           , this.nullOrEmpty(this.filename), this.last_modified
                           , this.size, this.nullOrEmpty(this.hash)

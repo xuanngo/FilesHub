@@ -199,4 +199,93 @@ public class TrashTest
     uniqueFile.delete();
   }
   
+  @Test(description="Add empty file in Trash table.")
+  public void addDocEmptyFileSize()
+  {
+    //*** Prepare data: Create a unique file in Trash table with empty content.
+    File uniqueFile = Data.createTempFile("addDocEmptyFileSize", null, "");
+    
+    //*** Main test: Add file with empty content in Shelf table.
+    Document trashDoc = new Document(uniqueFile);
+    trashDoc.hash = Utils.getHash(uniqueFile);
+    trashDoc.uid = atomicInt.get(); // Fake duid.
+    this.trash.addDoc(trashDoc);
+    
+    //*** Validation: Check all fields of document are correct.
+    Document actualTrashDoc = this.trash.getDocByFilename(uniqueFile.getName());
+    assertEquals(actualTrashDoc, trashDoc, String.format("\n%s\n"
+                                                         + "%s", actualTrashDoc.getInfo("Actual"), trashDoc.getInfo("Expected")));
+    //*** Clean up
+    uniqueFile.delete();
+  }  
+  
+  @Test(description="Test saveSize() with positive size.")
+  public void saveSizeWithPositiveSize()
+  {
+    //*** Prepare data: Add unique file in Shelf table.
+    File uniqueFile = Data.createTempFile("saveSizeWithPositiveSize");
+    
+    //*** Main test: Add simple doc in Shelf table.
+    Document trashDoc = new Document(uniqueFile);
+    trashDoc.hash = Utils.getHash(uniqueFile);
+    trashDoc.uid = atomicInt.get(); // Fake duid.
+    this.trash.addDoc(trashDoc);
+    
+    //*** Validation: Check specified size is saved.
+    final int expectedSize = 1;
+    this.trash.saveSize(trashDoc.hash, expectedSize);
+    Document actualTrashDoc = this.trash.getDocByFilename(uniqueFile.getName());
+    assertEquals(actualTrashDoc.size, expectedSize, "Trash.size doesn't match.");
+    
+    //*** Clean up
+    uniqueFile.delete();    
+  }
+  
+  @Test(description="Test saveSize() with zero.")
+  public void saveSizeWithZero()
+  {
+    //*** Prepare data: Add unique file in Shelf table.
+    File uniqueFile = Data.createTempFile("saveSizeWithZero");
+    
+    //*** Main test: Add simple doc in Shelf table.
+    Document trashDoc = new Document(uniqueFile);
+    trashDoc.hash = Utils.getHash(uniqueFile);
+    trashDoc.uid = atomicInt.get(); // Fake duid.
+    this.trash.addDoc(trashDoc);
+    
+    //*** Validation: Check zero size is saved.
+    final int expectedSize = 0;
+    this.trash.saveSize(trashDoc.hash, expectedSize);
+    Document actualTrashDoc = this.trash.getDocByFilename(uniqueFile.getName());
+    assertEquals(actualTrashDoc.size, expectedSize, "Trash.size doesn't match.");
+    
+    //*** Clean up
+    uniqueFile.delete();    
+  }
+  
+  @Test(description="Test saveSize() with negative size.", expectedExceptions={RuntimeException.class})
+  public void saveSizeWithNegativeSize()
+  {
+    //*** Prepare data: Add unique file in Shelf table.
+    File uniqueFile = Data.createTempFile("saveSizeWithNegativeSize");
+    
+    try
+    {
+      //*** Main test: Add simple doc in Shelf table.
+      Document trashDoc = new Document(uniqueFile);
+      trashDoc.hash = Utils.getHash(uniqueFile);
+      trashDoc.uid = atomicInt.get(); // Fake duid.
+      this.trash.addDoc(trashDoc);
+      
+      //*** Validation: Check exception is thrown because size is negative.
+      final int expectedSize = -1;
+      this.trash.saveSize(trashDoc.hash, expectedSize);
+    }
+    finally
+    {
+      //*** Clean up
+      uniqueFile.delete();
+    }
+  }  
+  
 }

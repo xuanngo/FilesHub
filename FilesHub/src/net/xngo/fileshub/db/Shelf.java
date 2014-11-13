@@ -128,6 +128,9 @@ public class Shelf
    */
   public int saveSize(int uid, long size)
   {
+    if(size<0)
+      throw new RuntimeException(String.format("Size can't be negative: uid=%d, size=%d", uid, size));
+    
     final int rowsAffected = this.update("uid", uid, "size", size);
     
     if (rowsAffected==0)

@@ -44,7 +44,7 @@ public class Upgrade
     // Set the location of all your SQL files: V?__*.sql
     this.flyway.setLocations("filesystem:"+this.sqlDir);
     
-    this.flyway.setInitDescription("FilesHub");
+    this.flyway.setInitDescription("Fileshub");
     
     // Force the creation of 'schema_version' table on existing database.
     this.flyway.setInitOnMigrate(true);  

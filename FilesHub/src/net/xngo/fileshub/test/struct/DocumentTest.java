@@ -186,10 +186,9 @@ public class DocumentTest
     
   }
   
-  @DataProvider(name = "sanityCheckNulls")
+  @DataProvider(name = "sanityCheckNullsException")
   public static Object[][] sanityCheckNulls()
   {
-    int i=0;
     return new Object[][] { 
               // Path, filename, hash
               { true,  false,  false  },     
@@ -198,10 +197,8 @@ public class DocumentTest
      
                         };
   }  
-
-  
-  @Test(description="Test sanityCheck() with null values.", dataProvider = "sanityCheckNulls")
-  public void sanityCheckNulls(boolean bCanonicalPathNull, boolean bFilenameNull, boolean bHashNull)
+  @Test(description="Test sanityCheck() with null values.", dataProvider = "sanityCheckNullsException", expectedExceptions={RuntimeException.class})
+  public void sanityCheckNullsException(boolean bCanonicalPathNull, boolean bFilenameNull, boolean bHashNull)
   {
     
     // To debug: Set the IF statement to satisfy your conditions and then put
@@ -226,22 +223,14 @@ public class DocumentTest
     if(bHashNull)
       doc.hash = null;
     
-    try
-    {
-     doc.sanityCheck();
-     assertTrue(false);// Fail the unit. Expected NullPointerException to be thrown.
-    }
-    catch(NullPointerException nullEx)
-    {
-      assertTrue(true);
-    }
+    //*** Validations: Exception should be thrown here because specified value is null.
+    doc.sanityCheck();
   }  
   
 
-  @DataProvider(name = "sanityCheckEmpty")
+  @DataProvider(name = "sanityCheckEmptyException")
   public static Object[][] sanityCheckEmpty()
   {
-    int i=0;
     return new Object[][] { 
               // Path, filename, hash
               { true,  false,  false  },     
@@ -250,10 +239,8 @@ public class DocumentTest
      
                         };
   }  
-
-  
-  @Test(description="Test sanityCheck() with empty values.", dataProvider = "sanityCheckEmpty")
-  public void sanityCheckEmpty(boolean bCanonicalPathEmpty, boolean bFilenameEmpty, boolean bHashEmpty)
+  @Test(description="Test sanityCheck() with empty values.", dataProvider = "sanityCheckEmptyException", expectedExceptions={RuntimeException.class})
+  public void sanityCheckEmptyException(boolean bCanonicalPathEmpty, boolean bFilenameEmpty, boolean bHashEmpty)
   {
     
     // To debug: Set the IF statement to satisfy your conditions and then put
@@ -278,17 +265,25 @@ public class DocumentTest
     if(bHashEmpty)
       doc.hash = "";
     
-    try
-    {
-     doc.sanityCheck();
-     assertTrue(false);// Fail the unit. Expected RuntimeException to be thrown.
-    }
-    catch(RuntimeException runtimeEx)
-    {
-      assertTrue(true);
-    }
+    //*** Validations: Exception should be thrown here because specified value is empty.
+    doc.sanityCheck();
+    
   }  
   
+  @Test(description="Test sanityCheck() with negative size.", expectedExceptions={RuntimeException.class})
+  public void sanityCheckNegativeSize()
+  {
+    //*** Prepare data: Create a unique file and a document.
+    File uniqueFile = Data.createTempFile("sanityCheckNegativeSize");
+    Document doc = new Document(uniqueFile);
+    doc.hash = Utils.getHash(uniqueFile);
+    
+    //*** Main test: Set negative size.
+    doc.size = -1;
+    
+    //*** Validations: Exception should be thrown here because size is negative.
+    doc.sanityCheck();
+  }
   
   
 }

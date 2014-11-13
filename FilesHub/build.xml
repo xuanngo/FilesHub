@@ -50,6 +50,7 @@
 		
 		<delete file="./test/fileshub.db"/>
 		<delete dir="./test/test-output"/>
+		<delete dir="./test/backupdb"/>
 	  
     <!-- Delete all results*.csv & results*.html -->
     <delete>

@@ -16,13 +16,21 @@ public class Data
   
   public static File createTempFile(final String affix, final File directory)
   {
+     return Data.createTempFile(affix, directory, null);
+  }
+  
+  public static File createTempFile(final String affix, final File directory, String content)
+  {
     File uniqueFile = null;
     try
     {
       final String prefix = String.format("FHTest_%s_", affix);
       final String suffix = ".tmp";
       uniqueFile = File.createTempFile(prefix, suffix, directory);
-      FileUtils.writeStringToFile(uniqueFile, uniqueFile.getName(), true);
+      
+      if(content==null)
+        content = uniqueFile.getName(); 
+      FileUtils.writeStringToFile(uniqueFile, content, true);
     }
     catch(IOException e)
     {
