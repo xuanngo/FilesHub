@@ -196,6 +196,7 @@ public class Trash
   {
     return this.getDocsBy("size", "<", "1");
   }
+  
   /****************************************************************************
    * 
    *                             PRIVATE FUNCTIONS
