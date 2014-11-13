@@ -145,7 +145,7 @@ public class Hub
     report.writeHtml(String.format("./results_%s.html", this.getResultsSuffix(addPaths)));
         Main.chrono.stop("Write HTML file");
     report.displaySummary();
-        Main.chrono.display();
+        Main.chrono.display("Add Files Runtime");
     
     System.out.println("Done!");
   }

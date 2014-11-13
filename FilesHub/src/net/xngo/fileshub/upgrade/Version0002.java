@@ -10,8 +10,10 @@ import net.xngo.fileshub.db.Trash;
 import net.xngo.fileshub.db.Shelf;
 import net.xngo.fileshub.struct.Document;
 import net.xngo.fileshub.report.Report;
+
+
 import net.xngo.utils.java.math.Math;
-import net.xngo.utils.java.io.Console;
+
 
 /**
  * Assuming size column is created in Shelf and Trash table.
@@ -37,6 +39,7 @@ public class Version0002
     Main.connection = new Connection();
     
     this.updateShelfFileSize();
+    System.out.println();
     this.updateTrashFileSize();
     
     Main.connection.close();
@@ -44,7 +47,7 @@ public class Version0002
   
   private void updateShelfFileSize()
   {
-    List<Document> shelfDocs = this.shelf.getDocs();
+    List<Document> shelfDocs = this.shelf.getDocsWithMissingFileSize();
     final int total = shelfDocs.size();
     int i = 0;
     for(Document shelfDoc: shelfDocs)

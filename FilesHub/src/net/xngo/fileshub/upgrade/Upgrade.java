@@ -10,6 +10,7 @@ import net.xngo.fileshub.db.Connection;
 
 import net.xngo.utils.java.io.FileUtils;
 import net.xngo.utils.java.time.CalUtils;
+import net.xngo.utils.java.time.Chronometer;
 
 import org.flywaydb.core.Flyway;
 import org.flywaydb.core.api.MigrationInfo;
@@ -52,9 +53,15 @@ public class Upgrade
   
   public void run()
   {
+    Chronometer chrono = new Chronometer();
+          chrono.start();
     this.backupBeforeUpgrade();
+          chrono.stop("Backup database file");
     this.version0001Run();
+          chrono.stop("Migrate to version 1");
     this.version0002Run();
+          chrono.stop("Migrate to version 2");
+          chrono.display("Migration Runtime");
   }
   
   /**
@@ -86,7 +93,7 @@ public class Upgrade
     }
     else
     {
-      System.out.println("ERROR: Can't upgrade to Version 2.");
+      System.out.println("ERROR: Can't upgrade to Version 2. Both columns Shelf.size and Trash.size should exist.");
       System.exit(0);
     }
   }

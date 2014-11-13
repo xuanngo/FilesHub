@@ -195,7 +195,10 @@ public class Shelf
     return this.searchLikeDocsBy("canonical_path", filepath);
   }
   
-  
+  public List<Document> getDocsWithMissingFileSize()
+  {
+    return this.getDocsBy("size", "<", "1");
+  }  
  
   /****************************************************************************
    * 
@@ -435,6 +438,46 @@ public class Shelf
     }
   }
   
+  private List<Document> getDocsBy(String column, String operator, Object value)
+  {
+    final String query = String.format("SELECT uid, canonical_path, filename, last_modified, size, hash, comment"
+                                        + " FROM %s"
+                                        + " WHERE %s %s ?", this.tablename, column, operator, value);
+    
+    // Get the documents.
+    List<Document> docList = new ArrayList<Document>();
+    try
+    {
+      Main.connection.prepareStatement(query);
+      Main.connection.setObject(1, value);
+      ResultSet resultSet =  Main.connection.executeQuery();
+
+      while(resultSet.next())
+      {
+        Document doc = new Document();
+        int j=1;
+        doc.uid             = resultSet.getInt(j++);
+        doc.canonical_path  = resultSet.getString(j++);
+        doc.filename        = resultSet.getString(j++);
+        doc.last_modified   = resultSet.getLong(j++);
+        doc.size            = resultSet.getLong(j++);
+        doc.hash            = resultSet.getString(j++);
+        doc.comment         = resultSet.getString(j++);
+        
+        docList.add(doc);
+      }
+      DbUtils.close(resultSet);
+      Main.connection.closePreparedStatement();
+    }
+    catch(SQLException e)
+    {
+      e.printStackTrace();
+    }
+    
+    return docList;
+  }  
+    
+  
   private List<Document> getDocsBy(String column, String value)
   {
     // Construct sql query.
@@ -445,7 +488,7 @@ public class Shelf
         where = String.format("WHERE %s = ?", column);
     }
     
-    final String query = String.format("SELECT uid, canonical_path, filename, last_modified, size, hash, comment "
+    final String query = String.format("SELECT uid, canonical_path, filename, last_modified, size, hash, comment"
                                         + " FROM %s"
                                         + " %s", this.tablename, where);
     
