@@ -62,12 +62,13 @@ public class Version0002
 
           this.shelf.saveSize(shelfDoc.uid, size);
           this.trash.saveSize(shelfDoc.hash, size); // Update file size in Trash where hash is the same as Shelf.
-          Main.connection.commit();
+
           
           // Display progress.
           i++;
           if( (i%this.whenToDisplay)==0 )
           {
+            Main.connection.commit();            
             this.report.console.printProgress(String.format("Migrating Shelf table: %s [%d/%d] %s", Math.getReadablePercentage(i, total), 
                                                                               i, 
                                                                               total,
@@ -87,6 +88,7 @@ public class Version0002
         }
       }
     }
+    try{ Main.connection.commit(); } catch(SQLException ex) { ex.printStackTrace(); }
     this.report.console.printProgress(String.format("Migrating Shelf table: %s [%d/%d] %s", 
                                                                             "100.00%", 
                                                                             total, 
@@ -109,12 +111,11 @@ public class Version0002
         {
           this.trash.saveSize(trashDoc.hash, size);
           
-          Main.connection.commit();
-          
           // Display progress.
           i++;
           if( (i%this.whenToDisplay)==0 )
           {
+            Main.connection.commit();
             this.report.console.printProgress(String.format("Migrating Trash table: %s [%d/%d] %s", Math.getReadablePercentage(i, total), 
                                                                               i, 
                                                                               total,
@@ -135,6 +136,7 @@ public class Version0002
         
       }
     }
+    try{ Main.connection.commit(); } catch(SQLException ex) { ex.printStackTrace(); }
     this.report.console.printProgress(String.format("Migrating Trash table: %s [%d/%d] %s", 
                                                                               "100.00%", 
                                                                               total, 
