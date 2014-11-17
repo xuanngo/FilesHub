@@ -60,7 +60,7 @@ public class Version0002
         
         try
         {
-          // Fix bug: For unknown reason, some Document don't has hash.
+          // Fix bug: For unknown reason, some Documents don't have hash.
           //    Here is to ensure that Document will get a hash if it does physically exist in the filesystem.
           if(shelfDoc.hash==null)
           {
@@ -121,7 +121,7 @@ public class Version0002
         long size = file.length();
         try
         {
-          // Fix bug: For unknown reason, some Document don't has hash.
+          // Fix bug: For unknown reason, some Documents don't have hash.
           //    Here is to ensure that Document will get a hash if it does physically exist in the filesystem.
           if(trashDoc.hash==null)
           {
