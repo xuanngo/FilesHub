@@ -208,4 +208,14 @@ public class Utils
     
     return false;
   }
+  
+  public static int getUpdateFrequency(int total)
+  {
+    int partitions = 1000;
+    int frequency = total/partitions;
+    if(frequency<11)
+      frequency = 11;
+    
+    return frequency;
+  }
 }
