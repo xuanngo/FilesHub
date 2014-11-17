@@ -696,23 +696,26 @@ public class Manager
     int uidLength      = this.maxUidLength(docsList);
     int hashLength     = this.maxHashLength(docsList);
     int filenameLength = this.maxFilenameLength(docsList);
+    int sizeLength     = this.maxSizeLength(docsList);
     
     System.out.println(title);
     if(header)
     {
       System.out.println(String.format( "  %"+uidLength     +"s | "
                                       + "%"+hashLength      +"s | "
+                                      + "%"+sizeLength      +"s | "
                                       + "%-"+filenameLength +"s | "
                                       + "%s", 
-                                      "<UID>", "<HASH>", "<FILENAME>", "<CANONICAL_PATH>"));
+                                      "<UID>", "<HASH>", "<SIZE>", "<FILENAME>", "<CANONICAL_PATH>"));
     }
     for(Document doc: docsList)
     {
       System.out.println(String.format( "  %"+uidLength     +"d | "
                                       + "%"+hashLength      +"s | "
+                                      + "%"+sizeLength      +"s | "
                                       + "%-"+filenameLength +"s | "
                                       + "%s", 
-                                      doc.uid, doc.hash, doc.filename, doc.canonical_path));
+                                      doc.uid, doc.hash, doc.size, doc.filename, doc.canonical_path));
     }
   }
   private int maxUidLength(List<Document> docsList)
@@ -749,5 +752,17 @@ public class Manager
     return maxLength;
   }
   
- 
+  private int maxSizeLength(List<Document> docsList)
+  {
+    int maxLength="<SIZE>".length(); // default value.
+    
+    for(Document doc: docsList)
+    {
+      String sizeStr = doc.size+"";
+      if(sizeStr.length()>maxLength)
+        maxLength = sizeStr.length();
+    }
+    return maxLength;
+  }
+  
 }
