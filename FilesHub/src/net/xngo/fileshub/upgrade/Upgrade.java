@@ -75,52 +75,6 @@ public class Upgrade
     
   }
 
-
-  
-  /**
-   * Add size column.
-   */
-  private void version0002Run()
-  {
-    Main.connection = new Connection();
-    boolean shelfSize = Main.connection.isColumnExists("Shelf", "size");
-    boolean trashSize = Main.connection.isColumnExists("Trash", "size");
-    Main.connection.close();
-    
-    if(!shelfSize && !trashSize)
-    {
-      // Add size column.
-      MigrationVersion migrationVersion = MigrationVersion.fromVersion("2");
-      this.flyway.setTarget(migrationVersion);
-      this.flyway.migrate(); // Migrate up to version set in setTarget().
-      
-      // Update file size.
-      Version0002 version2 = new Version0002();
-      version2.run();
-    }
-    else if(shelfSize && trashSize)
-    {// Column Shelf.size & Trash.size exist.
-      // Update file size.
-      Version0002 version2 = new Version0002();
-      version2.run();
-    }
-    else
-    {
-      System.out.println("ERROR: Can't upgrade to Version 2. Both columns Shelf.size and Trash.size should exist.");
-      System.exit(0);
-    }
-  }
-  
-  /**
-   * Initial database structure.
-   */
-  private void version0001Run()
-  {
-    MigrationVersion migrationVersion = MigrationVersion.fromVersion("1");
-    this.flyway.setTarget(migrationVersion);
-    this.flyway.migrate(); // Migrate up to version set in setTarget().      
-  }  
-  
   
   private void backupBeforeUpgrade()
   {
