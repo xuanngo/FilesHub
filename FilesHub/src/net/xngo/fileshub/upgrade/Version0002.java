@@ -32,7 +32,6 @@ public class Version0002
   private Shelf shelf = new Shelf();
   private Trash trash = new Trash();
   
-  private final int whenToDisplay = 101;
   private Report report = new Report();
   
   public void run()
@@ -50,6 +49,7 @@ public class Version0002
   {
     List<Document> shelfDocs = this.shelf.getDocsWithMissingFileSize();
     final int total = shelfDocs.size();
+    final int updateFrequency = Utils.getUpdateFrequency(total);
     int i = 0;
     for(Document shelfDoc: shelfDocs)
     {
@@ -78,11 +78,11 @@ public class Version0002
           
           // Display progress.
           i++;
-          if( (i%this.whenToDisplay)==0 )
+          if( (i%updateFrequency)==0 )
           {
             Main.connection.commit();            
             this.report.console.printProgress(String.format("Migrating Shelf table: %s [%d/%d] %s", Math.getReadablePercentage(i, total), 
-                                                                              i, 
+                                                                              i,
                                                                               total,
                                                                               report.getRAMUsage()));
           }          
@@ -112,6 +112,7 @@ public class Version0002
   {
     List<Document> trashDocs = this.trash.getDocsWithMissingFileSize();
     final int total = trashDocs.size();
+    final int updateFrequency = Utils.getUpdateFrequency(total);    
     int i = 0;    
     for(Document trashDoc: trashDocs)
     {
@@ -137,7 +138,7 @@ public class Version0002
           
           // Display progress.
           i++;
-          if( (i%this.whenToDisplay)==0 )
+          if( (i%updateFrequency)==0 )
           {
             Main.connection.commit();
             this.report.console.printProgress(String.format("Migrating Trash table: %s [%d/%d] %s", Math.getReadablePercentage(i, total), 
