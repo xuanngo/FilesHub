@@ -211,7 +211,7 @@ public class Utils
   
   public static int getUpdateFrequency(int total)
   {
-    int partitions = 1000;
+    int partitions = 107;
     int frequency = total/partitions;
     if(frequency<11)
       frequency = 11;
