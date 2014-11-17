@@ -91,7 +91,7 @@ public class Version0002
         {
           try
           {
-            System.out.println(String.format("Rollback %s", shelfDoc.canonical_path));
+            System.out.println(String.format("Rollback up to the last %d potential commits. Issue is in %s", updateFrequency, shelfDoc.canonical_path));
             System.out.println(shelfDoc.getInfo("Entry info in Shelf:"));
             ex.printStackTrace();
             Main.connection.rollback();
