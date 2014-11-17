@@ -11,4 +11,4 @@ if [ -z "$FILESHUB_HOME" ] ; then
 fi
 
 ## ISO-8859-1
-java -DFilesHub.files.in.batch=11 -Dfile.encoding=UTF-8 -DFilesHub.home=${FILESHUB_HOME} -DFilesHub.debug=true -jar ${FILESHUB_HOME}/fileshub.jar "$@"
+java -Dfile.encoding=UTF-8 -DFilesHub.home=${FILESHUB_HOME} -DFilesHub.debug=true -jar ${FILESHUB_HOME}/fileshub.jar "$@"
