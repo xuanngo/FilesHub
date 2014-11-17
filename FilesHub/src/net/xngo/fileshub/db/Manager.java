@@ -9,11 +9,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.xngo.fileshub.Config;
+import net.xngo.fileshub.Main;
 import net.xngo.fileshub.Utils;
 import net.xngo.fileshub.report.Difference;
 import net.xngo.fileshub.report.Report;
 import net.xngo.fileshub.struct.Document;
 import net.xngo.fileshub.struct.PairFile;
+import net.xngo.fileshub.upgrade.Upgrade;
 
 /**
  * Manage documents.
@@ -31,15 +33,22 @@ public class Manager
     File DbFile = new File(Config.DB_FILE_PATH);
     if(!DbFile.exists())
     {// Database file doesn't exist.
-      this.shelf.createTable();
-      this.trash.createTable();
+      //this.shelf.createTable();
+      //this.trash.createTable();
+      Upgrade upgrade = new Upgrade();
+      upgrade.run();
+      Main.connection = new Connection();
     }
     else
     {
       if(DbFile.length()<1)
       {// Database file already exist but it is empty.
-        this.shelf.createTable();
-        this.trash.createTable();
+        //this.shelf.createTable();
+        //this.trash.createTable();
+        Upgrade upgrade = new Upgrade();
+        upgrade.run();
+        
+        Main.connection = new Connection();
       }
     }
   }
