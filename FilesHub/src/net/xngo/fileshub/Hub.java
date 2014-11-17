@@ -42,13 +42,14 @@ public class Hub
     Report report = new Report();
     Report.FILES_TO_PROCESS = listOfFiles.size();
     report.displayTotalFilesToProcess();
+
       
     
     // Preparation to display the progress.
     Report.FILES_SIZE = FileUtils.totalSize(listOfFiles);
     String totalReadableSize = FileUtils.readableSize(Report.FILES_SIZE);
     long totalFilesize = 0;
-    int whenToDisplay = 11;
+    final int updateFrequency = Utils.getUpdateFrequency(Report.FILES_TO_PROCESS);
     
         Main.chrono.stop("Get total file size");
     int i=1; // 1 because progress % is print after some files are processed.
@@ -58,10 +59,10 @@ public class Hub
       
       try
       {
-        // Add file to database.
+        //*** Add file to database.
         Document doc = this.manager.addFile(file);
         
-        // Collect duplicate entries for report.
+        //*** Collect duplicate entries for report.
         if(doc!=null)
         {
           if(doc.canonical_path.compareTo(Utils.getCanonicalPath(file))!=0) // Ignore if users add the exact same file and the same path.
@@ -82,7 +83,19 @@ public class Hub
           }
         }
         
-        Main.connection.commit(); // Commit every if successful.
+        //*** Print progress to console.      
+        totalFilesize += file.length();
+        i++;
+        if( (i%updateFrequency)==0 )
+        {
+          Main.connection.commit();
+          report.console.printProgress(String.format("%s [%s] [%d/%d] %s", Math.getReadablePercentage(totalFilesize, Report.FILES_SIZE), 
+                                                                            totalReadableSize, 
+                                                                            i, 
+                                                                            Report.FILES_TO_PROCESS,
+                                                                            report.getRAMUsage()));
+        }
+        
       }
       catch(Exception e)
       {
@@ -100,36 +113,30 @@ public class Hub
         }
         else
         {
+          // Rollback, there is unknown error.
+          //   Rollback up to 'updateFrequency' commits.
+          try
+          {
+            Main.connection.rollback();
+            System.out.println(String.format("Rollback up to the last %d potential commits. Issue is in %s", updateFrequency, file.getAbsolutePath()));
+          }
+          catch(SQLException ex)
+          {
+            ex.printStackTrace();
+          }
+          
           RuntimeException rException = new RuntimeException(file.getAbsolutePath()+":\n"+e.getMessage());
           rException.setStackTrace(e.getStackTrace());
           throw rException;
         }
-        
-        // Rollback, there is some error.
-        try
-        {
-          Main.connection.rollback();
-        }
-        catch(SQLException ex)
-        {
-          ex.printStackTrace();
-        }
       }
       
-      // Print progress to console.      
-      totalFilesize += file.length();
-      i++;
-      if( (i%whenToDisplay)==0 )
-      {
-        report.console.printProgress(String.format("%s [%s] [%d/%d] %s", Math.getReadablePercentage(totalFilesize, Report.FILES_SIZE), 
-                                                                          totalReadableSize, 
-                                                                          i, 
-                                                                          Report.FILES_TO_PROCESS,
-                                                                          report.getRAMUsage()));
-      }
+
       
     }
+    try{ Main.connection.commit(); } catch(SQLException ex) { ex.printStackTrace(); }// Last commit() because of the remainder of modulus.
     report.console.printProgress(String.format("100.00%% [%s] [%d/%d]", totalReadableSize, Report.FILES_TO_PROCESS, Report.FILES_TO_PROCESS));// Last display because of the remainder of modulus.
+    
     System.out.println();
         Main.chrono.stop("Add files");
     
