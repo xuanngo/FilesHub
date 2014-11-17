@@ -5,6 +5,7 @@ import java.util.List;
 import java.io.File;
 
 import net.xngo.fileshub.Main;
+import net.xngo.fileshub.Utils;
 import net.xngo.fileshub.db.Connection;
 import net.xngo.fileshub.db.Trash;
 import net.xngo.fileshub.db.Shelf;
@@ -59,7 +60,18 @@ public class Version0002
         
         try
         {
-
+          // Fix bug: For unknown reason, some Document don't has hash.
+          //    Here is to ensure that Document will get a hash if it does physically exist in the filesystem.
+          if(shelfDoc.hash==null)
+          {
+            shelfDoc.hash = Utils.getHash(file);
+          }
+          else
+          {
+            if(shelfDoc.hash.isEmpty())
+              shelfDoc.hash = Utils.getHash(file);
+          }
+          
           this.shelf.saveSize(shelfDoc.uid, size);
           this.trash.saveSize(shelfDoc.hash, size); // Update file size in Trash where hash is the same as Shelf.
 
@@ -109,6 +121,18 @@ public class Version0002
         long size = file.length();
         try
         {
+          // Fix bug: For unknown reason, some Document don't has hash.
+          //    Here is to ensure that Document will get a hash if it does physically exist in the filesystem.
+          if(trashDoc.hash==null)
+          {
+            trashDoc.hash = Utils.getHash(file);
+          }
+          else
+          {
+            if(trashDoc.hash.isEmpty())
+              trashDoc.hash = Utils.getHash(file);
+          }
+          
           this.trash.saveSize(trashDoc.hash, size);
           
           // Display progress.
@@ -120,7 +144,7 @@ public class Version0002
                                                                               i, 
                                                                               total,
                                                                               report.getRAMUsage()));
-          }          
+          }
         }
         catch(SQLException ex)
         { 
