@@ -47,7 +47,7 @@ public class Hub
     // Preparation to display the progress.
     Report.FILES_SIZE = FileUtils.totalSize(listOfFiles);
     String totalReadableSize = FileUtils.readableSize(Report.FILES_SIZE);
-    long size = 0;
+    long totalFilesize = 0;
     int whenToDisplay = 11;
     
         Main.chrono.stop("Get total file size");
@@ -117,11 +117,11 @@ public class Hub
       }
       
       // Print progress to console.      
-      size += file.length();
+      totalFilesize += file.length();
       i++;
       if( (i%whenToDisplay)==0 )
       {
-        report.console.printProgress(String.format("%s [%s] [%d/%d] %s", Math.getReadablePercentage(size, Report.FILES_SIZE), 
+        report.console.printProgress(String.format("%s [%s] [%d/%d] %s", Math.getReadablePercentage(totalFilesize, Report.FILES_SIZE), 
                                                                           totalReadableSize, 
                                                                           i, 
                                                                           Report.FILES_TO_PROCESS,
