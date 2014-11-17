@@ -27,6 +27,7 @@ import org.flywaydb.core.api.MigrationVersion;
  */
 public class Upgrade
 {
+  public static Chronometer chrono = new Chronometer();
 
   private String dbFilePath = Config.DB_FILE_PATH;
   private String sqlDir     = Config.SQL_DIR.replace('\\', '/');
@@ -34,7 +35,7 @@ public class Upgrade
   
   private Flyway flyway = new Flyway();
 
-  public Upgrade()
+  public void run()
   {
     
     Main.connection.close(); 
@@ -48,21 +49,33 @@ public class Upgrade
     this.flyway.setInitDescription("Fileshub");
     
     // Force the creation of 'schema_version' table on existing database.
-    this.flyway.setInitOnMigrate(true);  
+    this.flyway.setInitOnMigrate(true);
+    
+    
+    // Add Fileshub callback.
+    FileshubCallback fileshubCallback = new FileshubCallback();
+    this.flyway.setCallbacks(fileshubCallback);
+    
+    // Migrate if there is pending migration. 
+    MigrationInfoService migrationInfoService = this.flyway.info();
+    MigrationInfo[] migrationInfo = migrationInfoService.pending();
+
+    if(migrationInfo.length>0)
+    {
+                                    Upgrade.chrono.start();
+      this.backupBeforeUpgrade(); // Backup database file before migration.
+                                    Upgrade.chrono.stop("Backup database file");
+      this.flyway.migrate();
+                                    Upgrade.chrono.display("Migration Runtime");
+    }
+    else
+    {
+      System.out.println("No migration needed.");
+    }
+    
   }
-  
-  public void run()
-  {
-    Chronometer chrono = new Chronometer();
-          chrono.start();
-    this.backupBeforeUpgrade();
-          chrono.stop("Backup database file");
-    this.version0001Run();
-          chrono.stop("Migrate to version 1");
-    this.version0002Run();
-          chrono.stop("Migrate to version 2");
-          chrono.display("Migration Runtime");
-  }
+
+
   
   /**
    * Add size column.
