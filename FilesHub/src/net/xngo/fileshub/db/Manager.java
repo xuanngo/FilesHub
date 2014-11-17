@@ -674,9 +674,6 @@ public class Manager
    */
   private void display(int uid)
   {
-    /**
-     * It is assumed that a document must always have a row in Shelf table.
-     */
     Document shelfDoc = this.shelf.getDocByUid(uid);
     if(shelfDoc==null)
     {
@@ -684,7 +681,7 @@ public class Manager
     }
     else
     {
-      // Display Shelf document.
+      // Display Shelf document if found in Shelf table.
       ArrayList<Document> shelfDocsList = new ArrayList<Document>();
       shelfDocsList.add(shelfDoc);
       this.displayDocument("Shelf:", true, shelfDocsList);
