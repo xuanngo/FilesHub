@@ -15,7 +15,6 @@ public class Config
   
   // Optional.
   public static final String DEBUG              = System.getProperty(NAME+".debug");          // Debug mode: true or false
-  public static final int FILES_IN_BATCH        = Integer.parseInt(System.getProperty(NAME+".files.in.batch")); // Number of files to process within a batch.
   public static final String WORD_LIST          = HOME_DIR+File.separator+"words.lst";
   
 }
