@@ -9,7 +9,7 @@ REM CALL build.bat
 CD %FILESHUB_TEST%
 CLS
 
-java -DFilesHub.files.in.batch=11 -DFilesHub.home=%FILESHUB_TEST% -cp "..\lib\*;..\bin" org.testng.TestNG testng-fileshub.xml
+java -DFilesHub.home=%FILESHUB_TEST% -cp "..\lib\*;..\bin" org.testng.TestNG testng-fileshub.xml
 
 
 CALL test.FilesHub.bat
