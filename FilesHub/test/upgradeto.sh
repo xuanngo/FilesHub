@@ -15,7 +15,10 @@ then
 	cp fileshub.jar "$1"
 	cp FilesHub.sh "$1"
 	cp sqlite3.exe "$1"
+	cp upgradeto.sh "$1"
 	cp template.html "$1"
+	cp words.lst "$1"
+	cp -R upgrade "$1"
 else
   echo "$1 is not a directory." 
 fi
