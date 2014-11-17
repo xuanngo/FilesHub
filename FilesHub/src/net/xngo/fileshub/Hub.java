@@ -52,7 +52,7 @@ public class Hub
     final int updateFrequency = Utils.getUpdateFrequency(Report.FILES_TO_PROCESS);
     
         Main.chrono.stop("Get total file size");
-    int i=1; // 1 because progress % is print after some files are processed.
+    int filesProcessed=0;
     for (File file : listOfFiles) 
     {
       Debug.msg(String.format("Adding [%s]", file.getAbsolutePath()));
@@ -85,13 +85,13 @@ public class Hub
         
         //*** Print progress to console.      
         totalFilesize += file.length();
-        i++;
-        if( (i%updateFrequency)==0 )
+        filesProcessed++;
+        if( (filesProcessed%updateFrequency)==0 )
         {
           Main.connection.commit();
           report.console.printProgress(String.format("%s [%s] [%d/%d] %s", Math.getReadablePercentage(totalFilesize, Report.FILES_SIZE), 
                                                                             totalReadableSize, 
-                                                                            i, 
+                                                                            filesProcessed, 
                                                                             Report.FILES_TO_PROCESS,
                                                                             report.getRAMUsage()));
         }
