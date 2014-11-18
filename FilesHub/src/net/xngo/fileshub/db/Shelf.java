@@ -387,7 +387,7 @@ public class Shelf
   {
     final String query = String.format("SELECT uid, canonical_path, filename, last_modified, size, hash, comment"
                                         + " FROM %s"
-                                        + " WHERE %s %s ?", this.tablename, column, operator, value);
+                                        + " WHERE %s %s ?", this.tablename, column, operator);
     
     // Get the documents.
     List<Document> docList = new ArrayList<Document>();
@@ -499,7 +499,7 @@ public class Shelf
     // Construct the query.
     final String query = String.format("SELECT uid, canonical_path, filename, last_modified, size, hash, comment"
                                         + " FROM %s"
-                                        + " WHERE %s %s ?", this.tablename, column, likeOrEqual, likeValue);
+                                        + " WHERE %s %s ?", this.tablename, column, likeOrEqual);
     
     
     List<Document> docsList = new ArrayList<Document>();

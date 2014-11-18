@@ -271,7 +271,7 @@ public class Trash
     
     final String query = String.format("SELECT duid, canonical_path, filename, last_modified, size, hash, comment"
                                         + " FROM %s"
-                                        + " WHERE %s %s ?", this.tablename, column, likeOrEqual, likeValue);
+                                        + " WHERE %s %s ?", this.tablename, column, likeOrEqual);
     
     List<Document> docsList = new ArrayList<Document>();
     try
@@ -336,9 +336,9 @@ public class Trash
   private List<Document> getDocsBy(String column, String operator, Object value)
   {
     
-    final String query = String.format("SELECT duid, canonical_path, filename, last_modified, size, hash, comment "
+    final String query = String.format("SELECT duid, canonical_path, filename, last_modified, size, hash, comment"
                                       + " FROM %s"
-                                      + " WHERE %s %s ?", this.tablename, column, operator, value);
+                                      + " WHERE %s %s ?", this.tablename, column, operator);
     
     // Get the documents.
     ArrayList<Document> docsList = new ArrayList<Document>();
