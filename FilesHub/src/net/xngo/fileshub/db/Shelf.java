@@ -157,33 +157,6 @@ public class Shelf
     return this.getDocsBy(null, null);
   }
 
-  
-  /**
-   * @deprecated Currently used in unit test. Otherwise, remove deprecated.
-   * @return {@link Document}
-   */
-  public int getTotalDocs()
-  {
-    final String query = "SELECT COUNT(*) FROM " + this.tablename;
-    
-    try
-    {
-      Main.connection.prepareStatement(query);
-      
-      ResultSet resultSet =  Main.connection.executeQuery();
-      if(resultSet.next())
-      {
-        return resultSet.getInt(1);
-      }
-    }
-    catch(SQLException e)
-    {
-      e.printStackTrace();
-    }
-    
-    return 0;
-  }
-  
   public List<Document> searchDocsByFilename(String filename)
   {
     return this.searchLikeDocsBy("filename", filename);
