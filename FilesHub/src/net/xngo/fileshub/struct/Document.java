@@ -24,10 +24,7 @@ public class Document
   
   public Document(final File file)
   {
-    this.canonical_path = Utils.getCanonicalPath(file);
-    this.filename       = file.getName();
-    this.last_modified  = file.lastModified();
-    this.size           = file.length();
+    this.update(file);
   }
   
   public Document(Document doc)
@@ -41,49 +38,43 @@ public class Document
     this.comment        = doc.comment;
   }
   
+  public void update(final File file)
+  {
+    this.canonical_path = Utils.getCanonicalPath(file);
+    this.filename       = file.getName();
+    this.last_modified  = file.lastModified();
+    this.size           = file.length();    
+  }
+  
   /**
    * Throw RuntimeException if Document data is not consistent and expected.
    */
   public void sanityCheck()
   {
-    /*
-  
-    try
-    {
-    */
-      if(this.hash == null)
-        throw new NullPointerException(this.getErrorMsg("Error: Hash can't be null."));
-      
-          if(this.hash.isEmpty())
-            throw new RuntimeException(this.getErrorMsg("Error: Hash can't be empty."));
-  
-      if(this.canonical_path == null)
-        throw new NullPointerException(this.getErrorMsg("Error: Canonical path can't be null."));
-      
-          if(this.canonical_path.isEmpty())
-            throw new RuntimeException(this.getErrorMsg("Error: Canonical path can't be empty."));
-
-      if(this.filename == null)
-        throw new NullPointerException(this.getErrorMsg("Error: Filename can't be null."));
-          
-          if(this.filename.isEmpty())
-            throw new RuntimeException(this.getErrorMsg("Error: Filename can't be empty."));
-      
-      if(this.last_modified<1)
-        System.out.println(String.format("Warning: [%s] is older than January 1, 1970. Last modified = %d.", this.canonical_path, this.last_modified));
-      
-      if(this.size<0)
-        throw new RuntimeException(this.getErrorMsg(String.format("Error: Size=%d can't be negative.", this.size)));
-      
-      /*
-    }
-    catch(Exception ex)
-    {
-      System.out.println(String.format("Data sanity check failed on [%s].", this.canonical_path));
-      ex.printStackTrace();
-    }
-    */
-
+    
+    if(this.hash == null)
+      throw new NullPointerException(this.getErrorMsg("Error: Hash can't be null."));
+    
+        if(this.hash.isEmpty())
+          throw new RuntimeException(this.getErrorMsg("Error: Hash can't be empty."));
+    
+    if(this.canonical_path == null)
+      throw new NullPointerException(this.getErrorMsg("Error: Canonical path can't be null."));
+    
+        if(this.canonical_path.isEmpty())
+          throw new RuntimeException(this.getErrorMsg("Error: Canonical path can't be empty."));
+    
+    if(this.filename == null)
+      throw new NullPointerException(this.getErrorMsg("Error: Filename can't be null."));
+        
+        if(this.filename.isEmpty())
+          throw new RuntimeException(this.getErrorMsg("Error: Filename can't be empty."));
+    
+    if(this.last_modified<1)
+      System.out.println(String.format("Warning: [%s] is older than January 1, 1970. Last modified = %d.", this.canonical_path, this.last_modified));
+    
+    if(this.size<0)
+      throw new RuntimeException(this.getErrorMsg(String.format("Error: Size=%d can't be negative.", this.size)));
   }
   
   public void checkUid()
