@@ -5,7 +5,6 @@ import java.sql.SQLException;
 
 import net.xngo.fileshub.Main;
 import net.xngo.fileshub.db.Trash;
-import net.xngo.fileshub.struct.Document;
 
 /**
  * Extend the original class to help testing.
