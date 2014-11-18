@@ -113,7 +113,7 @@ public class Shelf
   
   public int changeUid(int fromUid, int toUid)
   {
-    final int rowsAffected = this.updateInteger("uid", fromUid, "uid", toUid);
+    final int rowsAffected = this.update("uid", fromUid, "uid", toUid);
     
     if (rowsAffected==0)
       throw new RuntimeException(String.format("No uid has been changed: %s", Main.connection.getQueryString()));
@@ -266,7 +266,7 @@ public class Shelf
     return rowAffected;
   }
   
-  private int updateString(String replaceColumn, String replaceValue, String keyColumn, String keyValue)
+  private int update(String replaceColumn, String replaceValue, String keyColumn, String keyValue)
   {
     final String query = String.format("UPDATE %s SET %s=? WHERE %s=?", this.tablename, replaceColumn, keyColumn);
     
@@ -328,7 +328,7 @@ public class Shelf
     return rowAffected;    
   }
   
-  private int updateInteger(String keyColumn, int keyValue, String replaceColumn, int replaceValue)
+  private int update(String keyColumn, int keyValue, String replaceColumn, int replaceValue)
   {
     final String query = String.format("UPDATE %s SET %s=? WHERE %s=?", this.tablename, replaceColumn, keyColumn);
     
