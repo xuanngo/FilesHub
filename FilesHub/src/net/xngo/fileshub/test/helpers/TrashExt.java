@@ -4,7 +4,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import net.xngo.fileshub.Main;
-import net.xngo.fileshub.db.Shelf;
+import net.xngo.fileshub.db.Trash;
 import net.xngo.fileshub.struct.Document;
 
 /**
@@ -12,7 +12,7 @@ import net.xngo.fileshub.struct.Document;
  * @author Xuan Ngo
  *
  */
-public class ShelfExt extends Shelf
+public class TrashExt extends Trash
 {
   
   /**
@@ -38,5 +38,6 @@ public class ShelfExt extends Shelf
     }
     
     return 0;
-  }  
+  }
+  
 }

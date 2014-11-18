@@ -25,10 +25,13 @@ import net.xngo.fileshub.db.Manager;
 import net.xngo.fileshub.db.Shelf;
 import net.xngo.fileshub.db.Trash;
 import net.xngo.fileshub.struct.Document;
+
 import net.xngo.utils.java.math.Random;
 
 // FilesHub test helper classes.
 import net.xngo.fileshub.test.helpers.Data;
+import net.xngo.fileshub.test.helpers.ShelfExt;
+import net.xngo.fileshub.test.helpers.TrashExt;
 
 
 
@@ -116,17 +119,17 @@ public class ManagerTest
     // Expected values:
     //   Regardless of how many times you add the exact same file, 
     //      no new row should be added to Shelf and Trash tables.
-    Shelf shelf = new Shelf();
-    final int expected_totalDocsShelf = shelf.getTotalDocs();
-    Trash trash = new Trash();
-    final int expected_totalDocsTrash = trash.getTotalDocs();
+    ShelfExt shelfExt = new ShelfExt();
+    final int expected_totalDocsShelf = shelfExt.getTotalDocs();
+    TrashExt trashExt = new TrashExt();
+    final int expected_totalDocsTrash = trashExt.getTotalDocs();
     
     // Add the exact same file the 2nd time.
     this.manager.addFile(uniqueFile); 
 
     // Actual values.
-    final int actual_totalDocsShelf = shelf.getTotalDocs();
-    final int actual_totalDocsTrash = trash.getTotalDocs();
+    final int actual_totalDocsShelf = shelfExt.getTotalDocs();
+    final int actual_totalDocsTrash = trashExt.getTotalDocs();
     
     // Validations
     assertEquals(actual_totalDocsShelf, expected_totalDocsShelf, "No new row should be created in Shelf table.");
@@ -180,10 +183,10 @@ public class ManagerTest
     // Expected values:
     //   Regardless of how many times you add the exact same file with different content, 
     //      no new row should be added to Shelf and Trash tables.
-    Shelf shelf = new Shelf();
-    final int expected_totalDocsShelf = shelf.getTotalDocs();
-    Trash trash = new Trash();
-    final int expected_totalDocsTrash = trash.getTotalDocs();    
+    ShelfExt shelfExt = new ShelfExt();
+    final int expected_totalDocsShelf = shelfExt.getTotalDocs();
+    TrashExt trashExt = new TrashExt();
+    final int expected_totalDocsTrash = trashExt.getTotalDocs();    
 
     
     //*** Main test: Add the exact same file again with new content.
@@ -192,8 +195,8 @@ public class ManagerTest
 
     //*** Validations: By design, hash in database will not be updated even if hash of file has changed.
     // Actual values.
-    final int actual_totalDocsShelf = shelf.getTotalDocs();
-    final int actual_totalDocsTrash = trash.getTotalDocs();
+    final int actual_totalDocsShelf = shelfExt.getTotalDocs();
+    final int actual_totalDocsTrash = trashExt.getTotalDocs();
     
     assertEquals(actual_totalDocsShelf, expected_totalDocsShelf, "No new row should be created in Shelf table.");
     assertEquals(actual_totalDocsTrash, expected_totalDocsTrash, "No new row should be created in Trash table.");
@@ -219,10 +222,10 @@ public class ManagerTest
     // Expected values:
     //   Regardless of how many times you add the exact same file with new content, 
     //      no new row should be added to Shelf and Trash tables.
-    Shelf shelf = new Shelf();
-    final int expected_totalDocsShelf = shelf.getTotalDocs();
-    Trash trash = new Trash();
-    final int expected_totalDocsTrash = trash.getTotalDocs();    
+    ShelfExt shelfExt = new ShelfExt();
+    final int expected_totalDocsShelf = shelfExt.getTotalDocs();
+    TrashExt trashExt = new TrashExt();
+    final int expected_totalDocsTrash = trashExt.getTotalDocs();    
     
   
     // Add the exact same duplicated file again with new content.
@@ -230,8 +233,8 @@ public class ManagerTest
     this.manager.addFile(duplicateFile);
     
     // Actual values.
-    final int actual_totalDocsShelf = shelf.getTotalDocs();
-    final int actual_totalDocsTrash = trash.getTotalDocs();
+    final int actual_totalDocsShelf = shelfExt.getTotalDocs();
+    final int actual_totalDocsTrash = trashExt.getTotalDocs();
     
     // Validations
     assertEquals(actual_totalDocsShelf, expected_totalDocsShelf, "No new row should be created in Shelf table.");
@@ -256,17 +259,17 @@ public class ManagerTest
     this.manager.addFile(duplicateFile);
     
     // Expected values.
-    Shelf shelf = new Shelf();
-    final int expected_totalDocsShelf = shelf.getTotalDocs();
-    Trash trash = new Trash();
-    final int expected_totalDocsTrash = trash.getTotalDocs();    
+    ShelfExt shelfExt = new ShelfExt();
+    final int expected_totalDocsShelf = shelfExt.getTotalDocs();
+    TrashExt trashExt = new TrashExt();
+    final int expected_totalDocsTrash = trashExt.getTotalDocs();    
     
     // Add the exact same file again.
     this.manager.addFile(duplicateFile);
 
     // Actual values.
-    final int actual_totalDocsShelf = shelf.getTotalDocs();
-    final int actual_totalDocsTrash = trash.getTotalDocs();
+    final int actual_totalDocsShelf = shelfExt.getTotalDocs();
+    final int actual_totalDocsTrash = trashExt.getTotalDocs();
     
     // Validations
     assertEquals(actual_totalDocsShelf, expected_totalDocsShelf, String.format("The expected number of documents in Shelf is %d but it is %d. Expect to be equal.", expected_totalDocsShelf, actual_totalDocsShelf));
@@ -327,11 +330,11 @@ public class ManagerTest
     // Expected values:
     //  Total # of documents in Shelf should stay the same after the initial add of new file.
     //  Total # of documents in Trash should be added to the number of different paths.
-    Shelf shelf = new Shelf();
-    final int expectedTotalDocsShelf = shelf.getTotalDocs();
-    Trash trash = new Trash();
+    ShelfExt shelfExt = new ShelfExt();
+    final int expectedTotalDocsShelf = shelfExt.getTotalDocs();
+    TrashExt trashExt = new TrashExt();
     final int NUM_OF_DIFF_PATHS = 5;
-    final int expectedTotalDocsTrash = trash.getTotalDocs()+NUM_OF_DIFF_PATHS;
+    final int expectedTotalDocsTrash = trashExt.getTotalDocs()+NUM_OF_DIFF_PATHS;
     
     // Add same file from multiple paths
     for(int i=0; i<NUM_OF_DIFF_PATHS; i++)
@@ -345,8 +348,8 @@ public class ManagerTest
     }
     
     // Actual values.
-    final int actualTotalDocsShelf = shelf.getTotalDocs();
-    final int actualTotalDocsTrash = trash.getTotalDocs();
+    final int actualTotalDocsShelf = shelfExt.getTotalDocs();
+    final int actualTotalDocsTrash = trashExt.getTotalDocs();
     
     // Validate that no unexpected row are added.
     assertEquals(actualTotalDocsShelf, expectedTotalDocsShelf, String.format("More rows are added in Shelf table than expected."));
