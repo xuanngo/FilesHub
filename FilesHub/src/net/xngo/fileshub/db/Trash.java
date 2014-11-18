@@ -16,7 +16,7 @@ import net.xngo.utils.java.db.DbUtils;
  */
 public class Trash
 {
-  private final String tablename  = "Trash";
+  protected final String tablename  = "Trash";
  
   public void createTable()
   {
