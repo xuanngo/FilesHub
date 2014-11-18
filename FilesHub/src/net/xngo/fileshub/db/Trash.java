@@ -18,34 +18,6 @@ public class Trash
 {
   protected final String tablename  = "Trash";
  
-  public void createTable()
-  {
-    // Create table.
-    String query = this.createTableQuery();
-    try
-    {
-      Main.connection.prepareStatement(query);
-      Main.connection.executeUpdate();
-    }
-    catch(SQLException ex) { ex.printStackTrace(); }
-    
-    // Create indices.
-    this.createIndices();
-  }
-  
-  public void deleteTable()
-  {
-    // Delete table.
-    String query="DROP TABLE IF EXISTS " + this.tablename;
-    try
-    {
-      Main.connection.prepareStatement(query);
-      Main.connection.executeUpdate();
-    }
-    catch(SQLException ex) { ex.printStackTrace(); }   
-  }
-  
- 
   /**
    * @param canonicalPath
    * @return {@link Document}
@@ -508,39 +480,6 @@ public class Trash
   
     return generatedKey;
   }
-  
-  
-  /**
-   *   
-   * @return Create table query.
-   */
-  private String createTableQuery()
-  {
-    return  "CREATE TABLE "+tablename+" ("
-                + "uid            INTEGER PRIMARY KEY AUTOINCREMENT, "
-                + "duid           INTEGER NOT NULL, " // Document UID
-                + "canonical_path TEXT NOT NULL, "
-                + "filename       TEXT NOT NULL, "
-                + "last_modified  INTEGER NOT NULL, " // Optimization: Rerun same directories but files have changed since last run.
-                + "size           INTEGER NOT NULL, " // Document size in bytes.
-                + "hash           TEXT, "
-                + "comment        TEXT "
-                + ")";
-  }
-  
-  private void createIndices()
-  {
-    String[] indices={"CREATE INDEX trash_hash ON "+this.tablename+" (hash);",
-                      "CREATE INDEX trash_canonical_path ON "+this.tablename+" (canonical_path);"};
-    for(String query: indices)
-    {
-      try
-      {
-        Main.connection.prepareStatement(query);
-        Main.connection.executeUpdate();
-      }
-      catch(SQLException ex) { ex.printStackTrace(); }
-    }
-  }
+
   
 }

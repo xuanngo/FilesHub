@@ -18,33 +18,6 @@ public class Shelf
 {
   protected final String tablename  = "Shelf";
   
-  public void createTable()
-  {
-    // Create table.
-    String query = this.createTableQuery();
-    try
-    {
-      Main.connection.prepareStatement(query);
-      Main.connection.executeUpdate();
-    }
-    catch(SQLException ex) { ex.printStackTrace(); }
-    
-    // Create indices.
-    this.createIndices();    
-  }
-  
-  public void deleteTable()
-  {
-    // Delete table.
-    String query="DROP TABLE IF EXISTS " + this.tablename;
-    try
-    {
-      Main.connection.prepareStatement(query);
-      Main.connection.executeUpdate();
-    }
-    catch(SQLException ex) { ex.printStackTrace(); }   
-  }
-  
   /**
    * @param uid
    * @return {@link Document}
@@ -562,43 +535,5 @@ public class Shelf
     
     return docsList;
   }  
-  
-
-  /**
-   * Don't put too much constraint on the column. Do validations on the application side.
-   *   For example, it is tempted to set "hash" column to be UNIQUE or NOT NULL. Don't.
-   *   Hashing takes a lot of time. What if you want to calculate the hash value later on.
-   *   
-   * @return Create table query.
-   */
-  private String createTableQuery()
-  {
-    return  "CREATE TABLE "+tablename+" ("
-                + "uid            INTEGER PRIMARY KEY AUTOINCREMENT, "
-                + "canonical_path TEXT NOT NULL, "
-                + "filename       TEXT NOT NULL, "
-                + "last_modified  INTEGER NOT NULL, " // Optimization: Rerun same directories but files have changed since last run.
-                + "size           INTEGER NOT NULL, " // Document size in bytes.                
-                + "hash           TEXT, "              
-                + "comment        TEXT "
-                + ")";
-     
-  }
-  
-  private void createIndices()
-  {
-    String[] indices={"CREATE INDEX shelf_hash ON "+this.tablename+" (hash);",
-                      "CREATE INDEX shelf_canonical_path ON "+this.tablename+" (canonical_path);"};
-    
-    for(String query: indices)
-    {
-      try
-      {
-        Main.connection.prepareStatement(query);
-        Main.connection.executeUpdate();
-      }
-      catch(SQLException ex) { ex.printStackTrace(); }
-    }
-  }
-  
+ 
 }
