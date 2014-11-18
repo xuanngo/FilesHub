@@ -14,10 +14,6 @@ import net.xngo.fileshub.struct.Document;
  */
 public class TrashExt extends Trash
 {
-  
-  /**
-   * @return {@link Document}
-   */
   public int getTotalDocs()
   {
     final String query = "SELECT COUNT(*) FROM " + super.tablename;

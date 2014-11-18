@@ -15,9 +15,6 @@ import net.xngo.fileshub.struct.Document;
 public class ShelfExt extends Shelf
 {
   
-  /**
-   * @return {@link Document}
-   */
   public int getTotalDocs()
   {
     final String query = "SELECT COUNT(*) FROM " + super.tablename;
