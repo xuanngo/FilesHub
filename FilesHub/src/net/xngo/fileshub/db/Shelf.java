@@ -16,7 +16,7 @@ import net.xngo.utils.java.db.DbUtils;
  */
 public class Shelf
 {
-  private final String tablename  = "Shelf";
+  protected final String tablename  = "Shelf";
   
   public void createTable()
   {
