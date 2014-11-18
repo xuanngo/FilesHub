@@ -184,6 +184,11 @@ public class Trash
    */
   public int saveSize(String hash, long size)
   {
+    if(hash==null)
+      throw new RuntimeException("Hash can't be null.");
+    if(hash.isEmpty())
+      throw new RuntimeException("Hash can't be empty.");    
+    
     if(size<0)
       throw new RuntimeException(String.format("Size can't be negative: hash=%s, size=%d", hash, size));
     
