@@ -56,7 +56,11 @@ public class Trash
     return this.getDocsBy("duid", uid+"");
   }  
   
-
+  public List<Document> getDocsWithMissingFileSize()
+  {
+    return this.getDocsBy("size", "<", "1");
+  }
+  
   
   public int addDoc(Document doc)
   {
@@ -143,11 +147,7 @@ public class Trash
     return this.update("hash", hash, "size", size);
   }
   
-  public List<Document> getDocsWithMissingFileSize()
-  {
-    return this.getDocsBy("size", "<", "1");
-  }
-  
+
   /****************************************************************************
    * 
    *                             PRIVATE FUNCTIONS
