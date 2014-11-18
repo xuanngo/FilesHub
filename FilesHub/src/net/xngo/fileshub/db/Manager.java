@@ -33,8 +33,7 @@ public class Manager
     File DbFile = new File(Config.DB_FILE_PATH);
     if(!DbFile.exists())
     {// Database file doesn't exist.
-      //this.shelf.createTable();
-      //this.trash.createTable();
+
       Upgrade upgrade = new Upgrade();
       upgrade.run();
       Main.connection = new Connection();
@@ -43,8 +42,6 @@ public class Manager
     {
       if(DbFile.length()<1)
       {// Database file already exist but it is empty.
-        //this.shelf.createTable();
-        //this.trash.createTable();
         Upgrade upgrade = new Upgrade();
         upgrade.run();
         
