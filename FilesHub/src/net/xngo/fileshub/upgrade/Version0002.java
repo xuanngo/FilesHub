@@ -65,15 +65,24 @@ public class Version0002
           if(shelfDoc.hash==null)
           {
             shelfDoc.hash = Utils.getHash(file);
+            shelfDoc.update(file);
+            this.shelf.saveDoc(shelfDoc);
           }
           else
           {
             if(shelfDoc.hash.isEmpty())
+            {
               shelfDoc.hash = Utils.getHash(file);
+              shelfDoc.update(file);
+              this.shelf.saveDoc(shelfDoc);              
+            }
+            else
+            {
+              this.shelf.saveSize(shelfDoc.uid, size);
+            }
           }
           
-          this.shelf.saveSize(shelfDoc.uid, size);
-          this.trash.saveSize(shelfDoc.hash, size); // Update file size in Trash where hash is the same as Shelf.
+          this.trash.saveSize(shelfDoc.hash, size);  // Update file size in Trash where hash is the same as Shelf. 
 
           
           // Display progress.
@@ -122,18 +131,7 @@ public class Version0002
         long size = file.length();
         try
         {
-          // Fix bug: For unknown reason, some Documents don't have hash.
-          //    Here is to ensure that Document will get a hash if it does physically exist in the filesystem.
-          if(trashDoc.hash==null)
-          {
-            trashDoc.hash = Utils.getHash(file);
-          }
-          else
-          {
-            if(trashDoc.hash.isEmpty())
-              trashDoc.hash = Utils.getHash(file);
-          }
-          
+      
           this.trash.saveSize(trashDoc.hash, size);
           
           // Display progress.
