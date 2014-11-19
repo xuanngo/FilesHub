@@ -288,4 +288,15 @@ public class TrashTest
     }
   }  
   
+  
+  @Test(description="Test getDocsWithMissingFileSize() sql query.")
+  public void getDocsWithMissingFileSizeQuery()
+  {
+    this.trash.getDocsWithMissingFileSize();
+    String actualQuery = Main.connection.getQueryString();
+    System.out.println(actualQuery);
+    
+    String expectedQuery = "SELECT duid, canonical_path, filename, last_modified, size, hash, comment FROM Trash WHERE size < ? : 1";
+    assertEquals(actualQuery, expectedQuery);
+  }
 }
