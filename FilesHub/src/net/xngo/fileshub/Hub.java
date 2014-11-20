@@ -112,9 +112,13 @@ public class Hub
           System.out.println(String.format("Warning: The system cannot find the file specified: Ignore %s.", file.getAbsolutePath()));
         }
         else if(e.getMessage().indexOf("Too many levels of symbolic links")!=-1)
-        {// For case where filename=..\est.
+        {
           System.out.println(String.format("Warning: Too many levels of symbolic links: Ignore %s.", file.getAbsolutePath()));
-        }        
+        }
+        else if(e.getMessage().indexOf("No such file or directory")!=-1)
+        {// For filename with different encoding.
+          System.out.println(String.format("Warning: No such file or directory: Ignore %s.", file.getAbsolutePath()));
+        }
         else
         {
           // Rollback, there is unknown error.
