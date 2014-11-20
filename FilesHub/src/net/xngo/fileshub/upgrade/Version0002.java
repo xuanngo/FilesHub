@@ -67,6 +67,7 @@ public class Version0002
             shelfDoc.hash = Utils.getHash(file);
             shelfDoc.update(file);
             this.shelf.saveDoc(shelfDoc);
+System.out.println(shelfDoc.getInfo("Shelf NULL"));
           }
           else
           {
@@ -74,7 +75,8 @@ public class Version0002
             {
               shelfDoc.hash = Utils.getHash(file);
               shelfDoc.update(file);
-              this.shelf.saveDoc(shelfDoc);              
+              this.shelf.saveDoc(shelfDoc);
+System.out.println(shelfDoc.getInfo("Shelf EMPTY"));
             }
             else
             {
@@ -98,11 +100,11 @@ public class Version0002
         }
         catch(Exception ex)
         {
+          System.out.println(String.format("Rollback up to the last %d potential commits. Issue is in %s", updateFrequency, shelfDoc.canonical_path));
+          System.out.println(shelfDoc.getInfo("Entry info in Shelf:"));
+          ex.printStackTrace();          
           try
           {
-            System.out.println(String.format("Rollback up to the last %d potential commits. Issue is in %s", updateFrequency, shelfDoc.canonical_path));
-            System.out.println(shelfDoc.getInfo("Entry info in Shelf:"));
-            ex.printStackTrace();
             Main.connection.rollback();
           }
           catch(SQLException sqlEx) { sqlEx.printStackTrace(); }
@@ -147,11 +149,11 @@ public class Version0002
         }
         catch(SQLException ex)
         { 
+          System.out.println(String.format("Rollback %s", trashDoc.canonical_path));
+          System.out.println(trashDoc.getInfo("Entry info in Trash:"));
+          ex.printStackTrace();          
           try
           {
-            System.out.println(String.format("Rollback %s", trashDoc.canonical_path));
-            System.out.println(trashDoc.getInfo("Entry info in Trash:"));
-            ex.printStackTrace();
             Main.connection.rollback();
           }
           catch(SQLException sqlEx) { sqlEx.printStackTrace(); }
