@@ -101,16 +101,20 @@ public class Hub
       {
         if(e.getMessage().indexOf("The process cannot access the file because another process has locked a portion of the file")!=-1)
         {
-          System.out.println(String.format("Warning: Ignore locked file : %s.", file.getAbsolutePath()));
+          System.out.println(String.format("Warning: Ignore locked file %s.", file.getAbsolutePath()));
         }
         else if(e.getMessage().indexOf("FileNotFoundException")!=-1)
         {
-          System.out.println(String.format("Warning: Ignore FileNotFoundException: %s.", file.getAbsolutePath()));
+          System.out.println(String.format("Warning: FileNotFoundException: Ignore %s.", file.getAbsolutePath()));
         }
         else if(e.getMessage().indexOf("The system cannot find the file specified")!=-1)
         {// For case where filename=..\est.
-          System.out.println(String.format("Warning: Ignore FileNotFoundException: %s.", file.getAbsolutePath()));
+          System.out.println(String.format("Warning: The system cannot find the file specified: Ignore %s.", file.getAbsolutePath()));
         }
+        else if(e.getMessage().indexOf("Too many levels of symbolic links")!=-1)
+        {// For case where filename=..\est.
+          System.out.println(String.format("Warning: Too many levels of symbolic links: Ignore %s.", file.getAbsolutePath()));
+        }        
         else
         {
           // Rollback, there is unknown error.
@@ -172,7 +176,7 @@ public class Hub
     
     if(missingFileList.size()>0)
     {
-      System.out.println(String.format("\nMissing files not in your system:", missingFileList.size()));
+      System.out.println(String.format("\nMissing files not in your system: %d", missingFileList.size()));
       System.out.println("===================================");
       for(Document doc: missingFileList)
       {
