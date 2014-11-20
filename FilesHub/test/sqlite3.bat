@@ -1,1 +1,1 @@
-sqlite3 FilesHub.db -column -header
+sqlite3 -column -header $1
