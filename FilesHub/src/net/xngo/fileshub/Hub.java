@@ -133,7 +133,7 @@ public class Hub
             ex.printStackTrace();
           }
           
-          RuntimeException rException = new RuntimeException(file.getAbsolutePath()+":\n"+e.getMessage());
+          RuntimeException rException = new RuntimeException(e.getMessage());
           rException.setStackTrace(e.getStackTrace());
           throw rException;
         }
