@@ -121,8 +121,7 @@ public class Hub
         }
         else
         {
-          // Rollback, there is unknown error.
-          //   Rollback up to 'updateFrequency' commits.
+          // Unknown error, roll back up to 'updateFrequency' commits.
           try
           {
             Main.connection.rollback();
