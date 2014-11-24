@@ -14,7 +14,6 @@ import net.xngo.fileshub.report.Report;
 import net.xngo.fileshub.struct.Document;
 import net.xngo.fileshub.struct.PairFile;
 import net.xngo.fileshub.upgrade.Upgrade;
-
 import net.xngo.utils.java.io.FileUtils;
 import net.xngo.utils.java.math.Math;
 import net.xngo.utils.java.time.CalUtils;
@@ -103,10 +102,6 @@ public class Hub
         {
           System.out.println(String.format("Warning: Ignore locked file %s.", file.getAbsolutePath()));
         }
-        else if(e.getMessage().indexOf("FileNotFoundException")!=-1)
-        {
-          System.out.println(String.format("Warning: FileNotFoundException: Ignore %s.", file.getAbsolutePath()));
-        }
         else if(e.getMessage().indexOf("The system cannot find the file specified")!=-1)
         {// For case where filename=..\est.
           System.out.println(String.format("Warning: The system cannot find the file specified: Ignore %s.", file.getAbsolutePath()));
@@ -117,8 +112,38 @@ public class Hub
         }
         else if(e.getMessage().indexOf("No such file or directory")!=-1)
         {// For filename with different encoding.
-          System.out.println(String.format("Warning: No such file or directory: Ignore %s.", file.getAbsolutePath()));
+          if(file.getName().indexOf('\uFFFD')!=-1)
+          {
+            /**
+             * Assuming invalid characters are occurring only in the filename.
+             * This will not handle case where directory name has invalid characters.
+             */
+            File newFile = new File(file.getName().replaceAll("\uFFFD", "_"));
+            if(file.renameTo(newFile))
+            {
+              System.out.println(String.format("Warning: No such file or directory: %s.", file.getAbsolutePath()));
+              System.out.println(String.format("\tWarning: Renamed file from\n"
+                                             + "\t\t%s to\n"
+                                             + "\t\t%s", file.getAbsolutePath(), newFile.getAbsolutePath()));
+              listOfFiles.add(newFile); // Add renamed file to the list for later processing.
+            }
+            else
+            {
+              System.out.println(String.format("Error: Failed to rename file from\n"
+                                                + "\t%s to\n"
+                                                + "\t%s", file.getAbsolutePath(), newFile.getAbsolutePath()));
+            }
+
+          }
+          else
+          {
+            System.out.println(String.format("Warning: No such file or directory: Ignore %s.", file.getAbsolutePath()));
+          }
         }
+        else if(e.getMessage().indexOf("RuntimeException: Hash is null")!=-1)
+        {
+          System.out.println(String.format("Warning: RuntimeException: Hash is null: Ignore %s.", file.getAbsolutePath()));
+        }        
         else
         {
           // Unknown error, roll back up to 'updateFrequency' commits.
