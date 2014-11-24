@@ -67,7 +67,6 @@ public class Version0002
             shelfDoc.hash = Utils.getHash(file);
             shelfDoc.update(file);
             this.shelf.saveDoc(shelfDoc);
-System.out.println(shelfDoc.getInfo("Shelf NULL"));
           }
           else
           {
@@ -76,7 +75,6 @@ System.out.println(shelfDoc.getInfo("Shelf NULL"));
               shelfDoc.hash = Utils.getHash(file);
               shelfDoc.update(file);
               this.shelf.saveDoc(shelfDoc);
-System.out.println(shelfDoc.getInfo("Shelf EMPTY"));
             }
             else
             {
