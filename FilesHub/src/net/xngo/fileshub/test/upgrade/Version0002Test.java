@@ -9,6 +9,7 @@ import org.testng.annotations.Test;
 
 import net.xngo.fileshub.Utils;
 import net.xngo.fileshub.db.Trash;
+import net.xngo.fileshub.db.Shelf;
 import net.xngo.fileshub.struct.Document;
 import net.xngo.fileshub.test.helpers.Data;
 import net.xngo.fileshub.test.helpers.FHSampleDb;
