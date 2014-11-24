@@ -10,8 +10,10 @@ import static org.testng.Assert.assertTrue;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
+
 // Java Library
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.UnsupportedEncodingException;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -25,7 +27,6 @@ import net.xngo.fileshub.db.Manager;
 import net.xngo.fileshub.db.Shelf;
 import net.xngo.fileshub.db.Trash;
 import net.xngo.fileshub.struct.Document;
-
 import net.xngo.utils.java.math.Random;
 
 // FilesHub test helper classes.
@@ -470,7 +471,7 @@ public class ManagerTest
     
   }
   
-  @Test(description="Add a unique file that is deleted.")
+  @Test(description="Add a unique file that is deleted.", expectedExceptions={RuntimeException.class})
   public void addFileDelete()
   {
     // Add a unique file.
@@ -480,7 +481,6 @@ public class ManagerTest
     {
       this.manager.addFile(uniqueFile);
     }
-    catch(RuntimeException ex) { System.out.println("Runtime exception thrown is expected. File is not found because it is deleted."); }
     finally
     {
       // Validate: File is deleted. Therefore, no commit in the database.
@@ -489,13 +489,14 @@ public class ManagerTest
       Document shelfDoc = shelf.getDocByCanonicalPath(canonicalPath);
       Trash trash = new Trash();
       Document trashDoc = trash.getDocByCanonicalPath(canonicalPath);
-      assertNull(shelfDoc, String.format("'%s' should not be Shelf.", canonicalPath));
-      assertNull(trashDoc, String.format("'%s' should not be Trash.", canonicalPath));
+      assertNull(shelfDoc, String.format("'%s' should not be in Shelf.", canonicalPath));
+      assertNull(trashDoc, String.format("'%s' should not be in Trash.", canonicalPath));
+      
     }
     
   }
   
-  @Test(description="Add a duplicate file that is deleted.")
+  @Test(description="Add a duplicate file that is deleted.", expectedExceptions={RuntimeException.class})
   public void addFileDuplicateDelete()
   {
     // Add a unique file.
@@ -513,7 +514,6 @@ public class ManagerTest
     {
       this.manager.addFile(duplicateFile);
     }
-    catch(RuntimeException ex) { System.out.println("Runtime exception thrown is expected. File is not found because it is deleted."); }
     finally
     {
       // Validate: Duplicate file is deleted. Therefore, no commit in the database.
@@ -522,7 +522,7 @@ public class ManagerTest
       Trash trash = new Trash();
       Document trashDoc = trash.getDocByCanonicalPath(duplicateFilePath);
       assertEquals(shelfDoc.canonical_path, uniqueFilePath);
-      assertNull(trashDoc, String.format("'%s' should not be Trash.", duplicateFilePath));
+      assertNull(trashDoc, String.format("'%s' should not be in Trash.", duplicateFilePath));
     }
     
     // Clean up.
@@ -547,10 +547,8 @@ public class ManagerTest
     duplicateFile.delete();    
     try
     {
-
       this.manager.addFile(duplicateFile);
     }
-    catch(RuntimeException ex) { System.out.println("Runtime exception thrown is expected. File is not found because it is deleted."); }
     finally
     {
       // Validate: Duplicate file is deleted. Therefore, no commit in the database.
