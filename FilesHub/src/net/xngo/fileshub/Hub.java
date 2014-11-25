@@ -18,6 +18,8 @@ import net.xngo.utils.java.io.FileUtils;
 import net.xngo.utils.java.math.Math;
 import net.xngo.utils.java.time.CalUtils;
 
+import java.lang.Process;
+import java.lang.Runtime;
 
 /**
  * 
@@ -118,8 +120,11 @@ public class Hub
              * Assuming invalid characters are occurring only in the filename.
              * This will not handle case where directory name has invalid characters.
              */
-            File newFile = new File(file.getName().replaceAll("\uFFFD", "_"));
-            if(file.renameTo(newFile))
+            final String sourcePath = file.getAbsolutePath();
+            final String destinationPath = file.getParent()+File.separator+file.getName().replaceAll("\uFFFD", "_");
+            File newFile = new File(destinationPath);
+            //if(file.renameTo(newFile))
+            if(this.renameInvalidFilename(sourcePath, destinationPath))
             {
               System.out.println(String.format("Warning: No such file or directory: %s.", file.getAbsolutePath()));
               System.out.println(String.format("\tWarning: Renamed file from\n"
@@ -361,4 +366,37 @@ public class Hub
     else
       return directories.toString();
   }
+
+  
+  private boolean renameInvalidFilename(String sourcePath, String destinationPath)
+  {
+    String source = sourcePath.replaceAll("\uFFFD", "?");
+    String destination = destinationPath.replaceAll("\uFFFD", "_");
+    
+    // Define move command depending on OS.
+    String moveCmd = "";
+    String os_name = System.getProperty("os.name");
+    if(os_name.indexOf("Windows")!=-1)
+      moveCmd = "move";
+    else
+      moveCmd = "mv";  
+    
+    // Execute the command.
+    try
+    {
+      System.out.println(String.format("%s \"%s\" \"%s\"", moveCmd, source, destination));
+      Process process = Runtime.getRuntime().exec(String.format("%s \"%s\" \"%s\"", moveCmd, source, destination));
+      if(process.exitValue()==0)
+        return true;
+      else
+        return false;
+    }
+    catch(IOException ex)
+    {
+      ex.printStackTrace();
+    }
+    
+    return false;
+  }
+
 }
