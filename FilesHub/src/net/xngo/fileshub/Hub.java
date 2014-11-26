@@ -370,17 +370,22 @@ public class Hub
   
   private boolean renameInvalidFilename(String sourcePath, String destinationPath)
   {
+    
+    // Execute move command depending on OS.
+    String os_name = System.getProperty("os.name");
+    if(os_name.indexOf("Windows")!=-1)
+      return this.renameInvalidFilenameWin(sourcePath, destinationPath);
+    else
+      return this.renameInvalidFilenameUnix(sourcePath, destinationPath);  
+
+  }
+
+  private boolean renameInvalidFilenameWin(String sourcePath, String destinationPath)
+  {
     String source = sourcePath.replaceAll("\uFFFD", "?");
     String destination = destinationPath.replaceAll("\uFFFD", "_");
     
-    // Define move command depending on OS.
-    String moveCmd = "";
-    String os_name = System.getProperty("os.name");
-    if(os_name.indexOf("Windows")!=-1)
-      moveCmd = "move";
-    else
-      moveCmd = "mv";  
-    
+    String moveCmd = "move";
     // Execute the command.
     try
     {
@@ -396,7 +401,36 @@ public class Hub
       ex.printStackTrace();
     }
     
-    return false;
+    return false;    
   }
-
+  
+  private boolean renameInvalidFilenameUnix(String sourcePath, String destinationPath)
+  {
+    String source = sourcePath.replaceAll("\uFFFD", "?");
+    source = source.replaceAll(" ", "\\ ");
+    source = source.replaceAll("[", "\\[");
+    source = source.replaceAll("]", "\\]");
+    
+    String destination = destinationPath.replaceAll("\uFFFD", "_");
+    
+    String moveCmd = "mv";
+    // Execute the command.
+    try
+    {
+      System.out.println(String.format("%s %s \"%s\"", moveCmd, source, destination));
+      Process process = Runtime.getRuntime().exec(String.format("%s %s \"%s\"", moveCmd, source, destination));
+      if(process.exitValue()==0)
+        return true;
+      else
+        return false;
+    }
+    catch(IOException ex)
+    {
+      ex.printStackTrace();
+    }
+    
+    return false;    
+  }
+  
+  
 }
