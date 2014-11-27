@@ -121,7 +121,7 @@ public class Hub
              * This will not handle case where directory name has invalid characters.
              */
             final String sourcePath = file.getAbsolutePath();
-            final String destinationPath = file.getParent()+File.separator+file.getName().replaceAll("\uFFFD", "_");
+            final String destinationPath = file.getParent()+File.separator+file.getName().replace("\uFFFD", "_");
             File newFile = new File(destinationPath);
             //if(file.renameTo(newFile))
             if(this.renameInvalidFilename(sourcePath, destinationPath))
@@ -382,8 +382,8 @@ public class Hub
 
   private boolean renameInvalidFilenameWin(String sourcePath, String destinationPath)
   {
-    String source = sourcePath.replaceAll("\uFFFD", "?");
-    String destination = destinationPath.replaceAll("\uFFFD", "_");
+    String source = sourcePath.replace("\uFFFD", "?");
+    String destination = destinationPath.replace("\uFFFD", "_");
     
     String moveCmd = "move";
     // Execute the command.
@@ -406,12 +406,12 @@ public class Hub
   
   private boolean renameInvalidFilenameUnix(String sourcePath, String destinationPath)
   {
-    String source = sourcePath.replaceAll("\uFFFD", "?");
-    source = source.replaceAll(" ", "\\ ");
-    source = source.replaceAll("[", "\\[");
-    source = source.replaceAll("]", "\\]");
+    String source = sourcePath.replace("\uFFFD", "?");
+    source = source.replace(" ", "\\ ");
+    source = source.replace("[", "\\[");
+    source = source.replace("]", "\\]");
     
-    String destination = destinationPath.replaceAll("\uFFFD", "_");
+    String destination = destinationPath.replace("\uFFFD", "_");
     
     String moveCmd = "mv";
     // Execute the command.
