@@ -383,14 +383,14 @@ public class Hub
   private boolean renameInvalidFilenameWin(String sourcePath, String destinationPath)
   {
     String source = sourcePath.replace("\uFFFD", "?");
-    String destination = destinationPath.replace("\uFFFD", "_");
     
     String moveCmd = "move";
     // Execute the command.
     try
     {
-      System.out.println(String.format("%s \"%s\" \"%s\"", moveCmd, source, destination));
-      Process process = Runtime.getRuntime().exec(String.format("%s \"%s\" \"%s\"", moveCmd, source, destination));
+      System.out.println(String.format("%s \"%s\" \"%s\"", moveCmd, source, destinationPath));
+      Process process = Runtime.getRuntime().exec(String.format("%s \"%s\" \"%s\"", moveCmd, source, destinationPath));
+      try { process.waitFor(); } catch(InterruptedException ex){ ex.printStackTrace(); }
       if(process.exitValue()==0)
         return true;
       else
@@ -411,14 +411,13 @@ public class Hub
     source = source.replace("[", "\\[");
     source = source.replace("]", "\\]");
     
-    String destination = destinationPath.replace("\uFFFD", "_");
-    
     String moveCmd = "mv";
     // Execute the command.
     try
     {
-      System.out.println(String.format("%s %s \"%s\"", moveCmd, source, destination));
-      Process process = Runtime.getRuntime().exec(String.format("%s %s \"%s\"", moveCmd, source, destination));
+      System.out.println(String.format("%s %s \"%s\"", moveCmd, source, destinationPath));
+      Process process = Runtime.getRuntime().exec(String.format("%s %s \"%s\"", moveCmd, source, destinationPath));
+      try { process.waitFor(); } catch(InterruptedException ex){ ex.printStackTrace(); }
       if(process.exitValue()==0)
         return true;
       else
