@@ -390,7 +390,7 @@ public class Hub
     {
       System.out.println(String.format("%s \"%s\" \"%s\"", moveCmd, source, destinationPath));
       Process process = Runtime.getRuntime().exec(String.format("%s \"%s\" \"%s\"", moveCmd, source, destinationPath));
-      try { process.waitFor(); } catch(InterruptedException ex){ ex.printStackTrace(); }
+      try { process.waitFor(); } catch(InterruptedException ex){ ex.printStackTrace(); } // Wait for the process to terminate.
       if(process.exitValue()==0)
         return true;
       else
@@ -417,7 +417,7 @@ public class Hub
     {
       System.out.println(String.format("%s %s \"%s\"", moveCmd, source, destinationPath));
       Process process = Runtime.getRuntime().exec(String.format("%s %s \"%s\"", moveCmd, source, destinationPath));
-      try { process.waitFor(); } catch(InterruptedException ex){ ex.printStackTrace(); }
+      try { process.waitFor(); } catch(InterruptedException ex){ ex.printStackTrace(); } // Wait for the process to terminate.
       if(process.exitValue()==0)
         return true;
       else
