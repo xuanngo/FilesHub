@@ -1,6 +1,9 @@
 package net.xngo.fileshub;
 
 import java.io.File;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -384,12 +387,13 @@ public class Hub
   {
     String source = sourcePath.replace("\uFFFD", "?");
     
-    String moveCmd = "move";
+    String mvCmd = String.format("move \"%s\" \"%s\"", source, destinationPath);
+    String[] cmdLine = new String[]{"cmd", "/c", mvCmd};
+    
     // Execute the command.
     try
     {
-      System.out.println(String.format("%s \"%s\" \"%s\"", moveCmd, source, destinationPath));
-      Process process = Runtime.getRuntime().exec(String.format("%s \"%s\" \"%s\"", moveCmd, source, destinationPath));
+      Process process = Runtime.getRuntime().exec(cmdLine);
       try { process.waitFor(); } catch(InterruptedException ex){ ex.printStackTrace(); } // Wait for the process to terminate.
       if(process.exitValue()==0)
         return true;
@@ -410,13 +414,18 @@ public class Hub
     source = source.replace(" ", "\\ ");
     source = source.replace("[", "\\[");
     source = source.replace("]", "\\]");
+    source = source.replace("(", "\\(");
+    source = source.replace(")", "\\)");
+    source = source.replace("'", "\\'");
     
-    String moveCmd = "mv";
+    String mvCmd = String.format("mv %s \"%s\"", source, destinationPath);
+    String[] cmdLine = new String[]{"/bin/sh", "-c", mvCmd};
+    
     // Execute the command.
     try
     {
-      System.out.println(String.format("%s %s \"%s\"", moveCmd, source, destinationPath));
-      Process process = Runtime.getRuntime().exec(String.format("%s %s \"%s\"", moveCmd, source, destinationPath));
+      Process process = Runtime.getRuntime().exec(cmdLine);
+
       try { process.waitFor(); } catch(InterruptedException ex){ ex.printStackTrace(); } // Wait for the process to terminate.
       if(process.exitValue()==0)
         return true;
