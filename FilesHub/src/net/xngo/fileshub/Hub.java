@@ -130,16 +130,16 @@ public class Hub
             if(this.renameInvalidFilename(sourcePath, destinationPath))
             {
               System.out.println(String.format("Warning: No such file or directory: %s.", file.getAbsolutePath()));
-              System.out.println(String.format("\tRenamed file from\n"
-                                             + "\t\t%s to\n"
-                                             + "\t\t%s", file.getAbsolutePath(), newFile.getAbsolutePath()));
-              this.manager.addFile(newFile); // Add renamed file to the database. This will render duplicate report not accurate but it is ok.
+              System.out.println(String.format("   Renamed file from\n"
+                                             + "     %s to\n"
+                                             + "     %s", file.getAbsolutePath(), newFile.getAbsolutePath()));
+              this.manager.addFile(newFile); // Add renamed file to the database. This might render duplicate report not accurate but it is ok.
             }
             else
             {
               System.out.println(String.format("Error: Failed to rename file from\n"
-                                                + "\t%s to\n"
-                                                + "\t%s", file.getAbsolutePath(), newFile.getAbsolutePath()));
+                                                + "   %s to\n"
+                                                + "   %s", file.getAbsolutePath(), newFile.getAbsolutePath()));
             }
 
           }
@@ -430,7 +430,9 @@ public class Hub
       if(process.exitValue()==0)
         return true;
       else
+      {
         return false;
+      }
     }
     catch(IOException ex)
     {
