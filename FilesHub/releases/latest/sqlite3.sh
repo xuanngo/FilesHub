@@ -1,1 +1,0 @@
-sqlite3 -column -header $1
