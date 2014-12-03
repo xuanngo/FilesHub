@@ -258,9 +258,9 @@ public class Hub
     }
   }
   
-  public void searchByUid(int uid)
+  public void searchById(int id)
   {
-    this.manager.searchByUid(uid);
+    this.manager.searchById(id);
   }
   
   public void searchByHash(String hash)

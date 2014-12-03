@@ -61,7 +61,7 @@ public class Cmd
           {
             if(cmdSearch.id!=0)
             {
-              hub.searchByUid(cmdSearch.id);
+              hub.searchById(cmdSearch.id);
             }
             else if(cmdSearch.hash!=null)
             {

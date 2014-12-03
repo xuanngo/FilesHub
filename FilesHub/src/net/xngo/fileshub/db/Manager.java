@@ -500,9 +500,9 @@ public class Manager
     this.trash.removeDoc(trashDocFrom);
   }
   
-  public void searchByUid(int uid)
+  public void searchById(int id)
   {
-    this.display(uid);
+    this.display(id);
   }
   
   public void searchByHash(String hash)
@@ -678,12 +678,12 @@ public class Manager
    * Display all entries of a document.
    * @param uid
    */
-  private void display(int uid)
+  private void display(int id)
   {
-    Document shelfDoc = this.shelf.getDocByUid(uid);
+    Document shelfDoc = this.shelf.getDocByUid(id);
     if(shelfDoc==null)
     {
-      System.out.println(String.format("'%d' is not found!", uid));
+      System.out.println(String.format("'%d' is not found!", id));
     }
     else
     {
@@ -692,7 +692,7 @@ public class Manager
       shelfDocsList.add(shelfDoc);
       this.displayDocument("Shelf:", true, shelfDocsList);
       
-      List<Document> trashDocsList = this.trash.getDocsByUid(uid);
+      List<Document> trashDocsList = this.trash.getDocsByUid(id);
       this.displayDocument("Trash:", false, trashDocsList);
     }
   }
