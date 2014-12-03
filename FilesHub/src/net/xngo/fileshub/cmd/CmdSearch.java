@@ -10,8 +10,8 @@ public class CmdSearch
 {
   public static String name = "search";
   
-  @Parameter(names = {"-uid", "--uid"}, description = "Search by unique ID.", arity = 1)
-  public int uid;
+  @Parameter(names = {"-id", "--id"}, description = "Search by document ID.", arity = 1)
+  public int id;
   
   @Parameter(names = {"-h", "--hash"}, description = "Search by hash.", arity = 1)
   public String hash;

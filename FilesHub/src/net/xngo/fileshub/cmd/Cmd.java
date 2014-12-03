@@ -59,9 +59,9 @@ public class Cmd
           }
           else if(parsedCmd.compareTo(CmdSearch.name)==0)
           {
-            if(cmdSearch.uid!=0)
+            if(cmdSearch.id!=0)
             {
-              hub.searchByUid(cmdSearch.uid);
+              hub.searchByUid(cmdSearch.id);
             }
             else if(cmdSearch.hash!=null)
             {
