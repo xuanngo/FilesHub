@@ -130,10 +130,10 @@ public class Hub
             if(this.renameInvalidFilename(sourcePath, destinationPath))
             {
               System.out.println(String.format("Warning: No such file or directory: %s.", file.getAbsolutePath()));
-              System.out.println(String.format("\tWarning: Renamed file from\n"
+              System.out.println(String.format("\tRenamed file from\n"
                                              + "\t\t%s to\n"
                                              + "\t\t%s", file.getAbsolutePath(), newFile.getAbsolutePath()));
-              listOfFiles.add(newFile); // Add renamed file to the list for later processing.
+              this.manager.addFile(newFile); // Add renamed file to the database. This will render duplicate report not accurate but it is ok.
             }
             else
             {
