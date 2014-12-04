@@ -15,6 +15,7 @@ import org.testng.annotations.Test;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.UnsupportedEncodingException;
+import java.nio.file.Path;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -735,10 +736,20 @@ public class ManagerTest
     
   }  
   
-  @Test(description="Add a directory.")
+  @Test(description="Add a directory.", expectedExceptions={RuntimeException.class})
   public void addFileDirectory()
   {
+    Path tmpDir = Data.createTempDir();
     
+    try
+    {
+      this.manager.addFile(tmpDir.toFile());
+    }
+    finally
+    {
+      // Clean up.
+      tmpDir.toFile().delete();
+    }
   }
   
   @Test(description="Update file that has changed since added in database. "
