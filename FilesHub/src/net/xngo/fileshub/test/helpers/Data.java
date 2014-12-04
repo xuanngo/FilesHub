@@ -2,6 +2,9 @@ package net.xngo.fileshub.test.helpers;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 import net.xngo.fileshub.Utils;
 
@@ -112,6 +115,39 @@ public class Data
     return null;
   }
 
+  /*
+  public static Path createTempDir(final String dirname)
+  {
+    Path tempDirPath = Paths.get(System.getProperty("java.io.tmpdir")+File.separator+dirname);
+    try
+    {
+      return Files.createDirectory(tempDirPath);
+    }
+    catch(IOException ex)
+    {
+      ex.printStackTrace();
+    }
+    return null;
+  }
+  
+  */
+  public static Path createTempDir()
+  {
+    return createTempDir("");
+  }
+  
+  public static Path createTempDir(final String prefix)
+  {
+    try
+    {
+      return Files.createTempDirectory(prefix);
+    }
+    catch(IOException ex)
+    {
+      ex.printStackTrace();
+    }
+    return null;
+  }
   
   
 }
