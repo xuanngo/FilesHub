@@ -3,6 +3,11 @@ FilesHub
 
 FilesHub is used to find duplicate files.
 
+Requirements
+=============
+* Java 7
+
+
 Usage
 ======
 
