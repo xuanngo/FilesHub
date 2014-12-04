@@ -735,6 +735,12 @@ public class ManagerTest
     
   }  
   
+  @Test(description="Add a directory.")
+  public void addFileDirectory()
+  {
+    
+  }
+  
   @Test(description="Update file that has changed since added in database. "
       + "Note: This is exactly the same as addFileShelfFileChanged(), "
       + "except that it uses Manager.update() instead of Manager.addFile().")
