@@ -385,6 +385,7 @@ public class Hub
 
   private boolean renameInvalidFilenameWin(String sourcePath, String destinationPath)
   {
+    // Explanation: http://stackoverflow.com/questions/12109520/java-cant-see-file-on-file-system-that-contains-illegal-characters#answer-12110279
     String source = sourcePath.replace("\uFFFD", "?");
     
     String mvCmd = String.format("move \"%s\" \"%s\"", source, destinationPath);
