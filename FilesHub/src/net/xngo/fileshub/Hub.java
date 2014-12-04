@@ -417,6 +417,7 @@ public class Hub
     source = source.replace("(", "\\(");
     source = source.replace(")", "\\)");
     source = source.replace("'", "\\'");
+    source = source.replace("&", "\\&");
     
     String mvCmd = String.format("mv %s \"%s\"", source, destinationPath);
     String[] cmdLine = new String[]{"/bin/sh", "-c", mvCmd};
