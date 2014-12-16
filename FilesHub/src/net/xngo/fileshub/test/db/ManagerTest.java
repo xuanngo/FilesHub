@@ -11,10 +11,14 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 
+
+
 // Java Library
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -740,7 +744,6 @@ public class ManagerTest
   public void addFileDirectory()
   {
     Path tmpDir = Data.createTempDir();
-    
     try
     {
       this.manager.addFile(tmpDir.toFile());
@@ -748,7 +751,14 @@ public class ManagerTest
     finally
     {
       // Clean up.
-      tmpDir.toFile().delete();
+      try
+      {
+        Files.deleteIfExists(tmpDir);
+      }
+      catch(IOException ex)
+      {
+        ex.printStackTrace();
+      }
     }
   }
   
