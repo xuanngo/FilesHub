@@ -10,9 +10,6 @@ import static org.testng.Assert.assertTrue;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-
-
-
 // Java Library
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -25,6 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
+// FilesHub
 import net.xngo.fileshub.Config;
 import net.xngo.fileshub.Main;
 import net.xngo.fileshub.Utils;
@@ -32,6 +30,8 @@ import net.xngo.fileshub.db.Manager;
 import net.xngo.fileshub.db.Shelf;
 import net.xngo.fileshub.db.Trash;
 import net.xngo.fileshub.struct.Document;
+
+// net.xngo.utils.java
 import net.xngo.utils.java.math.Random;
 
 // FilesHub test helper classes.
@@ -743,9 +743,11 @@ public class ManagerTest
   @Test(description="Add a directory.", expectedExceptions={RuntimeException.class})
   public void addFileDirectory()
   {
+    //*** Prepare data: Create a directory
     Path tmpDir = Data.createTempDir();
     try
     {
+    //*** Main test: Add directory. It should throw an exception. ***
       this.manager.addFile(tmpDir.toFile());
     }
     finally
@@ -761,6 +763,30 @@ public class ManagerTest
       }
     }
   }
+  
+  @Test(description="Add empty file.")
+  public void addFileEmpty()
+  {
+    //*** Prepare data: Create a empty file. 
+    File uniqueFile = Data.createTempFile("addFileEmpty", null, "");
+    assertEquals(uniqueFile.length(), 0); // Guarantee that it is an empty file.
+    
+    //*** Main test: Add empty file.
+    this.manager.addFile(uniqueFile);
+    
+    //*** Validation: Empty file should exists in Shelf.
+    Shelf shelf = new Shelf();
+    Document shelfDoc = shelf.getDocByCanonicalPath(Utils.getCanonicalPath(uniqueFile));
+    assertNotNull(shelfDoc, String.format("Expected [%s] to be added in Shelf table but it is not.\n"
+                                                + "%s"
+                                                ,uniqueFile.getName(),
+                                                Data.getFileInfo(uniqueFile, "File to add")
+                                          ));
+
+    //*** Clean up.
+    uniqueFile.delete();    
+
+  }  
   
   @Test(description="Update file that has changed since added in database. "
       + "Note: This is exactly the same as addFileShelfFileChanged(), "
