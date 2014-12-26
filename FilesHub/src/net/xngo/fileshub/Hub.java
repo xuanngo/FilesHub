@@ -103,6 +103,11 @@ public class Hub
       }
       catch(Exception e)
       {
+        if(e.getMessage()==null)
+        {
+          RuntimeException rException = new RuntimeException("Unknown exception: Exception.getMessage() is null. Cause by "+file.getAbsolutePath());
+          throw rException;          
+        }
         if(e.getMessage().indexOf("The process cannot access the file because another process has locked a portion of the file")!=-1)
         {
           System.out.println(String.format("Warning: Ignore locked file %s.", file.getAbsolutePath()));
