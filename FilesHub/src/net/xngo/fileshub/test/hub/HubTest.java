@@ -95,6 +95,32 @@ public class HubTest
     fileC.delete();
   }
   
+  @Test(description="Add empty file.", invocationCount=3)
+  public void addFilesEmpty()
+  {
+    //*** Prepare data: Create a empty file. 
+    File uniqueFile = Data.createTempFile("addFileEmpty", null, "");
+    assertEquals(uniqueFile.length(), 0); // Guarantee that it is an empty file.
+    HashSet<File> files = new HashSet<File>();
+      files.add(uniqueFile);
+    ArrayList<File> addPaths = new ArrayList<File>();
+    addPaths.addAll(files);
+
+    //*** Main test: Add an empty file. ***
+    this.hub.addFiles(files, addPaths);
+    Main.connection.close();
+    
+    //*** Validation: Empty file should be added in Shelf table..
+    Main.connection = new Connection();
+    Shelf shelf = new Shelf();
+    Document shelfDoc = shelf.getDocByFilename(uniqueFile.getName());
+    assertNotNull(shelfDoc, String.format("%s should be added in Shelf.", uniqueFile.getAbsolutePath()));
+    
+    // Clean up.
+    uniqueFile.delete();
+    
+  }
+  
   @Test(description="Mark duplicate an already duplicate file.")
   public void markDuplicateAlreadyDuplicate()
   {
