@@ -16,6 +16,7 @@ import net.xngo.fileshub.report.Report;
 import net.xngo.fileshub.struct.Document;
 import net.xngo.fileshub.struct.PairFile;
 import net.xngo.fileshub.upgrade.Upgrade;
+import net.xngo.utils.java.io.Console;
 
 /**
  * Manage documents.
@@ -597,10 +598,18 @@ public class Manager
   
   public ArrayList<PairFile> searchSimilarFilename(int fuzzyRate)
   {
+    Console console = new Console();
+    
     List<Document> docsList = this.cleanFilenames(this.shelf.getDocs());
     ArrayList<PairFile> pairFileList = new ArrayList<PairFile>();
     if(docsList.size()>1)
     {
+      
+      long totalCombinations = docsList.size()*docsList.size();
+      long combination = 0;
+      System.out.println(String.format("Processing %,d combinations.", totalCombinations));
+      
+      
       for(int i=0; i<docsList.size()-1; i++)
       {
         for(int j=i+1; j<docsList.size(); j++)
@@ -608,13 +617,17 @@ public class Manager
           Difference diff = new Difference(docsList.get(i).filename, docsList.get(j).filename);
           if(diff.getSimilarRate()>fuzzyRate)
           {
-            System.out.println(String.format("[%d] %s ?= %s ", diff.getSimilarRate(), docsList.get(i).filename, docsList.get(j).filename));
+            //System.out.println(String.format("[%d] %s ?= %s ", diff.getSimilarRate(), docsList.get(i).filename, docsList.get(j).filename));
             PairFile pairFile = new PairFile();
             pairFile.similarRate = diff.getSimilarRate();
             pairFile.fileA = docsList.get(i).canonical_path;
             pairFile.fileB = docsList.get(j).canonical_path;
             pairFileList.add(pairFile);
           }
+          
+          if(combination%10000==0)
+            console.printProgress(String.format("Processed %,d / %,d", combination, totalCombinations));
+          combination++;
         }
       }
     }
