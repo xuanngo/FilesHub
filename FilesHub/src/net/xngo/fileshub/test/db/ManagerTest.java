@@ -52,7 +52,7 @@ import net.xngo.fileshub.test.helpers.TrashExt;
  */
 public class ManagerTest
 {
-  private static final boolean DEBUG = true;
+  private static final boolean DEBUG = false;
   
   private final int randomInt = java.lang.Math.abs(Random.Int())+1;
   private AtomicInteger atomicInt = new AtomicInteger(randomInt); // Must set initial value to more than 0. Duid can't be 0.
@@ -792,7 +792,7 @@ public class ManagerTest
   }  
   
   @Test(description="Add files renamed. E.g. Files renamed: Serie_17.txt should be Serie_18.txt and vice versa.")
-  public void addFileRenamed()
+  public void addFileRenamedToExistingFilenames()
   {
     // DEBUG
     if(this.DEBUG)
@@ -802,8 +802,8 @@ public class ManagerTest
     }    
     
     //*** Prepare data: Create files. 
-    File serie_17 = Data.createTempFile("addFileRenamed_serie_17");
-    File serie_18 = Data.createTempFile("addFileRenamed_serie_18");
+    File serie_17 = Data.createTempFile("addFileRenamedToExistingFilenames_serie_17");
+    File serie_18 = Data.createTempFile("addFileRenamedToExistingFilenames_serie_18");
     this.manager.addFile(serie_17);
     this.manager.addFile(serie_18);
     
@@ -813,7 +813,7 @@ public class ManagerTest
         
     //*** Main test: Rename files and add them again in database.
     // Rename files(serie_17<->serie_18)
-    File tmp_serie_17 = Data.createTempFile("addFileRenamed_tmp_serie_17");
+    File tmp_serie_17 = Data.createTempFile("addFileRenamedToExistingFilenames_tmp_serie_17");
     try
     {
       Files.move(serie_17.toPath(), tmp_serie_17.toPath(), REPLACE_EXISTING);
