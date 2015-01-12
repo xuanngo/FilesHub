@@ -149,5 +149,8 @@ public class Data
     return null;
   }
   
-  
+  public static String getTempDirPath()
+  {
+    return System.getProperty("java.io.tmpdir");
+  }
 }
