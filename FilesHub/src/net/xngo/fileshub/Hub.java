@@ -125,7 +125,9 @@ public class Hub
           if(file.getName().indexOf('\uFFFD')!=-1)
           {
             /**
-             * Assuming invalid characters are occurring only in the filename.
+             * Rename invalid filename with a valid filename. All invalid characters in the filename will be replaced
+             *  with a hyphen(-).
+             * Note: It is assumed invalid characters are occurring only in the filename.
              * This will not handle case where directory name has invalid characters.
              */
             final String sourcePath = file.getAbsolutePath();
