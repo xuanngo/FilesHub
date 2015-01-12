@@ -10,6 +10,7 @@ import static org.testng.Assert.assertTrue;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
+
 // Java Library
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -17,11 +18,13 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import static java.nio.file.StandardCopyOption.*;
 // FilesHub
 import net.xngo.fileshub.Config;
 import net.xngo.fileshub.Main;
@@ -49,7 +52,7 @@ import net.xngo.fileshub.test.helpers.TrashExt;
  */
 public class ManagerTest
 {
-  private static final boolean DEBUG = false;
+  private static final boolean DEBUG = true;
   
   private final int randomInt = java.lang.Math.abs(Random.Int())+1;
   private AtomicInteger atomicInt = new AtomicInteger(randomInt); // Must set initial value to more than 0. Duid can't be 0.
@@ -787,6 +790,59 @@ public class ManagerTest
     uniqueFile.delete();    
 
   }  
+  
+  @Test(description="Add files renamed. E.g. Files renamed: Serie_17.txt should be Serie_18.txt and vice versa.")
+  public void addFileRenamed()
+  {
+    // DEBUG
+    if(this.DEBUG)
+    {
+      try { Main.connection.setAutoCommit(true); }
+      catch(SQLException ex) { ex.printStackTrace(); }
+    }    
+    
+    //*** Prepare data: Create files. 
+    File serie_17 = Data.createTempFile("addFileRenamed_serie_17");
+    File serie_18 = Data.createTempFile("addFileRenamed_serie_18");
+    this.manager.addFile(serie_17);
+    this.manager.addFile(serie_18);
+    
+    Shelf shelf = new Shelf();
+    Document originalShelfDocSerie17 = shelf.getDocByCanonicalPath(serie_17.getAbsolutePath());
+    Document originalShelfDocSerie18 = shelf.getDocByCanonicalPath(serie_18.getAbsolutePath());
+        
+    //*** Main test: Rename files and add them again in database.
+    // Rename files(serie_17<->serie_18)
+    File tmp_serie_17 = Data.createTempFile("addFileRenamed_tmp_serie_17");
+    try
+    {
+      Files.move(serie_17.toPath(), tmp_serie_17.toPath(), REPLACE_EXISTING);
+      Files.move(serie_18.toPath(), serie_17.toPath(), REPLACE_EXISTING);
+      Files.move(tmp_serie_17.toPath(), serie_18.toPath(), REPLACE_EXISTING);     
+    }
+    catch(IOException ex){ ex.printStackTrace(); }
+    
+    this.manager.addFile(serie_17);
+    this.manager.addFile(serie_18);    
+  
+    //*** Validation: New filename should be in the Shelf and old filename should be in Trash.
+    Trash trash = new Trash();
+    Document newShelfDocSerie17 = shelf.getDocByCanonicalPath(serie_18.getAbsolutePath());
+    assertEquals(newShelfDocSerie17.hash, originalShelfDocSerie17.hash);
+    Document trashDocSerie17 = trash.getDocByCanonicalPath(serie_17.getAbsolutePath());
+    assertEquals(trashDocSerie17.hash, originalShelfDocSerie17.hash);
+    
+    Document newShelfDocSerie18 = shelf.getDocByCanonicalPath(serie_17.getAbsolutePath());
+    assertEquals(newShelfDocSerie18.hash, originalShelfDocSerie18.hash);
+    Document trashDocSerie18 = trash.getDocByCanonicalPath(serie_18.getAbsolutePath());
+    assertEquals(trashDocSerie18.hash, originalShelfDocSerie18.hash);    
+
+    //*** Clean up.
+    serie_17.delete();
+    serie_18.delete();
+    tmp_serie_17.delete();
+
+  }
   
   @Test(description="Update file that has changed since added in database. "
       + "Note: This is exactly the same as addFileShelfFileChanged(), "
