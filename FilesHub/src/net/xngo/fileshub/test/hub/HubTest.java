@@ -100,7 +100,7 @@ public class HubTest
   {
     //*** Prepare data: Create a empty file. 
     File uniqueFile = Data.createTempFile("addFileEmpty", null, "");
-    assertEquals(uniqueFile.length(), 0); // Guarantee that it is an empty file.
+    assertEquals(uniqueFile.length(), 0, "File size should be zero."); // Guarantee that it is an empty file.
     HashSet<File> files = new HashSet<File>();
       files.add(uniqueFile);
     ArrayList<File> addPaths = new ArrayList<File>();
