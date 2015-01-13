@@ -769,7 +769,9 @@ public class ManagerTest
   {
     //*** Prepare data: Create a empty file. 
     File uniqueFile = Data.createTempFile("addFileEmpty", null, "");
-    assertEquals(uniqueFile.length(), 0); // Guarantee that it is an empty file.
+    assertEquals(uniqueFile.length(), 0, 
+              String.format("File [%s] should be empty. Currently, filesize=%d.", 
+                              uniqueFile.getName(), uniqueFile.length())); // Guarantee that it is an empty file.
     
     //*** Main test: Add empty file.
     this.manager.addFile(uniqueFile);
