@@ -121,7 +121,7 @@ public class Manager
         }
       }
       else
-      {
+      {// Path not in Shelf nor in Trash.
           doc.hash = Utils.getHash(file);
           if(doc.hash==null)
           {
@@ -202,7 +202,25 @@ public class Manager
           
       }
     }
-    // Exact same file in Shelf. Therefore, do nothing.
+    else
+    {// Exact same file path in Shelf.
+      
+      if(shelfDoc.last_modified!=file.lastModified())
+      {
+        String newHash = Utils.getHash(file);
+        if(shelfDoc.hash.compareTo(newHash)!=0)
+        {
+          Document newShelfDoc = new Document(file);
+          newShelfDoc.uid = shelfDoc.uid;
+          newShelfDoc.hash = newHash;
+          this.shelf.saveDoc(newShelfDoc); // Update Shelf with new information of the same file path.
+          
+          this.trash.addDoc(shelfDoc);  // Move Shelf entry to Trash table.
+          
+        }
+      }
+      
+    }
     return null;
   }
   
