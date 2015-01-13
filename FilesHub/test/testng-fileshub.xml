@@ -2,24 +2,42 @@
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
 
 <suite name="FilesHub test suite">
-
-  <test verbose="5" name="FilesHub tests">
-  <!--
-    <packages>
-      <package name="net.xngo.fileshub.test.*" />
-   </packages>
-   -->
-   
-  <classes>
-    <class name="net.xngo.fileshub.test.db.ManagerTest">
-				<methods>
-<include name="DatabaseCreation" />
-<include name="markDuplicateTrailingDuplicatesFileBInDb" />
-        </methods>
-    </class>
-  </classes>
-   
-   
+  
+  <test verbose="1" name="FilesHub tests: Once">
+	  <packages>
+	    <package name="net.xngo.fileshub.test.*" />
+	  </packages>
   </test>
   
+  <test verbose="1" name="FilesHub tests: Twice">
+		<packages>
+		  <package name="net.xngo.fileshub.test.*" />
+		</packages>
+  </test>
+  
+  <test verbose="1" name="FilesHub tests: Thrice">
+    <packages>
+      <package name="net.xngo.fileshub.test.*" />
+    </packages>
+  </test>  
+  
+  <!-- 
+  <test verbose="1" name="FilesHub tests: Twice">
+    <packages>
+      <package name="net.xngo.fileshub.test.*" />
+    </packages>
+  
+    <classes>
+      <class name="net.xngo.fileshub.test.db.ManagerTest">
+        <methods>
+          <include name="DatabaseCreation" />
+          <include name="markDuplicateTrailingDuplicatesFileBInDb" />
+          <exclude name="testMakeOrder" />
+          </methods>
+      </class>
+    </classes>
+   
+  </test>  
+  -->
+   
 </suite>
