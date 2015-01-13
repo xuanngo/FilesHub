@@ -8,6 +8,7 @@ import static org.testng.Assert.assertNull;
 import static org.testng.Assert.assertTrue;
 
 import org.testng.annotations.BeforeClass;
+import org.testng.annotations.AfterMethod;
 import org.testng.annotations.Test;
 
 
@@ -24,7 +25,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static java.nio.file.StandardCopyOption.*;
+import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
+
 // FilesHub
 import net.xngo.fileshub.Config;
 import net.xngo.fileshub.Main;
@@ -52,7 +54,7 @@ import net.xngo.fileshub.test.helpers.TrashExt;
  */
 public class ManagerTest
 {
-  private static final boolean DEBUG = false;
+  private static final boolean DEBUG = true;
   
   private final int randomInt = java.lang.Math.abs(Random.Int())+1;
   private AtomicInteger atomicInt = new AtomicInteger(randomInt); // Must set initial value to more than 0. Duid can't be 0.
@@ -64,8 +66,16 @@ public class ManagerTest
   {
     // Make sure that the database file is created.
     this.manager.createDbStructure();
+    
+    // DEBUG: Commit every single transaction in database.
+    if(ManagerTest.DEBUG)
+    {
+      try { Main.connection.setAutoCommit(true); }
+      catch(SQLException ex) { ex.printStackTrace(); }
+    }      
   }
   
+ 
   @Test(description="Add new unique file.")
   public void addFileUniqueFile()
   {
@@ -183,35 +193,28 @@ public class ManagerTest
   }
   
   @Test(description="Add the same file in Shelf that has changed since FilesHub last ran.")
-  public void addFileShelfFileChanged()
+  public void addFileShelfFileContentChanged()
   {
-    // Add unique file in Shelf.
-    File uniqueFile = Data.createTempFile("addFileShelfFileChanged");
+    //*** Prepare data: Create a unique file and add it in database.   
+    File uniqueFile = Data.createTempFile("addFileShelfFileContentChanged");
     this.manager.addFile(uniqueFile);
-    
-    // Expected values:
-    //   Regardless of how many times you add the exact same file with different content, 
-    //      no new row should be added to Shelf and Trash tables.
-    ShelfExt shelfExt = new ShelfExt();
-    final int expected_totalDocsShelf = shelfExt.getTotalDocs();
-    TrashExt trashExt = new TrashExt();
-    final int expected_totalDocsTrash = trashExt.getTotalDocs();    
+    Shelf shelf = new Shelf();
+    Document oldShelfDoc = shelf.getDocByCanonicalPath(uniqueFile.getAbsolutePath());
 
     
     //*** Main test: Add the exact same file again with new content.
     Data.writeStringToFile(uniqueFile, "new content");
     this.manager.addFile(uniqueFile);
 
-    //*** Validations: By design, hash in database will not be updated even if hash of file has changed.
-    // Actual values.
-    final int actual_totalDocsShelf = shelfExt.getTotalDocs();
-    final int actual_totalDocsTrash = trashExt.getTotalDocs();
+    //*** Validations: Since hash has changed, therefore the old entry will be moved from Shelf to Trash table.
+    String newHash = Utils.getHash(uniqueFile);
+    Document newShelfDoc = shelf.getDocByCanonicalPath(uniqueFile.getAbsolutePath());
+    assertEquals(newShelfDoc.hash, newHash, String.format("Content of file has changed. The new hash[%s] should be in Shelf table.", newHash));
+    Trash trash = new Trash(); 
+    Document trashDoc = trash.getDocByCanonicalPath(uniqueFile.getAbsolutePath());
+    assertEquals(trashDoc.hash, oldShelfDoc.hash, String.format("Content of file has changed. The old hash[%s] should be moved in Trash table.", oldShelfDoc.hash));
     
-    assertEquals(actual_totalDocsShelf, expected_totalDocsShelf, "No new row should be created in Shelf table.");
-    assertEquals(actual_totalDocsTrash, expected_totalDocsTrash, "No new row should be created in Trash table.");
-       
-    
-    // Clean up.
+    //*** Clean up.
     uniqueFile.delete();    
     
   }
@@ -664,12 +667,6 @@ public class ManagerTest
   @Test(description="Add file C. B is marked as duplicate of A but they don't have the same hash but A doesn't exist anymore. C has the same hash as B.")
   public void addFileDupInTrashMainDelete()
   {
-    // DEBUG
-    if(this.DEBUG)
-    {
-      try { Main.connection.setAutoCommit(true); }
-      catch(SQLException ex) { ex.printStackTrace(); }
-    }    
     
     //*** Prepare data: Make File B to be duplicate of File A. ****
     // Create File A and add to database.
@@ -794,12 +791,6 @@ public class ManagerTest
   @Test(description="Add files renamed. E.g. Files renamed: Serie_17.txt should be Serie_18.txt and vice versa.")
   public void addFileRenamedToExistingFilenames()
   {
-    // DEBUG
-    if(this.DEBUG)
-    {
-      try { Main.connection.setAutoCommit(true); }
-      catch(SQLException ex) { ex.printStackTrace(); }
-    }    
     
     //*** Prepare data: Create files. 
     File serie_17 = Data.createTempFile("addFileRenamedToExistingFilenames_serie_17");
@@ -1152,13 +1143,6 @@ public class ManagerTest
   @Test(description="File A is a duplicate of File B in the database but now you want to mark File B to be the duplicate of File A")
   public void markDuplicateMainBecomeDuplicate()
   {
-    // DEBUG
-    if(this.DEBUG)
-    {
-      try { Main.connection.setAutoCommit(true); }
-      catch(SQLException ex) { ex.printStackTrace(); }
-    }
-    
     
     //*** Prepare data: Make File A to be a duplicate of File B ****
     // Create File B and add to database.
