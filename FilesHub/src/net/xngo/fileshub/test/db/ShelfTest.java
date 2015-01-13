@@ -35,6 +35,16 @@ public class ShelfTest
     // Make sure that the database file is created.
     Manager manager = new Manager();
     manager.createDbStructure();
+    
+    // If DEBUG is true, then commit every single transaction.
+    if(ShelfTest.DEBUG)
+    {
+      try
+      {
+        Main.connection.setAutoCommit(true);
+      }
+      catch(SQLException ex) { ex.printStackTrace(); }
+    }    
   }
   
   @Test(description="Search by filename without wildcard: Test SQL query.")
@@ -131,14 +141,6 @@ public class ShelfTest
   @Test(description="Search by filename using wildcard.")
   public void searchDocsByFilenameUsingWildcard()
   {
-    if(this.DEBUG)
-    {
-      try
-      {
-        Main.connection.setAutoCommit(true);
-      }
-      catch(SQLException ex) { ex.printStackTrace(); }
-    }
     
     //*** Prepare data: Add multiple files in Shelf table.
     ArrayList<File> files = new ArrayList<File>();
@@ -177,25 +179,6 @@ public class ShelfTest
     File uniqueFile = Data.createTempFile("addDocSimple");
     
     //*** Main test: Add simple doc in Trash table.
-    Document shelfDoc = new Document(uniqueFile);
-    shelfDoc.hash = Utils.getHash(uniqueFile);
-    shelfDoc.uid = this.shelf.addDoc(shelfDoc);
-    
-    //*** Validation: Check all fields of document are correct.
-    Document actualShelfDoc = this.shelf.getDocByFilename(uniqueFile.getName());
-    assertEquals(actualShelfDoc, shelfDoc, String.format("\n%s\n"
-                                                         + "%s", actualShelfDoc.getInfo("Actual"), shelfDoc.getInfo("Expected")));
-    //*** Clean up
-    uniqueFile.delete();
-  }
-  
-  @Test(description="Add empty file in Shelf table.")
-  public void addDocEmptyFileSize()
-  {
-    //*** Prepare data: Create a unique file in Shelf table with empty content.
-    File uniqueFile = Data.createTempFile("addDocEmptyFileSize", null, "");
-    
-    //*** Main test: Add file with empty content in Trash table.
     Document shelfDoc = new Document(uniqueFile);
     shelfDoc.hash = Utils.getHash(uniqueFile);
     shelfDoc.uid = this.shelf.addDoc(shelfDoc);
