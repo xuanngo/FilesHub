@@ -2,7 +2,9 @@ package net.xngo.fileshub.test.db;
 
 
 //TestNG
+import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeClass;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 import org.testng.annotations.AfterTest;
@@ -12,6 +14,9 @@ import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertNull;
 import static org.testng.Assert.assertTrue;
+
+
+
 
 
 
@@ -25,6 +30,9 @@ import java.util.List;
 
 
 import java.util.concurrent.atomic.AtomicInteger;
+
+
+
 
 //FilesHub classes.
 import net.xngo.fileshub.Utils;
@@ -46,7 +54,7 @@ import net.xngo.utils.java.math.Random;
 @Test(singleThreaded=false)
 public class ManagerTestSearch
 {
-  /*
+  
   private final int randomInt = java.lang.Math.abs(Random.Int())+1;
   private AtomicInteger atomicInt = new AtomicInteger(randomInt); // Must set initial value to more than 0. Duid can't be 0.
   
@@ -63,20 +71,27 @@ public class ManagerTestSearch
     this.manager.createDbStructure();
   }
   
-  @BeforeTest
+  @BeforeMethod
   public void beforeTest()
   {
-    this.consoleContent = new ByteArrayOutputStream();
+    // Redirect all System.out to consoleContent.
     System.setOut(new PrintStream(this.consoleContent));
   }
   
-  @AfterTest
+  @AfterMethod
   public void afterTest()
   {
+    // Put back the standard out.
     System.setOut(this.originalStdOut);
+    
+    // Print what has been captured.
+    System.out.println(this.consoleContent.toString());
+    
+    // Clear the consoleContent.
+    this.consoleContent = new ByteArrayOutputStream(); 
   }
   
 
-  */
+
   
 }
