@@ -1,5 +1,7 @@
 :: Description: Display megabytes files only.
 :: Author: Xuan Ngo
+:: Usage:
+::    mbonly.bat inputfilename outputfilename
 
 SET filename=%1
 SET outputFilename=%2
