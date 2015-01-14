@@ -790,7 +790,8 @@ public class ManagerTest
 
   }  
   
-  @Test(description="Add files renamed. E.g. Files renamed: Serie_17.txt should be Serie_18.txt and vice versa.")
+  @Test(description="Add files renamed. E.g. Files renamed: Serie_17.txt should be Serie_18.txt and vice versa."
+                      + "Assumed renaming causes an update of File.lastmodified().")
   public void addFileRenamedToExistingFilenames()
   {
     
@@ -815,6 +816,8 @@ public class ManagerTest
     }
     catch(IOException ex){ ex.printStackTrace(); }
     
+    serie_17.setLastModified(System.currentTimeMillis()); // Guarantee file renaming causes an update of File.lastmodified().
+    serie_18.setLastModified(System.currentTimeMillis()); // Guarantee file renaming causes an update of File.lastmodified().
     this.manager.addFile(serie_17);
     this.manager.addFile(serie_18);    
   
@@ -849,8 +852,8 @@ public class ManagerTest
     Document oldShelfDoc = shelf.getDocByHash(Utils.getHash(uniqueFile));       
     
     // Update the unique file.
-    try{ Thread.sleep(10); } catch(InterruptedException ex) { ex.printStackTrace(); } // Guarantee an elapsed time has passed before updating content.
     Data.writeStringToFile(uniqueFile, "new content");
+    uniqueFile.setLastModified(System.currentTimeMillis()); // Guarantee content update causes an update of File.lastmodified().
     
     // Update database
     this.manager.update();
