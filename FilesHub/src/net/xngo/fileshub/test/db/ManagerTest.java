@@ -840,15 +840,19 @@ public class ManagerTest
   }
   
   @Test(description="Add file turned directory. "
-                    + "(1) add '../animal' file."
-                    + "(2) move animal to animal/animal_cat.txt")
+                    + "(1) Add 'animal' file."
+                    + "(2) Rename 'animal' file to 'animal_cat.txt' ."
+                    + "(3) Create directory called 'animal'."
+                    + "(4) Move 'animal_cat.txt' file to 'animal' directory."
+                    + "(5) End result: animal/animal_cat.txt"
+                    )
   public void addFileTurnedDirectory()
   {
-    //*** Prepare data: Create a unique file without extension. 
+    //*** Prepare data: Create a unique file. 
     File uniqueFile = Data.createTempFile("addFileTurnedDirectory");
     this.manager.addFile(uniqueFile);
     
-    //*** Main test: Add empty file.
+    //*** Main test: Rename the file. Create a directory using the exact same file path. Add the renamed file to the new directory. 
     File tmpUniqueFile = Data.createTempFile("addFileTurnedDirectory_tmp");
     File newFile = new File(uniqueFile.getAbsolutePath()+File.separator+System.currentTimeMillis()+".tmp");
     try
