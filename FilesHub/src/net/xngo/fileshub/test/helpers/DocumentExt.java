@@ -36,7 +36,7 @@ public class DocumentExt extends Document
       return true;
     else
     {
-      System.err.println("The following information are not found:"+errorMsg.length());
+      System.err.println("The following information are not found:");
       errorMsg.append("in\n\n");
       errorMsg.append(str);
       System.err.println(errorMsg.toString());
