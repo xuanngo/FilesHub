@@ -201,7 +201,6 @@ public class ManagerTest
     Shelf shelf = new Shelf();
     Document oldShelfDoc = shelf.getDocByCanonicalPath(uniqueFile.getAbsolutePath());
 
-    
     //*** Main test: Add the exact same file again with new content.
     Data.writeStringToFile(uniqueFile, "new content");
     this.manager.addFile(uniqueFile);
