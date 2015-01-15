@@ -1190,22 +1190,6 @@ public class ManagerTest
     fileB.delete();
   }
   
-  @Test(description="Search similar filename without words filtering file.")
-  public void searchSimilarFilenameNoWordFile()
-  {
-    //*** Prepare data ****
-    // Create File A and add to database.
-    File fileA = Data.createTempFile("searchSimilarFilenameNoWordFile_fileA");
-    this.manager.addFile(fileA);
-    
-    //*** Main test: Do simple search by filename without word list *** 
-    File wordsFile = new File(Config.WORD_LIST);
-    wordsFile.delete();
-    this.manager.searchSimilarFilename(80);
-    
-    //*** Validation: No exception is thrown even the word list file is not found.
-  }
-  
   @Test(description="Search by hash: Multiple hashes in Trash table")
   public void searchByHashMultipleHashesInTrash()
   {
