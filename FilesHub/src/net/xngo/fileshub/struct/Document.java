@@ -110,23 +110,25 @@ public class Document
   /**
    * Define equality of document.
    */
-   @Override public boolean equals(Object obj) 
-   {
-     if (this == obj) return true;
-     if (!(obj instanceof Document)) return false;
+  @Override 
+  public boolean equals(Object obj) 
+  {
+    if (this == obj) return true;
+    if (!(obj instanceof Document)) return false;
 
-     Document doc = (Document)obj;
-     return
-       ( this.uid           == doc.uid                 ) &&
-       ( this.last_modified == doc.last_modified       ) &&
-       ( this.size          == doc.size                ) &&
-       ( this.hash          .equals(doc.hash          )) &&
-       ( this.filename      .equals(doc.filename      )) &&
-       ( this.canonical_path.equals(doc.canonical_path)) &&
-       ( this.comment       .equals(doc.comment       ))
-       ;
-   }
+    Document doc = (Document)obj;
+    return
+        ( this.uid           == doc.uid                 ) &&
+        ( this.last_modified == doc.last_modified       ) &&
+        ( this.size          == doc.size                ) &&
+        ( this.hash          .equals(doc.hash          )) &&
+        ( this.filename      .equals(doc.filename      )) &&
+        ( this.canonical_path.equals(doc.canonical_path)) &&
+        ( this.comment       .equals(doc.comment       ))
+        ;
+  }
   
+   
   /****************************************************************************
    * 
    *                             PRIVATE FUNCTIONS
