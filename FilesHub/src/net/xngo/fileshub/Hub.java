@@ -64,16 +64,18 @@ public class Hub
       try
       {
         //*** Add file to database.
-        Document doc = this.manager.addFile(file);
+        Document conflictDoc = this.manager.addFile(file);
         
         //*** Collect duplicate entries for report.
-        if(doc!=null)
+        if(conflictDoc!=null)
         {
-          if(doc.canonical_path.compareTo(Utils.getCanonicalPath(file))!=0) // Ignore if users add the exact same file and the same path.
+          if(conflictDoc.canonical_path.compareTo(Utils.getCanonicalPath(file))!=0) // Ignore if users add the exact same file and the same path.
           {
-            if(file.exists() && new File(doc.canonical_path).exists())
+            File conflictFile = new File(conflictDoc.canonical_path);
+            
+            if(file.exists() && conflictFile.exists() && conflictFile.isFile())
             {// Ensure both files exist before adding them to the report as duplicate.
-              report.addDuplicate(new Document(file), doc);
+              report.addDuplicate(new Document(file), conflictDoc);
             }
             else
             {
@@ -81,7 +83,7 @@ public class Hub
                                                                             + "\n  To add: [exists = %b] %s"
                                                                             + "\n   In DB: [exists = %b] %s", 
                                                                             file.exists(), file.getAbsolutePath(), 
-                                                                            new File(doc.canonical_path).exists(), doc.canonical_path);
+                                                                            conflictFile.exists(), conflictDoc.canonical_path);
               System.out.println(msg);
             }
           }
