@@ -16,8 +16,8 @@ import static org.testng.Assert.assertNull;
 import static org.testng.Assert.assertTrue;
 
 
-
-
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.containsString;
 
 
 // Java Library
@@ -123,6 +123,17 @@ public class ManagerTestSearch
     uniqueFile.delete();    
   }
 
+  @Test(description="Search by unknown uid.")
+  public void searchByIdNotFound()
+  {
+    //*** Main test: Search by uid.
+    this.manager.searchById(Integer.MAX_VALUE);
+    
+    //*** Validations: Searched uid not found.
+    assertThat(this.consoleContent.toString(), containsString("ID '2147483647' is not found!"));
+    
+  }
+  
   @Test(description="Search by hash in Shelf.")
   public void searchByHashInShelf()
   {
@@ -142,6 +153,17 @@ public class ManagerTestSearch
     //*** Clean up.
     uniqueFile.delete();    
   }
+  
+  @Test(description="Search by unknown hash.")
+  public void searchByHashNotFound()
+  {
+    //*** Main test: Search by unknown hash.
+    this.manager.searchByHash("searchByHashNotFound");
+    
+    //*** Validations: Searched hash not found.
+    assertThat(this.consoleContent.toString(), containsString("Hash 'searchByHashNotFound' is not found in Shelf table."));
+    assertThat(this.consoleContent.toString(), containsString("Hash 'searchByHashNotFound' is not found in Trash table."));     
+  }  
   
   @Test(description="Search by hash: Multiple hashes in Trash table")
   public void searchByHashMultipleHashesInTrash()
@@ -188,6 +210,17 @@ public class ManagerTestSearch
     uniqueFile.delete();    
   }
   
+  @Test(description="Search by unknown filename.")
+  public void searchByFilenameNotFound()
+  {
+    //*** Main test: Search by unknown filename.
+    this.manager.searchByFilename("searchByFilenameNotFound");
+    
+    //*** Validations: Found document searched by filename.
+    assertThat(this.consoleContent.toString(), containsString("Filename 'searchByFilenameNotFound' is not found in Shelf table."));
+    assertThat(this.consoleContent.toString(), containsString("Filename 'searchByFilenameNotFound' is not found in Trash table."));    
+  }  
+  
   @Test(description="Search by file path in Shelf.")
   public void searchByFilepathInShelf()
   {
@@ -206,6 +239,17 @@ public class ManagerTestSearch
     
     //*** Clean up.
     uniqueFile.delete();    
+  }
+  
+  @Test(description="Search by unknown file path.")
+  public void searchByFilepathNotFound()
+  {
+    //*** Main test: Search by unknown filename.
+    this.manager.searchByFilepath("searchByFilepathNotFound");
+    
+    //*** Validations: Found document searched by filename.
+    assertThat(this.consoleContent.toString(), containsString("Filepath 'searchByFilepathNotFound' is not found in Shelf table."));
+    assertThat(this.consoleContent.toString(), containsString("Filepath 'searchByFilepathNotFound' is not found in Trash table."));
   }
   
 }
