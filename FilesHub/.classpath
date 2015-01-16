@@ -11,5 +11,6 @@
 	<classpathentry kind="lib" path="lib/google-diff-match-patch.jar"/>
 	<classpathentry kind="lib" path="lib/flyway-core-3.0.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="lib/hamcrest-all-1.3.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
