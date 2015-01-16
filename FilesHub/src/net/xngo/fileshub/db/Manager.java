@@ -717,7 +717,7 @@ public class Manager
     Document shelfDoc = this.shelf.getDocByUid(id);
     if(shelfDoc==null)
     {
-      System.out.println(String.format("'%d' is not found!", id));
+      System.out.println(String.format("ID '%d' is not found!", id));
     }
     else
     {
