@@ -887,6 +887,7 @@ public class ManagerTest
     catch(IOException ex){ ex.printStackTrace(); }
   }
   
+  
   @Test(description="Update file that has changed since added in database. "
       + "Note: This is exactly the same as addFileShelfFileChanged(), "
       + "except that it uses Manager.update() instead of Manager.addFile().")
@@ -961,6 +962,54 @@ public class ManagerTest
                                        ));
     }
   }
+  
+  @Test(description="update file turned directory. "
+      + "(1) Add 'animal' file."
+      + "(2) Rename 'animal' file to 'animal_cat.txt' ."
+      + "(3) Create directory called 'animal'."
+      + "(4) Move 'animal_cat.txt' file to 'animal' directory."
+      + "(5) End result: animal/animal_cat.txt"
+      )  
+  public void updateFileTurnedDirectory()
+  {
+    //*** Prepare data: Create a unique file. 
+    File uniqueFile = Data.createTempFile("updateFileTurnedDirectory");
+    this.manager.addFile(uniqueFile);
+    
+    //*** Main test: Rename the file. Create a directory using the exact same file path. Add the renamed file to the new directory. 
+    File tmpUniqueFile = Data.createTempFile("addFileTurnedDirectory_tmp");
+    File newFile = new File(uniqueFile.getAbsolutePath()+File.separator+System.currentTimeMillis()+".tmp");
+    try
+    {
+      // Temporarily rename the file.
+      Path newPath = Files.move(uniqueFile.toPath(), tmpUniqueFile.toPath(), REPLACE_EXISTING);
+      
+      // Create a directory with the exact same path.
+      Files.createDirectory(uniqueFile.toPath());
+      
+      // Move the tmp file to the newly created directory.
+      newPath = Files.move(newPath, newFile.toPath(), REPLACE_EXISTING);
+    }
+    catch(IOException ex){ ex.printStackTrace(); }    
+    
+    // Add the new path to database.
+//    this.manager.addFile(newFile);
+    
+    //*** Validation: animal should be move to Trash. animal/animal_cat.txt should be in Shelf.
+    Shelf shelf = new Shelf();
+    Document shelfDoc = shelf.getDocByCanonicalPath(newFile.getAbsolutePath());
+//    assertNotNull(shelfDoc, String.format("[%s] should be in Shelf because [%s] is now a directory.", newFile.getAbsolutePath(), uniqueFile.getAbsolutePath()));
+    Trash trash = new Trash();
+    Document trashDoc = trash.getDocByCanonicalPath(uniqueFile.getAbsolutePath());
+//    assertNotNull(trashDoc, String.format("[%s] should be in Trash because it is now a directory.", uniqueFile.getAbsolutePath()));
+
+    //*** Clean up.
+    try
+    {
+      FileUtils.deleteDirectory(uniqueFile);
+    }
+    catch(IOException ex){ ex.printStackTrace(); }
+  }  
   
   @Test(description="File A is a duplicate of File B and File B exists in database.")
   public void markDuplicateFileBExistInDb()
