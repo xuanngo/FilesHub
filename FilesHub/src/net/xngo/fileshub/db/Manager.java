@@ -133,7 +133,8 @@ public class Manager
             if(shelfDoc != null)
             {// Hash found in Shelf.
               
-              if(new File(shelfDoc.canonical_path).exists())
+              File shelfDocFile = new File(shelfDoc.canonical_path);
+              if(shelfDocFile.exists() && shelfDocFile.isFile())
               {// Shelf file still exists
                 doc.uid = shelfDoc.uid;
                 this.trash.addDoc(doc);
