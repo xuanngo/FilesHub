@@ -161,21 +161,20 @@ public class ManagerTest
   @Test(description="Add file with same hash but different file name/path.")
   public void addFileWithSameHash()
   {
-    // Add unique file.
+    //*** Prepare data: Create unique file.
     File uniqueFile = Data.createTempFile("addFileWithSameHash");
     this.manager.addFile(uniqueFile);
     Shelf shelf = new Shelf();
     Document shelfDoc = shelf.getDocByFilename(uniqueFile.getName());
     
-    // Copy unique file and then add to database.
+    //*** Main test: Copy unique file and then add to database.
     File duplicateFile = Data.createTempFile("addFileWithSameHash_duplicate_hash");
     Data.copyFile(uniqueFile, duplicateFile);
     
     // Add duplicate file to database.
     this.manager.addFile(duplicateFile); // Add duplicate file with different file name/path.
     
-    // Validate:
-    //  Check new hash is added in Trash.
+    //*** Validations: Check new hash is added in Trash.
     Trash trash = new Trash();
     Document trashDoc = trash.getDocByHash(Utils.getHash(duplicateFile));
     assertNotNull(trashDoc, String.format("[%s] is not added in Trash table. It should.\n"
@@ -187,7 +186,7 @@ public class ManagerTest
                                                       shelfDoc.getInfo("Shelf")
                                                  ));
     
-    // Clean up.
+    //*** Clean up.
     uniqueFile.delete();
     duplicateFile.delete();
   }
@@ -208,10 +207,10 @@ public class ManagerTest
     //*** Validations: Since hash has changed, therefore the old entry will be moved from Shelf to Trash table.
     String newHash = Utils.getHash(uniqueFile);
     Document newShelfDoc = shelf.getDocByCanonicalPath(uniqueFile.getAbsolutePath());
-    assertEquals(newShelfDoc.hash, newHash, String.format("Content of file has changed. The new hash[%s] should be in Shelf table.", newHash));
+    assertEquals(newShelfDoc.hash, newHash, String.format("Content of file(%s) has changed. The new hash[%s] should be in Shelf table.", uniqueFile.getAbsolutePath(), newHash));
     Trash trash = new Trash(); 
     Document trashDoc = trash.getDocByCanonicalPath(uniqueFile.getAbsolutePath());
-    assertEquals(trashDoc.hash, oldShelfDoc.hash, String.format("Content of file has changed. The old hash[%s] should be moved in Trash table.", oldShelfDoc.hash));
+    assertEquals(trashDoc.hash, oldShelfDoc.hash, String.format("Content of file(%s) has changed. The old hash[%s] should be moved in Trash table.", uniqueFile.getAbsolutePath(), oldShelfDoc.hash));
     
     //*** Clean up.
     uniqueFile.delete();    
@@ -846,14 +845,14 @@ public class ManagerTest
                     + "(4) Move 'animal_cat.txt' file to 'animal' directory."
                     + "(5) End result: animal/animal_cat.txt"
                     )
-  public void addFileTurnedDirectory()
+  public void addFileShelfTurnedDirectory()
   {
     //*** Prepare data: Create a unique file. 
-    File uniqueFile = Data.createTempFile("addFileTurnedDirectory");
+    File uniqueFile = Data.createTempFile("addFileShelfTurnedDirectory");
     this.manager.addFile(uniqueFile);
     
     //*** Main test: Rename the file. Create a directory using the exact same file path. Add the renamed file to the new directory. 
-    File tmpUniqueFile = Data.createTempFile("addFileTurnedDirectory_tmp");
+    File tmpUniqueFile = Data.createTempFile("addFileShelfTurnedDirectory_tmp");
     File newFile = new File(uniqueFile.getAbsolutePath()+File.separator+System.currentTimeMillis()+".tmp");
     try
     {
@@ -887,6 +886,42 @@ public class ManagerTest
     catch(IOException ex){ ex.printStackTrace(); }
   }
   
+  @Test(description="Add duplicate Shelf file turned directory.")
+  public void addFileDuplicateShelfTurnedDirectory()
+  {
+    //*** Prepare data:
+    File uniqueFile = Data.createTempFile("addFileDuplicateShelfTurnedDirectory");
+    this.manager.addFile(uniqueFile);
+    File duplicateFile = Data.createTempFile("addFileDuplicateShelfTurnedDirectory_duplicate_diff_hash");
+    this.manager.markDuplicate(duplicateFile, uniqueFile);
+    
+    //*** Main test:
+    // Delete unique file and make a directory with the same name.
+    uniqueFile.delete();
+    try { Files.createDirectory(uniqueFile.toPath()); } catch(IOException ex) { ex.printStackTrace(); }
+    // Add the duplicate file in database again.
+    this.manager.addFile(duplicateFile);
+    
+    
+    //*** Validation: Duplicate file is now moved from Trash to Shelf. Shelf entry is moved to Trash because it has now a directory(not valid file anymore).
+    Shelf shelf = new Shelf();
+    Document shelfDoc = shelf.getDocByCanonicalPath(duplicateFile.getAbsolutePath());
+    assertNotNull(shelfDoc, String.format("[%s] should be moved from Trash to Shelf.", duplicateFile.getAbsolutePath()));
+    assertEquals(shelfDoc.canonical_path, Utils.getCanonicalPath(duplicateFile), String.format("[%s] should be moved from Trash to Shelf.", duplicateFile.getAbsolutePath()));
+    Trash trash = new Trash();
+    Document trashDoc = trash.getDocByCanonicalPath(uniqueFile.getAbsolutePath());
+    assertNotNull(trashDoc, String.format("[%s] should be moved from Shelf to Trash.", uniqueFile.getAbsolutePath()));
+    assertEquals(trashDoc.canonical_path, Utils.getCanonicalPath(uniqueFile), String.format("[%s] should be moved from Shelf to Trash because it is now a directory.", uniqueFile.getAbsolutePath()));
+    
+    
+    //*** Clean up.
+    duplicateFile.delete();
+    try
+    {
+      FileUtils.deleteDirectory(uniqueFile);
+    }
+    catch(IOException ex){ ex.printStackTrace(); }    
+  }  
   
   @Test(description="Update file that has changed since added in database. "
       + "Note: This is exactly the same as addFileShelfFileChanged(), "

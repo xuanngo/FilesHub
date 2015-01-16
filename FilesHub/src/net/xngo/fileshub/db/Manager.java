@@ -108,7 +108,8 @@ public class Manager
         
         // Check if original file doesn't exist.
         Document originalDoc = this.shelf.getDocByUid(trashDoc.uid);
-        if(new File(originalDoc.canonical_path).exists())
+        File originalDocFile = new File(originalDoc.canonical_path);
+        if(originalDocFile.exists() && originalDocFile.isFile())
           return this.shelf.getDocByUid(trashDoc.uid);
         else
         {// Shelf file doesn't exist.
@@ -172,7 +173,8 @@ public class Manager
                 else
                 {// Hash found in Shelf
                   
-                  if(new File(shelfDoc.canonical_path).exists())
+                  File shelfDocFile = new File(shelfDoc.canonical_path);
+                  if(shelfDocFile.exists()/* && shelfDocFile.isFile()*/)
                   {
                     doc.uid = shelfDoc.uid;
                     trash.addDoc(doc);
