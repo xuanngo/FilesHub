@@ -923,6 +923,46 @@ public class ManagerTest
     catch(IOException ex){ ex.printStackTrace(); }    
   }  
   
+  @Test(description="Add duplicate different path Shelf file turned directory.")
+  public void addFileShelfTurnedDirectoryDuplicateDiffPath()
+  {
+    //*** Prepare data:
+    File uniqueFile = Data.createTempFile("addFileShelfTurnedDirectoryDuplicateDiffPath");
+    this.manager.addFile(uniqueFile);
+    File duplicateFile = Data.createTempFile("addFileShelfTurnedDirectoryDuplicateDiffPath_duplicate_diff_hash");
+    this.manager.markDuplicate(duplicateFile, uniqueFile);
+    
+    //*** Main test:
+    // Delete unique file and make a directory with the same name.
+    uniqueFile.delete();
+    try { Files.createDirectory(uniqueFile.toPath()); } catch(IOException ex) { ex.printStackTrace(); }
+    File newDuplicateFile = Data.createTempFile("addFileShelfTurnedDirectoryDuplicateDiffPath_duplicate_diff_path");
+    Data.copyFile(duplicateFile, newDuplicateFile);    
+    // Add the newDuplicateFile file in database again.
+    this.manager.addFile(newDuplicateFile);
+    
+    
+    //*** Validation: Duplicate file is now moved from Trash to Shelf. Shelf entry is moved to Trash because it has now a directory(not valid file anymore).
+    Shelf shelf = new Shelf();
+    Document shelfDoc = shelf.getDocByCanonicalPath(newDuplicateFile.getAbsolutePath());
+    assertNotNull(shelfDoc, String.format("[%s] should be moved from Trash to Shelf.", newDuplicateFile.getAbsolutePath()));
+    assertEquals(shelfDoc.canonical_path, Utils.getCanonicalPath(newDuplicateFile), String.format("[%s] should be moved from Trash to Shelf.", newDuplicateFile.getAbsolutePath()));
+    Trash trash = new Trash();
+    Document trashDoc = trash.getDocByCanonicalPath(uniqueFile.getAbsolutePath());
+    assertNotNull(trashDoc, String.format("[%s] should be moved from Shelf to Trash.", uniqueFile.getAbsolutePath()));
+    assertEquals(trashDoc.canonical_path, Utils.getCanonicalPath(uniqueFile), String.format("[%s] should be moved from Shelf to Trash because it is now a directory.", uniqueFile.getAbsolutePath()));
+  
+    
+    //*** Clean up.
+    duplicateFile.delete();
+    newDuplicateFile.delete();
+    try
+    {
+      FileUtils.deleteDirectory(uniqueFile);
+    }
+    catch(IOException ex){ ex.printStackTrace(); }    
+  }  
+  
   @Test(description="Update file that has changed since added in database. "
       + "Note: This is exactly the same as addFileShelfFileChanged(), "
       + "except that it uses Manager.update() instead of Manager.addFile().")

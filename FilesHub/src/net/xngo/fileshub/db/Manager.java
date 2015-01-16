@@ -174,7 +174,7 @@ public class Manager
                 {// Hash found in Shelf
                   
                   File shelfDocFile = new File(shelfDoc.canonical_path);
-                  if(shelfDocFile.exists()/* && shelfDocFile.isFile()*/)
+                  if(shelfDocFile.exists() && shelfDocFile.isFile())
                   {
                     doc.uid = shelfDoc.uid;
                     trash.addDoc(doc);
