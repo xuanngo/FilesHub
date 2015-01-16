@@ -887,12 +887,12 @@ public class ManagerTest
   }
   
   @Test(description="Add duplicate Shelf file turned directory.")
-  public void addFileDuplicateShelfTurnedDirectory()
+  public void addFileShelfTurnedDirectoryDuplicate()
   {
     //*** Prepare data:
-    File uniqueFile = Data.createTempFile("addFileDuplicateShelfTurnedDirectory");
+    File uniqueFile = Data.createTempFile("addFileShelfTurnedDirectoryDuplicate");
     this.manager.addFile(uniqueFile);
-    File duplicateFile = Data.createTempFile("addFileDuplicateShelfTurnedDirectory_duplicate_diff_hash");
+    File duplicateFile = Data.createTempFile("addFileShelfTurnedDirectoryDuplicate_duplicate_diff_hash");
     this.manager.markDuplicate(duplicateFile, uniqueFile);
     
     //*** Main test:
