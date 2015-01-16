@@ -248,7 +248,7 @@ public class Manager
     for(Document doc: docList)
     {
       File file = new File(doc.canonical_path);
-      if(file.exists())
+      if(file.exists() && file.isFile())
       {
         if(file.lastModified()!=doc.last_modified)
         {// File has changed.
