@@ -289,7 +289,7 @@ public class Hub
   
   public void searchSimilarFilename(int fuzzyRate)
   {
-    List<PairFile> pairFileList = this.manager.searchSimilarFilename(fuzzyRate);
+    List<PairFile> pairFileList = this.manager.searchSimilarFilenameFromCurrentDirectory(fuzzyRate);
     
     Collections.sort(pairFileList);
     Report report = new Report();
