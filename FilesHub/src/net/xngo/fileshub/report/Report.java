@@ -9,6 +9,7 @@ import java.util.Collections;
 import java.util.List;
 
 import net.xngo.fileshub.Config;
+import net.xngo.fileshub.Utils;
 import net.xngo.fileshub.struct.Document;
 import net.xngo.fileshub.struct.Duplicate;
 import net.xngo.fileshub.struct.PairFile;
@@ -164,7 +165,7 @@ public class Report
       htmlWriterBuffer.write(html);
       htmlWriterBuffer.close();
       htmlWriter.close();
-      System.out.println(String.format("\nResults are stored in %s.", new File(filepath).getAbsolutePath()));
+      System.out.println(String.format("\nResults are stored in %s.", Utils.getCanonicalPath(new File(filepath))));
     }
     catch(IOException e)
     {
