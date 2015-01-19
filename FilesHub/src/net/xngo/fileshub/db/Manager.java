@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import net.xngo.fileshub.Config;
 import net.xngo.fileshub.Main;
@@ -17,6 +18,7 @@ import net.xngo.fileshub.struct.Document;
 import net.xngo.fileshub.struct.PairFile;
 import net.xngo.fileshub.upgrade.Upgrade;
 import net.xngo.utils.java.io.Console;
+import net.xngo.utils.java.io.FileUtils;
 
 /**
  * Manage documents.
@@ -617,70 +619,90 @@ public class Manager
     
   }
   
-  public ArrayList<PairFile> searchSimilarFilename(int fuzzyRate)
+  public ArrayList<PairFile> searchSimilarFilenameFromCurrentDirectory(int fuzzyRate)
   {
+    ArrayList<File> currentDirList = new ArrayList<File>();
+    currentDirList.add(new File("."));
+    Set<File> files = FileUtils.listFiles(currentDirList);
+    
     Console console = new Console();
     
-    List<Document> docsList = this.cleanFilenames(this.shelf.getDocs());
     ArrayList<PairFile> pairFileList = new ArrayList<PairFile>();
-    if(docsList.size()>1)
+    if(files.size()>1)
     {
       
-      long totalCombinations = docsList.size()*docsList.size();
-      long combination = 0;
-      System.out.println(String.format("Processing %,d combinations.", totalCombinations));
+      ArrayList<String> commonTerms = this.getCommonTerms();
+      List<Document> cleanDocsList = this.cleanFilenames(this.shelf.getDocs(), commonTerms);
       
-      
-      for(int i=0; i<docsList.size()-1; i++)
+      if(cleanDocsList.size()==0)
       {
-        for(int j=i+1; j<docsList.size(); j++)
+        System.out.println("There is no data in your database. Therefore, nothing to process.");
+      }
+      else
+      {
+        long totalCombinations = files.size()*cleanDocsList.size();
+        long combination = 0;
+        System.out.println(String.format("Processing %,d combinations.", totalCombinations));
+        
+        final int updateFrequency = Utils.getUpdateFrequency((int)totalCombinations);
+        for(File file: files)
         {
-          Difference diff = new Difference(docsList.get(i).filename, docsList.get(j).filename);
-          if(diff.getSimilarRate()>fuzzyRate)
+          for(int j=0; j<cleanDocsList.size()-1; j++)
           {
-            //System.out.println(String.format("[%d] %s ?= %s ", diff.getSimilarRate(), docsList.get(i).filename, docsList.get(j).filename));
-            PairFile pairFile = new PairFile();
-            pairFile.similarRate = diff.getSimilarRate();
-            pairFile.fileA = docsList.get(i).canonical_path;
-            pairFile.fileB = docsList.get(j).canonical_path;
-            pairFileList.add(pairFile);
+            if(file.getAbsolutePath().compareTo(cleanDocsList.get(j).canonical_path)!=0)
+            {
+              Difference diff = new Difference(this.cleanFilename(file.getName(), commonTerms), cleanDocsList.get(j).filename);
+              if(diff.getSimilarRate()>fuzzyRate)
+              {
+                //System.out.println(String.format("[%d] %s ?= %s ", diff.getSimilarRate(), docsList.get(i).filename, docsList.get(j).filename));
+                PairFile pairFile = new PairFile();
+                pairFile.similarRate = diff.getSimilarRate();
+                pairFile.fileA = file.getAbsolutePath();
+                pairFile.fileB = cleanDocsList.get(j).canonical_path;
+                pairFileList.add(pairFile);
+              }
+              
+              if(combination%updateFrequency==0)
+                console.printProgress(String.format("Processed %,d / %,d", combination, totalCombinations));
+              combination++;
+            }
           }
-          
-          if(combination%10000==0)
-            console.printProgress(String.format("Processed %,d / %,d", combination, totalCombinations));
-          combination++;
         }
+        console.printProgress(String.format("Processed %,d / %,d", totalCombinations, totalCombinations));
       }
     }
     return pairFileList;
-  }
+  }  
   
   /****************************************************************************
    * 
    *                             PRIVATE FUNCTIONS
    * 
    ****************************************************************************/
-  private List<Document> cleanFilenames(List<Document> docsList)
+  private List<Document> cleanFilenames(List<Document> docsList, ArrayList<String> commonTerms)
   {
-    ArrayList<String> commonTerms = this.getCommonTerms();
     ArrayList<Document> resultDocs = new ArrayList<Document>();
     for(Document doc: docsList)
     {
-      StringBuilder filename = new StringBuilder(doc.filename.toLowerCase());
-      for(String term: commonTerms)
-      {
-        int start = filename.indexOf(term);
-        if(start!=-1)
-        {
-          int end = start + term.length();
-          filename.replace(start, end, "");
-        }
-      }
-      doc.filename = filename.toString();
+      doc.filename = this.cleanFilename(doc.filename, commonTerms);
       resultDocs.add(doc);
     }
     
     return resultDocs;
+  }
+  private String cleanFilename(String filename, ArrayList<String> commonTerms)
+  {
+    StringBuilder cleanFilename = new StringBuilder(filename.toLowerCase());
+    for(String term: commonTerms)
+    {
+      int start = cleanFilename.indexOf(term);
+      if(start!=-1)
+      {
+        int end = start + term.length();
+        cleanFilename.replace(start, end, "");
+      }
+    }
+    return cleanFilename.toString();    
   }
   private ArrayList<String> getCommonTerms()
   {
