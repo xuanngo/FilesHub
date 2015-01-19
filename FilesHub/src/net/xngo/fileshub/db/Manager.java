@@ -642,7 +642,7 @@ public class Manager
       {
         long totalCombinations = files.size()*cleanDocsList.size();
         long combination = 0;
-        System.out.println(String.format("Processing %,d combinations.", totalCombinations));
+        System.out.println(String.format("Comparing %,d files against %,d from the database for a total of %,d combinations.", files.size(), cleanDocsList.size(), totalCombinations));
         
         final int updateFrequency = Utils.getUpdateFrequency((int)totalCombinations);
         for(File file: files)
