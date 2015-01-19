@@ -164,6 +164,7 @@ public class Report
       htmlWriterBuffer.write(html);
       htmlWriterBuffer.close();
       htmlWriter.close();
+      System.out.println(String.format("Results are stored in ", new File(filepath).getAbsolutePath()));
     }
     catch(IOException e)
     {
