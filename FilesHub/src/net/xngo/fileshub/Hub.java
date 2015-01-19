@@ -294,6 +294,7 @@ public class Hub
     Collections.sort(pairFileList);
     Report report = new Report();
     report.writePotentialDuplicatesInHtml("./potentialDuplicates.html", pairFileList);
+    System.out.println("Done!");
   }
   
   public void upgrade()
