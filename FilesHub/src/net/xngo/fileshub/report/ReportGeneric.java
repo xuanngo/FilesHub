@@ -26,6 +26,11 @@ public class ReportGeneric
       return this.printDeleteUnix(path);
   }
   
+  /****************************************************************************
+   * 
+   *                             PRIVATE FUNCTIONS
+   * 
+   ****************************************************************************/  
   private String printDeleteWin(String path)
   {
     return String.format("del /q %s", path);
