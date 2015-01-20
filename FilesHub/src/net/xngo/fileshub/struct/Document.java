@@ -71,7 +71,7 @@ public class Document
           throw new RuntimeException(this.getErrorMsg("Error: Filename can't be empty."));
     
     if(this.last_modified<1)
-      System.out.println(String.format("Warning: [%s] is older than January 1, 1970. Last modified = %d.", this.canonical_path, this.last_modified));
+      System.out.println(String.format("Warning: [%s] is older or equal to January 1, 1970. Last modified = %d.", this.canonical_path, this.last_modified));
     
     if(this.size<0)
       throw new RuntimeException(this.getErrorMsg(String.format("Error: Size=%d can't be negative.", this.size)));
