@@ -195,7 +195,7 @@ public class Hub
     reportDuplicate.addDirectoriesProcessed(this.getDirectoriesProcessed(addPaths));
     reportDuplicate.writeHtml();
     
-    Main.chrono.display("Add Files Runtime");    
+    Main.chrono.display("Runtime breakdown");    
     System.out.println("Done!");
   }
   
