@@ -42,23 +42,9 @@ public class ReportSimilar extends ReportGeneric
         divLines.append(String.format("<div class=\"line-odd\">[%3d%%] %s %s<br/>%s %s</div>\n", pairFileList.get(i).similarRate, leftSpan, fileASizeSpan, rightSpan, fileBSizeSpan));  // Add \n so that user can process the HTML output.
     }
 
-    String html = FileUtils.load(Config.HTML_TEMPLATE_PATH);
-    html = html.replace("<!-- @SUMMARY -->", this.summary.toString());
-    html = html.replace("<!-- @DIFF -->", divLines);
-    
-    try
-    {
-      FileWriter htmlWriter = new FileWriter(super.file);
-      BufferedWriter htmlWriterBuffer = new BufferedWriter(htmlWriter);
-      htmlWriterBuffer.write(html);
-      htmlWriterBuffer.close();
-      htmlWriter.close();
-      System.out.println(String.format("\nResults are stored in %s.", Utils.getCanonicalPath(super.file)));
-    }
-    catch(IOException e)
-    {
-      e.printStackTrace();
-    }
-    
+    super.addSummary("NO SUMMARY");
+    super.addBody(divLines.toString());
+    super.write();
+    System.out.println(String.format("\nResults are stored in %s.", Utils.getCanonicalPath(super.file)));
   }    
 }

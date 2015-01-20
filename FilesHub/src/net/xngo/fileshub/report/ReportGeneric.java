@@ -1,11 +1,19 @@
 package net.xngo.fileshub.report;
 
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+
+import net.xngo.fileshub.Config;
+import net.xngo.fileshub.Utils;
+import net.xngo.utils.java.io.FileUtils;
 
 public class ReportGeneric
 {
-  public StringBuilder summary = new StringBuilder();
   protected File file = null;
+  protected StringBuilder htmlSummary = new StringBuilder(255); // The top part.
+  protected StringBuilder htmlBody = new StringBuilder(255);    // The bottom and last part.
   
   public ReportGeneric(File file)
   {
@@ -24,6 +32,34 @@ public class ReportGeneric
       return this.printDeleteWin(path);
     else
       return this.printDeleteUnix(path);
+  }
+  protected void addBody(String htmlBody)
+  {
+    this.htmlBody.append(htmlBody);
+  }
+  protected void addSummary(String htmlSummary)
+  {
+    this.htmlSummary.append(htmlSummary);
+  }
+  protected void write()
+  {
+    // Load html template file and replace the placehoders.
+    String html = FileUtils.load(Config.HTML_TEMPLATE_PATH);
+    html = html.replace("<!-- @SUMMARY -->", this.htmlSummary.toString());
+    html = html.replace("<!-- @DIFF -->", this.htmlBody.toString());
+    
+    try
+    {
+      FileWriter htmlWriter = new FileWriter(this.file);
+      BufferedWriter htmlWriterBuffer = new BufferedWriter(htmlWriter);
+      htmlWriterBuffer.write(html);
+      htmlWriterBuffer.close();
+      htmlWriter.close();
+    }
+    catch(IOException e)
+    {
+      e.printStackTrace();
+    }    
   }
   
   /****************************************************************************
