@@ -34,6 +34,7 @@ public class Hub
 {
   private Manager manager = new Manager();
   
+  
   public Hub()
   {
     this.manager.createDbStructure();
@@ -48,8 +49,6 @@ public class Hub
     Report.FILES_TO_PROCESS = listOfFiles.size();
     report.displayTotalFilesToProcess();
 
-      
-    
     // Preparation to display the progress.
     Report.FILES_SIZE = FileUtils.totalSize(listOfFiles);
     String totalReadableSize = FileUtils.readableSize(Report.FILES_SIZE);
