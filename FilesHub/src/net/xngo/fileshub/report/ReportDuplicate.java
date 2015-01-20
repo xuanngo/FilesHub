@@ -90,8 +90,12 @@ public class ReportDuplicate extends ReportGeneric
     super.addBody(divLines.toString());
     super.write();
     Main.chrono.stop("Write HTML file");
+    this.displaySummary();
   }
-  
+  private void displaySummary()
+  {
+    System.out.println(super.htmlSummary);
+  }
   private void constructSummary()
   {
     
