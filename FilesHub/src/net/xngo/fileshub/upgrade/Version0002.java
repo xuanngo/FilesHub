@@ -10,8 +10,6 @@ import net.xngo.fileshub.db.Connection;
 import net.xngo.fileshub.db.Trash;
 import net.xngo.fileshub.db.Shelf;
 import net.xngo.fileshub.struct.Document;
-import net.xngo.fileshub.report.Report;
-
 
 import net.xngo.utils.java.math.Math;
 
@@ -31,8 +29,6 @@ public class Version0002
 {
   private Shelf shelf = new Shelf();
   private Trash trash = new Trash();
-  
-  private Report report = new Report();
   
   public void run()
   {
@@ -90,10 +86,10 @@ public class Version0002
           if( (i%updateFrequency)==0 )
           {
             Main.connection.commit();            
-            this.report.console.printProgress(String.format("Migrating Shelf table: %s [%d/%d] %s", Math.getReadablePercentage(i, total), 
+            Main.console.printProgress(String.format("Migrating Shelf table: %s [%d/%d] %s", Math.getReadablePercentage(i, total), 
                                                                               i,
                                                                               total,
-                                                                              report.getRAMUsage()));
+                                                                              Utils.getRAMUsage()));
           }          
         }
         catch(Exception ex)
@@ -110,11 +106,11 @@ public class Version0002
       }
     }
     try{ Main.connection.commit(); } catch(SQLException ex) { ex.printStackTrace(); }
-    this.report.console.printProgress(String.format("Migrating Shelf table: %s [%d/%d] %s", 
+    Main.console.printProgress(String.format("Migrating Shelf table: %s [%d/%d] %s", 
                                                                             "100.00%", 
                                                                             total, 
                                                                             total,
-                                                                            report.getRAMUsage()));      
+                                                                            Utils.getRAMUsage()));      
   }
   
   private void updateTrashFileSize()
@@ -139,10 +135,10 @@ public class Version0002
           if( (i%updateFrequency)==0 )
           {
             Main.connection.commit();
-            this.report.console.printProgress(String.format("Migrating Trash table: %s [%d/%d] %s", Math.getReadablePercentage(i, total), 
+            Main.console.printProgress(String.format("Migrating Trash table: %s [%d/%d] %s", Math.getReadablePercentage(i, total), 
                                                                               i, 
                                                                               total,
-                                                                              report.getRAMUsage()));
+                                                                              Utils.getRAMUsage()));
           }
         }
         catch(SQLException ex)
@@ -160,11 +156,11 @@ public class Version0002
       }
     }
     try{ Main.connection.commit(); } catch(SQLException ex) { ex.printStackTrace(); }
-    this.report.console.printProgress(String.format("Migrating Trash table: %s [%d/%d] %s", 
+    Main.console.printProgress(String.format("Migrating Trash table: %s [%d/%d] %s", 
                                                                               "100.00%", 
                                                                               total, 
                                                                               total,
-                                                                              report.getRAMUsage()));      
+                                                                              Utils.getRAMUsage()));      
   }
   
 }

@@ -15,6 +15,7 @@ import java.text.DecimalFormat;
 
 import net.jpountz.xxhash.StreamingXXHash32;
 import net.jpountz.xxhash.XXHashFactory;
+import net.xngo.utils.java.io.FileUtils;
 import net.xngo.utils.java.math.Hash;
 
 
@@ -218,4 +219,13 @@ public class Utils
     
     return frequency;
   }
+  
+  public static String getRAMUsage()
+  {
+    Runtime runtime = Runtime.getRuntime();
+    long usedMemory = runtime.totalMemory()-runtime.freeMemory();
+    return String.format("RAM: %s / %s Max=%s", FileUtils.readableSize(usedMemory           ), 
+                                                FileUtils.readableSize(runtime.totalMemory()), 
+                                                FileUtils.readableSize(runtime.maxMemory()) );
+  }    
 }

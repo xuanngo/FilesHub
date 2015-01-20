@@ -37,7 +37,7 @@ public class ReportGeneric
   {
     this.htmlBody.append(htmlBody);
   }
-  protected void addSummary(String htmlSummary)
+  public void addSummary(String htmlSummary)
   {
     this.htmlSummary.append(htmlSummary);
   }

@@ -13,8 +13,8 @@ import java.util.Set;
 
 import net.xngo.fileshub.db.Debug;
 import net.xngo.fileshub.db.Manager;
-import net.xngo.fileshub.report.Report;
 import net.xngo.fileshub.report.ReportSimilar;
+import net.xngo.fileshub.report.ReportDuplicate;
 import net.xngo.fileshub.struct.Document;
 import net.xngo.fileshub.struct.PairFile;
 import net.xngo.fileshub.upgrade.Upgrade;
@@ -42,20 +42,23 @@ public class Hub
   
   public void addFiles(Set<File> listOfFiles, List<File> addPaths)
   {
+    
+    ReportDuplicate reportDuplicate = new ReportDuplicate(new File(String.format("./results_%s_2.html", this.getResultsSuffix(addPaths))));
+    
     Main.chrono.stop("Get all files to process");
     
     // Display total number of files to process.
-    Report report = new Report();
-    Report.FILES_TO_PROCESS = listOfFiles.size();
-    report.displayTotalFilesToProcess();
+    int numberOfFilesToProcess = listOfFiles.size();
+    reportDuplicate.addTotalFilesToProcess(numberOfFilesToProcess);
+    System.out.println(String.format("File(s) to process = %,d", numberOfFilesToProcess));
 
-    // Preparation to display the progress.
-    Report.FILES_SIZE = FileUtils.totalSize(listOfFiles);
-    String totalReadableSize = FileUtils.readableSize(Report.FILES_SIZE);
-    long totalFilesize = 0;
-    final int updateFrequency = Utils.getUpdateFrequency(Report.FILES_TO_PROCESS);
+    // Prepare to display the progress.
+    long totalFileSize = FileUtils.totalSize(listOfFiles);
+    String totalReadableSize = FileUtils.readableSize(totalFileSize);
+    long accumulateFileSize = 0;
+    final int updateFrequency = Utils.getUpdateFrequency(numberOfFilesToProcess);
     
-        Main.chrono.stop("Get total file size");
+    Main.chrono.stop("Get total file size");
     int filesProcessed=0;
     for (File file : listOfFiles) 
     {
@@ -75,7 +78,7 @@ public class Hub
             
             if(file.exists() && conflictFile.exists() && conflictFile.isFile())
             {// Ensure both files exist before adding them to the report as duplicate.
-              report.addDuplicate(new Document(file), conflictDoc);
+              reportDuplicate.addDuplicate(new Document(file), conflictDoc);
             }
             else
             {
@@ -90,16 +93,16 @@ public class Hub
         }
         
         //*** Print progress to console.      
-        totalFilesize += file.length();
+        accumulateFileSize += file.length();
         filesProcessed++;
         if( (filesProcessed%updateFrequency)==0 )
         {
           Main.connection.commit();
-          report.console.printProgress(String.format("%s [%s] [%d/%d] %s", Math.getReadablePercentage(totalFilesize, Report.FILES_SIZE), 
+          Main.console.printProgress(String.format("%s [%s] [%d/%d] %s", Math.getReadablePercentage(accumulateFileSize, totalFileSize), 
                                                                             totalReadableSize, 
                                                                             filesProcessed, 
-                                                                            Report.FILES_TO_PROCESS,
-                                                                            report.getRAMUsage()));
+                                                                            numberOfFilesToProcess,
+                                                                            reportDuplicate.getRAMUsage()));
         }
         
       }
@@ -184,25 +187,15 @@ public class Hub
       
     }
     try{ Main.connection.commit(); } catch(SQLException ex) { ex.printStackTrace(); }// Last commit() because of the remainder of modulus.
-    report.console.printProgress(String.format("100.00%% [%s] [%d/%d]", totalReadableSize, Report.FILES_TO_PROCESS, Report.FILES_TO_PROCESS));// Last display because of the remainder of modulus.
+    Main.console.printProgress(String.format("100.00%% [%s] [%d/%d]", totalReadableSize, numberOfFilesToProcess, numberOfFilesToProcess));// Last display because of the remainder of modulus.
     
     System.out.println();
-        Main.chrono.stop("Add files");
+    Main.chrono.stop("Add files");
+
+    reportDuplicate.addDirectoriesProcessed(this.getDirectoriesProcessed(addPaths));
+    reportDuplicate.writeHtml();
     
-    Report.START_TIME   = Main.chrono.getStartTime();
-    Report.END_TIME     = Main.chrono.getEndTime();
-    Report.ELAPSED_TIME = Main.chrono.getTotalRuntimeString();
-    
-    Report.DIRECTORIES = this.getDirectoriesProcessed(addPaths);
-    
-    report.sort();
-        Main.chrono.stop("Sort duplicates");
-    report.constructSummary();
-    report.writeHtml(String.format("./results_%s.html", this.getResultsSuffix(addPaths)));
-        Main.chrono.stop("Write HTML file");
-    report.displaySummary();
-        Main.chrono.display("Add Files Runtime");
-    
+    Main.chrono.display("Add Files Runtime");    
     System.out.println("Done!");
   }
   

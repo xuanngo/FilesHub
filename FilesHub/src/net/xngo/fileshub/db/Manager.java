@@ -13,7 +13,6 @@ import net.xngo.fileshub.Config;
 import net.xngo.fileshub.Main;
 import net.xngo.fileshub.Utils;
 import net.xngo.fileshub.report.Difference;
-import net.xngo.fileshub.report.Report;
 import net.xngo.fileshub.struct.Document;
 import net.xngo.fileshub.struct.PairFile;
 import net.xngo.fileshub.upgrade.Upgrade;
@@ -238,9 +237,7 @@ public class Manager
     List<Document> docList = this.shelf.getDocs();
     List<Document> missingFileList = new ArrayList<Document>();
     
-    Report report = new Report();
-    Report.FILES_TO_PROCESS = docList.size();
-    report.displayTotalFilesToProcess();    
+    System.out.println(String.format("File(s) to process = %,d", docList.size())); // displayTotalFilesToProcess
     
     // Variables for print progress.
     int whenToDisplay = 100;
@@ -272,10 +269,10 @@ public class Manager
       i++;
       if( (i%whenToDisplay)==0)
       {
-        report.console.printProgress(String.format("[%d/%d]", i, totalFiles));
+        Main.console.printProgress(String.format("[%d/%d]", i, totalFiles));
       }      
     }
-    report.console.printProgress(String.format("[%d/%d]", totalFiles, totalFiles)); // Print last result.
+    Main.console.printProgress(String.format("[%d/%d]", totalFiles, totalFiles)); // Print last result.
 
     return missingFileList;
   }

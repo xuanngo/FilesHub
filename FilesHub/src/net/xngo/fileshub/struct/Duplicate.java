@@ -1,7 +1,5 @@
 package net.xngo.fileshub.struct;
 
-import net.xngo.fileshub.report.Report;
-
 /**
  * Used by {@link Report} class.
  * @author Xuan Ngo
