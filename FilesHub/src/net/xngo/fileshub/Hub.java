@@ -290,6 +290,8 @@ public class Hub
     ReportSimilar reportSimilar = new ReportSimilar(new File("./potentialDuplicates.html"));
     reportSimilar.writePotentialDuplicatesInHtml(pairFileList);
     
+    Main.chrono.display("Runtime breakdown"); 
+    
     System.out.println("Done!");
   }
   

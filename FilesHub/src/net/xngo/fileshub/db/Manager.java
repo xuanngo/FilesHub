@@ -621,6 +621,7 @@ public class Manager
     ArrayList<File> currentDirList = new ArrayList<File>();
     currentDirList.add(new File("."));
     Set<File> files = FileUtils.listFiles(currentDirList);
+    Main.chrono.stop("Get all files to process");
     
     Console console = new Console();
     
@@ -668,6 +669,7 @@ public class Manager
         console.printProgress(String.format("Processed %,d / %,d", totalCombinations, totalCombinations));
       }
     }
+    Main.chrono.stop("Compare similar files");
     return pairFileList;
   }  
   
