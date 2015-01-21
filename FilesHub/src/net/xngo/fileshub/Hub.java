@@ -16,6 +16,7 @@ import net.xngo.fileshub.db.Manager;
 import net.xngo.fileshub.report.ReportSimilar;
 import net.xngo.fileshub.report.ReportDuplicate;
 import net.xngo.fileshub.struct.Document;
+import net.xngo.fileshub.struct.Duplicate;
 import net.xngo.fileshub.struct.PairFile;
 import net.xngo.fileshub.upgrade.Upgrade;
 import net.xngo.utils.java.io.FileUtils;
@@ -58,6 +59,7 @@ public class Hub
     long accumulateFileSize = 0;
     final int updateFrequency = Utils.getUpdateFrequency(numberOfFilesToProcess);
     
+    List<Duplicate> duplicates = new ArrayList<Duplicate>();
     Main.chrono.stop("Get total file size");
     int filesProcessed=0;
     for (File file : listOfFiles) 
@@ -78,7 +80,7 @@ public class Hub
             
             if(file.exists() && conflictFile.exists() && conflictFile.isFile())
             {// Ensure both files exist before adding them to the report as duplicate.
-              reportDuplicate.addDuplicate(new Document(file), conflictDoc);
+              duplicates.add(new Duplicate(new Document(file), conflictDoc));
             }
             else
             {
@@ -193,6 +195,7 @@ public class Hub
     Main.chrono.stop("Add files");
 
     reportDuplicate.addDirectoriesProcessed(this.getDirectoriesProcessed(addPaths));
+    reportDuplicate.setData(duplicates);
     reportDuplicate.generate();
     
     Main.chrono.display("Runtime breakdown");    

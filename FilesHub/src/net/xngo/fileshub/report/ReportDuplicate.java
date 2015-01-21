@@ -2,6 +2,7 @@ package net.xngo.fileshub.report;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Collections;
 
 import net.xngo.fileshub.Main;
@@ -12,10 +13,7 @@ import net.xngo.utils.java.io.FileUtils;
 
 public class ReportDuplicate extends Report
 {
-  private ArrayList<Duplicate> duplicates = new ArrayList<Duplicate>();
-  
-  private long totalDuplicateSize = 0;
-  private int numberOfDuplicates = 0;
+  private List<Duplicate> duplicates = new ArrayList<Duplicate>();
   
   private int totalFilesToProcess = 0;
   
@@ -52,11 +50,9 @@ public class ReportDuplicate extends Report
     this.directories = directories;
   }
   
-  public void addDuplicate(Document toAddDoc, Document shelfDoc)
+  public void setData(List<Duplicate> listOfDuplicates)
   {
-    this.duplicates.add(new Duplicate(toAddDoc, shelfDoc));
-    totalDuplicateSize += new File(toAddDoc.canonical_path).length();
-    numberOfDuplicates++;
+    this.duplicates = listOfDuplicates;
   }
   private String generateBody()
   {
@@ -93,7 +89,7 @@ public class ReportDuplicate extends Report
     if(!this.directories.isEmpty()){ super.addSummary(String.format("\tProcessed directories: %s.\n", this.directories)); }
     
     super.addSummary(String.format("\t%,d files processed.\n", this.totalFilesToProcess));
-    super.addSummary(String.format("\t%,d duplicate file(s) found totalling %s.\n", this.numberOfDuplicates, FileUtils.readableSize(this.totalDuplicateSize)));
+    super.addSummary(String.format("\t%,d duplicate file(s) found totalling %s.\n", this.duplicates.size(), FileUtils.readableSize(this.getTotalDuplicateFileSize())));
     
     // Start at YYYY-MM-DD HH:MM:SS.mmm
     super.addSummary(String.format("\tStart at %s\n", Main.chrono.getStartTime()));
@@ -107,6 +103,17 @@ public class ReportDuplicate extends Report
     // Display memory usage.
     super.addSummary(String.format("\t%s\n", Utils.getRAMUsage()));
     
+  }
+  
+  private long getTotalDuplicateFileSize()
+  {
+    long totalFileSize = 0;
+    for(Duplicate dup: this.duplicates)
+    {
+      totalFileSize += new File(dup.toAddDoc.canonical_path).length();
+    }
+    
+    return totalFileSize;
   }
   
 }

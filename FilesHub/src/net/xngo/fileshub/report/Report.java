@@ -18,11 +18,11 @@ abstract class Report
   {
     this.file = file;
   }
+  
   public void addSummary(String htmlSummary)
   {
     this.htmlSummary.append(htmlSummary);
   }
-  
   
   
   /****************************************************************************
