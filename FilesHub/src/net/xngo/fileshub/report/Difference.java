@@ -6,6 +6,12 @@ import name.fraser.neil.plaintext.diff_match_patch;
 import name.fraser.neil.plaintext.diff_match_patch.Diff;
 import name.fraser.neil.plaintext.diff_match_patch.Operation;
 
+/**
+ * Compute the difference of 2 strings and give you 
+ *  the differences highlighted in HTML format. 
+ * @author Xuan Ngo
+ *
+ */
 public class Difference
 {
   
@@ -39,7 +45,7 @@ public class Difference
     return this.similarRate;
   }
   
-  public void computeSpan()
+  public void compute()
   {
     this.leftSpan = "<span class=\"left\">";
     this.rightSpan = "<span class=\"right\">";

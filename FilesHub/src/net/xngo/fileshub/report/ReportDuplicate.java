@@ -77,7 +77,7 @@ public class ReportDuplicate extends Report
       
       // Construct the difference with HTML elements.
       Difference difference = new Difference(left, right);
-      difference.computeSpan();
+      difference.compute();
       String leftSpan = this.printDelete(difference.getLeftSpan()); // Not elegant.
       String rightSpan= difference.getRightSpan();
       String sizeSpan = String.format("<span class=\"size\">%s</span>", FileUtils.readableSize(toAddSize));

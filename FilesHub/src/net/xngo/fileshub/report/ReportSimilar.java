@@ -39,7 +39,7 @@ public class ReportSimilar extends Report
       
       // Construct the difference with HTML elements.
       Difference difference = new Difference(left, right);
-      difference.computeSpan();
+      difference.compute();
       String leftSpan = super.printDelete(difference.getLeftSpan()); // Not elegant.
       String rightSpan= difference.getRightSpan();
       String fileASizeSpan = String.format("<span class=\"size\">%s</span>", FileUtils.readableSize(fileASize));
