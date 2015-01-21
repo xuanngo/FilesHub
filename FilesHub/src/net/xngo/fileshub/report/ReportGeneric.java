@@ -41,7 +41,7 @@ public class ReportGeneric
   {
     this.htmlSummary.append(htmlSummary);
   }
-  protected void write()
+  protected void writeToFile()
   {
     // Load html template file and replace the placehoders.
     String html = FileUtils.load(Config.HTML_TEMPLATE_PATH);

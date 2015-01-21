@@ -52,7 +52,7 @@ public class ReportSimilar extends ReportGeneric
 
     this.constructSummary();
     super.addBody(divLines.toString());
-    super.write();
+    super.writeToFile();
     Main.chrono.stop("Write HTML file");
     System.out.println(String.format("\nResults are stored in %s.", Utils.getCanonicalPath(super.file)));
     this.displaySummary();
