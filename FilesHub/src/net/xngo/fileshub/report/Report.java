@@ -23,13 +23,15 @@ abstract class Report
     this.htmlSummary.append(htmlSummary);
   }
   
-  abstract protected void constructSummary();
+  
   
   /****************************************************************************
    * 
    *                             ABSTRACT FUNCTIONS
    * 
    ****************************************************************************/    
+  abstract protected void constructSummary();
+  //abstract public void write();
   
   /****************************************************************************
    * 
