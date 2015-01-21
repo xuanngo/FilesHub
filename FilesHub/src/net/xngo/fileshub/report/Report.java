@@ -8,7 +8,7 @@ import java.io.IOException;
 import net.xngo.fileshub.Config;
 import net.xngo.utils.java.io.FileUtils;
 
-public class Report
+abstract class Report
 {
   protected File file = null;
   protected StringBuilder htmlSummary = new StringBuilder(255); // The top part.
@@ -22,6 +22,9 @@ public class Report
   {
     this.htmlSummary.append(htmlSummary);
   }
+  
+  abstract protected void constructSummary();
+  
   /****************************************************************************
    * 
    *                             ABSTRACT FUNCTIONS
@@ -33,6 +36,10 @@ public class Report
    *                             PROTECTED FUNCTIONS
    * 
    ****************************************************************************/  
+  protected void displaySummary()
+  {
+    System.out.println(this.htmlSummary);
+  }
   
   protected String doubleQuote(String s)
   {

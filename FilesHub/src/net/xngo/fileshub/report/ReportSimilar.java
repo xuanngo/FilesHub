@@ -55,15 +55,10 @@ public class ReportSimilar extends Report
     super.writeToFile();
     Main.chrono.stop("Write HTML file");
     System.out.println(String.format("\nResults are stored in %s.", Utils.getCanonicalPath(super.file)));
-    this.displaySummary();
+    super.displaySummary();
   }
   
-  private void displaySummary()
-  {
-    System.out.println(super.htmlSummary);
-  }
-  
-  private void constructSummary()
+  protected void constructSummary()
   {
     /** Construct summary details **/
     /*******************************/

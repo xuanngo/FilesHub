@@ -90,13 +90,10 @@ public class ReportDuplicate extends Report
     super.addBody(divLines.toString());
     super.writeToFile();
     Main.chrono.stop("Write HTML file");
-    this.displaySummary();
+    super.displaySummary();
   }
-  private void displaySummary()
-  {
-    System.out.println(super.htmlSummary);
-  }
-  private void constructSummary()
+
+  protected void constructSummary()
   {
     
     /** Construct summary details **/
