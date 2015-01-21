@@ -3,27 +3,54 @@ package net.xngo.fileshub.test.cmd;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.PrintStream;
+import java.sql.SQLException;
+import java.util.concurrent.atomic.AtomicInteger;
 
+import net.xngo.fileshub.Main;
 import net.xngo.fileshub.cmd.Cmd;
 import net.xngo.fileshub.db.Shelf;
 import net.xngo.fileshub.db.Manager;
 import net.xngo.fileshub.struct.Document;
+import net.xngo.fileshub.test.db.ManagerTestSearch;
 import net.xngo.fileshub.test.helpers.Data;
-
+import net.xngo.utils.java.math.Random;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.not;
 
 
+
+
 import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 public class CmdConsoleTest
 {
+  
+  private static final boolean DEBUG = true;
+  
+  private Manager manager = new Manager();
+  
+  
   // Get the original standard out before changing it.
   private final PrintStream originalStdOut = System.out;
   private ByteArrayOutputStream consoleContent = new ByteArrayOutputStream();
+  
+  @BeforeClass
+  public void DatabaseCreation()
+  {
+    // Make sure that the database file is created.
+    this.manager.createDbStructure();
+    
+    // DEBUG: Commit every single transaction in database.
+    if(CmdConsoleTest.DEBUG)
+    {
+      try { Main.connection.setAutoCommit(true); }
+      catch(SQLException ex) { ex.printStackTrace(); }
+    }      
+  }
   
   @BeforeMethod
   public void beforeTest()
@@ -79,10 +106,13 @@ public class CmdConsoleTest
   @Test(description="search: Check console output skeleton.")
   public void searchSimilarOutputConsoleBasic()
   {
-    //*** Prepare data: Add a unique file in database. Guarantee that there is something to compare.
-    File uniqueFile = Data.createTempFile("addFileUniqueFile");
-    Manager manager = new Manager();
-    manager.addFile(uniqueFile);
+    //*** Prepare data: Create and add files in database. Guarantee that there is something to compare.
+    File fileA = new File("./FHTest_searchSimilarOutputConsoleBasic.txt");
+    File fileB = new File("./FHTest_searchSimilarOutputConsoleBasic_2.txt");
+    Data.writeStringToFile(fileA, "searchSimilarOutputConsoleBasic 1");
+    Data.writeStringToFile(fileB, "searchSimilarOutputConsoleBasic 2");
+    this.manager.addFile(fileA);
+    this.manager.addFile(fileB);
     
     //*** Main test: Copy unique file and then add to database.
     String[] args = new String[] { "search" };
@@ -110,7 +140,8 @@ public class CmdConsoleTest
     assertThat(this.consoleContent.toString(), containsString("[Total] ="));
     
     //*** Clean up.
-    uniqueFile.delete();
+    fileA.delete();
+    fileB.delete();
   }
   
 }
