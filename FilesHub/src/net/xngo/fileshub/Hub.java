@@ -43,7 +43,7 @@ public class Hub
   public void addFiles(Set<File> listOfFiles, List<File> addPaths)
   {
     
-    ReportDuplicate reportDuplicate = new ReportDuplicate(new File(String.format("./results_%s_2.html", this.getResultsSuffix(addPaths))));
+    ReportDuplicate reportDuplicate = new ReportDuplicate(new File(String.format("./results_%s.html", this.getResultsSuffix(addPaths))));
     
     Main.chrono.stop("Get all files to process");
     
