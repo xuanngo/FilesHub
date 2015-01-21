@@ -15,15 +15,25 @@ import net.xngo.utils.java.io.FileUtils;
 public class ReportSimilar extends Report
 {
   private String combinationsInfo = "";
+  private List<PairFile> pairFileList;
   
   public ReportSimilar(File file)
   {
     super(file);
   }
-  
+  public void setData(List<PairFile> pairFileList)
+  {
+    this.pairFileList = pairFileList;
+  }
   public void generate()
   {
-    
+
+    this.constructSummary();
+    super.addBody(this.generateBody());
+    super.writeToFile();
+    Main.chrono.stop("Write HTML file");
+    System.out.println(String.format("\nResults are stored in %s.", Utils.getCanonicalPath(super.file)));
+    super.displaySummary();
   }
   
   public void addCombinationsInfo(String combinationsInfo)
@@ -31,16 +41,16 @@ public class ReportSimilar extends Report
     this.combinationsInfo = combinationsInfo;
   }
   
-  public void writePotentialDuplicatesInHtml(List<PairFile> pairFileList)
+  private String generateBody()
   {
     StringBuilder divLines = new StringBuilder();
-    for(int i=0; i<pairFileList.size(); i++)
+    for(int i=0; i<this.pairFileList.size(); i++)
     {
       // Add double quote so that it is easier to manipulate on command line.
-      String left = super.doubleQuote(pairFileList.get(i).fileA);
-      String right= super.doubleQuote(pairFileList.get(i).fileB);
-      long fileASize = new File(pairFileList.get(i).fileA).length();
-      long fileBSize = new File(pairFileList.get(i).fileB).length();
+      String left = super.doubleQuote(this.pairFileList.get(i).fileA);
+      String right= super.doubleQuote(this.pairFileList.get(i).fileB);
+      long fileASize = new File(this.pairFileList.get(i).fileA).length();
+      long fileBSize = new File(this.pairFileList.get(i).fileB).length();
       
       // Construct the difference with HTML elements.
       Difference difference = new Difference(left, right);
@@ -50,17 +60,12 @@ public class ReportSimilar extends Report
       String fileASizeSpan = String.format("<span class=\"size\">%s</span>", FileUtils.readableSize(fileASize));
       String fileBSizeSpan = String.format("<span class=\"size\">%s</span>", FileUtils.readableSize(fileBSize));
       if(i%2==0)
-        divLines.append(String.format("<div class=\"line-even\">[%3d%%] %s %s<br/>%s %s</div>\n", pairFileList.get(i).similarRate, leftSpan, fileASizeSpan, rightSpan, fileBSizeSpan)); // Add \n so that user can process the HTML output.
+        divLines.append(String.format("<div class=\"line-even\">[%3d%%] %s %s<br/>%s %s</div>\n", this.pairFileList.get(i).similarRate, leftSpan, fileASizeSpan, rightSpan, fileBSizeSpan)); // Add \n so that user can process the HTML output.
       else
-        divLines.append(String.format("<div class=\"line-odd\">[%3d%%] %s %s<br/>%s %s</div>\n", pairFileList.get(i).similarRate, leftSpan, fileASizeSpan, rightSpan, fileBSizeSpan));  // Add \n so that user can process the HTML output.
+        divLines.append(String.format("<div class=\"line-odd\">[%3d%%] %s %s<br/>%s %s</div>\n", this.pairFileList.get(i).similarRate, leftSpan, fileASizeSpan, rightSpan, fileBSizeSpan));  // Add \n so that user can process the HTML output.
     }
-
-    this.constructSummary();
-    super.addBody(divLines.toString());
-    super.writeToFile();
-    Main.chrono.stop("Write HTML file");
-    System.out.println(String.format("\nResults are stored in %s.", Utils.getCanonicalPath(super.file)));
-    super.displaySummary();
+    
+    return divLines.toString();
   }
   
   protected void constructSummary()

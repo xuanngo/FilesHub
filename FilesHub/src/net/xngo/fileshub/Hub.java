@@ -193,7 +193,7 @@ public class Hub
     Main.chrono.stop("Add files");
 
     reportDuplicate.addDirectoriesProcessed(this.getDirectoriesProcessed(addPaths));
-    reportDuplicate.writeHtml();
+    reportDuplicate.generate();
     
     Main.chrono.display("Runtime breakdown");    
     System.out.println("Done!");
@@ -288,7 +288,8 @@ public class Hub
     Collections.sort(pairFileList);
     
     ReportSimilar reportSimilar = new ReportSimilar(new File("./potentialDuplicates.html"));
-    reportSimilar.writePotentialDuplicatesInHtml(pairFileList);
+    reportSimilar.setData(pairFileList);
+    reportSimilar.generate();
     
     Main.chrono.display("Runtime breakdown"); 
     

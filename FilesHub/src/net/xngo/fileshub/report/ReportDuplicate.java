@@ -28,7 +28,18 @@ public class ReportDuplicate extends Report
   
   public void generate()
   {
+    // Sort
+    Collections.sort(this.duplicates);
+    Main.chrono.stop("Sort duplicates");
     
+    // Generate html file.
+    this.constructSummary();
+    super.addBody(this.generateBody());
+    super.writeToFile();
+    Main.chrono.stop("Write HTML file");
+    
+    // Display summary in console.
+    super.displaySummary();    
   }
   
   public void addTotalFilesToProcess(int totalNumberOfFiles)
@@ -47,13 +58,8 @@ public class ReportDuplicate extends Report
     totalDuplicateSize += new File(toAddDoc.canonical_path).length();
     numberOfDuplicates++;
   }
-  
-  public void writeHtml()
+  private String generateBody()
   {
-    // Sort
-    Collections.sort(this.duplicates);
-    Main.chrono.stop("Sort duplicates");
-    
     StringBuilder divLines = new StringBuilder();
     for(int i=0; i<this.duplicates.size(); i++)
     {
@@ -74,11 +80,7 @@ public class ReportDuplicate extends Report
         divLines.append(String.format("<div class=\"line-odd\">%s<br/>%s %s</div>\n", leftSpan, rightSpan, sizeSpan));  // Add \n so that user can process the HTML output.
     }
     
-    this.constructSummary();
-    super.addBody(divLines.toString());
-    super.writeToFile();
-    Main.chrono.stop("Write HTML file");
-    super.displaySummary();
+    return divLines.toString();
   }
 
   protected void constructSummary()
