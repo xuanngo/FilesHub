@@ -6,6 +6,7 @@ import java.io.PrintStream;
 
 import net.xngo.fileshub.cmd.Cmd;
 import net.xngo.fileshub.db.Shelf;
+import net.xngo.fileshub.db.Manager;
 import net.xngo.fileshub.struct.Document;
 import net.xngo.fileshub.test.helpers.Data;
 
@@ -78,6 +79,11 @@ public class CmdConsoleTest
   @Test(description="search: Check console output skeleton.")
   public void searchSimilarOutputConsoleBasic()
   {
+    //*** Prepare data: Add a unique file in database. Guarantee that there is something to compare.
+    File uniqueFile = Data.createTempFile("addFileUniqueFile");
+    Manager manager = new Manager();
+    manager.addFile(uniqueFile);
+    
     //*** Main test: Copy unique file and then add to database.
     String[] args = new String[] { "search" };
     Cmd cmd = new Cmd(args);
@@ -101,7 +107,10 @@ public class CmdConsoleTest
     assertThat(this.consoleContent.toString(), containsString("Runtime breakdown:"));
     assertThat(this.consoleContent.toString(), containsString("Compare similar files ="));
     assertThat(this.consoleContent.toString(), containsString("Write HTML file ="));
-    assertThat(this.consoleContent.toString(), containsString("[Total] ="));    
+    assertThat(this.consoleContent.toString(), containsString("[Total] ="));
+    
+    //*** Clean up.
+    uniqueFile.delete();
   }
   
 }
