@@ -44,7 +44,7 @@ public class CopyAndHashBenchmark
     long currentTimeMillis = System.currentTimeMillis();
     for (File file : filesList) 
     {
-      String filesize = Utils.readableFileSize(file.length());
+      String filesize = net.xngo.utils.java.io.FileUtils.readableSize(file.length());
       
       double averageCopyNhashSeparately = this.copyNhashSeparately(file, MAX_TRIES);
       double averageCopyNhashCombined = this.copyNhashCombined(file, MAX_TRIES);
