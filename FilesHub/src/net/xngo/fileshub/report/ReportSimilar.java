@@ -12,7 +12,7 @@ import net.xngo.fileshub.Utils;
 import net.xngo.fileshub.struct.PairFile;
 import net.xngo.utils.java.io.FileUtils;
 
-public class ReportSimilar extends ReportGeneric
+public class ReportSimilar extends Report
 {
   private String combinationsInfo = "";
   

@@ -6,16 +6,15 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 import net.xngo.fileshub.Config;
-import net.xngo.fileshub.Utils;
 import net.xngo.utils.java.io.FileUtils;
 
-public class ReportGeneric
+public class Report
 {
   protected File file = null;
   protected StringBuilder htmlSummary = new StringBuilder(255); // The top part.
   protected StringBuilder htmlBody = new StringBuilder(255);    // The bottom and last part.
   
-  public ReportGeneric(File file)
+  public Report(File file)
   {
     this.file = file;
   }

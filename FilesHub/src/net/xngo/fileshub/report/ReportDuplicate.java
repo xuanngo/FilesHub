@@ -13,7 +13,7 @@ import net.xngo.fileshub.struct.Document;
 import net.xngo.fileshub.struct.Duplicate;
 import net.xngo.utils.java.io.FileUtils;
 
-public class ReportDuplicate extends ReportGeneric
+public class ReportDuplicate extends Report
 {
   private ArrayList<Duplicate> duplicates = new ArrayList<Duplicate>();
   
