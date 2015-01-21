@@ -1,13 +1,9 @@
 package net.xngo.fileshub.report;
 
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 
-import net.xngo.fileshub.Config;
 import net.xngo.fileshub.Main;
 import net.xngo.fileshub.Utils;
 import net.xngo.fileshub.struct.Document;
@@ -23,10 +19,6 @@ public class ReportDuplicate extends Report
   
   private int totalFilesToProcess = 0;
   
-  private String startTime = "";
-  private String endTime="";
-  private String runtime="";
-  
   private String directories = "";
   
   public ReportDuplicate(File file)
@@ -37,18 +29,7 @@ public class ReportDuplicate extends Report
   {
     totalFilesToProcess = totalNumberOfFiles;
   }
-  public void addStartTime(String startTime)
-  {
-    this.startTime = startTime;
-  }
-  public void addEndTime(String endTime)
-  {
-    this.endTime = endTime;
-  }
-  public void addRunTime(String runtime)
-  {
-    this.runtime = runtime;
-  }
+
   public void addDirectoriesProcessed(String directories)
   {
     this.directories = directories;
