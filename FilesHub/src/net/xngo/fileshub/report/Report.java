@@ -18,6 +18,10 @@ public class Report
   {
     this.file = file;
   }
+  public void addSummary(String htmlSummary)
+  {
+    this.htmlSummary.append(htmlSummary);
+  }  
   
   protected String doubleQuote(String s)
   {
@@ -36,10 +40,7 @@ public class Report
   {
     this.htmlBody.append(htmlBody);
   }
-  public void addSummary(String htmlSummary)
-  {
-    this.htmlSummary.append(htmlSummary);
-  }
+
   protected void writeToFile()
   {
     // Load html template file and replace the placehoders.
