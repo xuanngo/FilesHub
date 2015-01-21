@@ -115,7 +115,7 @@ public class ReportDuplicate extends Report
     // Ran for HH:MM:SS.mmm (milliseconds)
     super.addSummary(String.format("\tRan  for %s\n", Main.chrono.getTotalRuntimeString()));
 
-    // Ran for HH:MM:SS.mmm (milliseconds)
+    // Display memory usage.
     super.addSummary(String.format("\t%s\n", Utils.getRAMUsage()));
     
   }
