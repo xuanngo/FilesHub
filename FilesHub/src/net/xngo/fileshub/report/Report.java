@@ -31,7 +31,7 @@ abstract class Report
    * 
    ****************************************************************************/    
   abstract protected void constructSummary();
-  //abstract public void write();
+  abstract public void generate();
   
   /****************************************************************************
    * 

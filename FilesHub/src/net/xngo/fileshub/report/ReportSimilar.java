@@ -21,6 +21,11 @@ public class ReportSimilar extends Report
     super(file);
   }
   
+  public void generate()
+  {
+    
+  }
+  
   public void addCombinationsInfo(String combinationsInfo)
   {
     this.combinationsInfo = combinationsInfo;

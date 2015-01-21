@@ -25,6 +25,12 @@ public class ReportDuplicate extends Report
   {
     super(file);
   }
+  
+  public void generate()
+  {
+    
+  }
+  
   public void addTotalFilesToProcess(int totalNumberOfFiles)
   {
     totalFilesToProcess = totalNumberOfFiles;
