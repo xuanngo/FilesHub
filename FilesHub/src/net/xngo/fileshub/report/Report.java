@@ -21,7 +21,18 @@ public class Report
   public void addSummary(String htmlSummary)
   {
     this.htmlSummary.append(htmlSummary);
-  }  
+  }
+  /****************************************************************************
+   * 
+   *                             ABSTRACT FUNCTIONS
+   * 
+   ****************************************************************************/    
+  
+  /****************************************************************************
+   * 
+   *                             PROTECTED FUNCTIONS
+   * 
+   ****************************************************************************/  
   
   protected String doubleQuote(String s)
   {
