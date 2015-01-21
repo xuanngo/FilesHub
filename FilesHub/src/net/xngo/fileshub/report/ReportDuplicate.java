@@ -9,6 +9,7 @@ import java.util.Collections;
 
 import net.xngo.fileshub.Config;
 import net.xngo.fileshub.Main;
+import net.xngo.fileshub.Utils;
 import net.xngo.fileshub.struct.Document;
 import net.xngo.fileshub.struct.Duplicate;
 import net.xngo.utils.java.io.FileUtils;
@@ -115,16 +116,8 @@ public class ReportDuplicate extends Report
     super.addSummary(String.format("\tRan  for %s\n", Main.chrono.getTotalRuntimeString()));
 
     // Ran for HH:MM:SS.mmm (milliseconds)
-    super.addSummary(String.format("\t%s\n", this.getRAMUsage()));
+    super.addSummary(String.format("\t%s\n", Utils.getRAMUsage()));
     
   }
   
-  public String getRAMUsage()
-  {
-    Runtime runtime = Runtime.getRuntime();
-    long usedMemory = runtime.totalMemory()-runtime.freeMemory();
-    return String.format("RAM: %s / %s Max=%s", FileUtils.readableSize(usedMemory           ), 
-                                                FileUtils.readableSize(runtime.totalMemory()), 
-                                                FileUtils.readableSize(runtime.maxMemory()) );
-  }  
 }

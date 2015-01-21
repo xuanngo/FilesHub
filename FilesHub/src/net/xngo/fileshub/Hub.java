@@ -102,7 +102,7 @@ public class Hub
                                                                             totalReadableSize, 
                                                                             filesProcessed, 
                                                                             numberOfFilesToProcess,
-                                                                            reportDuplicate.getRAMUsage()));
+                                                                            Utils.getRAMUsage()));
         }
         
       }
