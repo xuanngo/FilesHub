@@ -49,7 +49,7 @@ Search by file path: Can use wildcard(*)
 FilesHub search -p "*\somewhere\fileshub\*"
 ```
 
-Search similar files from the current directory and its sub-directories. It will output the results in potentialDuplicates.html.
+Search similar files of the current directory and its sub-directories against the whole database. It will output the results in potentialDuplicates.html.
 ```
 # Search all file names that are 80% similar or more.
 FilesHub search -s 80
