@@ -15,6 +15,7 @@ import java.text.DecimalFormat;
 
 import net.jpountz.xxhash.StreamingXXHash32;
 import net.jpountz.xxhash.XXHashFactory;
+import net.xngo.fileshub.db.Debug;
 import net.xngo.utils.java.io.FileUtils;
 import net.xngo.utils.java.math.Hash;
 
@@ -55,6 +56,9 @@ public class Utils
    */
   public static final String getHash(File file)
   {
+    if(Debug.activate())
+      System.out.println("Hashing "+file.getAbsolutePath());
+    
     return Hash.xxhash32(file);
   }
   
