@@ -57,7 +57,7 @@ public class Utils
   public static final String getHash(File file)
   {
     if(Debug.activate())
-      System.out.println("Hashing "+file.getAbsolutePath());
+      System.out.println("DEBUG: Hashing "+file.getAbsolutePath());
     
     return Hash.xxhash32(file);
   }
