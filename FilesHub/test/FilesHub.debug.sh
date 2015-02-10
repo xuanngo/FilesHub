@@ -10,5 +10,7 @@ if [ -z "$FILESHUB_HOME" ] ; then
   exit 1  # fail
 fi
 
+echo "FILESHUB_HOME=${FILESHUB_HOME}"
+
 ## ISO-8859-1
 java -Dfile.encoding=UTF-8 -DFilesHub.home=${FILESHUB_HOME} -DFilesHub.debug=true -jar ${FILESHUB_HOME}/fileshub.jar "$@"
