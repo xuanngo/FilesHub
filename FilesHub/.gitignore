@@ -3,3 +3,4 @@
 *.db
 potentialDuplicates*.html
 results_*.html
+/test-output/
