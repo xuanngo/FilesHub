@@ -816,8 +816,11 @@ public class ManagerTest
     }
     catch(IOException ex){ ex.printStackTrace(); }
     
-    serie_17.setLastModified(System.currentTimeMillis()); // Guarantee file renaming causes an update of File.lastmodified().
-    serie_18.setLastModified(System.currentTimeMillis()); // Guarantee file renaming causes an update of File.lastmodified().
+    // Guarantee content update causes an update of File.lastmodified().
+    //   All platforms support file-modification times to the nearest second
+    serie_17.setLastModified(System.currentTimeMillis()+1000);
+    serie_18.setLastModified(System.currentTimeMillis()+1000);
+    
     this.manager.addFile(serie_17);
     this.manager.addFile(serie_18);    
   
