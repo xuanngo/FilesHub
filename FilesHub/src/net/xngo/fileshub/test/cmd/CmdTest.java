@@ -2,6 +2,7 @@ package net.xngo.fileshub.test.cmd;
 
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertNull;
+import static org.testng.Assert.assertTrue;
 
 import java.io.File;
 import java.io.RandomAccessFile;
@@ -94,50 +95,59 @@ public class CmdTest
   @Test(description="Test -a option with locked file.")
   public void addOptLockedUniqueFile()
   {
-    // Create a unique file.
-    File uniqueFile = Data.createTempFile("addOptLockedUniqueFile");
-    
-    // Lock unique file.
-    FileChannel channel = null;
-    FileLock lock = null;
-    try
-    {
-      channel = new RandomAccessFile(uniqueFile, "rw").getChannel();
-      lock = channel.lock();
-    }
-    catch(Exception ex)
-    {
-      ex.printStackTrace();
-    }
-
-    // Add locked file.
-    String[] args = new String[] { "-a", uniqueFile.getAbsolutePath() };
-    Cmd cmd = new Cmd(args);
-    
-    // Validate
-    Shelf shelf = new Shelf();
-    Document shelfDoc = shelf.getDocByCanonicalPath(Utils.getCanonicalPath(uniqueFile));
-    Trash trash = new Trash();
-    Document trashDoc = trash.getDocByCanonicalPath(Utils.getCanonicalPath(uniqueFile));
-    assertNull(shelfDoc, String.format("[%s] should not be added in Shelf. It is locked. [%s]", uniqueFile.getName(), Utils.getCanonicalPath(uniqueFile)));
-    assertNull(trashDoc, String.format("[%s] should not be added in Trash. It is locked. [%s]", uniqueFile.getName(), Utils.getCanonicalPath(uniqueFile)));
-    
-    
-    // Release lock.
-    try
-    {
+    String os_name = System.getProperty("os.name");
+    if(os_name.indexOf("Windows")!=-1)
+    {// Test locking in Windows only.
+      // Create a unique file.
+      File uniqueFile = Data.createTempFile("addOptLockedUniqueFile");
       
-      lock.release();
-      channel.close();
-
+      // Lock unique file.
+      FileChannel channel = null;
+      FileLock lock = null;
+      try
+      {
+        channel = new RandomAccessFile(uniqueFile, "rw").getChannel();
+        lock = channel.lock();
+      }
+      catch(Exception ex)
+      {
+        ex.printStackTrace();
+      }
+  
+      // Add locked file.
+      String[] args = new String[] { "-a", uniqueFile.getAbsolutePath() };
+      Cmd cmd = new Cmd(args);
+      
+      // Validate
+      Shelf shelf = new Shelf();
+      Document shelfDoc = shelf.getDocByCanonicalPath(Utils.getCanonicalPath(uniqueFile));
+      Trash trash = new Trash();
+      Document trashDoc = trash.getDocByCanonicalPath(Utils.getCanonicalPath(uniqueFile));
+      assertNull(shelfDoc, String.format("[%s] should not be added in Shelf. It is locked. [%s]", uniqueFile.getName(), Utils.getCanonicalPath(uniqueFile)));
+      assertNull(trashDoc, String.format("[%s] should not be added in Trash. It is locked. [%s]", uniqueFile.getName(), Utils.getCanonicalPath(uniqueFile)));
+      
+      
+      // Release lock.
+      try
+      {
+        
+        lock.release();
+        channel.close();
+  
+      }
+      catch(Exception ex)
+      {
+        ex.printStackTrace();
+      }
+      
+      // Clean up.
+      uniqueFile.delete();
     }
-    catch(Exception ex)
-    {
-      ex.printStackTrace();
+    else
+    {// In unix like OS.
+      // See https://docs.oracle.com/javase/8/docs/api/java/nio/channels/FileLock.html#pdep
+      assertTrue(true, "Locking code here doesn't work in unix-like OS.");
     }
-    
-    // Clean up.
-    uniqueFile.delete();
 
   }
   
