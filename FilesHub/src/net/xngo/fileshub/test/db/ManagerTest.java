@@ -976,16 +976,18 @@ public class ManagerTest
     
     // Update the unique file.
     Data.writeStringToFile(uniqueFile, "new content");
-    uniqueFile.setLastModified(System.currentTimeMillis()); // Guarantee content update causes an update of File.lastmodified().
-    
+    uniqueFile.setLastModified(System.currentTimeMillis()+1000); // Guarantee content update causes an update of File.lastmodified().
+
     // Update database
     this.manager.update();
     
-    // Validations: Check that Shelf document info is moved to Trash table and the new document is updated in Shelf table.
+    // Validations: Check that Shelf document info is moved to Trash table 
+    //                and the new document is updated in Shelf table.
     Trash trash = new Trash();
     Document trashDoc = trash.getDocByCanonicalPath(Utils.getCanonicalPath(uniqueFile));
 
-    assertNotNull(trashDoc, String.format("trashDoc can't be null. %s is not found in Trash table.", Utils.getCanonicalPath(uniqueFile)));
+    assertNotNull(trashDoc, String.format("trashDoc can't be null. %s is not found in Trash table.", 
+                                              Utils.getCanonicalPath(uniqueFile)));
     assertEquals(trashDoc, oldShelfDoc,
                                   String.format("Document information should be moved from Shelf to Trash.\n"
                                                       + "%s"
