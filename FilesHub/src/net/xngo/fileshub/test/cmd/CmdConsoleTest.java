@@ -126,7 +126,7 @@ public class CmdConsoleTest
     assertThat(this.consoleContent.toString(), not(containsString("Comparing 0 files against ")));
     
     assertThat(this.consoleContent.toString(), containsString("Results are stored in "));
-    assertThat(this.consoleContent.toString(), containsString("\\potentialDuplicates"));
+    assertThat(this.consoleContent.toString(), containsString("potentialDuplicates"));
     
     
     assertThat(this.consoleContent.toString(), containsString("Summary:"));
@@ -142,6 +142,7 @@ public class CmdConsoleTest
     //*** Clean up.
     fileA.delete();
     fileB.delete();
+
   }
   
 }
