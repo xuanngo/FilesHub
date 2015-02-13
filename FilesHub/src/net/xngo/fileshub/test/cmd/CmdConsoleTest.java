@@ -142,7 +142,6 @@ public class CmdConsoleTest
     //*** Clean up.
     fileA.delete();
     fileB.delete();
-
   }
   
 }
