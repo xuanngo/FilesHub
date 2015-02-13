@@ -153,6 +153,8 @@ public class CmdTest
     
     // Execute update option with file where its content has changed.
     Data.writeStringToFile(uniqueFile, "new content");
+    uniqueFile.setLastModified(System.currentTimeMillis()+1000); // Guarantee content update causes an update of File.lastmodified().
+                                                                 //   All platforms support file-modification times to the nearest second
     String newHash = Utils.getHash(uniqueFile);
     args = new String[] { "-u" };
     cmd = new Cmd(args);    
