@@ -202,6 +202,8 @@ public class ManagerTest
 
     //*** Main test: Add the exact same file again with new content.
     Data.writeStringToFile(uniqueFile, "new content");
+    uniqueFile.setLastModified(System.currentTimeMillis()+1000); // Guarantee content update causes an update of File.lastmodified().
+                                                                 //   All platforms support file-modification times to the nearest second
     this.manager.addFile(uniqueFile);
 
     //*** Validations: Since hash has changed, therefore the old entry will be moved from Shelf to Trash table.
@@ -977,6 +979,7 @@ public class ManagerTest
     // Update the unique file.
     Data.writeStringToFile(uniqueFile, "new content");
     uniqueFile.setLastModified(System.currentTimeMillis()+1000); // Guarantee content update causes an update of File.lastmodified().
+                                                                 //   All platforms support file-modification times to the nearest second
 
     // Update database
     this.manager.update();
