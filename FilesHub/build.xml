@@ -5,7 +5,7 @@
 	<property name="latest.jar.file.path" value="${latest.release.directory}/fileshub.jar"/>
 	
 	<target name="create_run_jar">
-		<delete file="${latest.jar.file.path}"/><!-- Guarantee JAR is always the latest. -->
+		<delete verbose="true" file="${latest.jar.file.path}"/><!-- Guarantee JAR is always the latest. -->
 	  <jar destfile="${latest.jar.file.path}">
 	    <manifest>
 	      <attribute name="Main-Class" value="org.eclipse.jdt.internal.jarinjarloader.JarRsrcLoader"/>
@@ -52,14 +52,14 @@
 		<delete verbose="true" dir="./test/test-output"/>
 		<delete verbose="true" dir="./test/backupdb"/>
 	  
-    <!-- Delete all results*.csv & results*.html -->
-    <delete>
-      <fileset dir="./" includes="**/results_*.csv"/>
-      <fileset dir="./" includes="**/results_*.html"/>
-    </delete>
-		
+	    <!-- Delete all results*.csv & results*.html -->
+	    <delete verbose="true">
+	      <fileset dir="./" includes="**/results_*.csv"/>
+	      <fileset dir="./" includes="**/results_*.html"/>
+	    </delete>
+			
 		<!-- Delete javadoc directory -->
-		<delete dir="javadoc"/>
+		<delete verbose="true" dir="javadoc"/>
 
 	</target>
 	
