@@ -46,11 +46,11 @@
 	</target>
 	
 	<target name="delete_files">
-		<delete file="${latest.release.directory}/fileshub.db"/><!-- Guarantee no database will be touched when upgraded. -->
+		<delete file="${latest.release.directory}/FilesHub.db"/><!-- Guarantee no database will be touched when upgraded. Don't set verbose="true". File shouldn't exist. -->
 		
-		<delete file="./test/fileshub.db"/>
-		<delete dir="./test/test-output"/>
-		<delete dir="./test/backupdb"/>
+		<delete verbose="true" file="./test/FilesHub.db"/>
+		<delete verbose="true" dir="./test/test-output"/>
+		<delete verbose="true" dir="./test/backupdb"/>
 	  
     <!-- Delete all results*.csv & results*.html -->
     <delete>
