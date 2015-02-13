@@ -968,6 +968,31 @@ public class ManagerTest
     catch(IOException ex){ ex.printStackTrace(); }    
   }  
   
+  @Test(description="Add the same file with different lastmodified time.")
+  public void addFileSameFileDiffLastModifiedTime()
+  {
+    //*** Prepare data: Create a unique file and add it in database.   
+    File uniqueFile = Data.createTempFile("addFileSameFileDiffLastModifiedTime");
+    this.manager.addFile(uniqueFile);
+    
+    //*** Main test: Add the exact same file again with different last modified time.
+    uniqueFile.setLastModified(System.currentTimeMillis()+1000); // Guarantee content update causes an update of File.lastmodified().
+                                                                 //   All platforms support file-modification times to the nearest second
+    this.manager.addFile(uniqueFile);
+
+    //*** Validations: Check no last_modified is updated and no new entry is added in Trash.
+    Shelf shelf = new Shelf();
+    Document shelfDoc = shelf.getDocByCanonicalPath(uniqueFile.getAbsolutePath());
+    assertEquals(shelfDoc.last_modified, uniqueFile.lastModified(), String.format("File modification time has changed. The new time[%d] should be in Shelf table.", uniqueFile.lastModified()));
+    Trash trash = new Trash(); 
+    Document trashDoc = trash.getDocByCanonicalPath(uniqueFile.getAbsolutePath());
+    assertNull(trashDoc, String.format("%s should not be found in Trash table.", uniqueFile.getAbsolutePath()));
+    
+    //*** Clean up.
+    uniqueFile.delete();    
+    
+  }  
+  
   @Test(description="Update file that has changed since added in database. "
       + "Note: This is exactly the same as addFileShelfFileChanged(), "
       + "except that it uses Manager.update() instead of Manager.addFile().")
