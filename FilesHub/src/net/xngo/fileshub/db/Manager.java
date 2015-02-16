@@ -212,12 +212,6 @@ public class Manager
       
       if(shelfDoc.last_modified!=file.lastModified())
       {
-        String fileDateStr = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format(new java.util.Date(file.lastModified())).toString();
-        String dbDateStr = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format(new java.util.Date(shelfDoc.last_modified)).toString();
-System.out.println("\n"+file.getAbsolutePath());
-System.out.println(String.format("\tFile=%d, %s", file.lastModified(), fileDateStr) );
-System.out.println(String.format("\tDB  =%d, %s", shelfDoc.last_modified, dbDateStr) );
-
         String newHash = Utils.getHash(file);
         if(shelfDoc.hash.compareTo(newHash)!=0)
         {// Hash is different.
@@ -231,6 +225,8 @@ System.out.println(String.format("\tDB  =%d, %s", shelfDoc.last_modified, dbDate
         }
         else
         {// Hash is the same but last modified timestamp is different.
+          
+          // Update last modified time.
           shelfDoc.last_modified = file.lastModified();
           this.shelf.saveDoc(shelfDoc);
         }
