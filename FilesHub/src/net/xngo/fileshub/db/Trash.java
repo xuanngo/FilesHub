@@ -76,32 +76,6 @@ public class Trash
       return rowsAffected;
   }
   
-  public int markDuplicate(int duplicate, int of)
-  {
-    final String query = "UPDATE "+this.tablename+  " SET duid = ? WHERE duid = ?";
-    
-    int rowAffected = 0;
-    try
-    {
-      // Prepare the query.
-      Main.connection.prepareStatement(query);
-      
-      // Set the data.
-      int i=1;
-      Main.connection.setInt(i++, of);
-      Main.connection.setInt(i++, duplicate);
-      
-      // update row.
-      rowAffected = Main.connection.executeUpdate();
-    }
-    catch(SQLException e)
-    {
-      e.printStackTrace();
-    }
-  
-    return rowAffected;    
-  }
-  
   public List<Document> searchDocsByFilename(String filename)
   {
     return this.searchLikeDocsBy("filename", filename);
