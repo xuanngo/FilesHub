@@ -6,24 +6,17 @@
 # 
 
 
-# To handle filename with spaces.
-####################
+#### To handle filename with spaces.
 SAVE_IFS=$IFS
 IFS=$(echo -en "\n\b")
 
 
 
-# Pause for security.
-####################
+### Pause for security.
 if [ "$3" = "commit" ]
 then
 	read -p "Are you sure?"
 fi
-
-
-# Main
-####################
-scriptname=`basename $0`
 
 
 ### Collect array list of files
@@ -60,5 +53,5 @@ green='\e[0;32m'
 no_color='\e[0m'
 echo -e "${green}$marked files marked as duplicate.${no_color}"
 
-# Restore IFS
+### Restore IFS
 IFS=$SAVE_IFS
