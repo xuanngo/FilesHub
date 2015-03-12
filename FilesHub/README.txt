@@ -3,7 +3,9 @@ Development
 
   Eclipse
   --------
-  -In Eclipse, you have to set the following in "Run Configurations->Arguments->VM arguments": -DFilesHub.home=<your path>\FilesHub\FilesHub\test\
+  -In Eclipse, you have to set the followings:
+  	- In "Run Configurations->Arguments->VM arguments": -DFilesHub.home=<your path>\FilesHub\FilesHub\test\
+  	- Add all application parameters in "Run Configurations->Arguments->Program arguments"
   -In Eclipse, install TestNG.
       *In Preference, set 'Output directory' to '/test/test-output'.
 
