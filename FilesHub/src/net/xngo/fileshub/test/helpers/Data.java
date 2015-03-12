@@ -5,6 +5,10 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.lang.StringBuilder;
+import java.util.Random;
+import java.nio.charset.Charset;
+
 
 import net.xngo.fileshub.Utils;
 
@@ -40,6 +44,31 @@ public class Data
       e.printStackTrace();
     }
     return uniqueFile;
+  }
+  
+  public static File createTempFileWithBytes(final String affix, final File directory, byte[] content)
+  {
+    File uniqueFile = null;
+    try
+    {
+      final String prefix = String.format("FHTest_%s_", affix);
+      final String suffix = ".tmp";
+      uniqueFile = File.createTempFile(prefix, suffix, directory);
+      
+      if(content.length==0)
+        content = uniqueFile.getName().getBytes(Charset.forName("UTF-8")); 
+      FileUtils.writeByteArrayToFile(uniqueFile, content, true);
+    }
+    catch(IOException e)
+    {
+      e.printStackTrace();
+    }
+    return uniqueFile;
+  }
+  
+  public static File createTempFileWithByte(final String affix, byte[] content)
+  {
+    return Data.createTempFileWithBytes(affix, null, content);
   }
   
   public static void copyFile(File from, File to)
@@ -152,5 +181,18 @@ public class Data
   public static String getTempDirPath()
   {
     return System.getProperty("java.io.tmpdir");
+  }
+  
+  /**
+   * Get random bytes of a given size.
+   * @param size Be careful. Big number will cause out of heap memory.
+   * @return
+   */
+  public static byte[] getRandomBytes(int size)
+  {
+    Random random = new Random(1243);
+    byte[] randomBytes = new byte[size];
+    random.nextBytes(randomBytes);
+    return randomBytes;
   }
 }
