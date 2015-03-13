@@ -40,7 +40,15 @@ public class Utils
     }
     catch(IOException e)
     {
-      e.printStackTrace();
+      //e.printStackTrace();
+      if(e.getMessage().indexOf("Too many levels of symbolic links")!=-1)
+      {
+        RuntimeException rException = new RuntimeException(e.getMessage());
+        rException.setStackTrace(e.getStackTrace());
+        throw rException;
+      }
+      else
+        e.printStackTrace();
     }
     
     return null; // Return NULL to make this function more brittle so caller will know something is wrong.
