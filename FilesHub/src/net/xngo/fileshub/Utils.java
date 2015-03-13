@@ -59,27 +59,6 @@ public class Utils
     if(Debug.activate())
       System.out.println("DEBUG: Hashing "+file.getAbsolutePath());
     
-    int fileSizeThreshold = 4194304; // 4*1024*1024 = 4194304 = 4 MB;
-    if(file.length()>fileSizeThreshold)
-      return Hash.xxhash32Spread(file, 1048576); // Buffer size = 1024*1024 = 1048576 = 1 MB.
-    else
-      return Hash.xxhash32(file);
-  }
-  
-  /**
-   * Get the hash(ID) of the file.
-   * Note: -XXHash32 is chosen because it claims to be fast.
-   *       -Check what is the collision rate of XXHash32 algorithm 
-   *              because StreamingXXHash32.getValue() return an integer, 
-   *              which has a limit of 2,147,483,648.
-   * @param file
-   * @return      the hash as string
-   */
-  public static final String getHash_old(File file)
-  {
-    if(Debug.activate())
-      System.out.println("DEBUG: Hashing "+file.getAbsolutePath());
-    
     return Hash.xxhash32(file);
   }
   
