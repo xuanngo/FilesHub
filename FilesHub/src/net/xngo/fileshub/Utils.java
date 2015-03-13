@@ -29,6 +29,7 @@ public class Utils
 {
   /**
    * Always get canonical(complete and fully expanded) path of file.
+   * Beware of symbolic link.
    * @return Canonical path.
    */
   public static final String getCanonicalPath(File file)
