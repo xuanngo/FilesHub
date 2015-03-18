@@ -60,6 +60,7 @@ public class Utils
    *       -Check what is the collision rate of XXHash32 algorithm 
    *              because StreamingXXHash32.getValue() return an integer, 
    *              which has a limit of 2,147,483,648.
+   * Collision explained: https://code.google.com/p/xxhash/issues/detail?id=14#c1
    * @param file
    * @return      the hash as string
    */
