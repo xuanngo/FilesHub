@@ -24,6 +24,8 @@
 	  	
 	  	<!-- Add Library -->
       <zipfileset dir="./lib" includes="**/*.jar" excludes="testng*.jar"/>
+
+	  	
 	  </jar>
 
     <!-- Add version number in template.html . -->
