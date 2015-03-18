@@ -13,6 +13,9 @@ import java.nio.channels.FileChannel;
 import java.nio.channels.FileLock;
 import java.text.DecimalFormat;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import net.jpountz.xxhash.StreamingXXHash32;
 import net.jpountz.xxhash.XXHashFactory;
 import net.xngo.fileshub.db.Debug;
@@ -27,6 +30,7 @@ import net.xngo.utils.java.math.Hash;
  */
 public class Utils
 {
+  final static Logger logger = LoggerFactory.getLogger(Utils.class);
   /**
    * Always get canonical(complete and fully expanded) path of file.
    * Beware of symbolic link.
@@ -43,12 +47,17 @@ public class Utils
       //e.printStackTrace();
       if(e.getMessage().indexOf("Too many levels of symbolic links")!=-1)
       {
+        logger.warn("Too many levels of symbolic links. Ignore: {}", file.getAbsolutePath(), e);
+        
         RuntimeException rException = new RuntimeException(e.getMessage());
         rException.setStackTrace(e.getStackTrace());
         throw rException;
       }
       else
+      {
+        logger.error("", e);
         e.printStackTrace();
+      }
     }
     
     return null; // Return NULL to make this function more brittle so caller will know something is wrong.
