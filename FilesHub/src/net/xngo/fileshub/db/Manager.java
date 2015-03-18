@@ -10,6 +10,9 @@ import java.util.List;
 import java.util.Set;
 import java.text.SimpleDateFormat;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import net.xngo.fileshub.Config;
 import net.xngo.fileshub.Main;
 import net.xngo.fileshub.Utils;
@@ -27,6 +30,8 @@ import net.xngo.utils.java.io.FileUtils;
  */
 public class Manager
 {
+  final static Logger logger = LoggerFactory.getLogger(Manager.class);
+  
   private Shelf shelf = new Shelf();
   private Trash trash = new Trash();
   
