@@ -12,5 +12,8 @@
 	<classpathentry exported="true" kind="lib" path="lib/flyway-core-3.0.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry exported="true" kind="lib" path="lib/hamcrest-all-1.3.jar"/>
+	<classpathentry kind="lib" path="lib/slf4j-1.7.10/logback-classic-1.1.2.jar"/>
+	<classpathentry kind="lib" path="lib/slf4j-1.7.10/logback-core-1.1.2.jar"/>
+	<classpathentry kind="lib" path="lib/slf4j-1.7.10/slf4j-api-1.7.10.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
