@@ -64,8 +64,6 @@ public class Hub
     int filesProcessed=0;
     for (File file : listOfFiles) 
     {
-      Debug.msg(String.format("Adding [%s]", file.getAbsolutePath()));
-      
       try
       {
         //*** Add file to database.
