@@ -302,9 +302,8 @@ public class ManagerTest
     this.manager.addFile(uniqueFile);
     
     // Copied temporary file to another directory and add content to the copied file so it will have different content.
-    File tmpDirectory = new File(System.getProperty("java.io.tmpdir")+System.nanoTime());
-    tmpDirectory.mkdir();
-    File copiedFile = Data.copyFileToDirectory(uniqueFile, tmpDirectory);
+    Path tmpDirectoryPath = Data.createTempDir();
+    File copiedFile = Data.copyFileToDirectory(uniqueFile, tmpDirectoryPath.toFile());
     Data.writeStringToFile(copiedFile, " new content");
     this.manager.addFile(copiedFile);
     
@@ -328,7 +327,7 @@ public class ManagerTest
     // Clean up.
     uniqueFile.delete();
     copiedFile.delete();
-    tmpDirectory.delete();
+    tmpDirectoryPath.toFile().delete();
 
   }  
   
@@ -381,9 +380,8 @@ public class ManagerTest
     String originalCanonicalPath = Utils.getCanonicalPath(uniqueFile);
     
     // Move file to another directory.
-    File tmpDirectory = new File(System.getProperty("java.io.tmpdir")+System.nanoTime());
-    tmpDirectory.mkdir();
-    File fileMoved = Data.moveFileToDirectory(uniqueFile, tmpDirectory, false);
+    Path tmpDirectoryPath = Data.createTempDir();
+    File fileMoved = Data.moveFileToDirectory(uniqueFile, tmpDirectoryPath.toFile(), false);
     String newCanonicalPath = Utils.getCanonicalPath(fileMoved);
     
     // Add moved file again.
@@ -401,6 +399,8 @@ public class ManagerTest
     
     // Clean up.
     uniqueFile.delete();
+    fileMoved.delete();
+    tmpDirectoryPath.toFile().delete();
 
   }
   
