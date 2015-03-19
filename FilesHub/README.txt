@@ -3,15 +3,17 @@ Development
 
   Eclipse
   --------
-  -In Eclipse, you have to set the followings:
-  	- In "Run Configurations->Arguments->VM arguments": -DFilesHub.home=<your path>\FilesHub\FilesHub\test\
+  * In Eclipse, you have to set the followings:
+  	* In "Run Configurations->Arguments->VM arguments": 
+  	   * -DFilesHub.home=/your-path-of/FilesHub/FilesHub/test/
+  	   * -Dlogback.configurationFile=/your-path-of/FilesHub/FilesHub/test/logback.xml
   	- Add all application parameters in "Run Configurations->Arguments->Program arguments"
-  -In Eclipse, install TestNG.
-      *In Preference, set 'Output directory' to '/test/test-output'.
+  * In Eclipse, install TestNG.
+      * In Preference, set 'Output directory' to '/test/test-output'.
 
-  -Follow semantic versioning described at http://semver.org/
-  -Add new library:
-      --In build.xml, add JAR filename to '<attribute name="Rsrc-Class-Path" .../>'.
+  * Follow semantic versioning described at http://semver.org/
+  * Add new library:
+      * In build.xml, add JAR filename to '<attribute name="Rsrc-Class-Path" .../>'.
 
 TODO
 ============
