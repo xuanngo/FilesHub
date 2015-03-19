@@ -17,13 +17,13 @@ Development
 
 TODO
 ============
-  -Redo reportings: net.xngo.fileshub.report. It was adhoc coding.
+  * Redo reportings: net.xngo.fileshub.report. It was adhoc coding.
       
 Libraries
 ==========
-  -CSV: http://csveed.org/comparison-matrix.html
-  -https://code.google.com/p/markdown-doclet/ 
-  -https://code.google.com/p/sqlite4java/wiki/ComparisonToOtherWrappers
+  * CSV: http://csveed.org/comparison-matrix.html
+  * https://code.google.com/p/markdown-doclet/ 
+  * https://code.google.com/p/sqlite4java/wiki/ComparisonToOtherWrappers
 
 Indices
 ========
@@ -36,9 +36,9 @@ CREATE INDEX trash_canonical_path ON Trash (canonical_path);
 
 ================================================
 Unicode filename not found: 
-  -http://stackoverflow.com/questions/3072376/how-can-i-open-files-containing-accents-in-java
-  -http://jonisalonen.com/2012/java-and-file-names-with-invalid-characters/
-  -http://stackoverflow.com/questions/3610013/file-listfiles-mangles-unicode-names-with-jdk-6-unicode-normalization-issues
-  -http://stackoverflow.com/questions/13513652/encoding-issue-on-filename-with-java-7-on-osx-with-jnlp-webstart
+  * http://stackoverflow.com/questions/3072376/how-can-i-open-files-containing-accents-in-java
+  * http://jonisalonen.com/2012/java-and-file-names-with-invalid-characters/
+  * http://stackoverflow.com/questions/3610013/file-listfiles-mangles-unicode-names-with-jdk-6-unicode-normalization-issues
+  * http://stackoverflow.com/questions/13513652/encoding-issue-on-filename-with-java-7-on-osx-with-jnlp-webstart
   
 
