@@ -9,6 +9,7 @@ import java.io.RandomAccessFile;
 import java.nio.channels.FileChannel;
 import java.nio.channels.FileLock;
 import java.util.Collection;
+import java.nio.file.Path;
 
 import net.xngo.fileshub.Utils;
 import net.xngo.fileshub.cmd.Cmd;
@@ -64,22 +65,21 @@ public class CmdTest
   @Test(description="Test -a option with 1 directory.")
   public void addOptSingleDirectory()
   {
-    // Create test data in temporary path
-    String testDirectoryString = System.getProperty("java.io.tmpdir")+System.nanoTime();
-    File testDirectory = new File(testDirectoryString);
-    testDirectory.mkdir();
+    //*** Create test data in temporary path
+    // Create temp directory.
+    Path tmpDirPath = Data.createTempDir();
     for(int i=0; i<5; i++)
     {
-      Data.createTempFile("addOptSingleDirectory_"+i, testDirectory);
+      Data.createTempFile("addOptSingleDirectory_"+i, tmpDirPath.toFile());
     }
     
-    // Run command.
-    String[] args = new String[] { "-a", testDirectoryString };
+    //*** Main test: Run command.
+    String[] args = new String[] { "-a", tmpDirPath.toString() };
     Cmd cmd = new Cmd(args);
 
-    // Validate
+    //*** Validate
     Shelf shelf = new Shelf();
-    Collection<File> filesList = FileUtils.listFiles(testDirectory, TrueFileFilter.INSTANCE, TrueFileFilter.INSTANCE);
+    Collection<File> filesList = FileUtils.listFiles(tmpDirPath.toFile(), TrueFileFilter.INSTANCE, TrueFileFilter.INSTANCE);
     
     for(File file: filesList)
     {
@@ -88,8 +88,8 @@ public class CmdTest
       assertNotNull(doc, String.format("Command [%s %s] doesn't work. [%s] is not found in the database.", args[0], args[1], canonicalPath));
     }
     
-    // Clean up. Directory will be not be cleaned up if assertions failed. But at least the created directory is in the temporary directory.
-    FileUtils.deleteQuietly(testDirectory);    
+    //*** Clean up. Directory will be not be cleaned up if assertions failed. But at least the created directory is in the temporary directory.
+    FileUtils.deleteQuietly(tmpDirPath.toFile());    
   }
   
   @Test(description="Test -a option with locked file.")
