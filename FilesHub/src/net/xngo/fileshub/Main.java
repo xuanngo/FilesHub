@@ -17,7 +17,7 @@ import net.xngo.utils.java.time.Chronometer;
  */
 public class Main
 {
-  final static Logger logger = LoggerFactory.getLogger(Main.class);
+  final static Logger log = LoggerFactory.getLogger(Main.class);
   
   public static Chronometer chrono = new Chronometer();
   public static Connection connection = new Connection();
