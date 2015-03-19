@@ -54,11 +54,16 @@
 		<delete verbose="true" dir="./test/test-output"/>
 		<delete verbose="true" dir="./test/backupdb"/>
 	  
-	    <!-- Delete all results*.csv & results*.html -->
-	    <delete verbose="true">
-	      <fileset dir="./" includes="**/results_*.csv"/>
-	      <fileset dir="./" includes="**/results_*.html"/>
-	    </delete>
+    <!-- Delete files with the following patterns:
+              results*.csv
+              results*.html
+              FilesHub*.log 
+    -->
+    <delete verbose="true">
+      <fileset dir="./" includes="**/results_*.csv"/>
+      <fileset dir="./" includes="**/results_*.html"/>
+    	<fileset dir="./" includes="**/FilesHub*.log"/>
+    </delete>
 			
 		<!-- Delete javadoc directory -->
 		<delete verbose="true" dir="javadoc"/>
