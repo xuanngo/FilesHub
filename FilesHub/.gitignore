@@ -5,4 +5,4 @@ potentialDuplicates*.html
 results_*.html
 /test-output/
 /build-auto-generated.xml
-**/FilesHub*.log
+**/*.log

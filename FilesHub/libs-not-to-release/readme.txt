@@ -1,0 +1,1 @@
+libs-not-to-release/ holds all library files not relevant for releases.
