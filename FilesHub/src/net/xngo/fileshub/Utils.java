@@ -30,7 +30,7 @@ import net.xngo.utils.java.math.Hash;
  */
 public class Utils
 {
-  final static Logger logger = LoggerFactory.getLogger(Utils.class);
+  final static Logger log = LoggerFactory.getLogger(Utils.class);
   /**
    * Always get canonical(complete and fully expanded) path of file.
    * Beware of symbolic link.
@@ -47,7 +47,7 @@ public class Utils
       //e.printStackTrace();
       if(e.getMessage().indexOf("Too many levels of symbolic links")!=-1)
       {
-        logger.warn("Too many levels of symbolic links. Ignore: {}", file.getAbsolutePath(), e);
+        log.warn("Too many levels of symbolic links. Ignore: {}", file.getAbsolutePath(), e);
         
         RuntimeException rException = new RuntimeException(e.getMessage());
         rException.setStackTrace(e.getStackTrace());
@@ -55,7 +55,7 @@ public class Utils
       }
       else
       {
-        logger.error("", e);
+        log.error("", e); // @TODO: Add message. Need to create this conditions.
         e.printStackTrace();
       }
     }
@@ -75,9 +75,7 @@ public class Utils
    */
   public static final String getHash(File file)
   {
-    if(Debug.activate())
-      System.out.println("DEBUG: Hashing "+file.getAbsolutePath());
-    
+    log.debug("Hashing {}", file.getAbsolutePath());
     return Hash.xxhash32(file);
   }
   
