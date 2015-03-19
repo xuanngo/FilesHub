@@ -2,7 +2,6 @@ package net.xngo.fileshub.cmd;
 
 import net.xngo.fileshub.Config;
 import net.xngo.fileshub.Hub;
-import net.xngo.fileshub.db.Debug;
 import net.xngo.utils.java.io.FileUtils;
 
 import com.beust.jcommander.JCommander;

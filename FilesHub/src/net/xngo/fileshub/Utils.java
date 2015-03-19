@@ -11,16 +11,14 @@ import java.io.RandomAccessFile;
 import java.io.UnsupportedEncodingException;
 import java.nio.channels.FileChannel;
 import java.nio.channels.FileLock;
-import java.text.DecimalFormat;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import net.jpountz.xxhash.StreamingXXHash32;
 import net.jpountz.xxhash.XXHashFactory;
-import net.xngo.fileshub.db.Debug;
 import net.xngo.utils.java.io.FileUtils;
 import net.xngo.utils.java.math.Hash;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**

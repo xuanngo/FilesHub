@@ -1,9 +1,6 @@
 package net.xngo.fileshub;
 
 import java.io.File;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -11,10 +8,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
-import net.xngo.fileshub.db.Debug;
 import net.xngo.fileshub.db.Manager;
-import net.xngo.fileshub.report.ReportSimilar;
 import net.xngo.fileshub.report.ReportDuplicate;
+import net.xngo.fileshub.report.ReportSimilar;
 import net.xngo.fileshub.struct.Document;
 import net.xngo.fileshub.struct.Duplicate;
 import net.xngo.fileshub.struct.PairFile;
@@ -22,9 +18,6 @@ import net.xngo.fileshub.upgrade.Upgrade;
 import net.xngo.utils.java.io.FileUtils;
 import net.xngo.utils.java.math.Math;
 import net.xngo.utils.java.time.CalUtils;
-
-import java.lang.Process;
-import java.lang.Runtime;
 
 /**
  * 
