@@ -746,8 +746,9 @@ public class ManagerTest
     Path tmpDir = Data.createTempDir();
     try
     {
-    //*** Main test: Add directory. It should throw an exception. ***
+      //*** Main test: Add directory. It should throw an exception. ***
       this.manager.addFile(tmpDir.toFile());
+      assertTrue(false, "This line should never be run. It should throw an exception."); 
     }
     finally
     {
