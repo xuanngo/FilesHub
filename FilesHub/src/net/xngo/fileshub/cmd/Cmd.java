@@ -95,7 +95,6 @@ public class Cmd
     {
       System.out.println("\nError: Wrong usage!");
       System.out.println(e.getMessage());
-      if(Debug.activate()){e.printStackTrace();}
       System.out.println("====================================");
       System.out.println();
       jc.usage();
