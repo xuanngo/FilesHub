@@ -45,8 +45,18 @@
 		<copy todir="./test">
 			<fileset dir="${latest.release.directory}"/>
 		</copy>
+		
+		<!-- Modify logback.xml for testing purpose:
+		        -Change Level from WARN to DEBUG
+		-->
+    <replaceregexp file="test/logback.xml"
+                   match="&lt;root level=&quot;WARN&quot;&gt;"
+                   replace="&lt;root level=&quot;DEBUG&quot;&gt;"
+
+    />		
 	</target>
 	
+	<!-- clean up after build -->
 	<target name="delete_files">
 		<delete file="${latest.release.directory}/FilesHub.db"/><!-- Guarantee no database will be touched when upgraded. Don't set verbose="true". File shouldn't exist. -->
 		
