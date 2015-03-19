@@ -34,12 +34,12 @@
 
         <encoder>
           <charset>UTF-8</charset>
-          <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg %n</pattern>
+          <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger.%method - %msg %n</pattern>
         </encoder>
     </appender> 
 
     <root level="WARN"><!-- DEBUG > INFO > WARN > ERROR > FATAL -->
-      <appender-ref ref="STDOUT" />
+      <!-- <appender-ref ref="STDOUT" /> -->
       <appender-ref ref="FILE" />     
     </root>
 </configuration>

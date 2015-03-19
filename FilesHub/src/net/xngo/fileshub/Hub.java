@@ -8,6 +8,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import net.xngo.fileshub.db.Manager;
 import net.xngo.fileshub.report.ReportDuplicate;
 import net.xngo.fileshub.report.ReportSimilar;
@@ -26,6 +29,8 @@ import net.xngo.utils.java.time.CalUtils;
  */
 public class Hub
 {
+  final static Logger log = LoggerFactory.getLogger(Manager.class);
+  
   private Manager manager = new Manager();
   
   
@@ -103,19 +108,23 @@ public class Hub
       {
         if(e.getMessage()==null)
         {
+          log.error("Unknown exception: Exception.getMessage() is null. Caused by {]", file.getAbsolutePath());
           RuntimeException rException = new RuntimeException("Unknown exception: Exception.getMessage() is null. Caused by "+file.getAbsolutePath());
           throw rException;          
         }
         if(e.getMessage().indexOf("The process cannot access the file because another process has locked a portion of the file")!=-1)
         {
+          log.warn("Ignore locked file {}.", file.getAbsolutePath());
           System.out.println(String.format("Warning: Ignore locked file %s.", file.getAbsolutePath()));
         }
         else if(e.getMessage().indexOf("The system cannot find the file specified")!=-1)
         {// For case where filename=..\est.
+          log.error("The system cannot find the file specified: Ignore {}.", file.getAbsolutePath(), e);
           System.out.println(String.format("Warning: The system cannot find the file specified: Ignore %s.", file.getAbsolutePath()));
         }
         else if(e.getMessage().indexOf("Too many levels of symbolic links")!=-1)
         {
+          log.warn("Too many levels of symbolic links: Ignore {}.", file.getAbsolutePath());
           System.out.println(String.format("Warning: Too many levels of symbolic links: Ignore %s.", file.getAbsolutePath()));
         }
         else if(e.getMessage().indexOf("No such file or directory")!=-1)
@@ -134,6 +143,7 @@ public class Hub
             //if(file.renameTo(newFile))
             if(this.renameInvalidFilename(sourcePath, destinationPath))
             {
+              log.warn("Invalid charaters in filename. Rename {} to {}.", file.getAbsolutePath(), newFile.getAbsolutePath());
               System.out.println(String.format("Warning: No such file or directory: %s.", file.getAbsolutePath()));
               System.out.println(String.format("   Renamed file from\n"
                                              + "     %s to\n"
@@ -142,6 +152,7 @@ public class Hub
             }
             else
             {
+              log.error("Invalid charaters in filename. Failed rename {} to {}.", file.getAbsolutePath(), newFile.getAbsolutePath());
               System.out.println(String.format("Error: Failed to rename file from\n"
                                                 + "   %s to\n"
                                                 + "   %s", file.getAbsolutePath(), newFile.getAbsolutePath()));
@@ -150,11 +161,13 @@ public class Hub
           }
           else
           {
+            log.warn("No such file or directory: Ignore {}.", file.getAbsolutePath());
             System.out.println(String.format("Warning: No such file or directory: Ignore %s.", file.getAbsolutePath()));
           }
         }
         else if(e.getMessage().indexOf("RuntimeException: Hash is null")!=-1)
         {
+          log.error("RuntimeException: Hash is null: Ignore {}. Need investigation", file.getAbsolutePath(), e);
           System.out.println(String.format("Warning: RuntimeException: Hash is null: Ignore %s.", file.getAbsolutePath()));
         }        
         else
@@ -164,6 +177,7 @@ public class Hub
           {
             Main.connection.rollback();
             System.out.println(String.format("Rollback up to the last %d potential commits. Issue is in %s", updateFrequency, file.getAbsolutePath()));
+            log.error("Unknown error. Rollback up to the last {} potential commits. Issue is in {}. Need investigation", updateFrequency, file.getAbsolutePath(), e);
           }
           catch(SQLException ex)
           {
