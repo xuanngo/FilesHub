@@ -38,7 +38,7 @@
         </encoder>
     </appender> 
 
-    <root level="DEBUG"><!-- DEBUG > INFO > WARN > ERROR > FATAL -->
+    <root level="WARN"><!-- DEBUG > INFO > WARN > ERROR > FATAL -->
       <appender-ref ref="STDOUT" />
       <appender-ref ref="FILE" />     
     </root>
