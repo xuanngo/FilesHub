@@ -14,7 +14,6 @@ public class Config
   public static final String SQL_DIR            = HOME_DIR+File.separator+"upgrade"+File.separator+"sql";
   
   // Optional.
-  //public static final String DEBUG              = System.getProperty(NAME+".debug");          // Debug mode: true or false
   public static final String WORD_LIST          = HOME_DIR+File.separator+"words.lst";
   
 }
