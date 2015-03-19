@@ -351,12 +351,11 @@ public class ManagerTest
     // Add same file from multiple paths
     for(int i=0; i<NUM_OF_DIFF_PATHS; i++)
     {
-      File tmpDirectory = new File(System.getProperty("java.io.tmpdir")+System.nanoTime()+i);
-      tmpDirectory.mkdir();
-      File copiedFile = Data.copyFileToDirectory(uniqueFile, tmpDirectory);
+      Path tmpDirectoryPath = Data.createTempDir();
+      File copiedFile = Data.copyFileToDirectory(uniqueFile, tmpDirectoryPath.toFile());
       this.manager.addFile(copiedFile);
       copiedFile.delete();
-      tmpDirectory.delete();
+      tmpDirectoryPath.toFile().delete();
     }
     
     // Actual values.
