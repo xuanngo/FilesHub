@@ -30,7 +30,7 @@ import net.xngo.utils.java.io.FileUtils;
  */
 public class Manager
 {
-  final static Logger logger = LoggerFactory.getLogger(Manager.class);
+  final static Logger log = LoggerFactory.getLogger(Manager.class);
   
   private Shelf shelf = new Shelf();
   private Trash trash = new Trash();
@@ -319,6 +319,7 @@ public class Manager
     if(fileFromPath.compareTo(fileToPath)==0)
     {
       System.out.println("Error: Both files are exactly the same.");
+      log.warn("Both files are exactly the same: {} and {}.", fileFrom.getPath(), fileTo.getPath());
       return false;
     }    
     
@@ -405,6 +406,7 @@ public class Manager
           else
           {// TO file doesn't physically exist and it is not in the database.
             System.out.println(String.format("ERROR: %s doesn't exist.", fileTo.getAbsolutePath()));
+            log.warn("{} doesn't exist.", fileTo.getAbsolutePath());
             return false;
           }
         }
@@ -481,6 +483,7 @@ public class Manager
             else
             {
               System.out.println(String.format("ERROR: %s doesn't exist.", fileTo.getAbsolutePath()));
+              log.warn("{} doesn't exist.", fileTo.getAbsolutePath());
               return false;              
             }
           }
@@ -497,6 +500,7 @@ public class Manager
         else
         {// FROM file doesn't exist.
           System.out.println(String.format("ERROR: %s doesn't exist.", fileFrom.getAbsolutePath()));
+          log.warn("{} doesn't exist.", fileFrom.getAbsolutePath());
           return false;
         }
       }
