@@ -26,7 +26,7 @@
           <timeBasedFileNamingAndTriggeringPolicy
               class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
               <!-- Create a new log file if it reaches over maxFileSize. -->
-              <maxFileSize>10KB</maxFileSize>
+              <maxFileSize>5MB</maxFileSize>
           </timeBasedFileNamingAndTriggeringPolicy>
           <!-- keep 30 days' worth of history -->
           <maxHistory>30</maxHistory>
