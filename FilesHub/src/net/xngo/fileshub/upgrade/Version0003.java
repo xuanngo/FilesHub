@@ -36,6 +36,7 @@ public class Version0003
     this.rehashShelfFiles();
     // Note: No need to rehash files from Trash table.
     //  Waste of space. Let's be forward compatible only.
+    //  By definition, files in Trash table are duplicates.
     
     Main.connection.close();
   }
@@ -94,6 +95,8 @@ public class Version0003
           }
         }
       }
+      else
+        log.warn("Skip MD5 hashing. File doesn't exist: {}.", shelfDoc.canonical_path);
     }
     try{ Main.connection.commit(); } catch(SQLException ex) { log.error("Can't commit", ex); ex.printStackTrace(); }
     Main.console.printProgress(String.format("Migrating Shelf table: %s [%d/%d] %s", 
