@@ -28,7 +28,15 @@ public class FileshubCallback  implements FlywayCallback
       version2.run();
     }
     
-    // Version 3: Use different hash function
+    // Version 3: Rehash all files. Change from xxhash32 to md5
+    //              because xxhash32 have a very high probability of collision: 1/4 billions
+    //              whereas md5 have 1/2^128.
+    if(version.compareTo("3")==0)
+    {
+      // Update file size.
+      Version0003 version3 = new Version0003();
+      version3.run();
+    }    
     
     Upgrade.chrono.stop("Migrate to version "+version);
   }
