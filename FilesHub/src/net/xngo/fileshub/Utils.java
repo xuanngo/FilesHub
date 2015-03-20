@@ -29,6 +29,7 @@ import org.slf4j.LoggerFactory;
 public class Utils
 {
   final static Logger log = LoggerFactory.getLogger(Utils.class);
+  
   /**
    * Always get canonical(complete and fully expanded) path of file.
    * Beware of symbolic link.
@@ -63,18 +64,14 @@ public class Utils
  
   /**
    * Get the hash(ID) of the file.
-   * Note: -XXHash32 is chosen because it claims to be fast.
-   *       -Check what is the collision rate of XXHash32 algorithm 
-   *              because StreamingXXHash32.getValue() return an integer, 
-   *              which has a limit of 2,147,483,648.
-   * Collision explained: https://code.google.com/p/xxhash/issues/detail?id=14#c1
+   * Choose hash algorithm that has low probability of collisions and
+   *    its distribution is uniform.
    * @param file
    * @return      the hash as string
    */
   public static final String getHash(File file)
   {
     log.debug("Hashing {}", file.getAbsolutePath());
-    //return Hash.xxhash32(file);
     return Hash.md5(file);
   }
   
