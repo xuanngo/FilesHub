@@ -2,16 +2,12 @@ package net.xngo.fileshub.db;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-import java.text.SimpleDateFormat;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import net.xngo.fileshub.Config;
 import net.xngo.fileshub.Main;
@@ -22,6 +18,9 @@ import net.xngo.fileshub.struct.PairFile;
 import net.xngo.fileshub.upgrade.Upgrade;
 import net.xngo.utils.java.io.Console;
 import net.xngo.utils.java.io.FileUtils;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Manage documents.

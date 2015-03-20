@@ -1,25 +1,18 @@
 package net.xngo.fileshub.test.cmd;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.PrintStream;
-import java.sql.SQLException;
-import java.util.concurrent.atomic.AtomicInteger;
-
-import net.xngo.fileshub.Main;
-import net.xngo.fileshub.cmd.Cmd;
-import net.xngo.fileshub.db.Shelf;
-import net.xngo.fileshub.db.Manager;
-import net.xngo.fileshub.struct.Document;
-import net.xngo.fileshub.test.db.ManagerTestSearch;
-import net.xngo.fileshub.test.helpers.Data;
-import net.xngo.utils.java.math.Random;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.not;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.PrintStream;
+import java.sql.SQLException;
 
-
+import net.xngo.fileshub.Main;
+import net.xngo.fileshub.cmd.Cmd;
+import net.xngo.fileshub.db.Manager;
+import net.xngo.fileshub.test.helpers.Data;
 
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeClass;

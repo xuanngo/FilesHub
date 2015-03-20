@@ -1,29 +1,25 @@
 package net.xngo.fileshub.test.db;
 
-import java.io.File;
-import java.sql.SQLException;
-import java.util.List;
-import java.util.ArrayList;
-import java.util.concurrent.atomic.AtomicInteger;
-
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotEquals;
-import static org.testng.Assert.assertFalse;
-import static org.testng.Assert.assertNotNull;
-import static org.testng.Assert.assertNull;
-import static org.testng.Assert.assertTrue;
+
+import java.io.File;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
+
 import net.xngo.fileshub.Main;
 import net.xngo.fileshub.Utils;
-import net.xngo.fileshub.db.Manager;
-
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
-
-import net.xngo.fileshub.db.Trash;
 import net.xngo.fileshub.db.Connection;
+import net.xngo.fileshub.db.Manager;
+import net.xngo.fileshub.db.Trash;
 import net.xngo.fileshub.struct.Document;
 import net.xngo.fileshub.test.helpers.Data;
 import net.xngo.utils.java.math.Random;
+
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Test;
 
 public class TrashTest
 {

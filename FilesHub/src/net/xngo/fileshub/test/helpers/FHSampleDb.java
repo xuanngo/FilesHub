@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.xngo.fileshub.Main;
-import net.xngo.fileshub.db.*;
+import net.xngo.fileshub.db.Manager;
 
 /**
  * This class will create a sample database with different types of data.

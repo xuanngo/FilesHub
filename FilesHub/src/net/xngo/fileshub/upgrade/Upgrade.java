@@ -4,10 +4,6 @@ import java.io.File;
 
 import net.xngo.fileshub.Config;
 import net.xngo.fileshub.Main;
-import net.xngo.fileshub.Utils;
-import net.xngo.fileshub.db.Connection;
-
-
 import net.xngo.utils.java.io.FileUtils;
 import net.xngo.utils.java.time.CalUtils;
 import net.xngo.utils.java.time.Chronometer;
@@ -15,7 +11,6 @@ import net.xngo.utils.java.time.Chronometer;
 import org.flywaydb.core.Flyway;
 import org.flywaydb.core.api.MigrationInfo;
 import org.flywaydb.core.api.MigrationInfoService;
-import org.flywaydb.core.api.MigrationVersion;
 
 /**
  * Backup old database and upgrade using Flyway.

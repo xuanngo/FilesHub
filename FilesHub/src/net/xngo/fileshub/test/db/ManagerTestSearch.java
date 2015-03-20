@@ -2,38 +2,16 @@ package net.xngo.fileshub.test.db;
 
 
 //TestNG
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.BeforeTest;
-import org.testng.annotations.Test;
-import org.testng.annotations.AfterTest;
-
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertFalse;
-import static org.testng.Assert.assertNotNull;
-import static org.testng.Assert.assertNull;
-import static org.testng.Assert.assertTrue;
-
-
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
+import static org.testng.Assert.assertTrue;
 
-
+import java.io.ByteArrayOutputStream;
 // Java Library
 import java.io.File;
 import java.io.PrintStream;
-import java.io.UnsupportedEncodingException;
-import java.io.ByteArrayOutputStream;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
-
-
-
-
-
 
 import net.xngo.fileshub.Main;
 //FilesHub classes.
@@ -42,11 +20,15 @@ import net.xngo.fileshub.db.Manager;
 import net.xngo.fileshub.db.Shelf;
 import net.xngo.fileshub.db.Trash;
 import net.xngo.fileshub.struct.Document;
-
 // FilesHub test helper classes.
 import net.xngo.fileshub.test.helpers.Data;
 import net.xngo.fileshub.test.helpers.DocumentExt;
 import net.xngo.utils.java.math.Random;
+
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
 
 
 /**

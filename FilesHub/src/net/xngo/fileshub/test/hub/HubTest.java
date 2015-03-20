@@ -1,27 +1,26 @@
 package net.xngo.fileshub.test.hub;
 
-import java.io.File;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashSet;
-
-import org.testng.annotations.Test;
-
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertNull;
 
-import org.testng.annotations.DataProvider;
+import java.io.File;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashSet;
 
 import net.xngo.fileshub.Hub;
 import net.xngo.fileshub.Main;
 import net.xngo.fileshub.Utils;
+import net.xngo.fileshub.db.Connection;
 import net.xngo.fileshub.db.Shelf;
 import net.xngo.fileshub.db.Trash;
 import net.xngo.fileshub.struct.Document;
-import net.xngo.fileshub.db.Connection;
 import net.xngo.fileshub.test.helpers.Data;
+
+import org.testng.annotations.DataProvider;
+import org.testng.annotations.Test;
 
 public class HubTest
 {

@@ -1,18 +1,10 @@
 package net.xngo.fileshub.test.upgrade;
 
-import java.io.File;
-
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.BeforeTest;
-import org.testng.annotations.AfterTest;
-import org.testng.annotations.Test;
-
-import net.xngo.fileshub.Utils;
-import net.xngo.fileshub.db.Trash;
-import net.xngo.fileshub.db.Shelf;
-import net.xngo.fileshub.struct.Document;
-import net.xngo.fileshub.test.helpers.Data;
 import net.xngo.fileshub.test.helpers.FHSampleDb;
+
+import org.testng.annotations.AfterTest;
+import org.testng.annotations.BeforeTest;
+import org.testng.annotations.Test;
 
 public class Version0002Test
 {

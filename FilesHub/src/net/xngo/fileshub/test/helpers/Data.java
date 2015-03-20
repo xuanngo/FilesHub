@@ -2,13 +2,10 @@ package net.xngo.fileshub.test.helpers;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.lang.StringBuilder;
-import java.util.Random;
 import java.nio.charset.Charset;
-
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.Random;
 
 import net.xngo.fileshub.Utils;
 

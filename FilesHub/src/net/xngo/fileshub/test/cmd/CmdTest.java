@@ -8,8 +8,8 @@ import java.io.File;
 import java.io.RandomAccessFile;
 import java.nio.channels.FileChannel;
 import java.nio.channels.FileLock;
-import java.util.Collection;
 import java.nio.file.Path;
+import java.util.Collection;
 
 import net.xngo.fileshub.Utils;
 import net.xngo.fileshub.cmd.Cmd;

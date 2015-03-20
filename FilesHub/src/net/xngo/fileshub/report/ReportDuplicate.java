@@ -2,12 +2,11 @@ package net.xngo.fileshub.report;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Collections;
+import java.util.List;
 
 import net.xngo.fileshub.Main;
 import net.xngo.fileshub.Utils;
-import net.xngo.fileshub.struct.Document;
 import net.xngo.fileshub.struct.Duplicate;
 import net.xngo.utils.java.io.FileUtils;
 

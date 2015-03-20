@@ -1,11 +1,8 @@
 package net.xngo.fileshub.upgrade;
 
+import java.io.File;
 import java.sql.SQLException;
 import java.util.List;
-import java.io.File;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import net.xngo.fileshub.Main;
 import net.xngo.fileshub.Utils;
@@ -13,6 +10,9 @@ import net.xngo.fileshub.db.Connection;
 import net.xngo.fileshub.db.Shelf;
 import net.xngo.fileshub.struct.Document;
 import net.xngo.utils.java.math.Math;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**

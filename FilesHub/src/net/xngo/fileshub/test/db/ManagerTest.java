@@ -1,50 +1,41 @@
 package net.xngo.fileshub.test.db;
 
 // FilesHub classes.
+import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertNull;
 import static org.testng.Assert.assertTrue;
 
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.Test;
-
-
 // Java Library
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
-
-// FilesHub
-import net.xngo.fileshub.Config;
 import net.xngo.fileshub.Main;
 import net.xngo.fileshub.Utils;
 import net.xngo.fileshub.db.Manager;
 import net.xngo.fileshub.db.Shelf;
 import net.xngo.fileshub.db.Trash;
 import net.xngo.fileshub.struct.Document;
-
-// net.xngo.utils.java
-import net.xngo.utils.java.math.Random;
-
 // FilesHub test helper classes.
 import net.xngo.fileshub.test.helpers.Data;
 import net.xngo.fileshub.test.helpers.ShelfExt;
 import net.xngo.fileshub.test.helpers.TrashExt;
+// net.xngo.utils.java
+import net.xngo.utils.java.math.Random;
 
 import org.apache.commons.io.FileUtils;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Test;
+// FilesHub
 
 
 /**
