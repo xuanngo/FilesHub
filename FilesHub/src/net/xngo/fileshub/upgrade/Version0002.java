@@ -22,6 +22,7 @@ import net.xngo.utils.java.math.Math;
  * 
  *    Assuming 100 MB of heap memory and average Document size = 400 bytes(largest = 493 bytes).
  *    Number of possible in heap=100*1024*1024/400 = 262,144
+ *    
  * @author Xuan Ngo
  *
  */

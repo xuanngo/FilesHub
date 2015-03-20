@@ -5,6 +5,13 @@ import java.sql.Connection;
 import org.flywaydb.core.api.MigrationInfo;
 import org.flywaydb.core.api.callback.FlywayCallback;
 
+/**
+ * This class define different set of hooks that you can
+ *  use to execute your custom code in the upgrading process.
+ *  
+ * @author Xuan Ngo
+ *
+ */
 public class FileshubCallback  implements FlywayCallback
 {
   public void afterClean(Connection connection)
@@ -12,12 +19,16 @@ public class FileshubCallback  implements FlywayCallback
   public void afterEachMigrate(Connection connection, MigrationInfo info)
   {
     String version = info.getVersion().toString();
+    
+    // Version 2: Add file size column.
     if(version.compareTo("2")==0)
     {
       // Update file size.
       Version0002 version2 = new Version0002();
       version2.run();
     }
+    
+    // Version 3: Use different hash function
     
     Upgrade.chrono.stop("Migrate to version "+version);
   }
