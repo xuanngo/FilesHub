@@ -1,11 +1,7 @@
 package net.xngo.fileshub;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import net.xngo.fileshub.cmd.Cmd;
 import net.xngo.fileshub.db.Connection;
-import net.xngo.fileshub.db.Manager;
 import net.xngo.utils.java.io.Console;
 import net.xngo.utils.java.time.Chronometer;
 

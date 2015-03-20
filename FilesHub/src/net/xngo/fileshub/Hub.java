@@ -8,9 +8,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import net.xngo.fileshub.db.Manager;
 import net.xngo.fileshub.report.ReportDuplicate;
 import net.xngo.fileshub.report.ReportSimilar;
@@ -21,6 +18,9 @@ import net.xngo.fileshub.upgrade.Upgrade;
 import net.xngo.utils.java.io.FileUtils;
 import net.xngo.utils.java.math.Math;
 import net.xngo.utils.java.time.CalUtils;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * 
