@@ -18,6 +18,9 @@ import org.flywaydb.core.api.MigrationInfoService;
 import org.flywaydb.core.api.MigrationVersion;
 
 /**
+ * Backup old database and upgrade using Flyway.
+ *  This class shouldn't change much. It is calling FileshubCallback to do
+ *    the heavy lifting.
  * IMPORTANT: SQLite only supports a single connection at a time.
  *            Therefore, you need to close and open connection every time
  *            you use Main.connection.
