@@ -95,7 +95,7 @@ public class Version0002
         }
         catch(Exception ex)
         {
-          System.out.println(String.format("Rollback up to the last %d potential commits. Issue is in %s", updateFrequency, shelfDoc.canonical_path));
+          System.out.println(String.format("Rollback up to the last %d potential commits. Issue is in %s.", updateFrequency, shelfDoc.canonical_path));
           System.out.println(shelfDoc.getInfo("Entry info in Shelf:"));
           ex.printStackTrace();          
           try
