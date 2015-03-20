@@ -123,6 +123,7 @@ public class Shelf
   
   /**
    * Return all documents from Shelf table.
+   * Warning: Big table = big memory usage.
    * @return all documents from Shelf table.
    */
   public List<Document> getDocs()
