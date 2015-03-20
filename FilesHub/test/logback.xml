@@ -34,7 +34,7 @@
 
         <encoder>
           <charset>UTF-8</charset>
-          <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger %method - %msg %n</pattern>
+          <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger.%method - %msg %n</pattern>
         </encoder>
     </appender> 
 
