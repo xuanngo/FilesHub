@@ -38,6 +38,10 @@ public class Document
     this.comment        = doc.comment;
   }
   
+  /**
+   * Update all file information.
+   * @param file
+   */
   public void update(final File file)
   {
     this.canonical_path = Utils.getCanonicalPath(file);
