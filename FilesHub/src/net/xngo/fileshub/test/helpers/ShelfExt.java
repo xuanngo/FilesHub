@@ -13,7 +13,10 @@ import net.xngo.fileshub.db.Shelf;
  */
 public class ShelfExt extends Shelf
 {
-  
+  /**
+   * 
+   * @return Total number of documents(i.e. rows).
+   */
   public int getTotalDocs()
   {
     final String query = "SELECT COUNT(*) FROM " + super.tablename;
