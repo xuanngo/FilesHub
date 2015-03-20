@@ -13,6 +13,10 @@ import net.xngo.fileshub.db.Trash;
  */
 public class TrashExt extends Trash
 {
+  /**
+   * 
+   * @return Total number of documents(i.e. rows).
+   */
   public int getTotalDocs()
   {
     final String query = "SELECT COUNT(*) FROM " + super.tablename;
