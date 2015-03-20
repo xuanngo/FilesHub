@@ -74,7 +74,8 @@ public class Utils
   public static final String getHash(File file)
   {
     log.debug("Hashing {}", file.getAbsolutePath());
-    return Hash.xxhash32(file);
+    //return Hash.xxhash32(file);
+    return Hash.md5(file);
   }
   
   /**
