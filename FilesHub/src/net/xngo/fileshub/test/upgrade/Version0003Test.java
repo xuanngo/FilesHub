@@ -5,8 +5,6 @@ import java.io.File;
 
 
 
-
-
 import net.xngo.fileshub.Main;
 import net.xngo.fileshub.Utils;
 import net.xngo.fileshub.db.Connection;
@@ -15,12 +13,15 @@ import net.xngo.fileshub.db.Trash;
 import net.xngo.fileshub.test.helpers.FHSampleDb;
 import net.xngo.fileshub.upgrade.Upgrade;
 import net.xngo.fileshub.struct.Document;
+import net.xngo.utils.java.lang.StringUtils;
 
 import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertFalse;
+import static org.testng.Assert.assertTrue;
 
 
 public class Version0003Test
@@ -63,9 +64,15 @@ public class Version0003Test
         String actualHash = shelfDoc.hash;
         String expectedHash = Utils.getHash(file);
         
+        // Check hash is in hexadecimal form.
+        assertTrue(StringUtils.isHex(actualHash));
+        
+        // Check hash is 32 characters long.
         assertEquals(actualHash.length(), 32);
         assertEquals(expectedHash.length(), 32);
         
+        
+        // Main check: Check database hash is equal to file hash.
         assertEquals(actualHash, expectedHash, shelfDoc.getInfo("MD5 Hash doesn't match:"));
       }
       
