@@ -66,6 +66,7 @@ public class Version0003Test
         
         // Check hash is in hexadecimal form.
         assertTrue(StringUtils.isHex(actualHash));
+        assertTrue(StringUtils.isHex(expectedHash));
         
         // Check hash is 32 characters long.
         assertEquals(actualHash.length(), 32);
