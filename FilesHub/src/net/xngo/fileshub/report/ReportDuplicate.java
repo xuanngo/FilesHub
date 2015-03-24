@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import net.xngo.fileshub.Config;
 import net.xngo.fileshub.Main;
 import net.xngo.fileshub.Utils;
 import net.xngo.fileshub.struct.Duplicate;
@@ -84,6 +85,8 @@ public class ReportDuplicate extends Report
     /** Construct summary details **/
     /*******************************/
     super.addSummary("Summary:\n");
+    
+    super.addSummary(String.format("\tHash Frequency: %d\n", Config.HASH_FREQUENCY));
     
     if(!this.directories.isEmpty()){ super.addSummary(String.format("\tProcessed directories: %s.\n", this.directories)); }
     
