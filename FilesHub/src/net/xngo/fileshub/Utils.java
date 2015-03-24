@@ -82,7 +82,7 @@ public class Utils
     }
     else
     {
-      // Spot check the hash if the file is bigger than 4MB.
+      // Spot hash if the file is bigger than 4MB.
       if(file.length()>fileSizeThreshold)
       {
         return Hash.md5FingerPrint(file, Config.HASH_FREQUENCY);
