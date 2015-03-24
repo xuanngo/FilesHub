@@ -176,11 +176,11 @@ public class Hub
           try
           {
             Main.connection.rollback();
-            System.out.println(String.format("Rollback up to the last %d potential commits. Issue is in %s", updateFrequency, file.getAbsolutePath()));
-            log.error("Unknown error. Rollback up to the last {} potential commits. Issue is in {}. Need investigation", updateFrequency, file.getAbsolutePath(), e);
           }
           catch(SQLException ex)
           {
+            System.out.println(String.format("Rollback up to the last %d potential commits. Issue is in %s", updateFrequency, file.getAbsolutePath()));
+            log.error("Unknown error. Rollback up to the last {} potential commits. Issue is in {}.", updateFrequency, file.getAbsolutePath(), e);
             ex.printStackTrace();
           }
           
