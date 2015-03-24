@@ -16,4 +16,6 @@ public class Config
   // Optional.
   public static final String WORD_LIST          = HOME_DIR+File.separator+"words.lst";
   
+  public static final int    HASH_FREQUENCY    = Integer.parseInt(System.getProperty(NAME+".hash.frequency")); // HASH_FREQUENCY=0 means hash the whole file.
+  
 }
