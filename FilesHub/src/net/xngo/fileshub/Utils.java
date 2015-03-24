@@ -72,7 +72,24 @@ public class Utils
   public static final String getHash(File file)
   {
     log.debug("Hashing {}", file.getAbsolutePath());
-    return Hash.md5(file);
+    
+    final int fileSizeThreshold = 4194304; // 4MB=4*1024*1024;
+    
+    // When Config.HASH_FREQUENCY==0, then hash the whole file.
+    if(Config.HASH_FREQUENCY==0)
+    {
+      return Hash.md5(file);
+    }
+    else
+    {
+      // Spot check the hash if the file is bigger than 4MB.
+      if(file.length()>fileSizeThreshold)
+      {
+        return Hash.md5FingerPrint(file, Config.HASH_FREQUENCY);
+      }
+      else
+        return Hash.md5(file);
+    }
   }
   
   /**
