@@ -14,6 +14,8 @@ import org.flywaydb.core.api.callback.FlywayCallback;
  */
 public class FileshubCallback  implements FlywayCallback
 {
+  public void afterBaseline(Connection connection)
+  {}
   public void afterClean(Connection connection)
   {}
   public void afterEachMigrate(Connection connection, MigrationInfo info)
@@ -50,6 +52,9 @@ public class FileshubCallback  implements FlywayCallback
   {}
   public void afterValidate(Connection connection)
   {}
+  
+  public void beforeBaseline(Connection connection)
+  {}  
   public void beforeClean(Connection connection)
   {}
   public void beforeEachMigrate(Connection connection, MigrationInfo info)
