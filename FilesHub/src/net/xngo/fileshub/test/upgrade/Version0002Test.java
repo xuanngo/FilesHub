@@ -1,24 +1,21 @@
 package net.xngo.fileshub.test.upgrade;
 
-import java.util.List;
+import static org.testng.Assert.assertEquals;
+
 import java.io.File;
-
-
-
+import java.util.List;
 
 import net.xngo.fileshub.Main;
 import net.xngo.fileshub.db.Connection;
 import net.xngo.fileshub.db.Shelf;
 import net.xngo.fileshub.db.Trash;
+import net.xngo.fileshub.struct.Document;
 import net.xngo.fileshub.test.helpers.FHSampleDb;
 import net.xngo.fileshub.upgrade.Upgrade;
-import net.xngo.fileshub.struct.Document;
 
 import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
-
-import static org.testng.Assert.assertEquals;
 
 
 public class Version0002Test
