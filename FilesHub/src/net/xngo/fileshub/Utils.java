@@ -12,8 +12,6 @@ import java.io.UnsupportedEncodingException;
 import java.nio.channels.FileChannel;
 import java.nio.channels.FileLock;
 
-import net.jpountz.xxhash.StreamingXXHash32;
-import net.jpountz.xxhash.XXHashFactory;
 import net.xngo.utils.java.io.FileUtils;
 import net.xngo.utils.java.math.Hash;
 
@@ -90,108 +88,6 @@ public class Utils
       else
         return Hash.md5(file);
     }
-  }
-  
-  /**
-   * Source: http://examples.javacodegeeks.com/core-java/io/file/4-ways-to-copy-file-in-java/
-   */
-  public static void copyFileUsingFileStreams(File source, File dest)
-  {
-    try 
-    {
-      InputStream input = new FileInputStream(source);
-      OutputStream output = new FileOutputStream(dest);
-      byte[] buf = new byte[8192];
-      int bytesRead;
-      while ((bytesRead = input.read(buf)) > 0) 
-      {
-        output.write(buf, 0, bytesRead);
-      }
-      
-      input.close();
-      output.close();      
-    } 
-    catch(FileNotFoundException ex)
-    {
-      ex.printStackTrace();
-    }
-    catch(IOException ex)
-    {
-      ex.printStackTrace();
-    }      
-  }
-  
-  
-  /**
-   * Source: http://examples.javacodegeeks.com/core-java/io/file/4-ways-to-copy-file-in-java/
-   */
-  public static void copyFileUsingFileChannels(File source, File dest)
-  {
-    FileChannel inputChannel = null;
-    FileChannel outputChannel = null;
-    try 
-    {
-      inputChannel = new FileInputStream(source).getChannel();
-      outputChannel = new FileOutputStream(dest).getChannel();
-      outputChannel.transferFrom(inputChannel, 0, inputChannel.size());
-      
-      inputChannel.close();
-      outputChannel.close();      
-    }
-    catch(FileNotFoundException ex)
-    {
-      ex.printStackTrace();
-    }
-    catch(IOException ex)
-    {
-      ex.printStackTrace();
-    }     
-  }
-  
-  /**
-   * copyNhash() combine the copying and the hashing process at the same time so that it only fetches data once from hard drive.
-   * TODO Modify code to use FileChannel class. It is much faster.
-   * 
-   * @param source
-   * @param dest
-   * @return
-   */
-  public String copyNhash(File source, File dest)
-  {
-    XXHashFactory factory = XXHashFactory.fastestInstance();
-    int seed = 0x9747b28c;  // used to initialize the hash value, use whatever
-                            // value you want, but always the same
-    StreamingXXHash32 hash32 = factory.newStreamingHash32(seed);
-  
-    try
-    {
-      byte[] bufferBlock = new byte[8192]; // 8192 bytes
-      FileInputStream fileInputStream = new FileInputStream(source);
-      OutputStream fileOutputStream = new FileOutputStream(dest);
-  
-      int read;
-      while ((read = fileInputStream.read(bufferBlock))!=-1) 
-      {
-        hash32.update(bufferBlock, 0, read);  // Hash
-        
-        fileOutputStream.write(bufferBlock, 0, read); // Copy the file.
-      }
-      
-      fileInputStream.close();
-      fileOutputStream.close();
-      return hash32.getValue()+""; // Force to be a string so that if we can change to use another hashing algorithm.
-      
-    }
-    catch(UnsupportedEncodingException ex)
-    {
-      ex.printStackTrace();
-    }
-    catch(IOException ex)
-    {
-      ex.printStackTrace();
-    }
-    
-    return null;    
   }
   
   public static boolean isFileLocked(File f)
