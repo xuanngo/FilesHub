@@ -5,3 +5,6 @@
 /fileshub.jar
 **/*.log
 /FilesHub.old
+/libs/
+/logs/
+/upgrade/

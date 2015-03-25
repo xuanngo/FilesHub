@@ -7,3 +7,4 @@ results_*.html
 /build-auto-generated.xml
 **/*.log
 /javadoc/
+/logs/
