@@ -5,6 +5,7 @@ Development
   --------
   * In Eclipse, you have to set the followings:
   	* In "Run Configurations->Arguments->VM arguments": 
+  	   * -DFilesHub.hash.frequency=13
   	   * -DFilesHub.home=/your-path-of/FilesHub/FilesHub/test/
   	   * -Dlogback.configurationFile=/your-path-of/FilesHub/FilesHub/test/logback.xml
   	- Add all application parameters in "Run Configurations->Arguments->Program arguments"
