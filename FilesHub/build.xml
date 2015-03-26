@@ -57,8 +57,12 @@
 	</target>
 
 	<target name="copy_build_to_test_dir">
-		<copy overwrite="true" todir="./test">
-			<!-- overwrite="true": Guarantee same files used -->
+		<property name="test.release.dir" value="./test-release"/>
+		
+		<!-- Ensure test-release directory is exactly the same as releases directory. -->
+		<delete verbose="true" file="${test.release.dir}"/>
+		<mkdir dir="${test.release.dir}"/>
+		<copy overwrite="true" todir="${test.release.dir}">
 			<fileset dir="${latest.release.directory}"/>
 		</copy>
 
