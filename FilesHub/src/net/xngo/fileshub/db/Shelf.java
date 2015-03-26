@@ -8,6 +8,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import net.xngo.fileshub.Config;
 import net.xngo.fileshub.Main;
 import net.xngo.fileshub.struct.Document;
 import net.xngo.utils.java.db.DbUtils;
@@ -387,7 +388,7 @@ public class Shelf
       StringBuffer msg = new StringBuffer(String.format("'%s' returns %d entries. Expect 0 or 1 entry. Entries found are:\n", Main.connection.getQueryString(), docs.size()));
       for(Document doc: docs)
         msg.append("\t-").append(doc.canonical_path).append("\n");
-      
+
       RuntimeException rException = new RuntimeException(msg.toString());
       log.error("This method can't return 2 or more documents.", rException);
       throw rException;
