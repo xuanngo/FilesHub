@@ -5,6 +5,9 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import net.xngo.fileshub.Main;
 import net.xngo.fileshub.struct.Document;
 import net.xngo.utils.java.db.DbUtils;
@@ -16,6 +19,8 @@ import net.xngo.utils.java.db.DbUtils;
  */
 public class Shelf
 {
+  final static Logger log = LoggerFactory.getLogger(Shelf.class);
+  
   protected final String tablename  = "Shelf";
   
   /**
@@ -380,7 +385,10 @@ public class Shelf
     else
     {
       String msg = String.format("'%s' returns %d entries. Expect 0 or 1 entry.", Main.connection.getQueryString(), docs.size());
-      throw new RuntimeException(msg);
+      RuntimeException rException = new RuntimeException(msg);
+      log.error("This method can't return 2 or more documents.", rException);
+      throw rException;
+      
     }
   }
   
