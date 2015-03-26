@@ -108,7 +108,7 @@ public class Hub
       {
         if(e.getMessage()==null)
         {
-          log.error("Unknown exception: Exception.getMessage() is null. Caused by {]", file.getAbsolutePath());
+          log.error("Unknown exception: Exception.getMessage() is null. Caused by {}.", file.getAbsolutePath(), e);
           RuntimeException rException = new RuntimeException("Unknown exception: Exception.getMessage() is null. Caused by "+file.getAbsolutePath());
           throw rException;          
         }
