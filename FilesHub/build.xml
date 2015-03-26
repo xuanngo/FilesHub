@@ -60,7 +60,7 @@
 		<property name="test.release.dir" value="./test-release"/>
 		
 		<!-- Ensure test-release directory is exactly the same as releases directory. -->
-		<delete verbose="true" file="${test.release.dir}"/>
+		<delete verbose="true" dir="${test.release.dir}"/>
 		<mkdir dir="${test.release.dir}"/>
 		<copy overwrite="true" todir="${test.release.dir}">
 			<fileset dir="${latest.release.directory}"/>
