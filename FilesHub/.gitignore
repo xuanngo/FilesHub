@@ -8,3 +8,4 @@ results_*.html
 **/*.log
 /javadoc/
 /logs/
+/test-release/
