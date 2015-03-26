@@ -18,4 +18,3 @@ fi
 ##                            0 means hash the whole file.
 
 java -DFilesHub.home=${FILESHUB_HOME} -DFilesHub.hash.frequency=13 -jar ${FILESHUB_HOME}/fileshub.jar "$@"
-
