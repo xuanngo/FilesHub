@@ -22,9 +22,13 @@ TODO
       
 Libraries
 ==========
+  * Flyway: Upgrade database: http://flywaydb.org/getstarted/download.html
+  * Sqlite: Database engine: https://bitbucket.org/xerial/sqlite-jdbc
+
   * CSV: http://csveed.org/comparison-matrix.html
   * https://code.google.com/p/markdown-doclet/ 
   * https://code.google.com/p/sqlite4java/wiki/ComparisonToOtherWrappers
+  * 
 
 Indices
 ========
