@@ -19,10 +19,10 @@
     </appender>
 
     <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>logs/FilesHub.log</file>
+        <file>${FilesHub.home}/logs/FilesHub.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
           <!-- daily rollover -->
-          <fileNamePattern>logs/FilesHub.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+          <fileNamePattern>${FilesHub.home}/logs/FilesHub_%d{yyyy-MM-dd}.%i.log</fileNamePattern>
           <timeBasedFileNamingAndTriggeringPolicy
               class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
               <!-- Create a new log file if it reaches over maxFileSize. -->
