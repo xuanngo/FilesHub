@@ -3,6 +3,7 @@ package net.xngo.fileshub.test.cmd;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertNull;
 import static org.testng.Assert.assertTrue;
+import org.testng.annotations.Test;
 
 import java.io.File;
 import java.io.RandomAccessFile;
@@ -20,7 +21,7 @@ import net.xngo.fileshub.test.helpers.Data;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.TrueFileFilter;
-import org.testng.annotations.Test;
+
 
 public class CmdTest
 {
