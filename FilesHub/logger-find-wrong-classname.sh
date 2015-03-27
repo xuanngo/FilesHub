@@ -1,7 +1,8 @@
 #!/bin/bash
-# Description: Find whether logger declaration is correct or not.
+# Description: Scan source code to find whether logger declaration is correct or not.
 #     The copy and paste of 
-#     final static Logger log = LoggerFactory.getLogger(MyClasName.class);
+#       final static Logger log = LoggerFactory.getLogger(MyClasName.class);
+#     with the wrong class name.
 
 
 WORK_DIR=./src/
