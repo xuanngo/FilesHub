@@ -60,8 +60,8 @@ public class ReportDuplicate extends Report
     for(int i=0; i<this.duplicates.size(); i++)
     {
       // Add double quote so that it is easier to manipulate on command line.
-      String left = this.doubleQuote(this.duplicates.get(i).toAddDoc.canonical_path);
-      String right= this.doubleQuote(this.duplicates.get(i).shelfDoc.canonical_path);
+      String left = super.doubleQuote(this.duplicates.get(i).toAddDoc.canonical_path);
+      String right= super.doubleQuote(this.duplicates.get(i).shelfDoc.canonical_path);
       long toAddSize = new File(this.duplicates.get(i).toAddDoc.canonical_path).length();
       
       // Construct the difference with HTML elements.
