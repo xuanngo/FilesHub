@@ -22,7 +22,7 @@ public class CmdSearch
   @Parameter(names = {"-p", "--path"}, description = "Search by file path. Use * as wildcard.", arity = 1)
   public String filepath;
   
-  @Parameter(names = {"-s", "--similar"}, description = "Search all similar files of the current directory and its subdirectories "
+  @Parameter(names = {"-s", "--similar"}, description = "Search all similar filename of the current directory and its subdirectories "
                                                           + "against the database. Use number(0-100) as the similarity rate. "
                                                           + "E.g. 80 means return filenames that are 80% similar or more.")
   public int fuzzyRate=80;
