@@ -29,7 +29,7 @@ import org.slf4j.LoggerFactory;
  */
 public class Hub
 {
-  final static Logger log = LoggerFactory.getLogger(Manager.class);
+  final static Logger log = LoggerFactory.getLogger(Hub.class);
   
   private Manager manager = new Manager();
   
