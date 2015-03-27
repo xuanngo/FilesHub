@@ -689,10 +689,7 @@ public class Manager
     return pairFileList;
   }  
   
-  public void repair(boolean commit)
-  {
-    System.out.println(commit);
-  }
+
   /****************************************************************************
    * 
    *                             PRIVATE FUNCTIONS
