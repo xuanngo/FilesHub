@@ -132,7 +132,9 @@ public class Manager
           doc.hash = Utils.getHash(file);
           if(doc.hash==null)
           {
-            throw new RuntimeException(String.format("RuntimeException: Hash is null: %s", file.getAbsolutePath()));
+            RuntimeException rException = new RuntimeException(String.format("RuntimeException: Hash is null: %s", file.getAbsolutePath()));
+            log.error("Utils.getHash() can't return null.", rException);
+            throw rException;
           }
           else
           {
