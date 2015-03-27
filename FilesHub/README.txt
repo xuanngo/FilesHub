@@ -16,6 +16,15 @@ Development
   * Add new library:
       * In build.xml, add JAR filename to '<attribute name="Rsrc-Class-Path" .../>'.
 
+  Eclipse-Plugins
+  ---------------
+  * EGit: Distributed source control
+      * Install link: http://download.eclipse.org/egit/updates  
+  * FindBugs: Scan Java source code and find potential bugs.
+      * Install link: http://findbugs.cs.umd.edu/eclipse
+  * TestNG: Java unit test framework
+      * Install link: http://beust.com/eclipse
+      
 TODO
 ============
   * Redo reportings: net.xngo.fileshub.report. It was adhoc coding.
