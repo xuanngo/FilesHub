@@ -126,7 +126,102 @@ public class Trash
     return this.update("hash", hash, "size", size);
   }
   
+  /**
+   * Orphan = duid in Trash but not Shelf.
+   * @return List of Trash documents that don't have a matching DUID from Shelf table.
+   */
+  public List<Document> getOrphans()
+  {
+    final String query = String.format("SELECT duid, canonical_path, filename, last_modified, size, hash, comment "
+                                      + "FROM %s "
+                                      + "LEFT JOIN Shelf ON Trash.duid=Shelf.uid WHERE Shelf.uid IS NULL", this.tablename);
+    
+    // Get the documents.
+    ArrayList<Document> docsList = new ArrayList<Document>();
+    try
+    {
+      Main.connection.prepareStatement(query);
+      ResultSet resultSet =  Main.connection.executeQuery();
 
+      while(resultSet.next())
+      {
+        Document doc = new Document();
+        int j=1;
+        doc.uid             = resultSet.getInt(j++); // Shelf.uid is equal to Trash.duid.
+        doc.canonical_path  = resultSet.getString(j++);
+        doc.filename        = resultSet.getString(j++);
+        doc.last_modified   = resultSet.getLong(j++);
+        doc.size            = resultSet.getLong(j++);
+        doc.hash            = resultSet.getString(j++);
+        doc.comment         = resultSet.getString(j++);
+        
+        docsList.add(doc);
+        
+      }
+      DbUtils.close(resultSet);
+      Main.connection.closePreparedStatement();        
+    }
+    catch(SQLException e)
+    {
+      e.printStackTrace();
+    }
+    
+    return docsList;
+  }
+  /**
+   * Orphan = duid in Trash but not Shelf.
+   * @return Total number of Trash documents that don't have a matching DUID from Shelf table.
+   */
+  public int getTotalOrphans()
+  {
+    final String query = String.format("SELECT COUNT(*) "
+                                      + "FROM Trash "
+                                      + "LEFT JOIN Shelf ON Trash.duid=Shelf.uid WHERE Shelf.uid IS NULL");
+    
+    try
+    {
+      Main.connection.prepareStatement(query);
+      
+      ResultSet resultSet =  Main.connection.executeQuery();
+      if(resultSet.next())
+      {
+        return resultSet.getInt(1);
+      }
+    }
+    catch(SQLException e)
+    {
+      e.printStackTrace();
+    }
+    
+    return 0;
+  }
+  
+  /**
+   * Remove orphan documents in Trash: duid in Trash but not Shelf
+   * @return Total number of orphan documents in Trash table deleted.
+   */
+  public int removeOrphans()
+  {
+    final String query = "DELETE FROM Trash WHERE duid IN "
+                          + "("
+                          + "SELECT Trash.duid FROM Trash LEFT JOIN Shelf ON Trash.duid=Shelf.uid WHERE Shelf.uid IS NULL"
+                          + ")";
+    int rowsAffected = 0;
+    try
+    {
+      Main.connection.prepareStatement(query);
+      
+      rowsAffected = Main.connection.executeUpdate();
+
+      Main.connection.closePreparedStatement();     
+    }
+    catch(SQLException e)
+    {
+      e.printStackTrace();
+    }
+    return rowsAffected;    
+    
+  }
   /****************************************************************************
    * 
    *                             PRIVATE FUNCTIONS
