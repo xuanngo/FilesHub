@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Set;
 
 import net.xngo.fileshub.db.Manager;
+import net.xngo.fileshub.db.Repair;
 import net.xngo.fileshub.report.ReportDuplicate;
 import net.xngo.fileshub.report.ReportSimilar;
 import net.xngo.fileshub.struct.Document;
@@ -312,7 +313,8 @@ public class Hub
   
   public void repair(boolean commit)
   {
-    this.manager.repair(commit);
+    Repair repair = new Repair();
+    repair.commit(commit);
   }
   
   /****************************************************************************
