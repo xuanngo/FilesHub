@@ -310,6 +310,11 @@ public class Hub
     upgrade.run();
   }
   
+  public void repair(boolean commit)
+  {
+    this.manager.repair(commit);
+  }
+  
   /****************************************************************************
    * 
    *                             PRIVATE FUNCTIONS

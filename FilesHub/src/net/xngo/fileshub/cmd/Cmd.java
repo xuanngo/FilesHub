@@ -18,10 +18,13 @@ public class Cmd
     JCommander jc = new JCommander(options);
     jc.setProgramName(Config.NAME);
     
+    // Register commands here.
     CmdHash cmdHash = new CmdHash();
     CmdSearch cmdSearch = new CmdSearch();
+    CmdRepair cmdRepair = new CmdRepair();
     jc.addCommand(CmdHash.name, cmdHash);
     jc.addCommand(CmdSearch.name, cmdSearch);
+    jc.addCommand(CmdRepair.name, cmdRepair);
     
     Hub hub = new Hub();
     try
@@ -45,12 +48,18 @@ public class Cmd
         hub.upgrade();
       }
       else
-      { // Check if there is a command passed.
+      { 
+        /******************************
+         * Commands parsing start here.
+         ******************************/
+        
         String parsedCmd = jc.getParsedCommand();
         if(parsedCmd != null)
         {
           if(parsedCmd.compareTo(CmdHash.name)==0)
           {
+            // Hash command starts here.
+            
             if(cmdHash.paths!=null)
               hub.hash(cmdHash.getAllUniqueFiles());
             else
@@ -58,6 +67,8 @@ public class Cmd
           }
           else if(parsedCmd.compareTo(CmdSearch.name)==0)
           {
+            // Search command starts here.
+            
             if(cmdSearch.id!=0)
             {
               hub.searchById(cmdSearch.id);
@@ -82,6 +93,11 @@ public class Cmd
               this.displayUsage(jc);
 
           }
+          else if(parsedCmd.compareTo(CmdRepair.name)==0)
+          {
+            // Repair command starts here.
+            hub.repair(cmdRepair.commit);
+          }          
           else
             this.displayUsage(jc);
         }
