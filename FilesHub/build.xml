@@ -3,7 +3,8 @@
 	<!-- Require ANT version 1.7+ because of manifestclasspath -->
 
 	<property name="latest.release.directory" value="./releases/latest"/>
-	<property name="latest.jar.file.path" value="${latest.release.directory}/fileshub.jar"/>
+  <property name="test.release.dir"         value="./test-release"/>
+	<property name="latest.jar.file.path"     value="${latest.release.directory}/fileshub.jar"/>
 
 	<target name="create_run_jar">
 		<delete verbose="true" file="${latest.jar.file.path}"/>
@@ -57,23 +58,12 @@
 	</target>
 
 	<target name="copy_build_to_test_dir">
-		<property name="test.release.dir" value="./test-release"/>
-		
 		<!-- Ensure test-release directory is exactly the same as releases directory. -->
 		<delete verbose="true" dir="${test.release.dir}"/>
 		<mkdir dir="${test.release.dir}"/>
 		<copy overwrite="true" todir="${test.release.dir}">
 			<fileset dir="${latest.release.directory}"/>
 		</copy>
-
-		<!-- Modify logback.xml for testing purpose:
-		        -Change Level from WARN to DEBUG
-		-->
-		<replaceregexp file="test/logback.xml"
-                   match="&lt;root level=&quot;WARN&quot;&gt;"
-                   replace="&lt;root level=&quot;DEBUG&quot;&gt;"
-
-    />
 	</target>
 
 	<!-- Clean up after built -->
@@ -99,6 +89,20 @@
 		<!-- Delete javadoc directory -->
 		<delete verbose="true" dir="javadoc"/>
 
+	</target>
+	
+	<!-- Turn test-release into debug mode -->
+	<target name="debug">
+		<echo>Turn ${test.release.dir}/ into debug mode.</echo>
+
+    <!-- Modify logback.xml for testing purpose:
+            -Change Level from WARN to DEBUG
+    -->
+    <replaceregexp file="${test.release.dir}/logback.xml"
+                   match="&lt;root level=&quot;WARN&quot;&gt;"
+                   replace="&lt;root level=&quot;DEBUG&quot;&gt;"
+
+    />		
 	</target>
 
 </project>
