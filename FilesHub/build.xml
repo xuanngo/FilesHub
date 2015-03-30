@@ -19,7 +19,9 @@
 	  </path>
 
 	  <!-- This is the important line: by specifying in the "jarfile" attribute the location of the
-	       generated jar, ANT will be able to deduce the relative path to you jar libraries. -->
+	       generated jar, ANT will be able to deduce the relative path to you jar libraries.
+	       http://stackoverflow.com/questions/858766/generate-manifest-class-path-from-classpath-in-ant 
+	       -->
 	  <manifestclasspath property="lib.list" jarfile="releases/latest/libs/">
 	    <classpath refid="path.to.jars" />
 	  </manifestclasspath>
@@ -51,10 +53,10 @@
 		               replace="@version = ${DAY_TIME_NOW}"
 
 		/>
-
+		
 		<antcall target="copy_build_to_test_dir"/>
 		<antcall target="delete_files"/>
-
+	  
 	</target>
 
 	<target name="copy_build_to_test_dir">
@@ -104,5 +106,5 @@
 
     />		
 	</target>
-
+	
 </project>
