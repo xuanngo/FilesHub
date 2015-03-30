@@ -11,7 +11,7 @@
 if [ -d "$1" ]
 then
   #Overwrite all files.
-  yes | cp -R * "$1"
+  yes | cp -Rf * "$1"
 else
   echo "ERROR: $1 is not a directory." 
 fi
