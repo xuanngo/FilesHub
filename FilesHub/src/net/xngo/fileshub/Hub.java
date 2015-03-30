@@ -128,6 +128,11 @@ public class Hub
           log.warn("Too many levels of symbolic links: Ignore {}.", file.getAbsolutePath());
           System.out.println(String.format("Warning: Too many levels of symbolic links: Ignore %s.", file.getAbsolutePath()));
         }
+        else if(e.getMessage().indexOf("Access is denied")!=-1)
+        {
+          log.warn("Access is denied: Ignore {}.", file.getAbsolutePath());
+          System.out.println(String.format("Access is denied: Ignore %s.", file.getAbsolutePath()));
+        }        
         else if(e.getMessage().indexOf("No such file or directory")!=-1)
         {// For filename with different encoding.
           if(file.getName().indexOf('\uFFFD')!=-1)
