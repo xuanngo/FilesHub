@@ -13,4 +13,4 @@ fi
 echo "FILESHUB_HOME=${FILESHUB_HOME}"
 
 ## ISO-8859-1
-java -Dfile.encoding=UTF-8 -DFilesHub.home=${FILESHUB_HOME} -DFilesHub.debug=true -jar ${FILESHUB_HOME}/fileshub.jar "$@"
+java -Dfile.encoding=UTF-8 -DFilesHub.home=${FILESHUB_HOME} -DFilesHub.debug=true -jar ${FILESHUB_HOME}/Fileshub.jar "$@"
