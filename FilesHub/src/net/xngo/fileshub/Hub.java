@@ -19,9 +19,11 @@ import net.xngo.fileshub.upgrade.Upgrade;
 import net.xngo.utils.java.io.FileUtils;
 import net.xngo.utils.java.math.Math;
 import net.xngo.utils.java.time.CalUtils;
+import net.xngo.utils.java.lang.StringUtils;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 
 /**
  * 
@@ -107,32 +109,23 @@ public class Hub
       }
       catch(Exception e)
       {
+        String[] ignoreMessages = {
+                                    "The process cannot access the file because another process has locked a portion of the file.",
+                                    "The system cannot find the file specified.",
+                                    "Too many levels of symbolic links",
+                                    "Access is denied", // Win32
+                                    "The process cannot access the file because it is being used by another process", // Win32
+                                    "RuntimeException: Hash is null",
+                                    
+                                    };
+        int msgIndex = -1;  // Default to Not found.
+        
         if(e.getMessage()==null)
         {
           log.error("Unknown exception: Exception.getMessage() is null. Caused by {}.", file.getAbsolutePath(), e);
           RuntimeException rException = new RuntimeException("Unknown exception: Exception.getMessage() is null. Caused by "+file.getAbsolutePath());
           throw rException;          
         }
-        else if(e.getMessage().indexOf("The process cannot access the file because another process has locked a portion of the file")!=-1)
-        {
-          log.warn("Ignore locked file {}.", file.getAbsolutePath());
-          System.out.println(String.format("Warning: Ignore locked file %s.", file.getAbsolutePath()));
-        }
-        else if(e.getMessage().indexOf("The system cannot find the file specified")!=-1)
-        {// For case where filename=..\est.
-          log.warn("The system cannot find the file specified: Ignore {}.", file.getAbsolutePath(), e);
-          System.out.println(String.format("Warning: The system cannot find the file specified: Ignore %s.", file.getAbsolutePath()));
-        }
-        else if(e.getMessage().indexOf("Too many levels of symbolic links")!=-1)
-        {
-          log.warn("Too many levels of symbolic links: Ignore {}.", file.getAbsolutePath());
-          System.out.println(String.format("Warning: Too many levels of symbolic links: Ignore %s.", file.getAbsolutePath()));
-        }
-        else if(e.getMessage().indexOf("Access is denied")!=-1)
-        {
-          log.warn("Access is denied: Ignore {}.", file.getAbsolutePath());
-          System.out.println(String.format("Warning: Access is denied: Ignore %s.", file.getAbsolutePath()));
-        }        
         else if(e.getMessage().indexOf("No such file or directory")!=-1)
         {// For filename with different encoding.
           if(file.getName().indexOf('\uFFFD')!=-1)
@@ -171,10 +164,11 @@ public class Hub
             System.out.println(String.format("Warning: No such file or directory: Ignore %s.", file.getAbsolutePath()));
           }
         }
-        else if(e.getMessage().indexOf("RuntimeException: Hash is null")!=-1)
+        else if((msgIndex=StringUtils.indexOfStrings(ignoreMessages, e.getMessage()))!=-1)
         {
-          log.error("RuntimeException: Hash is null: Ignore {}. Need investigation", file.getAbsolutePath(), e);
-          System.out.println(String.format("Warning: RuntimeException: Hash is null: Ignore %s.", file.getAbsolutePath()));
+          String warnMsg = String.format("%s Ignore %s.", ignoreMessages[msgIndex], file.getAbsolutePath());
+          log.warn(warnMsg, e);
+          System.out.println(warnMsg);
         }        
         else
         {
