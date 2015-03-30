@@ -113,14 +113,14 @@ public class Hub
           RuntimeException rException = new RuntimeException("Unknown exception: Exception.getMessage() is null. Caused by "+file.getAbsolutePath());
           throw rException;          
         }
-        if(e.getMessage().indexOf("The process cannot access the file because another process has locked a portion of the file")!=-1)
+        else if(e.getMessage().indexOf("The process cannot access the file because another process has locked a portion of the file")!=-1)
         {
           log.warn("Ignore locked file {}.", file.getAbsolutePath());
           System.out.println(String.format("Warning: Ignore locked file %s.", file.getAbsolutePath()));
         }
         else if(e.getMessage().indexOf("The system cannot find the file specified")!=-1)
         {// For case where filename=..\est.
-          log.error("The system cannot find the file specified: Ignore {}.", file.getAbsolutePath(), e);
+          log.warn("The system cannot find the file specified: Ignore {}.", file.getAbsolutePath(), e);
           System.out.println(String.format("Warning: The system cannot find the file specified: Ignore %s.", file.getAbsolutePath()));
         }
         else if(e.getMessage().indexOf("Too many levels of symbolic links")!=-1)
@@ -131,7 +131,7 @@ public class Hub
         else if(e.getMessage().indexOf("Access is denied")!=-1)
         {
           log.warn("Access is denied: Ignore {}.", file.getAbsolutePath());
-          System.out.println(String.format("Access is denied: Ignore %s.", file.getAbsolutePath()));
+          System.out.println(String.format("Warning: Access is denied: Ignore %s.", file.getAbsolutePath()));
         }        
         else if(e.getMessage().indexOf("No such file or directory")!=-1)
         {// For filename with different encoding.
