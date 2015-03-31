@@ -132,6 +132,20 @@ public class Document
         ;
   }
   
+  public String toString(String prefix)
+  {
+    return String.format( "%s%s:\n"
+        + "%1$s  uid            = %d\n"
+        + "%1$s  last_modified  = %d\n"
+        + "%1$s  size           = %d\n"
+        + "%1$s  hash           = %s\n"
+        + "%1$s  comment        = %s\n"
+          , prefix
+          , this.nullOrEmpty(this.canonical_path) 
+          , this.uid, this.last_modified
+          , this.size, this.nullOrEmpty(this.hash)
+          , this.nullOrEmpty(this.comment));       
+  }
   /****************************************************************************
    * 
    *                             PRIVATE FUNCTIONS
