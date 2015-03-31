@@ -144,7 +144,7 @@ public class Document
         + "%1$s  last_modified  = %d\n"
         + "%1$s  size           = %d\n"
         + "%1$s  hash           = %s\n"
-        + "%1$s  comment        = %s\n"
+        + "%1$s  comment        = %s"
           , prefix
           , this.nullOrEmpty(this.canonical_path) 
           , this.uid, this.last_modified
