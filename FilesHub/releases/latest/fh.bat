@@ -8,7 +8,7 @@ REM ISO-8859-1
 ::                            0 means hash the whole file.
 
 :: To handle path with spaces, you have to:
-::   -Change backward slash to forward slash
+::   -Change backward slash(\) to forward slash(/)
 ::   -Add double quotes
 SET FILESHUB_HOME=%FILESHUB_HOME:\=/%
 SET FILESHUB_HOME_QUOTED="%FILESHUB_HOME%"
