@@ -196,9 +196,7 @@ public class Shelf
    */
   public int getTotalDuplicateHash()
   {
-    final String query = String.format("SELECT COUNT(*) "
-                                      + "FROM Shelf "
-                                      + "GROUP BY hash HAVING COUNT(*) > 1");
+    final String query = String.format("SELECT COUNT(*) FROM Shelf GROUP BY hash HAVING COUNT(*) > 1");
     try
     {
       Main.connection.prepareStatement(query);
@@ -219,9 +217,7 @@ public class Shelf
   
   public List<String> getDuplicateHashes()
   {
-    final String query = String.format("SELECT hash "
-                                      + "FROM Shelf "
-                                      + "GROUP BY hash HAVING COUNT(*) > 1");
+    final String query = String.format("SELECT hash FROM Shelf GROUP BY hash HAVING COUNT(*) > 1");
     
     // Get the documents.
     List<String> hashList = new ArrayList<String>();
