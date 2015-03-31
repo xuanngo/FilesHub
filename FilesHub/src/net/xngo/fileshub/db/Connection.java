@@ -16,7 +16,8 @@ import net.xngo.fileshub.Config;
  */
 public class Connection extends net.xngo.utils.java.db.Connection
 {
-  final static Logger log = LoggerFactory.getLogger(Connection.class);
+  final static Logger log = LoggerFactory.getLogger(net.xngo.fileshub.db.Connection.class);
+  
   public Connection()
   {
     super.connect(Config.JDBC_CLASSLOADER, Config.DB_URL);
@@ -32,6 +33,7 @@ public class Connection extends net.xngo.utils.java.db.Connection
     if(end > MAX_TIME)
     {
       log.warn("Commit() is too slow. It took {} milliseconds. Last Query={}", end, super.getQueryString());
+      System.out.println(String.format("Commit() is too slow. It took %,d milliseconds. Last Query=%s", end, super.getQueryString()));
     }
   }
   
@@ -51,6 +53,7 @@ public class Connection extends net.xngo.utils.java.db.Connection
     if(end > MAX_TIME)
     {
       log.warn("SQL query is too slow. It took {} milliseconds. Query={}", end, super.getQueryString());
+      System.out.println(String.format("SQL query is too slow. It took %,d milliseconds. Query=%s", end, super.getQueryString()));
     }
     
     return resultSet;
@@ -74,6 +77,7 @@ public class Connection extends net.xngo.utils.java.db.Connection
     if(end > MAX_TIME)
     {
       log.warn("SQL query is too slow. It took {} milliseconds. Query={}", end, super.getQueryString());
+      System.out.println(String.format("SQL query is too slow. It took %,d milliseconds. Query=%s", end, super.getQueryString()));
     }
     
     return updateResult;
