@@ -132,6 +132,11 @@ public class Document
         ;
   }
   
+  /**
+   * 
+   * @param prefix
+   * @return Formatted string of the document information.
+   */
   public String toString(String prefix)
   {
     return String.format( "%s%s:\n"
