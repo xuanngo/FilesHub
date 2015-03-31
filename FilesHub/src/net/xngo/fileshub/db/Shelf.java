@@ -196,23 +196,26 @@ public class Shelf
    */
   public int getTotalDuplicateHash()
   {
-    final String query = String.format("SELECT COUNT(*) FROM Shelf GROUP BY hash HAVING COUNT(*) > 1");
+    // COUNT(*) will not give the total number of rows when using with GROUP BY.
+    final String query = String.format("SELECT hash FROM Shelf GROUP BY hash HAVING COUNT(*) > 1");
+    int found = 0;    
     try
     {
       Main.connection.prepareStatement(query);
       
       ResultSet resultSet =  Main.connection.executeQuery();
-      if(resultSet.next())
+
+      while(resultSet.next())
       {
-        return resultSet.getInt(1);
-      }
+        found++;
+      }      
     }
     catch(SQLException e)
     {
       e.printStackTrace();
     }
     
-    return 0;
+    return found;
   }
   
   public List<String> getDuplicateHashes()
