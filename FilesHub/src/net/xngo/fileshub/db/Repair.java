@@ -39,7 +39,7 @@ public class Repair
     else
     {
       String orphanMsg        = String.format("%d orphan documents to be deleted from Trash table.", this.trash.getTotalOrphans());
-      String duplicateHashMsg = String.format("%d duplicate hashs to be deleted from Shelf table.", this.shelf.getTotalDuplicateHash());
+      String duplicateHashMsg = String.format("%d duplicate hashes to be deleted from Shelf table.", this.shelf.getTotalDuplicateHash());
       
       System.out.println("Simulation");
       System.out.println(orphanMsg);
