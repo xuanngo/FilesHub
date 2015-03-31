@@ -402,12 +402,12 @@ public class Trash
     }
     else
     {
-      StringBuffer msg = new StringBuffer(String.format("'%s' returns %d entries. Expect 0 or 1 entry. Entries found are:\n", Main.connection.getQueryString(), docs.size()));
+      StringBuffer msg = new StringBuffer(String.format("'%s' returns %d entries with same hash. Expect 0 or 1 entry. Entries found are:\n", Main.connection.getQueryString(), docs.size()));
       for(Document doc: docs)
         msg.append("\t-").append(doc.canonical_path).append("\n");
       
       RuntimeException rException = new RuntimeException(msg.toString());
-      log.error("This method can't return 2 or more documents.", rException);
+      log.error("This method can't return 2 or more documents with the same hash.", rException);
       throw rException;
       
     }
