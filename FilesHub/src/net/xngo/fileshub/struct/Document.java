@@ -151,6 +151,20 @@ public class Document
           , this.size, this.nullOrEmpty(this.hash)
           , this.nullOrEmpty(this.comment));       
   }
+  
+  public String toStringLine()
+  {
+    return String.format( "%s ["
+        + "uid = %d | "
+        + "last_modified = %d | "
+        + "size = %d | "
+        + "hash = %s | "
+        + "comment = %s]"
+          , this.nullOrEmpty(this.canonical_path) 
+          , this.uid, this.last_modified
+          , this.size, this.nullOrEmpty(this.hash)
+          , this.nullOrEmpty(this.comment));       
+  }  
   /****************************************************************************
    * 
    *                             PRIVATE FUNCTIONS

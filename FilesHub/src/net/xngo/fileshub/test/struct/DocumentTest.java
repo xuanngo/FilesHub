@@ -332,4 +332,26 @@ public class DocumentTest
     uniqueFile.delete();
     
   }
+  
+  @Test(description="Test toStringLine() with basic values.")
+  public void toStringToLineBasic()
+  {
+    //*** Prepare data: Create a unique file and a document.
+    File uniqueFile = Data.createTempFile("toStringToLineBasic");
+    Document doc = new Document(uniqueFile);
+    doc.hash = Utils.getHash(uniqueFile);
+    
+    //*** Validations: Check formatting and values are correct.
+    String docString = doc.toStringLine();
+    assertThat(docString, containsString(Utils.getCanonicalPath(uniqueFile)));
+    assertThat(docString, containsString(              "uid = 0"));
+    assertThat(docString, containsString(String.format("last_modified = %d", uniqueFile.lastModified())));
+    assertThat(docString, containsString(String.format("size = %d", uniqueFile.length())));
+    assertThat(docString, containsString(String.format("hash = %s", doc.hash)));
+    assertThat(docString, containsString(              "comment = <empty>"));
+
+    //*** Clean up.
+    uniqueFile.delete();
+    
+  }  
 }
