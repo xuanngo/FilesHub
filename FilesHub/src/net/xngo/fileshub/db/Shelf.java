@@ -124,7 +124,7 @@ public class Shelf
     if (rowsAffected==0)
       throw new RuntimeException(String.format("No uid has been changed: %s", Main.connection.getQueryString()));
     else
-      return rowsAffected;     
+      return rowsAffected;
   }
   
   /**
@@ -152,32 +152,6 @@ public class Shelf
     return this.getDocsBy("size", "<", "1");
   }  
  
-  /**
-   * @return Total number of duplicate hash in Shelf table.
-   */
-  public int getTotalDuplicateHash()
-  {
-    final String query = String.format("SELECT COUNT(*) "
-                                      + "FROM Shelf "
-                                      + "GROUP BY hash HAVING COUNT(*) > 1");
-    try
-    {
-      Main.connection.prepareStatement(query);
-      
-      ResultSet resultSet =  Main.connection.executeQuery();
-      if(resultSet.next())
-      {
-        return resultSet.getInt(1);
-      }
-    }
-    catch(SQLException e)
-    {
-      e.printStackTrace();
-    }
-    
-    return 0;
-  }
-  
   public int removeDuplicateHash()
   {
     final String query = "DELETE FROM Trash WHERE duid IN "
@@ -217,7 +191,33 @@ public class Shelf
       return rowsAffectedShelf;    
   }
   
-  public List<String> getDuplicatHashes()
+  /**
+   * @return Total number of duplicate hash in Shelf table.
+   */
+  public int getTotalDuplicateHash()
+  {
+    final String query = String.format("SELECT COUNT(*) "
+                                      + "FROM Shelf "
+                                      + "GROUP BY hash HAVING COUNT(*) > 1");
+    try
+    {
+      Main.connection.prepareStatement(query);
+      
+      ResultSet resultSet =  Main.connection.executeQuery();
+      if(resultSet.next())
+      {
+        return resultSet.getInt(1);
+      }
+    }
+    catch(SQLException e)
+    {
+      e.printStackTrace();
+    }
+    
+    return 0;
+  }
+  
+  public List<String> getDuplicateHashes()
   {
     final String query = String.format("SELECT hash "
                                       + "FROM Shelf "

@@ -50,7 +50,7 @@ public class Repair
   public int removeDuplicateHashes()
   {
     int duplicateHashRemoved = 0;
-    List<String> duplicateHashList = this.shelf.getDuplicatHashes();
+    List<String> duplicateHashList = this.shelf.getDuplicateHashes();
     for(String duplicateHash: duplicateHashList)
     {
       List<Document> duplicateDocList = this.shelf.getDocsByHash(duplicateHash);
