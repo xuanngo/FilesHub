@@ -108,11 +108,12 @@ public class Hub
         
       }
       catch(Exception e)
-      {
+      {//@TODO: Exception handling is messy here. Need rework.
+        
         String[] ignoreMessages = {
-                                    "The process cannot access the file because another process has locked a portion of the file.",
-                                    "The system cannot find the file specified.",
-                                    "Too many levels of symbolic links",
+                                    "The process cannot access the file because another process has locked a portion of the file", // win32
+                                    "The system cannot find the file specified",
+                                    "Too many levels of symbolic links", // linux
                                     "Access is denied", // Win32
                                     "The process cannot access the file because it is being used by another process", // Win32
                                     "RuntimeException: Hash is null",
@@ -164,9 +165,9 @@ public class Hub
             System.out.println(String.format("Warning: No such file or directory: Ignore %s.", file.getAbsolutePath()));
           }
         }
-        else if((msgIndex=StringUtils.indexOfStrings(ignoreMessages, e.getMessage()))!=-1)
+        else if((msgIndex=StringUtils.indexOfKeywords(e.getMessage(), ignoreMessages))!=-1)
         {
-          String warnMsg = String.format("%s Ignore %s.", ignoreMessages[msgIndex], file.getAbsolutePath());
+          String warnMsg = String.format("Warning: %s. Ignore %s.", ignoreMessages[msgIndex], file.getAbsolutePath());
           log.warn(warnMsg, e);
           System.out.println(warnMsg);
         }        
