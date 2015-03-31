@@ -152,6 +152,10 @@ public class Document
           , this.nullOrEmpty(this.comment));       
   }
   
+  /**
+   * 
+   * @return Information of document in 1 string line.
+   */
   public String toStringLine()
   {
     return String.format( "%s ["
