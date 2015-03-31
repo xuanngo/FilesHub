@@ -222,6 +222,30 @@ public class Trash
     return rowsAffected;    
     
   }
+  
+  public int removeDocByDuid(int duid)
+  {
+    // Add conditions that make Document unique.
+    final String query = String.format("DELETE FROM %s WHERE duid=?", this.tablename);
+    int rowsAffected = 0;
+    try
+    {
+      Main.connection.prepareStatement(query);
+      
+      int i=1; // Order must match with query.
+      Main.connection.setInt   (i++, duid);
+      
+      rowsAffected = Main.connection.executeUpdate();
+
+      Main.connection.closePreparedStatement();     
+    }
+    catch(SQLException e)
+    {
+      e.printStackTrace();
+    }
+    return rowsAffected;    
+  }
+  
   /****************************************************************************
    * 
    *                             PRIVATE FUNCTIONS

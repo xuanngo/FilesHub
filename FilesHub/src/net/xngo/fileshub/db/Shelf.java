@@ -152,6 +152,99 @@ public class Shelf
     return this.getDocsBy("size", "<", "1");
   }  
  
+  /**
+   * @return Total number of duplicate hash in Shelf table.
+   */
+  public int getTotalDuplicateHash()
+  {
+    final String query = String.format("SELECT COUNT(*) "
+                                      + "FROM Shelf "
+                                      + "GROUP BY hash HAVING COUNT(*) > 1");
+    try
+    {
+      Main.connection.prepareStatement(query);
+      
+      ResultSet resultSet =  Main.connection.executeQuery();
+      if(resultSet.next())
+      {
+        return resultSet.getInt(1);
+      }
+    }
+    catch(SQLException e)
+    {
+      e.printStackTrace();
+    }
+    
+    return 0;
+  }
+  
+  public int removeDuplicateHash()
+  {
+    final String query = "DELETE FROM Trash WHERE duid IN "
+                          + "("
+                          + "SELECT Trash.duid FROM Trash LEFT JOIN Shelf ON Trash.duid=Shelf.uid WHERE Shelf.uid IS NULL"
+                          + ")";
+    int rowsAffected = 0;
+    try
+    {
+      Main.connection.prepareStatement(query);
+      
+      rowsAffected = Main.connection.executeUpdate();
+
+      Main.connection.closePreparedStatement();     
+    }
+    catch(SQLException e)
+    {
+      e.printStackTrace();
+    }
+    return rowsAffected;    
+    
+  }
+  
+  /**
+   * Remove all documents in Shelf and in Trash tables having matching duid.
+   * @param duid
+   * @return
+   */
+  public int removeAllDoc(int duid)
+  {
+    Trash trash = new Trash();
+    int rowsAffectedShelf = this.deleteDoc(duid);
+    int rowsAffectedTrash = trash.removeDocByDuid(duid);
+    if (rowsAffectedShelf==0)
+      throw new RuntimeException(String.format("No document is removed: %s", Main.connection.getQueryString()));
+    else
+      return rowsAffectedShelf;    
+  }
+  
+  public List<String> getDuplicatHashes()
+  {
+    final String query = String.format("SELECT hash "
+                                      + "FROM Shelf "
+                                      + "GROUP BY hash HAVING COUNT(*) > 1");
+    
+    // Get the documents.
+    List<String> hashList = new ArrayList<String>();
+    try
+    {
+      Main.connection.prepareStatement(query);
+      ResultSet resultSet =  Main.connection.executeQuery();
+
+      while(resultSet.next())
+      {
+        hashList.add(resultSet.getString(1));
+      }
+      DbUtils.close(resultSet);
+      Main.connection.closePreparedStatement();
+    }
+    catch(SQLException e)
+    {
+      e.printStackTrace();
+    }
+    
+    return hashList;
+  }  
+  
   /****************************************************************************
    * 
    *                             PRIVATE FUNCTIONS
