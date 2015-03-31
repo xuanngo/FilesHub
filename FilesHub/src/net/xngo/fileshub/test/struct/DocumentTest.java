@@ -1,5 +1,7 @@
 package net.xngo.fileshub.test.struct;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.containsString;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotEquals;
 
@@ -33,6 +35,8 @@ public class DocumentTest
     assertEquals(doc.last_modified, uniqueFile.lastModified());
     assertEquals(doc.size, uniqueFile.length());
     
+    //*** Clean up.
+    uniqueFile.delete();
   }
   
   @Test(description="Test equals() with canonical path = null.")
@@ -50,6 +54,9 @@ public class DocumentTest
     //*** Validations: Documents should be equals.
     assertNotEquals(actualDoc, expectedDoc, String.format("\n%s\n"
                                                 + "%s", actualDoc.getInfo("Actual"), expectedDoc.getInfo("Expected")));
+    
+    //*** Clean up.
+    uniqueFile.delete();    
 
   }
 
@@ -68,6 +75,9 @@ public class DocumentTest
     //*** Validations: Documents should be equals.
     assertNotEquals(actualDoc, expectedDoc, String.format("\n%s\n"
                                                 + "%s", actualDoc.getInfo("Actual"), expectedDoc.getInfo("Expected")));
+    
+    //*** Clean up.
+    uniqueFile.delete();    
   }
   
   
@@ -87,6 +97,8 @@ public class DocumentTest
     assertNotEquals(actualDoc, expectedDoc, String.format("\n%s\n"
                                                 + "%s", actualDoc.getInfo("Actual"), expectedDoc.getInfo("Expected")));
     
+    //*** Clean up.
+    uniqueFile.delete();
   }  
   
   @Test(description="Test equals() with comment = null.")
@@ -105,6 +117,8 @@ public class DocumentTest
     assertNotEquals(actualDoc, expectedDoc, String.format("\n%s\n"
                                                 + "%s", actualDoc.getInfo("Actual"), expectedDoc.getInfo("Expected")));
     
+    //*** Clean up.
+    uniqueFile.delete();
   }
   
   @Test(description="Test equals() with canonical path = empty.")
@@ -122,7 +136,8 @@ public class DocumentTest
     //*** Validations: Documents should be equals.
     assertNotEquals(actualDoc, expectedDoc, String.format("\n%s\n"
                                                 + "%s", actualDoc.getInfo("Actual"), expectedDoc.getInfo("Expected")));
-    
+    //*** Clean up.
+    uniqueFile.delete();
   }
   
   @Test(description="Test equals() with filename = empty.")
@@ -141,6 +156,8 @@ public class DocumentTest
     assertNotEquals(actualDoc, expectedDoc, String.format("\n%s\n"
                                                 + "%s", actualDoc.getInfo("Actual"), expectedDoc.getInfo("Expected")));
     
+    //*** Clean up.
+    uniqueFile.delete();
   }
   
   
@@ -160,6 +177,9 @@ public class DocumentTest
     assertEquals(actualDoc, expectedDoc, String.format("\n%s\n"
                                                 + "%s", actualDoc.getInfo("Actual"), expectedDoc.getInfo("Expected")));
     
+    //*** Clean up.
+    uniqueFile.delete();    
+    
   }  
   
   @Test(description="Test equals() with comment = empty.")
@@ -178,6 +198,8 @@ public class DocumentTest
     assertEquals(actualDoc, expectedDoc, String.format("\n%s\n"
                                                 + "%s", actualDoc.getInfo("Actual"), expectedDoc.getInfo("Expected")));
     
+    //*** Clean up.
+    uniqueFile.delete();    
   }
   
   @DataProvider(name = "sanityCheckNullsException")
@@ -219,6 +241,9 @@ public class DocumentTest
     
     //*** Validations: Exception should be thrown here because specified value is null.
     doc.sanityCheck();
+    
+    //*** Clean up.
+    uniqueFile.delete();    
   }  
   
 
@@ -262,6 +287,9 @@ public class DocumentTest
     //*** Validations: Exception should be thrown here because specified value is empty.
     doc.sanityCheck();
     
+    //*** Clean up.
+    uniqueFile.delete();    
+    
   }  
   
   @Test(description="Test sanityCheck() with negative size.", expectedExceptions={RuntimeException.class})
@@ -277,7 +305,31 @@ public class DocumentTest
     
     //*** Validations: Exception should be thrown here because size is negative.
     doc.sanityCheck();
+    
+    //*** Clean up.
+    uniqueFile.delete();
   }
   
-  
+  @Test(description="Test toString() with basic values.")
+  public void toStringBasic()
+  {
+    //*** Prepare data: Create a unique file and a document.
+    File uniqueFile = Data.createTempFile("toString");
+    Document doc = new Document(uniqueFile);
+    doc.hash = Utils.getHash(uniqueFile);
+    
+    //*** Validations: Check formatting and values are correct.
+    String docString = doc.toString("prefix");
+    assertThat(docString, containsString("prefix"));
+    assertThat(docString, containsString(Utils.getCanonicalPath(uniqueFile)+":"));
+    assertThat(docString, containsString(              "prefix  uid            = 0"));
+    assertThat(docString, containsString(String.format("prefix  last_modified  = %d", uniqueFile.lastModified())));
+    assertThat(docString, containsString(String.format("prefix  size           = %d", uniqueFile.length())));
+    assertThat(docString, containsString(String.format("prefix  hash           = %s", doc.hash)));
+    assertThat(docString, containsString(              "prefix  comment        = <empty>"));
+
+    //*** Clean up.
+    uniqueFile.delete();
+    
+  }
 }
