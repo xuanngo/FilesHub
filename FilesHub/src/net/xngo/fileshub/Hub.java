@@ -168,7 +168,7 @@ public class Hub
         else if((msgIndex=StringUtils.indexOfKeywords(e.getMessage(), ignoreMessages))!=-1)
         {
           String warnMsg = String.format("Warning: %s. Ignore %s.", ignoreMessages[msgIndex], file.getAbsolutePath());
-          log.warn(warnMsg, e);
+          log.warn(warnMsg);
           System.out.println(warnMsg);
         }        
         else
