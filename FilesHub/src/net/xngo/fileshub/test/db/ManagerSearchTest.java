@@ -36,7 +36,6 @@ import org.testng.annotations.Test;
  * @author Xuan Ngo
  *
  */
-@Test(singleThreaded=false)
 public class ManagerSearchTest
 {
   private static final boolean DEBUG = true;
