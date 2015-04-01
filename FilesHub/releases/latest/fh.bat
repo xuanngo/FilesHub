@@ -1,8 +1,5 @@
 @ECHO OFF
 SET FILESHUB_HOME=%~dp0
-@ECHO ON
-REM -Dfile.encoding=UTF-8
-REM ISO-8859-1
 
 :: ~~HELP~~
 :: -DFilesHub.hash.frequency: It defines the number of times to spot hash a file when its size is greater than 4 MB.
@@ -15,3 +12,8 @@ REM ISO-8859-1
 SET FILESHUB_HOME=%FILESHUB_HOME:\=/%
 
 java -DFilesHub.home="%FILESHUB_HOME%" -Dlogback.configurationFile=logback.xml -DFilesHub.hash.frequency=13 -jar "%FILESHUB_HOME%Fileshub.jar" %*
+
+
+:: ~~DUMP~~
+:: -Dfile.encoding=UTF-8
+::  ISO-8859-1
