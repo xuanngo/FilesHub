@@ -13,6 +13,5 @@ REM ISO-8859-1
 ::      -Change backward slash(\) to forward slash(/)
 ::      -Add double quotes
 SET FILESHUB_HOME=%FILESHUB_HOME:\=/%
-SET FILESHUB_HOME_QUOTED="%FILESHUB_HOME%"
 
-java -DFilesHub.home=%FILESHUB_HOME_QUOTED% -Dlogback.configurationFile=logback.xml -DFilesHub.hash.frequency=13 -jar "%FILESHUB_HOME%Fileshub.jar" %*
+java -DFilesHub.home="%FILESHUB_HOME%" -Dlogback.configurationFile=logback.xml -DFilesHub.hash.frequency=13 -jar "%FILESHUB_HOME%Fileshub.jar" %*
