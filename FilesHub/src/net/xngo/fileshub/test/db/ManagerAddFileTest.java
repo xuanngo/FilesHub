@@ -8,6 +8,7 @@ import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertNull;
 import static org.testng.Assert.assertTrue;
 
+
 // Java Library
 import java.io.File;
 import java.io.IOException;
@@ -16,6 +17,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -295,7 +297,7 @@ public class ManagerAddFileTest
     // Copied temporary file to another directory and add content to the copied file so it will have different content.
     Path tmpDirectoryPath = Data.createTempDir();
     File copiedFile = Data.copyFileToDirectory(uniqueFile, tmpDirectoryPath.toFile());
-    Data.writeStringToFile(copiedFile, " new content");
+    Data.writeStringToFile(copiedFile, " new content "+System.currentTimeMillis());
     this.manager.addFile(copiedFile);
     
     // Validations:
@@ -971,7 +973,7 @@ public class ManagerAddFileTest
                                                                  //   All platforms support file-modification times to the nearest second
     this.manager.addFile(uniqueFile);
 
-    //*** Validations: Check no last_modified is updated and no new entry is added in Trash.
+    //*** Validations: Check last_modified is updated in Shelf and no new entry is added in Trash.
     Shelf shelf = new Shelf();
     Document shelfDoc = shelf.getDocByCanonicalPath(uniqueFile.getAbsolutePath());
     assertEquals(shelfDoc.last_modified, uniqueFile.lastModified(), String.format("File modification time has changed. The new time[%d] should be in Shelf table.", uniqueFile.lastModified()));
@@ -984,7 +986,36 @@ public class ManagerAddFileTest
     
   }
   
+  @Test(description="Hash of duplicate entry has changed.")
+  public void addFileDuplicateHashChanged()
+  {
+    //*** Prepare data: Create a duplicate entry.
+    // Add unique file.
+    File uniqueFile = Data.createTempFile("addFileDuplicateHashChanged");
+    this.manager.addFile(uniqueFile);
+    Shelf shelf = new Shelf();
+    Document shelfDoc = shelf.getDocByFilename(uniqueFile.getName());
+    
+    // Add duplicate file.
+    File duplicateFile = Data.createTempFile("addFileDuplicateHashChanged_duplicate_hash");
+    Data.copyFile(uniqueFile, duplicateFile);
+    this.manager.addFile(duplicateFile); // Add duplicate file with different filename.
+System.out.println("Before "+Utils.getHash(duplicateFile));
+    
+    //*** Main test: Change the content of the duplicate file and add it again in the database.
+    Data.writeStringToFile(duplicateFile, " new content "+System.currentTimeMillis());
+    duplicateFile.setLastModified(System.currentTimeMillis()+1000); // Guarantee content update causes an update of File.lastmodified().
+                                                                    //   All platforms support file-modification times to the nearest second.
+    this.manager.addFile(duplicateFile); // Add duplicate file again with different content.
+    
+System.out.println("After "+Utils.getHash(duplicateFile));    
+    //*** Validations: 
 
+    
+    //*** Clean up.
+    //uniqueFile.delete();
+    //duplicateFile.delete();
+  }
   
   
 }
