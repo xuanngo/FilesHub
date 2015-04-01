@@ -56,3 +56,6 @@ select duid, count(hash) from Trash group by hash having count(hash)>10 ;
 
 
 sqlite3 FilesHub.db "DELETE FROM Trash WHERE duid=5;"
+
+
+C:\ProgramData\McAfee\Common Framework\
