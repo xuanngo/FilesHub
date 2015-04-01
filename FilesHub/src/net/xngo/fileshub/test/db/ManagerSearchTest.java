@@ -37,7 +37,7 @@ import org.testng.annotations.Test;
  *
  */
 @Test(singleThreaded=false)
-public class ManagerTestSearch
+public class ManagerSearchTest
 {
   private static final boolean DEBUG = true;
   
@@ -57,7 +57,7 @@ public class ManagerTestSearch
     this.manager.createDbStructure();
     
     // DEBUG: Commit every single transaction in database.
-    if(ManagerTestSearch.DEBUG)
+    if(ManagerSearchTest.DEBUG)
     {
       try { Main.connection.setAutoCommit(true); }
       catch(SQLException ex) { ex.printStackTrace(); }
