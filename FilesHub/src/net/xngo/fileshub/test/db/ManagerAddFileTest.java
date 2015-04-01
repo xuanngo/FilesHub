@@ -35,9 +35,17 @@ import net.xngo.fileshub.test.helpers.TrashExt;
 import net.xngo.utils.java.math.Random;
 
 import org.apache.commons.io.FileUtils;
+
+
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-// FilesHub
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.not;
+import static org.hamcrest.core.IsEqual.equalTo;
+import static org.hamcrest.core.IsNull.nullValue;
+import static org.hamcrest.core.Is.is;
 
 
 /**
@@ -986,35 +994,48 @@ public class ManagerAddFileTest
     
   }
   
-  @Test(description="Hash of duplicate entry has changed.")
-  public void addFileDuplicateHashChanged()
+  /**********************************************************************************************
+   * Case: Content/hash changed to be exactly the same as another entry.
+   * Initial stage:
+   *    - File A => size = 1234
+   *    - File B => size = 0
+   * 
+   * Next stage:
+   *    - File A => size = 0 [CHANGED]
+   *    - File B => size = 0
+   ***********************************************************************************************/
+  
+  @Test(description="Shelf: Hash changed to match another entry.")
+  public void addFileHashChangedMatchOtherEntryShelf()
   {
-    //*** Prepare data: Create a duplicate entry.
-    // Add unique file.
-    File uniqueFile = Data.createTempFile("addFileDuplicateHashChanged");
-    this.manager.addFile(uniqueFile);
+    //*** Main variables:
     Shelf shelf = new Shelf();
-    Document shelfDoc = shelf.getDocByFilename(uniqueFile.getName());
+    Trash trash = new Trash();
     
-    // Add duplicate file.
-    File duplicateFile = Data.createTempFile("addFileDuplicateHashChanged_duplicate_hash");
-    Data.copyFile(uniqueFile, duplicateFile);
-    this.manager.addFile(duplicateFile); // Add duplicate file with different filename.
-System.out.println("Before "+Utils.getHash(duplicateFile));
+    //*** Prepare data: Add 2 unique files.
+    File fileA = Data.createTempFile("addFileHashChangedMatchOtherEntryShelf_fileA");
+    File fileB = Data.createTempFile("addFileHashChangedMatchOtherEntryShelf_fileB");
+    this.manager.addFile(fileA);
+    this.manager.addFile(fileB);
     
-    //*** Main test: Change the content of the duplicate file and add it again in the database.
-    Data.writeStringToFile(duplicateFile, " new content "+System.currentTimeMillis());
-    duplicateFile.setLastModified(System.currentTimeMillis()+1000); // Guarantee content update causes an update of File.lastmodified().
-                                                                    //   All platforms support file-modification times to the nearest second.
-    this.manager.addFile(duplicateFile); // Add duplicate file again with different content.
+    //*** Main test: Content of file A changed to match exactly the same as content of file B.
+    Data.copyFile(fileB, fileA);
+    fileA.setLastModified(System.currentTimeMillis()+1000); // Let's be more realistic. File modified => timestamp changed.
+    this.manager.addFile(fileA);
     
-System.out.println("After "+Utils.getHash(duplicateFile));    
-    //*** Validations: 
+    //*** Validations: FileA should be a duplicate of FileB.
+    // - No entry of File A should be Shelf anymore.
+    Document shelfDocA = shelf.getDocByCanonicalPath(Utils.getCanonicalPath(fileA)); 
+    assertThat(shelfDocA, is(nullValue()));
 
+    // - Trash.FileA.duid = Shelf.FileB.uid
+    Document trashDocA = trash.getDocByCanonicalPath(Utils.getCanonicalPath(fileA));
+    Document shelfDocB = shelf.getDocByCanonicalPath(Utils.getCanonicalPath(fileA));
+    assertThat(trashDocA.uid, equalTo(shelfDocB.uid));
     
     //*** Clean up.
-    //uniqueFile.delete();
-    //duplicateFile.delete();
+    fileA.delete();
+    fileB.delete();
   }
   
   
