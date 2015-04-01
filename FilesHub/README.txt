@@ -24,7 +24,12 @@ Development
       * Install link: http://findbugs.cs.umd.edu/eclipse
   * TestNG: Java unit test framework
       * Install link: http://beust.com/eclipse
-      
+
+  Logging
+  ---------------
+  WARNING: log 1 line.
+  ERROR: log full stack trace.
+  
 TODO
 ============
   * Redo reportings: net.xngo.fileshub.report. It was adhoc coding.
