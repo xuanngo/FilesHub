@@ -102,6 +102,8 @@ public class Manager
    */
   public Document addFile(File file)
   {
+    log.debug("Adding {} ...", file.getAbsolutePath());
+    
     Document doc = new Document(file);
     
     Document shelfDoc = this.shelf.getDocByCanonicalPath(doc.canonical_path);
