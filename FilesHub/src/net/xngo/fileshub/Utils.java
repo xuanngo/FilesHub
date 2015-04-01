@@ -64,7 +64,7 @@ public class Utils
    */
   public static final String getHash(File file)
   {
-    log.debug("Hashing {}", file.getAbsolutePath());
+    log.debug("Hashing {} ...", file.getAbsolutePath());
     
     final int fileSizeThreshold = 4194304; // 4MB=4*1024*1024;
     
