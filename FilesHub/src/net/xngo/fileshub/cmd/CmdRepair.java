@@ -5,7 +5,7 @@ import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;
 
 
-@Parameters(commandDescription = "Search by different attributes.")
+@Parameters(commandDescription = "Repair database.")
 public class CmdRepair
 {
   public static String name = "repair";
