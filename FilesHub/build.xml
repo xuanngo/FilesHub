@@ -104,7 +104,12 @@
                    match="&lt;root level=&quot;WARN&quot;&gt;"
                    replace="&lt;root level=&quot;DEBUG&quot;&gt;"
 
-    />		
+    />
+		
+    <copy verbose="true" overwrite="true" todir="${test.release.dir}">
+      <fileset dir="test" includes="test.FilesHub.*"/>
+    </copy>
+    	
 	</target>
 	
 </project>
