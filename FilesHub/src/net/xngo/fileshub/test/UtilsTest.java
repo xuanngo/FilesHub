@@ -1,6 +1,8 @@
 package net.xngo.fileshub.test;
 
 import java.io.File;
+import java.util.List;
+import java.util.ArrayList;
 
 import net.xngo.fileshub.Config;
 import net.xngo.fileshub.Utils;
@@ -14,6 +16,12 @@ import static org.testng.Assert.assertNull;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotEquals;
 import static org.testng.Assert.assertTrue;
+
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.not;
+import static org.hamcrest.text.IsEmptyString.isEmptyString;
 
 public class UtilsTest
 {
@@ -47,4 +55,39 @@ public class UtilsTest
     //uniqueFile.delete();    
   }
   
+  @Test(description="getDirsAsString(): Test a file.")
+  public void getDirsAsStringFile()
+  {
+    //*** Prepare data: Create a file.
+    File file = Data.createTempFile("getDirsAsStringFile");
+    List<File> paths = new ArrayList<File>();
+    paths.add(file);
+    
+    //*** Test: Should return an empty string as it is not a directory.
+    String errorMsg = String.format("Should return empty string as it is not a directory: %s.", file.getAbsolutePath());
+    assertThat(errorMsg, Utils.getDirsAsString(paths), isEmptyString());
+    
+    //*** Clean up.
+    file.delete();    
+  }
+  
+  /* @TODO: Mock File.isDirectory()
+  @Test(description="getDirsAsString(): Test a mix of files and directories.")
+  public void getDirsAsStringMixFileNDirs()
+  {
+    //*** Prepare data: Create files and directories
+    File file1 = Data.createTempFile("getDirsAsStringMixFileNDirs_file1");
+    File file1 = Data.createTempFile("getDirsAsStringMixFileNDirs_file1");
+    
+    List<File> paths = new ArrayList<File>();
+    paths.add(file1);
+    
+    //*** Test: Should return an empty string as it is not a directory.
+    assertThat(Utils.getDirsAsString(paths), is(""));
+    
+    //*** Clean up.\
+    for(File file: paths)
+      file.delete();
+  }
+  */
 }
