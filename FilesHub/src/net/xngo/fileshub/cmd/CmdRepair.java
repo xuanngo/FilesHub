@@ -11,7 +11,7 @@ public class CmdRepair
   public static String name = "repair";
   
   @Parameter(names = {"-c", "--commit"}, description = "True to commit repair. "
-                                                  + "Otherwise, list all actions to be executed without committing them.", arity = 1)
+                                                  + "Otherwise, list all actions to be executed without committing them.", arity = 0)
   public boolean commit=false;
   
 }
