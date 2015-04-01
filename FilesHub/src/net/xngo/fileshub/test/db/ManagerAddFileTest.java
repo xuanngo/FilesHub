@@ -287,11 +287,11 @@ public class ManagerAddFileTest
   }
   
   
-  @Test(description="Add same filename but different content.")
-  public void addFileSameNameDiffContent()
+  @Test(description="Add same filename but different content and different path.")
+  public void addFileSameNameDiffContentNPath()
   {
     // Add a unique file in database.
-    File uniqueFile = Data.createTempFile("addFileSameNameDiffContent");
+    File uniqueFile = Data.createTempFile("addFileSameNameDiffContentNPath");
     this.manager.addFile(uniqueFile);
     
     // Copied temporary file to another directory and add content to the copied file so it will have different content.
