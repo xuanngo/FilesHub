@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.nio.channels.FileChannel;
 import java.nio.channels.FileLock;
+import java.util.List;
 
 import net.xngo.utils.java.io.FileUtils;
 import net.xngo.utils.java.math.Hash;
@@ -134,5 +135,47 @@ public class Utils
     return String.format("RAM: %s / %s Max=%s", FileUtils.readableSize(usedMemory           ), 
                                                 FileUtils.readableSize(runtime.totalMemory()), 
                                                 FileUtils.readableSize(runtime.maxMemory()) );
-  }    
+  }
+  
+  /**
+   * @deprecated Not used yet. Need more unit test to remove @deprecated.
+   * @param paths
+   * @return List of directories as a string.
+   */
+  public static String getDirsAsString(List<File> paths)
+  {
+    StringBuilder directories = new StringBuilder();
+    String dirSeparator = ", ";
+    for(File path: paths)
+    {
+      if(path.exists())
+      {
+        File canonicalPath = null;
+        try
+        {
+          canonicalPath = path.getCanonicalFile();
+        }
+        catch(IOException ex) { ex.printStackTrace(); }
+        
+        if(canonicalPath.isDirectory())
+        {
+          if(!canonicalPath.getName().isEmpty())
+          {
+            directories.append(canonicalPath.getName());
+            directories.append(File.separator+dirSeparator);
+          }
+        }
+      }
+    }
+    
+    // Remove the last separator.
+    if(directories.length()>0)
+    {
+      int startpos = directories.lastIndexOf(dirSeparator);
+      int endpos   = startpos + dirSeparator.length();
+      return directories.replace(startpos, endpos, "").toString();
+    }
+    else
+      return directories.toString();
+  }  
 }
