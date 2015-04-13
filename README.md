@@ -14,7 +14,7 @@ Usage
 Add files or directories
 ```
 # fh -a <files, directories or mix>
-FilesHub -a FilesHub.db ./ FilesHub*
+fh -a FilesHub.db ./ FilesHub*
 ```
 
 Mark a file is a duplicate of another.
