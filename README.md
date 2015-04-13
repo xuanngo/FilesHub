@@ -14,7 +14,7 @@ Usage
 Add files or directories
 ```
 # fh -a <files, directories or mix>
-fh -a FilesHub.db ./ FilesHub*
+fh -a FilesHub.db ./ log*
 ```
 
 Mark a file is a duplicate of another.
@@ -23,7 +23,7 @@ Mark a file is a duplicate of another.
 fh -d SomeRandomFile.txt FilesHub.db
 ```
 
-Compute the [hash](https://code.google.com/p/xxhash/) of files
+Compute the hash of files
 ```
 # fh hash <files, directories or mix>
 fh hash FilesHub.db ./ FilesHub*
