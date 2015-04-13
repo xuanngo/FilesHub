@@ -142,7 +142,7 @@
         <pathelement location="releases/latest/libs/flyway-core-3.2.1.jar"/>
         <pathelement location="releases/latest/libs/sqlite-jdbc-3.8.6.jar"/>
     </path>
-    <testng outputdir="${testng.output.dir}" classpathref="classes">
+    <testng outputdir="${testng.output.dir}" classpathref="classes" failureProperty="test.failure">
     	<jvmarg value="-DFilesHub.hash.frequency=13" />
     	<jvmarg value="-Dlogback.configurationFile=${basedir}/test-release/logback.xml" /> 
     	<jvmarg value="-DFilesHub.home=${basedir}/test-release" />
@@ -150,6 +150,8 @@
     	<classpath refid="FilesHub.classpath"/>
       <xmlfileset dir="." includes="test/testng-fileshub.xml"/> 
     </testng>
+		
+		<fail message="Not all tests passed!" if="test.failure" />
 		
 	</target>
 	
