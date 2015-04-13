@@ -1,0 +1,14 @@
+Use cases:
+==========
+FilesHub need to handle the following cases:
+
+  Case 1: Add new files.
+  Case 2: Add files with same names but with different content.
+  Case 3: Add files with different names but with the same content.
+  
+Issues:
+==========
+  -How to FilesHub knows files have been renamed?
+    -Hard case: Filename changed to an existing filename. E.g.: Switch name between 'Episode_1.txt' and 'Episode_2.txt' and vice versa. 
+  
+{@link File#createTempFile}
