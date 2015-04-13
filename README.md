@@ -13,19 +13,19 @@ Usage
 
 Add files or directories
 ```
-# FilesHub -a <files, directories or mix>
+# fh -a <files, directories or mix>
 FilesHub -a FilesHub.db ./ FilesHub*
 ```
 
 Mark a file is a duplicate of another.
 ```
-# FilesHub -d <This file.txt> <Is a duplicate of this file.txt>
+# fh -d <This file.txt> <Is a duplicate of this file.txt>
 FilesHub -d SomeRandomFile.txt FilesHub.db
 ```
 
 Compute the [hash](https://code.google.com/p/xxhash/) of files
 ```
-# FilesHub hash <files, directories or mix>
+# fh hash <files, directories or mix>
 FilesHub hash FilesHub.db ./ FilesHub*
 ```
 
