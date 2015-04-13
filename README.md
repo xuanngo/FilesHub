@@ -20,39 +20,39 @@ FilesHub -a FilesHub.db ./ FilesHub*
 Mark a file is a duplicate of another.
 ```
 # fh -d <This file.txt> <Is a duplicate of this file.txt>
-FilesHub -d SomeRandomFile.txt FilesHub.db
+fh -d SomeRandomFile.txt FilesHub.db
 ```
 
 Compute the [hash](https://code.google.com/p/xxhash/) of files
 ```
 # fh hash <files, directories or mix>
-FilesHub hash FilesHub.db ./ FilesHub*
+fh hash FilesHub.db ./ FilesHub*
 ```
 
 Search by unique identifier(UID)
 ```
-FilesHub search -uid 2
+fh search -uid 2
 ```
 
 Search by hash value
 ```
-FilesHub search -h "-943432"
+fh search -h "-943432"
 ```
 
 Search by filename: Can use wildcard(*)
 ```
-FilesHub search -f "*fileshub*"
+fh search -f "*fileshub*"
 ```
 
 Search by file path: Can use wildcard(*)
 ```
-FilesHub search -p "*\somewhere\fileshub\*"
+fh search -p "*\somewhere\fileshub\*"
 ```
 
 Search similar files of the current directory and its sub-directories against the whole database. It will output the results in potentialDuplicates.html.
 ```
 # Search all file names that are 80% similar or more.
-FilesHub search -s 80
+fh search -s 80
 ```
 
 Output
