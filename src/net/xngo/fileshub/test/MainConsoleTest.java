@@ -1,4 +1,4 @@
-package net.xngo.fileshub.test.cmd;
+package net.xngo.fileshub.test;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
@@ -11,6 +11,7 @@ import java.sql.SQLException;
 
 import net.xngo.fileshub.Main;
 import net.xngo.fileshub.cmd.Cmd;
+import net.xngo.fileshub.db.Connection;
 import net.xngo.fileshub.db.Manager;
 import net.xngo.fileshub.test.helpers.Data;
 
@@ -19,7 +20,7 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-public class CmdConsoleTest
+public class MainConsoleTest
 {
   
   private static final boolean DEBUG = true;
@@ -38,7 +39,7 @@ public class CmdConsoleTest
     this.manager.createDbStructure();
     
     // DEBUG: Commit every single transaction in database.
-    if(CmdConsoleTest.DEBUG)
+    if(MainConsoleTest.DEBUG)
     {
       try { Main.connection.setAutoCommit(true); }
       catch(SQLException ex) { ex.printStackTrace(); }
@@ -48,6 +49,16 @@ public class CmdConsoleTest
   @BeforeMethod
   public void beforeTest()
   {
+    // Check if database connection is opened.
+    try
+    {
+      if(Main.connection.isClose())
+      {
+        Main.connection = new Connection();
+      }
+    }
+    catch(SQLException ex) { ex.printStackTrace(); }
+    
     // Redirect all System.out to consoleContent.
     System.setOut(new PrintStream(this.consoleContent));
   }
@@ -76,7 +87,7 @@ public class CmdConsoleTest
     
     //*** Main test: Copy unique file and then add to database.
     String[] args = new String[] { "-a", uniqueFile.getAbsolutePath(), duplicateFile.getAbsolutePath() };
-    Cmd cmd = new Cmd(args);
+    Main.main(args);
     
     assertThat(this.consoleContent.toString(), containsString("Summary:"));
 
@@ -109,7 +120,7 @@ public class CmdConsoleTest
     
     //*** Main test: Copy unique file and then add to database.
     String[] args = new String[] { "search" };
-    Cmd cmd = new Cmd(args);
+    Main.main(args);
     
     assertThat(this.consoleContent.toString(), containsString("Comparing "));
     assertThat(this.consoleContent.toString(), containsString(" files against "));
