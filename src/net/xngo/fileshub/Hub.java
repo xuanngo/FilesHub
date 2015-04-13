@@ -204,8 +204,7 @@ public class Hub
     reportDuplicate.setData(duplicates);
     reportDuplicate.generate();
     
-    Main.chrono.display("Runtime breakdown");    
-    System.out.println("Done!");
+    Main.chrono.stop("End of Hub.addFiles()");    
     
   }
   
@@ -300,9 +299,7 @@ public class Hub
     reportSimilar.setData(pairFileList);
     reportSimilar.generate();
     
-    Main.chrono.display("Runtime breakdown"); 
-    
-    System.out.println("Done!");
+    Main.chrono.stop("End of Hub.searchSimilarFilename()");    
   }
   
   public void upgrade()
