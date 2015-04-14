@@ -1004,8 +1004,7 @@ public class ManagerAddFileTest
    *    - File A => size = 0 [CHANGED]
    *    - File B => size = 0
    ***********************************************************************************************/
-  
-  @Test(enabled=false, description="Shelf: Hash changed to match another entry.")
+  @Test(description="Shelf: Hash changed to match another entry.")
   public void addFileHashChangedMatchOtherEntryShelf()
   {
     //*** Main variables:
