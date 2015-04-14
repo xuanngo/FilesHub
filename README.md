@@ -1,5 +1,6 @@
 FilesHub
 ========
+[![Build Status](https://travis-ci.org/limelime/FilesHub.svg?branch=master)](https://travis-ci.org/limelime/FilesHub)
 
 FilesHub is used to find duplicate files.
 
