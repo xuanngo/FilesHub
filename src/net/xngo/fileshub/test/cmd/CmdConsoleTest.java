@@ -97,7 +97,7 @@ public class CmdConsoleTest
     assertThat(this.consoleContent.toString(), containsString("[Total] ="));  */  
   }
   
-  @Test(enabled=false, description="search: Check console output skeleton.")
+  @Test(enabled=false, description="search: Check console output skeleton.") // This unit test is too slow.
   public void searchSimilarOutputConsoleBasic()
   {
     //*** Prepare data: Create and add files in database. Guarantee that there is something to compare.
