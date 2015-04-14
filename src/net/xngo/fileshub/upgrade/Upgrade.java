@@ -64,7 +64,7 @@ public class Upgrade
       this.backupBeforeUpgrade(); // Backup database file before migration.
                                     Upgrade.chrono.stop("Backup database file");
       this.flyway.migrate();
-                                    Upgrade.chrono.stop("End of Upgrade.run()");
+                                    Upgrade.chrono.display("Migration Runtime");
     }
     else
     {

@@ -299,7 +299,9 @@ public class Hub
     reportSimilar.setData(pairFileList);
     reportSimilar.generate();
     
-    Main.chrono.stop("End of Hub.searchSimilarFilename()");    
+    Main.chrono.display("Runtime breakdown"); 
+    
+    System.out.println("Done!");
   }
   
   public void upgrade()

@@ -22,9 +22,6 @@ public class Main
     Main.chrono.start();
     Cmd cmd = new Cmd(args);
     Main.connection.close();
-    
-    Main.chrono.display("Runtime breakdown");    
-    System.out.println("Done!");    
   }
  
 }
