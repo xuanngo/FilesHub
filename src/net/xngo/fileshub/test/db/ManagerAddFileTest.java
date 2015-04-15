@@ -1030,7 +1030,7 @@ public class ManagerAddFileTest
     Document shelfDocA = shelf.getDocByCanonicalPath(Utils.getCanonicalPath(fileA)); 
     assertThat(shelfDocA, is(nullValue()));
 
-    // - Trash.FileA.duid = Shelf.FileB.uid
+    // - Check File A is a duplicate of File B: Trash.FileA.duid = Shelf.FileB.uid
     Document trashDocA = trash.getDocByCanonicalPath(Utils.getCanonicalPath(fileA));
     Document shelfDocB = shelf.getDocByCanonicalPath(Utils.getCanonicalPath(fileA));
     assertThat(trashDocA.uid, equalTo(shelfDocB.uid));
