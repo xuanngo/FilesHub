@@ -208,12 +208,15 @@ public class ManagerAddFileTest
     this.manager.addFile(uniqueFile);
 
     //*** Validations: Since hash has changed, therefore the old entry will be moved from Shelf to Trash table.
+    // Check hash match the new value.
     String newHash = Utils.getHash(uniqueFile);
     Document newShelfDoc = shelf.getDocByCanonicalPath(uniqueFile.getAbsolutePath());
     assertEquals(newShelfDoc.hash, newHash, String.format("Content of file(%s) has changed. The new hash[%s] should be in Shelf table.", uniqueFile.getAbsolutePath(), newHash));
+    
+    // On content changed, old info should not be logged in Trash.
     Trash trash = new Trash(); 
     Document trashDoc = trash.getDocByCanonicalPath(uniqueFile.getAbsolutePath());
-    assertEquals(trashDoc.hash, oldShelfDoc.hash, String.format("Content of file(%s) has changed. The old hash[%s] should be moved in Trash table.", uniqueFile.getAbsolutePath(), oldShelfDoc.hash));
+    assertThat(trashDoc, is(nullValue()));
     
     //*** Clean up.
     uniqueFile.delete();    
