@@ -826,17 +826,19 @@ public class ManagerAddFileTest
     this.manager.addFile(serie_18);    
   
     //*** Validation: New filename should be in the Shelf and old filename should be in Trash.
-    Trash trash = new Trash();
-    Document newShelfDocSerie17 = shelf.getDocByCanonicalPath(serie_18.getAbsolutePath());
-    assertEquals(newShelfDocSerie17.hash, originalShelfDocSerie17.hash);
-    Document trashDocSerie17 = trash.getDocByCanonicalPath(serie_17.getAbsolutePath());
-    assertEquals(trashDocSerie17.hash, originalShelfDocSerie17.hash);
-    
-    Document newShelfDocSerie18 = shelf.getDocByCanonicalPath(serie_17.getAbsolutePath());
-    assertEquals(newShelfDocSerie18.hash, originalShelfDocSerie18.hash);
-    Document trashDocSerie18 = trash.getDocByCanonicalPath(serie_18.getAbsolutePath());
-    assertEquals(trashDocSerie18.hash, originalShelfDocSerie18.hash);    
+    // Check hash.
+    Document newShelfDocSerie18 = shelf.getDocByCanonicalPath(serie_18.getAbsolutePath());
+    assertEquals(newShelfDocSerie18.hash, originalShelfDocSerie17.hash);
+    Document newShelfDocSerie17 = shelf.getDocByCanonicalPath(serie_17.getAbsolutePath());
+    assertEquals(newShelfDocSerie17.hash, originalShelfDocSerie18.hash);
 
+    // Check no trash entry created.
+    Trash trash = new Trash();
+    Document trashDocSerie17 = trash.getDocByCanonicalPath(serie_17.getAbsolutePath());
+    Document trashDocSerie18 = trash.getDocByCanonicalPath(serie_18.getAbsolutePath());
+    assertThat(trashDocSerie17, is(nullValue()));
+    assertThat(trashDocSerie18, is(nullValue()));
+    
     //*** Clean up.
     serie_17.delete();
     serie_18.delete();
