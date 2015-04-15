@@ -97,8 +97,7 @@ public class Manager
    * }
    * </pre>               
    * @param file
-   * @return  Existing and conflicting document. Otherwise, null = new unique file. 
-   *              NULL is used to find duplicates.
+   * @return  Conflicting document.
    */
   public Document addFile(File file)
   {
@@ -218,24 +217,144 @@ public class Manager
     else
     {// Exact same file path in Shelf.
       
-      if(shelfDoc.last_modified!=file.lastModified())
+      /**
+       * For this section below, please refer flowchart ContentChanged.dia.
+       * Adding the old entry info in Trash table logic is intentionally omitted.
+       *  Otherwise, the basic logic of checking the path first following by hash
+       *  will fundamentally not work.
+       *  
+       * This has to handle the following cases:
+       * 1)
+       *  Rename of files with conflicting(existing) name.
+       *    Serie_17.txt(HASH-A) => Renamed to Serie_18.txt(HASH-A)
+       *    Serie_18.txt(HASH-B) => Renamed to Serie_17.txt(HASH-B)
+       * 2)
+       *  Content changed with conflicting(existing) hash.
+       *    File X(HASH-B)
+       *    File A(HASH-A) => Content changed: FileA(HASH-B)
+       *  
+       */
+      
+      if(FileUtils.isPotentiallyChanged(file, shelfDoc.size, shelfDoc.last_modified))
       {
         String newHash = Utils.getHash(file);
         if(shelfDoc.hash.compareTo(newHash)!=0)
         {// Hash is different.
-          Document newShelfDoc = new Document(file);
-          newShelfDoc.uid = shelfDoc.uid;
-          newShelfDoc.hash = newHash;
-          this.shelf.saveDoc(newShelfDoc); // Update Shelf with new information of the same file path.
           
-          this.trash.addDoc(shelfDoc);  // Move Shelf entry to Trash table.
+          Document hashShelfDoc = this.shelf.getDocByHash(newHash);
+          if(hashShelfDoc==null)
+          {// New hash not found in Shelf
+            
+            /**
+             * Processing in Trash table. 
+             */
+            Document hashTrashDoc = this.trash.getDocByHash(newHash);
+            if(hashTrashDoc==null)
+            {// New hash not found in Trash
+              // Update database entry.
+              shelfDoc.update(file);
+              shelfDoc.hash = newHash;
+              this.shelf.saveDoc(shelfDoc);
+            }
+            else
+            {// New hash found in Trash
+              
+              Document shelfDocOfTrash = this.shelf.getDocByUid(hashTrashDoc.uid);
+              File shelfFileOfTrash = new File(shelfDocOfTrash.canonical_path);
+              if(shelfFileOfTrash.exists())
+              {// New Hash file exists
+                
+                if(FileUtils.isPotentiallyChanged(shelfFileOfTrash, shelfDocOfTrash.size, shelfDocOfTrash.last_modified))
+                {// Shelf entry of Trash found not up-to-date
+                  
+                  // Update database entry.
+                  shelfDoc.update(file);
+                  shelfDoc.hash = newHash;
+                  this.shelf.saveDoc(shelfDoc);
+                  
+                  // Mark current entry as duplicate of the found entry even hash will be different on update.
+                  this.markDuplicate(file, shelfFileOfTrash);
+                  
+                  // Add shelfFileOfTrash for the update to occur.
+                  this.addFile(shelfFileOfTrash); // Warning: Recursive.
+                }
+                else
+                {// Shelf entry of Trash found is up-to-date
+                  
+                  // Update database entry.
+                  shelfDoc.update(file);
+                  shelfDoc.hash = newHash;
+                  this.shelf.saveDoc(shelfDoc);
+                  
+                  // Mark current entry as duplicate of the found entry.
+                  this.markDuplicate(file, shelfFileOfTrash);
+                  
+                }
+              }
+              else
+              {// New Hash doesn't file exists
+                // Update database entry.
+                shelfDoc.update(file);
+                shelfDoc.hash = newHash;
+                this.shelf.saveDoc(shelfDoc);
+                
+                // Mark entry found as duplicate of the current entry.
+                this.markDuplicate(shelfFileOfTrash, file);
+              }
+            }            
+          }
+          else
+          {// New hash found in Shelf
+            
+            /**
+             * Processing in Shelf table. 
+             */
+            
+            File newHashShelfFile = new File(hashShelfDoc.canonical_path);
+            if(newHashShelfFile.exists())
+            {// New Hash file exists
+              
+              if(FileUtils.isPotentiallyChanged(newHashShelfFile, hashShelfDoc.size, hashShelfDoc.last_modified))
+              {// Shelf entry found not up-to-date
+                
+                // Update database entry.
+                shelfDoc.update(file);
+                shelfDoc.hash = newHash;
+                this.shelf.saveDoc(shelfDoc);
+                
+                this.addFile(newHashShelfFile); // Warning: Recursive.
+              }
+              else
+              {// Shelf entry found is up-to-date
+                
+                // Update database entry.
+                shelfDoc.update(file);
+                shelfDoc.hash = newHash;
+                this.shelf.saveDoc(shelfDoc);
+                
+                // Mark newHashShelfDoc as duplicate of the current entry.
+                this.markDuplicate(file, newHashShelfFile);
+                
+              }
+            }
+            else
+            {// New Hash doesn't file exists
+              // Update database entry.
+              shelfDoc.update(file);
+              shelfDoc.hash = newHash;
+              this.shelf.saveDoc(shelfDoc);
+              
+              // Mark newHashShelfDoc as duplicate of the current entry.
+              this.markDuplicate(new File(hashShelfDoc.canonical_path), file);
+            }
+          }
           
         }
         else
-        {// Hash is the same but last modified timestamp is different.
+        {// Hash is the same but last modified timestamp or size are different.
           
-          // Update last modified time.
-          shelfDoc.last_modified = file.lastModified();
+          // Update database entry.
+          shelfDoc.update(file);
           this.shelf.saveDoc(shelfDoc);
         }
       }
@@ -850,5 +969,5 @@ public class Manager
     }
     return maxLength;
   }
-  
+
 }
