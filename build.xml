@@ -27,7 +27,7 @@
   </path>
 	
 
-	<target name="create_run_jar">
+	<target depends="cleanall, build-project" name="create_run_jar">
 		<delete verbose="true" file="${latest.jar.file.path}"/>
 		<!-- Guarantee JAR is always the latest. -->
 
