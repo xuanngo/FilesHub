@@ -151,7 +151,7 @@
       <xmlfileset dir="." includes="test/testng-fileshub.xml"/> 
     </testng>
 		
-		<fail message="Not all tests passed!" if="test.failure" />
+		<fail if="test.failure" message="Not all tests passed!" />
 		
 	</target>
 	
