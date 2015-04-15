@@ -204,7 +204,8 @@ public class Hub
     reportDuplicate.setData(duplicates);
     reportDuplicate.generate();
     
-    Main.chrono.stop("End of Hub.addFiles()");    
+    Main.chrono.display("Runtime breakdown"); 
+    System.out.println("Done!");
     
   }
   
