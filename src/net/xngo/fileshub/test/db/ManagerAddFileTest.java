@@ -996,13 +996,16 @@ public class ManagerAddFileTest
   
   /**********************************************************************************************
    * Case: Content/hash changed to be exactly the same as another entry.
-   * Initial stage:
+   * Initial step:
    *    - File A => size = 1234
    *    - File B => size = 0
    * 
-   * Next stage:
+   * Next step:
    *    - File A => size = 0 [CHANGED]
    *    - File B => size = 0
+   * 
+   * End result:
+   *    - File A should be a duplicate of File B.
    ***********************************************************************************************/
   @Test(description="Shelf: Hash changed to match another entry.")
   public void addFileHashChangedMatchOtherEntryShelf()
