@@ -3,7 +3,10 @@
 
 <suite name="FilesHub test suite">
   
-  <!-- net.xngo.fileshub.test.cmd.CmdConsoleTest.searchSimilarOutputConsoleBasic(): Take a lot of time to run. -->
+  <!-- 
+    * net.xngo.fileshub.test.cmd.CmdConsoleTest.searchSimilarOutputConsoleBasic(): Take a lot of time to run.
+    * Run unit test 3 times to ensure they are implemented properly. 
+  -->
   
   <test verbose="1" name="FilesHub tests: Once">
 	  <packages>
