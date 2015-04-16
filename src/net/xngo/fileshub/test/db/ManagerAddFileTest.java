@@ -1045,5 +1045,37 @@ public class ManagerAddFileTest
     fileB.delete();
   }
   
-  
+  @Test(description="Add duplicate with different last modified time.")
+  public void addFileDuplicateFilesWithDiffLastModifiedTime()
+  {
+    //*** Main variables:
+    Shelf shelf = new Shelf();
+    Trash trash = new Trash();
+    
+    //*** Prepare data: Add 2 duplicate files.
+    File file = Data.createTempFile("addFileDuplicateFilesWithDiffLastModifiedTime");
+    this.manager.addFile(file);
+    File duplicateFile = Data.createTempFile("addFileDuplicateFilesWithDiffLastModifiedTime_copy");
+    Data.copyFile(file, duplicateFile);    
+    this.manager.addFile(duplicateFile);
+    
+    //*** Main test: Change Last modified time of duplicate file.
+    file.setLastModified(System.currentTimeMillis()+1000); // Let's be more realistic. File modified => timestamp changed.
+    duplicateFile.setLastModified(System.currentTimeMillis()+1000); // Let's be more realistic. File modified => timestamp changed.
+    this.manager.addFile(file);
+    this.manager.addFile(duplicateFile);
+    
+    //*** Validations: 
+    Document shelfDoc = shelf.getDocByCanonicalPath(Utils.getCanonicalPath(file)); 
+    Document trashDoc = trash.getDocByCanonicalPath(Utils.getCanonicalPath(duplicateFile));
+    assertThat(shelfDoc.last_modified, is(equalTo(file.lastModified())));
+    
+    //@TODO: Manager.add(): update trash entry if it is changed.
+    //assertThat(trashDoc.last_modified, is(equalTo(duplicateFile.lastModified())));
+    
+    //*** Clean up.
+    file.delete();
+    duplicateFile.delete();
+ 
+  }
 }
