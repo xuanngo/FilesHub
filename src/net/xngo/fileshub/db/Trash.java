@@ -33,6 +33,7 @@ public class Trash
   }
   
   /**
+   * @deprecated Trash table allow duplicate hashes. Instead, use getDocsByHash().
    * @param hash
    * @return {@link Document}
    */
