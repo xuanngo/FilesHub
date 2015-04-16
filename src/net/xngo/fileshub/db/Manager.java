@@ -248,8 +248,8 @@ public class Manager
             /**
              * Processing in Trash table. 
              */
-            Document hashTrashDoc = this.trash.getDocByHash(newHash);
-            if(hashTrashDoc==null)
+            List<Document> hashTrashDocList = this.trash.getDocsByHash(newHash);
+            if(hashTrashDocList.size()==0)
             {// New hash not found in Trash
               // Update database entry.
               shelfDoc.update(file);
@@ -259,7 +259,7 @@ public class Manager
             else
             {// New hash found in Trash
               
-              Document shelfDocOfTrash = this.shelf.getDocByUid(hashTrashDoc.uid);
+              Document shelfDocOfTrash = this.shelf.getDocByUid(hashTrashDocList.get(0).uid);
               File shelfFileOfTrash = new File(shelfDocOfTrash.canonical_path);
               if(shelfFileOfTrash.exists())
               {// New Hash file exists
