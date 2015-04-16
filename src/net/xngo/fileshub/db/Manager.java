@@ -117,6 +117,7 @@ public class Manager
         Document originalDoc = this.shelf.getDocByUid(trashDoc.uid);
         File originalDocFile = new File(originalDoc.canonical_path);
         if(originalDocFile.exists() && originalDocFile.isFile())
+          //@TODO: update trash entry if it is changed.
           return this.shelf.getDocByUid(trashDoc.uid);
         else
         {// Shelf file doesn't exist.
