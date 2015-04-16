@@ -109,22 +109,22 @@ public class Manager
     if(shelfDoc == null)
     {// Path not found in Shelf.
       
-      Document trashDoc = this.trash.getDocByCanonicalPath(doc.canonical_path);
-      if(trashDoc != null)
+      List<Document> trashDocList = this.trash.getDocsByCanonicalPath(doc.canonical_path);
+      if(trashDocList.size() > 0)
       {// Path found in Trash.
         
         // Check if original file doesn't exist.
-        Document originalDoc = this.shelf.getDocByUid(trashDoc.uid);
+        Document originalDoc = this.shelf.getDocByUid(trashDocList.get(0).uid);
         File originalDocFile = new File(originalDoc.canonical_path);
         if(originalDocFile.exists() && originalDocFile.isFile())
           //@TODO: update trash entry if it is changed.
-          return this.shelf.getDocByUid(trashDoc.uid);
+          return this.shelf.getDocByUid(trashDocList.get(0).uid);
         else
         {// Shelf file doesn't exist.
           // Move original file info from Shelf to Trash.
-          this.shelf.saveDoc(trashDoc); // trashDoc is used instead of 'doc' because they both
+          this.shelf.saveDoc(trashDocList.get(0)); // trashDoc is used instead of 'doc' because they both
                                         //    have exact same path. It will save hash time.
-          this.trash.removeDoc(trashDoc); // Remove from Trash because it is moved to Shelf.
+          this.trash.removeDoc(trashDocList.get(0)); // Remove from Trash because it is moved to Shelf.
           this.trash.addDoc(originalDoc); // Move original doc from Shelf to Trash because it doesn't exist anymore.
           return null;
         }
@@ -477,7 +477,7 @@ public class Manager
       else
       {// TO is NOT in Shelf.
         
-        Document trashDocTo = this.trash.getDocByCanonicalPath(fileToPath);
+        List<Document> trashDocToList = this.trash.getDocsByCanonicalPath(fileToPath);
         if(trashDocTo!=null)
         {// TO is in Trash.
           

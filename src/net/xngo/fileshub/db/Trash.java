@@ -14,9 +14,6 @@ import net.xngo.utils.java.db.DbUtils;
 
 /**
  * Implement functionalities related to duplicate documents(files) in database.
- * Rules:
- *  -Duplicate UID, HASH and PATH are allowed.
- *  -All getDocXXXX() returning single document should be removed.
  * @author Xuan Ngo
  *
  */
@@ -27,7 +24,6 @@ public class Trash
   protected final String tablename  = "Trash";
  
   /**
-   * @deprecated Duplicate CanonicalPaths are allowed.
    * @param canonicalPath
    * @return {@link Document}
    */
@@ -36,13 +32,23 @@ public class Trash
     return this.getDocBy("canonical_path", canonicalPath);
   }
   
+  /**
+   * @deprecated Trash table allow duplicate hashes. Instead, use getDocsByHash().
+   * @param hash
+   * @return {@link Document}
+   */
+  public Document getDocByHash(String hash)
+  {
+    return this.getDocBy("hash", hash);
+  }
+  
   public List<Document> getDocsByHash(String hash)
   {
     return this.getDocsBy("hash", hash);
   }    
   
   /**
-   * @deprecated Duplicate filename are allowed.
+   * 
    * @param filename
    * @return {@link Document}
    */

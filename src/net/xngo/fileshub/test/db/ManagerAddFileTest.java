@@ -171,20 +171,21 @@ public class ManagerAddFileTest
     //*** Main test: Copy unique file and then add to database.
     File duplicateFile = Data.createTempFile("addFileWithSameHash_duplicate_hash");
     Data.copyFile(uniqueFile, duplicateFile);
+    
+    // Add duplicate file to database.
     this.manager.addFile(duplicateFile); // Add duplicate file with different file name/path.
     
     //*** Validations: Check new hash is added in Trash.
     Trash trash = new Trash();
-    List<Document> trashDocList = trash.getDocsByHash(Utils.getHash(duplicateFile));
-    String msg = String.format("[%s] is not added in Trash table. It should.\n"
-                                        + "%s"
-                                        + "\n"
-                                        + "%s"
-                                        ,duplicateFile.getName(),
-                                        Data.getFileInfo(duplicateFile, "File to add"),
-                                        shelfDoc.getInfo("Shelf")
-                                   );
-    assertThat(msg, trashDocList.size(), is(not(0)));
+    Document trashDoc = trash.getDocByHash(Utils.getHash(duplicateFile));
+    assertNotNull(trashDoc, String.format("[%s] is not added in Trash table. It should.\n"
+                                                      + "%s"
+                                                      + "\n"
+                                                      + "%s"
+                                                      ,duplicateFile.getName(),
+                                                      Data.getFileInfo(duplicateFile, "File to add"),
+                                                      shelfDoc.getInfo("Shelf")
+                                                 ));
     
     //*** Clean up.
     uniqueFile.delete();
@@ -324,9 +325,8 @@ public class ManagerAddFileTest
                                             shelfDoc.getInfo("Return document from Shelf")));
     
     Trash trash = new Trash();
-    List<Document> trashDocList = trash.getDocsByHash(hash);
-    assertThat(String.format("No new row should be created in Trash.\n%s", shelfDoc.getInfo("Unexpected Trash document returned.")), 
-                trashDocList.size(), is(0));
+    Document trashDoc = trash.getDocByHash(hash);
+    assertNull(trashDoc, String.format("No new row should be created in Trash.\n%s", shelfDoc.getInfo("Unexpected Trash document returned.")));
     
     // Clean up.
     uniqueFile.delete();
