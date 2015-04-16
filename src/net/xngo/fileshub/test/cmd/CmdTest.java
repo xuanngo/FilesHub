@@ -10,6 +10,7 @@ import java.nio.channels.FileChannel;
 import java.nio.channels.FileLock;
 import java.nio.file.Path;
 import java.util.Collection;
+import java.util.List;
 
 import net.xngo.fileshub.Utils;
 import net.xngo.fileshub.cmd.Cmd;
@@ -22,6 +23,12 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.TrueFileFilter;
 import org.testng.annotations.Test;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.not;
+import static org.hamcrest.core.IsEqual.equalTo;
+import static org.hamcrest.core.IsNull.nullValue;
+import static org.hamcrest.core.Is.is;
 
 public class CmdTest
 {
@@ -180,10 +187,11 @@ public class CmdTest
 
 
     Trash trash = new Trash();
-    Document trashDoc = trash.getDocByHash(oldHash);
-    assertNotNull(trashDoc, String.format("The old hash, %s, should be found in Trash table.\n"
-                                              + "%s", 
-                                              newHash, Data.getFileInfo(uniqueFile, "Info of file where its content has changed")));    
+    List<Document> trashDocList = trash.getDocsByHash(oldHash);
+    String msg = String.format("The old hash, %s, should be found in Trash table.\n"
+                                    + "%s", 
+                                    newHash, Data.getFileInfo(uniqueFile, "Info of file where its content has changed"));
+    assertThat(msg, trashDocList.size(), is(not(0)));
     
     // Clean up.
     uniqueFile.delete();    
