@@ -117,6 +117,7 @@ public class Hub
                                     "Access is denied", // Win32
                                     "The process cannot access the file because it is being used by another process", // Win32
                                     "RuntimeException: Hash is null",
+                                    "RuntimeException: Invalid argument. Caused by /proc/", // Linux: Caused by /proc/3672/attr/prev.
                                     
                                     };
         int msgIndex = -1;  // Default to Not found.
@@ -180,10 +181,11 @@ public class Hub
           }
           catch(SQLException ex)
           {
-            System.out.println(String.format("Rollback up to the last %d potential commits. Issue is in %s", updateFrequency, file.getAbsolutePath()));
-            log.error("Unknown error. Rollback up to the last {} potential commits. Issue is in {}.", updateFrequency, file.getAbsolutePath(), e);
             ex.printStackTrace();
           }
+
+          System.out.println(String.format("Rollback up to the last %d potential commits. Issue is in %s", updateFrequency, file.getAbsolutePath()));
+          log.error("Unknown error. Rollback up to the last {} potential commits. Issue is in {}.", updateFrequency, file.getAbsolutePath(), e);
           
           RuntimeException rException = new RuntimeException(e.getMessage());
           rException.setStackTrace(e.getStackTrace());
