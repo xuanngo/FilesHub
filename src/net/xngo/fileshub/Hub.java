@@ -116,8 +116,8 @@ public class Hub
                                     "Too many levels of symbolic links", // linux
                                     "Access is denied", // Win32
                                     "The process cannot access the file because it is being used by another process", // Win32
-                                    "RuntimeException: Hash is null",
-                                    "Invalid argument. Caused by /proc/", // Linux: RuntimeException: Invalid argument. Caused by /proc/3672/attr/prev.
+                                    "Hash is null",
+                                    "Invalid argument. Caused by /proc", // Linux: RuntimeException: Invalid argument. Caused by /proc/3672/attr/prev.
                                     
                                     };
         int msgIndex = -1;  // Default to Not found.
@@ -168,7 +168,7 @@ public class Hub
         }
         else if((msgIndex=StringUtils.indexOfKeywords(e.getMessage(), ignoreMessages))!=-1)
         {
-          String warnMsg = String.format("Warning: %s. Ignore %s.", ignoreMessages[msgIndex], file.getAbsolutePath());
+          String warnMsg = String.format("Warning: %s Ignore %s.", e.getMessage(), file.getAbsolutePath());
           log.warn(warnMsg);
           System.out.println(warnMsg);
         }        
