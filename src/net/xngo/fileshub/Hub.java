@@ -117,7 +117,7 @@ public class Hub
                                     "Access is denied", // Win32
                                     "The process cannot access the file because it is being used by another process", // Win32
                                     "RuntimeException: Hash is null",
-                                    "RuntimeException: Invalid argument. Caused by /proc/", // Linux: Caused by /proc/3672/attr/prev.
+                                    "Invalid argument. Caused by /proc/", // Linux: RuntimeException: Invalid argument. Caused by /proc/3672/attr/prev.
                                     
                                     };
         int msgIndex = -1;  // Default to Not found.
