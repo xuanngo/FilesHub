@@ -11,4 +11,4 @@ if [ -z "$FILESHUB_HOME" ] ; then
 fi
 
 ## Execute build.xml
-ant -f ${FILESHUB_HOME}/build.xml
+ant -f ${FILESHUB_HOME}/build.xml "${@}"
