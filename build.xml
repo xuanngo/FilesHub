@@ -123,7 +123,12 @@
       <fileset dir="test" includes="test.FilesHub.*"/>
       <fileset dir="test" includes="test.view.jar.files.*"/>
     </copy>
-    	
+    
+    <chmod perm="700">
+      <fileset dir="${test.release.dir}" includes="test.FilesHub.*"/>
+      <fileset dir="${test.release.dir}" includes="test.view.jar.files.*"/>
+    </chmod>
+    
 	</target>
 	
 	<!-- Rework, codes below are ugly--> 
