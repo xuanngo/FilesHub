@@ -1,5 +1,5 @@
 # View all files in fileshub.jar
-FILESHUB_JAR=fileshub.jar
+FILESHUB_JAR=Fileshub.jar
 FILESHUB_TMP_DIR=fileshub
 
 if [ ! -f ${FILESHUB_JAR} ]
