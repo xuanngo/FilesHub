@@ -121,6 +121,7 @@
 		
     <copy verbose="true" overwrite="true" todir="${test.release.dir}">
       <fileset dir="test" includes="test.FilesHub.*"/>
+      <fileset dir="test" includes="test.view.jar.files.*"/>
     </copy>
     	
 	</target>
