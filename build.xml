@@ -119,14 +119,20 @@
 
     />
 		
+		<!-- Copy test helper scripts. -->
     <copy verbose="true" overwrite="true" todir="${test.release.dir}">
-      <fileset dir="test" includes="test.FilesHub.*"/>
-      <fileset dir="test" includes="test.view.jar.files.*"/>
+      <fileset dir="test">
+        <include name="test.FilesHub.*"/>
+        <include name="test.view.jar.files.*"/>
+      </fileset>
     </copy>
     
+    <!-- Make test helper scripts executable. -->
     <chmod perm="700">
-      <fileset dir="${test.release.dir}" includes="test.FilesHub.*"/>
-      <fileset dir="${test.release.dir}" includes="test.view.jar.files.*"/>
+      <fileset dir="${test.release.dir}">
+        <include name="test.FilesHub.*"/>
+        <include name="test.view.jar.files.*"/>
+      </fileset>
     </chmod>
     
 	</target>
