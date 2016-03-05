@@ -39,7 +39,7 @@ Search by hash value
 fh search -h "-943432"
 ```
 
-Search by filename: Can use wildcard(*)
+Search by filename: Can use wildcard(*) but need to be within double quote.
 ```
 fh search -f "*fileshub*"
 ```
