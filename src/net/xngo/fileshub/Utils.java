@@ -120,12 +120,10 @@ public class Utils
   
   public static int getUpdateFrequency(int total)
   {
-    int partitions = 107;
-    int frequency = total/partitions;
-    if(frequency<11)
-      frequency = 11;
-    
-    return frequency;
+    if(total>1000)
+    	return 117;
+    else
+    	return 17;
   }
   
   public static String getRAMUsage()
