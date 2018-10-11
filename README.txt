@@ -36,9 +36,11 @@ TODO
       
 Libraries
 ==========
+  * commons-io-2.4.jar: https://commons.apache.org/proper/commons-io/download_io.cgi
   * Flyway: Upgrade database: http://flywaydb.org/getstarted/download.html
-  * Sqlite: Database engine: https://bitbucket.org/xerial/sqlite-jdbc
+  * jcommander-1.35.jar: http://jcommander.org/#_download, https://github.com/cbeust/jcommander/releases
   * net.xngo.utils.jar: https://github.com/limelime/Java
+  * Sqlite: Database engine: https://bitbucket.org/xerial/sqlite-jdbc/downloads/
 
   * CSV: http://csveed.org/comparison-matrix.html
   * https://code.google.com/p/markdown-doclet/ 
