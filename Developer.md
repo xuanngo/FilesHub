@@ -46,8 +46,10 @@ Libraries
   * jcommander-1.35.jar: http://jcommander.org/#_download, https://github.com/cbeust/jcommander/releases
   * net.xngo.utils.jar: https://github.com/limelime/Java
   * Sqlite: Database engine: https://bitbucket.org/xerial/sqlite-jdbc/downloads/
-  * google-diff-match-patch.jar: https://github.com/google/diff-match-patch 
+  * google-diff-match-patch.jar: https://github.com/google/diff-match-patch
+  * slf4j: https://www.slf4j.org/download.html
   
+    
   * CSV: http://csveed.org/comparison-matrix.html
   * https://code.google.com/p/markdown-doclet/ 
   * https://code.google.com/p/sqlite4java/wiki/ComparisonToOtherWrappers
