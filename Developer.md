@@ -1,3 +1,8 @@
+# Workflow
+	./build.sh
+	# Get ./releases/latest
+
+
 Development
 ============
 
@@ -41,7 +46,8 @@ Libraries
   * jcommander-1.35.jar: http://jcommander.org/#_download, https://github.com/cbeust/jcommander/releases
   * net.xngo.utils.jar: https://github.com/limelime/Java
   * Sqlite: Database engine: https://bitbucket.org/xerial/sqlite-jdbc/downloads/
-
+  * google-diff-match-patch.jar: https://github.com/google/diff-match-patch 
+  
   * CSV: http://csveed.org/comparison-matrix.html
   * https://code.google.com/p/markdown-doclet/ 
   * https://code.google.com/p/sqlite4java/wiki/ComparisonToOtherWrappers
