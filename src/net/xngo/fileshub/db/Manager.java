@@ -441,8 +441,8 @@ public class Manager
     String fileToPath   = Utils.getCanonicalPath(fileTo);
     if(fileFromPath.compareTo(fileToPath)==0)
     {
-      System.out.println("Error: Both files are exactly the same.");
-      log.warn("Both files are exactly the same: {} and {}.", fileFrom.getPath(), fileTo.getPath());
+      System.out.println(String.format("ERROR: From and To files are exactly the same: %s", fileTo.getPath()));
+      log.warn("From and To files are exactly the same: {}", fileFrom.getPath(), fileTo.getPath());
       return false;
     }    
     
