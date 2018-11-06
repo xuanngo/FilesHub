@@ -29,12 +29,11 @@
 	
 
 	<target depends="cleanall, build-project" name="create_run_jar">
-		<delete verbose="true" file="${latest.jar.file.path}"/>
-		<!-- Guarantee JAR is always the latest. -->
-
+		<delete verbose="true" file="${latest.jar.file.path}"/> <!-- Guarantee JAR is always the latest. -->
+		
 		<!-- This is the important line: by specifying in the "jarfile" attribute the location of the
-		generated jar, ANT will be able to deduce the relative path to you jar libraries.
-		http://stackoverflow.com/questions/858766/generate-manifest-class-path-from-classpath-in-ant 
+				generated jar, ANT will be able to deduce the relative path to you jar libraries.
+				http://stackoverflow.com/questions/858766/generate-manifest-class-path-from-classpath-in-ant 
 		-->
 		<manifestclasspath property="lib.list" jarfile="releases/latest/libs/">
 			<classpath refid="release.jar.paths" />
