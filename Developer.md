@@ -47,7 +47,8 @@ Libraries
   * net.xngo.utils.jar: https://github.com/limelime/Java
   * Sqlite: Database engine: https://bitbucket.org/xerial/sqlite-jdbc/downloads/
   * google-diff-match-patch.jar: https://github.com/google/diff-match-patch
-  * slf4j: https://www.slf4j.org/download.html
+  * slf4j-api-*.jar: https://www.slf4j.org/download.html
+  * logback-core-*.jar, logback-classic-*.jar: https://logback.qos.ch
   
     
   * CSV: http://csveed.org/comparison-matrix.html
