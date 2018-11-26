@@ -2,7 +2,7 @@
 set -e
 # Description: Update Firstboot fileshub script.
 
-fb_run_dir=$(readlink -ev /media/master/github/firstboot/firstboot/apps/fileshub/run)
+fb_run_dir=$(readlink -ev /media/master/github/firstboot/firstboot/scripts/ess-fileshub/run)
 fileshub_dir=$(readlink -ev ./releases/latest/)
 
 # Update clean fileshub to firstboot.
